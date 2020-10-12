@@ -1,0 +1,28 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:fragment="general_head">
+
+	<title>HSE</title>
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+    <link rel="stylesheet" th:href="@{/lib/bootstrap/css/bootstrap.min.css}"/>
+	<link rel="stylesheet" th:href="@{/lib/icons.css}"/>
+	<link rel="stylesheet" th:href="@{/css/main.css}"/>
+
+</head>
+
+<body>
+
+   <th:block th:fragment="commonScripts">
+	
+	  <script th:src="@{/lib/jquery-3.4.1.min.js}"></script>
+	  <script th:src="@{/lib/bootstrap/js/bootstrap.min.js}"></script>
+	  <script th:src="@{/js/main.js}"></script>
+	
+	</th:block>
+
+</body>
+
+</html>
