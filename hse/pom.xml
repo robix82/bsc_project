@@ -163,7 +163,7 @@
 			            </execution>
 			        </executions>
 			        <configuration>
-			            <repository>robix82/ch.usi-${project.artifactId}</repository>
+			            <repository>robix82/usi.ch-${project.artifactId}</repository>
 			            <tag>${project.version}</tag>
 			            <buildArgs>
 			                <JAR_FILE>${project.build.finalName}.jar</JAR_FILE>
