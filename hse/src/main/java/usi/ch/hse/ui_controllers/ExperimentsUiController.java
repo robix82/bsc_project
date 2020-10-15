@@ -5,24 +5,24 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
- * Controller class for the search UI page
+ * Controller class for the experiments UI page
  * 
- * @author Robert Jans 
- * 
+ * @author Robert Jans
+ *
  */
 @Controller
-public class SearchUiController {
+public class ExperimentsUiController {
 
 	/**
-	 * Serves the main search UI page
+	 * Serves the main experiments UI
 	 * 
 	 * @return ModelAndView
 	 */
-	@GetMapping("/")
-	public ModelAndView getSearchUi() {
-    		
+	@GetMapping("/experiments")
+	public ModelAndView getExperimentsUi() {
+		
 		ModelAndView mav = new ModelAndView();
-		mav.setViewName("search");
+		mav.setViewName("experiments");
 		
 		return mav;
 	}

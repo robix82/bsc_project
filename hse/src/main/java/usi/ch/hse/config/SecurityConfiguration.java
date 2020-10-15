@@ -5,6 +5,12 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
+/**
+ * Configuration for user authentication settings
+ * 
+ * @author Robert Jans
+ *
+ */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
@@ -14,6 +20,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		
 		http.authorizeRequests()
 			.antMatchers("/").permitAll()
+			.antMatchers("/experiments/**").permitAll()
+			.antMatchers("/indexing/**").permitAll()
 			.antMatchers("/admin/**").hasAuthority("ADMIN");
 		/*
 			.anyRequest()
