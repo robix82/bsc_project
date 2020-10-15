@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"usi.ch.hse.config"},{"l":"usi.ch.hse.ui_controllers"}]
+packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"usi.ch.hse.config"},{"l":"usi.ch.hse.dto"}]
