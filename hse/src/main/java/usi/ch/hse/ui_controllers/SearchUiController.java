@@ -2,7 +2,11 @@ package usi.ch.hse.ui_controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
+
+import usi.ch.hse.dto.SearchResultList;
+import static usi.ch.hse.dummie_data.SearchData.*;
 
 /**
  * Controller class for the search UI page
@@ -26,4 +30,25 @@ public class SearchUiController {
 		
 		return mav;
 	}
+	
+	@PostMapping("/")
+	public ModelAndView postQuery(String queryString) {
+		
+		SearchResultList srl = dummieSearchResultList(10);
+		
+		ModelAndView mav = new ModelAndView();
+		mav.setViewName("search");
+		mav.addObject("searchResults", srl);
+		
+		return mav;
+	}
 }
+
+
+
+
+
+
+
+
+
