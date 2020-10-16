@@ -7,7 +7,7 @@ import org.springframework.web.servlet.ModelAndView;
 /**
  * Controller class for the experiments UI page
  * 
- * @author Robert Jans
+ * @author robert.jans@usi.ch
  *
  */
 @Controller

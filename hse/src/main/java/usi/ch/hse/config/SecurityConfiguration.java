@@ -8,7 +8,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 /**
  * Configuration for user authentication settings
  * 
- * @author Robert Jans
+ * @author robert.jans@usi.ch
  *
  */
 @Configuration

@@ -7,7 +7,7 @@ import org.springframework.web.servlet.ModelAndView;
 /**
  * Controller class for the search UI page
  * 
- * @author Robert Jans 
+ * @author robert.jans@usi.ch
  * 
  */
 @Controller

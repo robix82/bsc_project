@@ -5,7 +5,7 @@ import org.apache.lucene.search.ScoreDoc;
 /**
  * Data transfer class for serving search result summaries
  * 
- * @author Robert Jans
+ * @author robert.jans@usi.ch
  *
  */
 public class SearchResult {
@@ -39,7 +39,7 @@ public class SearchResult {
 	}
 	
 	/**
-	 * Bilds a SearchResult object given a Lucene ScoreDoc
+	 * Bilds a SearchResult object given a Lucene ScoreDoc instance
 	 * 
 	 * @param doc
 	 */
