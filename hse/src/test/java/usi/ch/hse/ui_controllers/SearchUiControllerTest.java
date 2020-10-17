@@ -1,19 +1,24 @@
 package usi.ch.hse.ui_controllers;
 
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
-
+import static usi.ch.hse.dummie_data.SearchData.dummieSearchResultList;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import usi.ch.hse.dto.SearchResultList;
-import static usi.ch.hse.dummie_data.SearchData.*;
+import usi.ch.hse.services.SearchService;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -21,6 +26,19 @@ public class SearchUiControllerTest {
 
 	@Autowired
 	private MockMvc mvc;
+	
+	@MockBean
+	private SearchService searchService;
+	
+	private SearchResultList testSrl = dummieSearchResultList(10);
+	
+	@BeforeEach
+	public void setUp() {
+		
+		when(searchService.search(anyString())).thenReturn(testSrl);
+	}
+	
+	
 	
 	@Test
 	public void testGetSearchUi() throws Exception {
@@ -32,7 +50,7 @@ public class SearchUiControllerTest {
 	@Test
 	public void testPostQuery() throws Exception {
 		
-		SearchResultList expectedSrl = dummieSearchResultList(10);
+		
 		
 		String url = UriComponentsBuilder.fromUriString("/")
 								       .queryParam("queryString", "test query")
@@ -40,7 +58,8 @@ public class SearchUiControllerTest {
 								       .toUriString();
 		
 		mvc.perform(post(url)).andExpect(status().isOk())
-						     .andExpect(view().name("search"));
+						     .andExpect(view().name("search"))
+						     .andExpect(model().attribute("searchResults", testSrl));
 	}
 }
 

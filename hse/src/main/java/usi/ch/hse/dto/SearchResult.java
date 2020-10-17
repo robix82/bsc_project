@@ -1,5 +1,7 @@
 package usi.ch.hse.dto;
 
+import java.util.Objects;
+
 import org.apache.lucene.search.ScoreDoc;
 
 /**
@@ -70,6 +72,30 @@ public class SearchResult {
 	
 	public void setSummary(String summary) {
 		this.summary = summary;
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		
+		if (o == this) {
+			return true;
+		}
+		
+		if (! (o instanceof SearchResult)) {
+			return false;
+		}
+		
+		SearchResult sr = (SearchResult) o;
+		
+		return sr.documentId.equals(documentId) &&
+		            sr.url.equals(url) &&
+		            sr.summary.equals(summary);
+	}
+	
+	@Override
+	public int hashCode() {
+		
+		return Objects.hash(documentId, url, summary);
 	}
 }
 

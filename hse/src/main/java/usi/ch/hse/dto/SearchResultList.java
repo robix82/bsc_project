@@ -64,6 +64,34 @@ public class SearchResultList {
 	public void setSearchResults(List<SearchResult> searchResults) {
 		this.searchResults = searchResults;
 	}
+	
+	@Override
+	public boolean equals(Object o) {
+		
+		if (o == this) {
+			return true;
+		}
+		
+		if (! (o instanceof SearchResultList)) {
+			
+			return false;
+		}
+		
+		SearchResultList srl = (SearchResultList) o;
+		
+		if (! srl.queryString.equals(queryString)) {
+			return false;
+		}
+		
+		for (int i = 0; i < searchResults.size(); ++i) {
+			
+			if (! searchResults.get(i).equals(srl.searchResults.get(i))) {
+				return false;
+			}
+		}
+		
+		return true;
+	}
 }
 
 

@@ -1,12 +1,13 @@
 package usi.ch.hse.ui_controllers;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import usi.ch.hse.dto.SearchResultList;
-import static usi.ch.hse.dummie_data.SearchData.*;
+import usi.ch.hse.services.SearchService;
 
 /**
  * Controller class for the search UI page
@@ -17,6 +18,9 @@ import static usi.ch.hse.dummie_data.SearchData.*;
 @Controller
 public class SearchUiController {
 
+	@Autowired
+	private SearchService searchService;
+	
 	/**
 	 * Serves the main search UI page
 	 * 
@@ -34,7 +38,7 @@ public class SearchUiController {
 	@PostMapping("/")
 	public ModelAndView postQuery(String queryString) {
 		
-		SearchResultList srl = dummieSearchResultList(10);
+		SearchResultList srl = searchService.search(queryString);
 		
 		ModelAndView mav = new ModelAndView();
 		mav.setViewName("search");
