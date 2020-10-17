@@ -1,6 +1,7 @@
 package ch.usi.hse.dto;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.apache.lucene.search.TopDocs;
 
@@ -76,10 +77,14 @@ public class SearchResultList {
 			
 			return false;
 		}
-		
+		 
 		SearchResultList srl = (SearchResultList) o;
 		
 		if (! srl.queryString.equals(queryString)) {
+			return false;
+		}
+		
+		if (! (srl.searchResults.size() == searchResults.size())) {
 			return false;
 		}
 		
@@ -91,6 +96,12 @@ public class SearchResultList {
 		}
 		
 		return true;
+	}
+	
+	@Override
+	public int hashCode() {
+		
+		return Objects.hash(queryString, searchResults);
 	}
 }
 
