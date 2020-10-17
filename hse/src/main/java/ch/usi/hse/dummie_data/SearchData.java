@@ -1,10 +1,10 @@
-package usi.ch.hse.dummie_data;
+package ch.usi.hse.dummie_data;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import usi.ch.hse.dto.SearchResult;
-import usi.ch.hse.dto.SearchResultList;
+import ch.usi.hse.dto.SearchResult;
+import ch.usi.hse.dto.SearchResultList;
 
 public class SearchData {
 	

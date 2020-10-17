@@ -1,4 +1,4 @@
-package usi.ch.hse.config;
+package ch.usi.hse.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

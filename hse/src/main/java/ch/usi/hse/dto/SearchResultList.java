@@ -1,4 +1,4 @@
-package usi.ch.hse.dto;
+package ch.usi.hse.dto;
 
 import java.util.List;
 

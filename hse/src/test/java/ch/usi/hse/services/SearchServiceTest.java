@@ -1,15 +1,15 @@
-package usi.ch.hse.services;
+package ch.usi.hse.services;
 
 import org.junit.jupiter.api.BeforeEach;
 
 public class SearchServiceTest {
 
-	private SearchService testService;
+	// private SearchService testService;
 	
 	@BeforeEach
 	public void setUp() {
 		
-		testService = new SearchService();
+	//	testService = new SearchService();
 	}
 	
 	// TODO: unit tests

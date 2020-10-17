@@ -1,7 +1,7 @@
-package usi.ch.hse.dto;
+package ch.usi.hse.dto;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static usi.ch.hse.dummie_data.SearchData.dummieSearchResults;
+import static ch.usi.hse.dummie_data.SearchData.dummieSearchResults;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package usi.ch.hse.dto;
+package ch.usi.hse.dto;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;

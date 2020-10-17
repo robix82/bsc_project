@@ -1,4 +1,4 @@
-package usi.ch.hse;
+package ch.usi.hse;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

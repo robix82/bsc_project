@@ -1,9 +1,9 @@
-package usi.ch.hse.services;
+package ch.usi.hse.services;
 
 import org.springframework.stereotype.Service;
 
-import static usi.ch.hse.dummie_data.SearchData.*;
-import usi.ch.hse.dto.SearchResultList;
+import static ch.usi.hse.dummie_data.SearchData.*;
+import ch.usi.hse.dto.SearchResultList;
 
 /**
  * Service class for interacting with the Lucene Searcch API

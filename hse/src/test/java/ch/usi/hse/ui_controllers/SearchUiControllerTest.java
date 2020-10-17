@@ -1,4 +1,4 @@
-package usi.ch.hse.ui_controllers;
+package ch.usi.hse.ui_controllers;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
@@ -7,7 +7,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
-import static usi.ch.hse.dummie_data.SearchData.dummieSearchResultList;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +17,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import usi.ch.hse.dto.SearchResultList;
-import usi.ch.hse.services.SearchService;
+import static ch.usi.hse.dummie_data.SearchData.dummieSearchResultList;
+import ch.usi.hse.dto.SearchResultList;
+import ch.usi.hse.services.SearchService;
 
 @SpringBootTest
 @AutoConfigureMockMvc

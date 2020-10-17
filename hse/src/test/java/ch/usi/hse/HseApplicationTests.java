@@ -1,4 +1,4 @@
-package usi.ch.hse;
+package ch.usi.hse;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

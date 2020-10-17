@@ -1,4 +1,4 @@
-package usi.ch.hse.ui_controllers;
+package ch.usi.hse.ui_controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

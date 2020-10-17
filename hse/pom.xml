@@ -10,7 +10,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	
-	<groupId>usi.ch</groupId>
+	<groupId>ch.usi</groupId>
 	<artifactId>hse</artifactId>
 	<version>0.1</version>
 	<name>hse</name>
