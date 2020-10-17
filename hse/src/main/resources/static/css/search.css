@@ -1,8 +1,66 @@
 
-h1 {
+
+#main-container {
+	
+	display: flex;
+	flex-flow: column nowrap;
+	align-items: center;
+	padding-top: 10%;
+}
+
+h1, h2 {
+	
 	color: blue;
 }
 
 h2 {
-	color: blue;
+	
+	font-size: 16pt;
 }
+
+#title {
+	
+	display: flex;
+	flex-flow: column nowrap;
+	align-items: center;
+}
+
+#search-bar {
+	
+	display: flex;
+	flex-flow: row nowrap;
+	align-items: center;
+	margin-top: 2rem;
+}
+
+#search-bar form {
+	
+	display: flex;
+	flex-flow: row nowrap;
+	align-items: center;
+}
+
+#search-input {
+	
+	width: 30rem;
+	margin-right: .5rem;
+}
+
+#results {
+	
+	display: flex;
+	flex-flow: column nowrap;
+	align-items: flex-start;
+	width: 60%;
+	margin-top: 4rem;
+}
+
+.result-item {
+	
+	margin-top: 1rem;
+}
+
+
+
+
+

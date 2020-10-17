@@ -15,10 +15,49 @@
 
 <div id="main-container">
 
-	<h1>HSE</h1>
-	<h2>The Health Search Engine</h2>	
+	<div id="title">
+		<h1>HSE</h1>
+		<h2>The Health Search Engine</h2>	
+	</div>
+	
+	<div id="search-bar">
+		<form th:action="@{/}" method="POST">
+		
+		<input id="search-input" 
+				    name="queryString" 
+				   	class="form-control form-control-lg" 
+				   	type="text" 
+				   	placeholder="Search">
+		
+		<button type="submit" id="search-btn" class="btn btn-lg btn-primary">
+			<span class="glyphicon glyphicon-search"></span>
+		</button>
+		
+		</form>
+	</div>
+	
+	<div id="results" th:if="${searchResultList != null}">
+
+		<div th:each="result : ${searchResultList.searchResults}" class="result-item">
+		
+			<div class="result-url">
+				<a th:href="@{${result.url}}" th:text="${result.url}" target="blank"></a>
+			</div>
+			
+			<div class="result-summary" th:text="${result.summary}">
+			</div>
+			
+		</div>
+
+	</div>
 	
 </div>
+
+<script th:inline="javascript">
+	/*<![CDATA[*/
+	var searchResultList = /*[[${searchResultList}]]*/ "default";
+	/*]]>*/
+</script>
 
 <th:block th:include="fragments/general.html :: commonScripts"></th:block>
 
@@ -27,3 +66,4 @@
 </body>
 
 </html>
+

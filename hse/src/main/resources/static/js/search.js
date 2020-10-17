@@ -1,5 +1,7 @@
 
 $(document).ready(function() {
 	
-		console.log("hello from search.js");
+		if (searchResultList != null) {
+			$("#search-input").val(searchResultList.queryString);
+		}
 });

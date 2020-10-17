@@ -19,9 +19,10 @@ public class SearchData {
 		
 		for (int i = 0; i < n; ++i) {
 			
-			res.add(new SearchResult(n, "www.test.com", "Some summary"));
+			res.add(new SearchResult(n, "https://www.usi.ch", "Some summary"));
 		}
 		
 		return res;
 	}
 }
+ 

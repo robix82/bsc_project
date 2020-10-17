@@ -1,4 +1,6 @@
-usi.ch.hse
-usi.ch.hse.config
-usi.ch.hse.dto
-usi.ch.hse.ui_controllers
+ch.usi.hse
+ch.usi.hse.config
+ch.usi.hse.dto
+ch.usi.hse.dummie_data
+ch.usi.hse.services
+ch.usi.hse.ui_controllers

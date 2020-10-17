@@ -60,7 +60,7 @@ public class SearchUiControllerTest {
 		
 		mvc.perform(post(url)).andExpect(status().isOk())
 						     .andExpect(view().name("search"))
-						     .andExpect(model().attribute("searchResults", testSrl));
+						     .andExpect(model().attribute("searchResultList", testSrl));
 	}
 }
 

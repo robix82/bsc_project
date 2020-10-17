@@ -38,11 +38,13 @@ public class SearchUiController {
 	@PostMapping("/")
 	public ModelAndView postQuery(String queryString) {
 		
+		System.out.println("QUERY: " + queryString);
+		
 		SearchResultList srl = searchService.search(queryString);
 		
 		ModelAndView mav = new ModelAndView();
 		mav.setViewName("search");
-		mav.addObject("searchResults", srl);
+		mav.addObject("searchResultList", srl);
 		
 		return mav;
 	}
