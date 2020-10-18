@@ -9,7 +9,7 @@ HSE is the core part of the apparatus, consisting in a special purpose Lucene ba
 
 The current version can be run by issuing `docker-compose up`
 from the `hse` directory.
-if the images are not already installed on the system, the latest hse image as well as
+If the images are not already installed on the system, the latest hse image as well as
 the required MySql image will be downloaded from DockerHub.
 The application's user interface runs on tcp port 80.
 
