@@ -11,11 +11,13 @@ The current version can be run by issuing `docker-compose up`
 from the `hse` directory.
 if the images are not already installed on the system, the latest hse image as well as
 the required MySql image will be downloaded from DockerHub.
+The application's user interface runs on tcp port 80.
 
 ### Build with Maven
 
 running `mvn clean install`
 from the `hse` directory creates a local build intended to be used during development. Running this build requires a local MySql instance running on port 3306 and containing a database named `hse_db`.
+The development version runs on tcp port 8080.
 
 running
   `mvn -Pprod clean install` creates the final docker image.
