@@ -14,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  * @author robert.jans@usi.ch
  *
  */
-@Entity
+@Entity(name="user")
 @Inheritance(strategy=InheritanceType.JOINED)
 public abstract class User {
 

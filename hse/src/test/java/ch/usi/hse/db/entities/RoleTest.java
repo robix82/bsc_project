@@ -28,6 +28,14 @@ public class RoleTest {
 	}
 	
 	@Test
+	public void testConstructor3() {
+		
+		Role r = new Role(testRole);
+		
+		assertEquals(testRole, r.getRole());
+	}
+	
+	@Test
 	public void testSetters() {
 		
 		Role r = new Role();

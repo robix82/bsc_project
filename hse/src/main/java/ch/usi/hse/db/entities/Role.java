@@ -10,7 +10,7 @@ import javax.persistence.*;
  * @author robert.jans@usi.ch
  *
  */
-@Entity
+@Entity(name="role")
 public class Role {
 
 	@Id
@@ -30,6 +30,10 @@ public class Role {
 	public Role(int id, String role) {
 		
 		this.id = id;
+		this.role = role;
+	}
+	
+	public Role(String role) {
 		this.role = role;
 	}
 	
