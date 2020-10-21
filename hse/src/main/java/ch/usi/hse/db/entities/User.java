@@ -7,6 +7,13 @@ import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+/**
+ * Base class representing users for seccurity/authentication
+ * Planned subclasses: Administrator, Experimenter, Participant
+ * 
+ * @author robert.jans@usi.ch
+ *
+ */
 @Entity
 @Inheritance(strategy=InheritanceType.JOINED)
 public abstract class User {
@@ -49,6 +56,46 @@ public abstract class User {
 		this.userName = userName;
 		this.password = password;
 		this.roles = roles;
+	}
+
+	public int getId() {
+		return id;
+	}
+	
+	public String getUserName() {
+		return userName;
+	}
+	
+	public String getPassword() {
+		return password;
+	}
+	
+	public Set<Role> getRoles() {
+		return roles;
+	}
+	
+	public void setId(int id) {
+		this.id = id;
+	}
+	
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+	
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	
+	public void setRoles(Set<Role> roles) {
+		this.roles = roles;
+	}
+	
+	public void addRole(Role role) {
+		roles.add(role);
+	}
+	
+	public void removeRole(Role role) {
+		roles.remove(role);
 	}
 }
 
