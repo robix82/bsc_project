@@ -53,6 +53,7 @@ public abstract class User {
 	
 	public User(String userName, String password, Set<Role> roles) {
 		
+		id = 0;
 		this.userName = userName;
 		this.password = password;
 		this.roles = roles;
