@@ -5,12 +5,12 @@ import java.util.Set;
 import javax.persistence.Entity;
 
 /**
- * User implementation for administrators
+ * User implementation for administrators 
  * 
- * @Entity(name="admin")
  * @author robert.jans@usi.ch
  *
  */
+@Entity(name="administrator")
 public class Administrator extends User {
 
 	public Administrator() {
