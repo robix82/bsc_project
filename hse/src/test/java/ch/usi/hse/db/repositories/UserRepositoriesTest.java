@@ -3,7 +3,6 @@ package ch.usi.hse.db.repositories;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -94,6 +93,20 @@ public class UserRepositoriesTest {
 		assertEquals(experimenter, experimenterRepo.findByUserName(experimenter.getUserName()));
 		assertEquals(participant1, userRepo.findByUserName(participant1.getUserName()));
 		assertEquals(participant1, participantRepo.findByUserName(participant1.getUserName()));
+	}
+	
+	@Test
+	public void testExistsById() {
+		
+		assertTrue(userRepo.existsById(admin.getId()));
+		assertFalse(userRepo.existsById(admin.getId() + 999));
+	}
+	
+	@Test
+	public void testExistsByUserName() {
+		
+		assertTrue(userRepo.existsByUserName(admin.getUserName()));
+		assertFalse(userRepo.existsByUserName("noSuchName"));
 	}
 
 	@Test

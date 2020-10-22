@@ -21,4 +21,6 @@ public interface UserBaseRepository<T extends User>
 	public T findById(int id);
 	public T findByUserName(String userName);
 	public List<T> findAll();
+	public boolean existsById(int id);
+	public boolean existsByUserName(String userName); 
 }
