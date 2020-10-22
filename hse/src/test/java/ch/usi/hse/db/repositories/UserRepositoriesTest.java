@@ -44,59 +44,117 @@ public class UserRepositoriesTest {
 	@BeforeEach
 	public void setUp() {
 		
-		Role adminRole = new Role(1, "ADMIN");
-		Role experimenterRole = new Role(2, "EXPERIMENTER");
-		Role participantRole = new Role(3, "PARTICIPANT");
-		adminRoles = new HashSet<>();
-		adminRoles.add(adminRole);
-		experimenterRoles = new HashSet<>();
-		experimenterRoles.add(experimenterRole);
-		participantRoles = new HashSet<>();
-		participantRoles.add(participantRole);
+		/*
+		Role adminRole = new Role("ADMIN");
+		Role experimenterRole = new Role("EXPERIMENTER");
+		Role participantRole = new Role("PARTICIPANT");
 		
 		roleRepo.deleteAll();
-		/*
+		
 		roleRepo.save(adminRole);
 		roleRepo.save(experimenterRole);
 		roleRepo.save(participantRole);
 		*/
 		
-		admin = new Administrator("admin", "pwd", adminRoles);
-		experimenter = new Experimenter("experimenter", "pwd", experimenterRoles);
-		participant1 = new Participant("p1", "pwd", participantRoles);
-		participant2 = new Participant("p2", "pwd", participantRoles);
-				
+		adminRoles = new HashSet<>(); 
+		adminRoles.add(roleRepo.findByRole("ADMIN"));
+		experimenterRoles = new HashSet<>();
+		experimenterRoles.add(roleRepo.findByRole("EXPERIMENTER"));
+		participantRoles = new HashSet<>();
+		participantRoles.add(roleRepo.findByRole("PARTICICPANT"));
+		
 		userRepo.deleteAll();
-		userRepo.save(admin);
-		userRepo.save(experimenter);
-		userRepo.save(participant1);
-		userRepo.save(participant2);		
+		admin = userRepo.save(new Administrator("admin", "pwd", adminRoles));
+		experimenter = userRepo.save(new Experimenter("experimenter", "pwd", experimenterRoles));
+		participant1 = userRepo.save(new Participant("p1", "pwd", participantRoles));
+		participant2 = userRepo.save(new Participant("p2", "pwd", participantRoles));				
 	}
 	
 	@Test
 	public void setupTest() {
+		
+		List<Role> allRoles = (List<Role>) roleRepo.findAll();
+		assertEquals(3, allRoles.size());
 
 		assertEquals(4, allUsers().size());
 		assertEquals(1, allAdministrators().size());
 		assertEquals(1, allExperimenters().size());
 		assertEquals(2, allParticipants().size());
+		
+		assertTrue(allAdministrators().contains(admin));
+		assertTrue(allExperimenters().contains(experimenter));
+		assertTrue(allParticipants().contains(participant1));
+		assertTrue(allParticipants().contains(participant1));
+	}
+	
+	@Test
+	public void testFindById() {
+		
+		assertEquals(admin, userRepo.findById(admin.getId()));
+		assertEquals(admin, administratorRepo.findById(admin.getId()));
+		assertEquals(experimenter, userRepo.findById(experimenter.getId()));
+		assertEquals(experimenter, experimenterRepo.findById(experimenter.getId()));
+		assertEquals(participant1, userRepo.findById(participant1.getId()));
+		assertEquals(participant1, participantRepo.findById(participant1.getId()));
+	}
+	
+	@Test
+	public void testFindByUsername() {
+		
+		assertEquals(admin, userRepo.findByUserName(admin.getUserName()));
+		assertEquals(admin, administratorRepo.findByUserName(admin.getUserName()));
+		assertEquals(experimenter, userRepo.findByUserName(experimenter.getUserName()));
+		assertEquals(experimenter, experimenterRepo.findByUserName(experimenter.getUserName()));
+		assertEquals(participant1, userRepo.findByUserName(participant1.getUserName()));
+		assertEquals(participant1, participantRepo.findByUserName(participant1.getUserName()));
 	}
 
 	@Test
-	public void saveTest() {
+	public void testSave() {
 		
-		Administrator newAdmin = new Administrator("admin1", "pwd", adminRoles);
-		Experimenter newExperimenter = new Experimenter("experimenter1", "pwd", experimenterRoles);
-		Participant newParticipant = new Participant("p3", "pwd", participantRoles);
-
-		administratorRepo.save(newAdmin);
-		experimenterRepo.save(newExperimenter);
-		participantRepo.save(newParticipant);
+		Administrator newAdmin = administratorRepo.save(
+									new Administrator("admin1", "pwd", adminRoles));
+		
+		Experimenter newExperimenter = experimenterRepo.save(
+									new Experimenter("experimenter1", "pwd", experimenterRoles));
+		
+		Participant newParticipant = participantRepo.save(
+									new Participant("p3", "pwd", participantRoles));
 		
 		assertEquals(7, allUsers().size());
 		assertEquals(2, allAdministrators().size());
 		assertEquals(2, allExperimenters().size());
 		assertEquals(3, allParticipants().size());
+		
+		assertTrue(allAdministrators().contains(newAdmin));
+		assertTrue(allExperimenters().contains(newExperimenter));
+		assertTrue(allParticipants().contains(newParticipant));
+	}
+	
+	@Test
+	public void testUpdate() {
+		
+		int id = admin.getId();
+		String newName = "newName";
+		
+		assertNotEquals(newName, userRepo.findById(id).getUserName());
+		
+		admin.setUserName(newName);
+		userRepo.save(admin);
+		
+		assertEquals(newName, userRepo.findById(id).getUserName());
+	}
+	
+	@Test
+	public void testDelete() {
+		
+		assertEquals(2, allParticipants().size());
+		assertTrue(allUsers().contains(participant2));
+		
+		userRepo.delete(participant2);
+		
+		assertEquals(1, allParticipants().size());
+		assertFalse(allUsers().contains(participant2));
 	}
 	
 	

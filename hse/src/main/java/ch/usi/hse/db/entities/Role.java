@@ -15,7 +15,7 @@ public class Role {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(name="id")
+	@Column(name="role_id")
 	private Integer id;
 	
 	@Column(name="role")
@@ -24,7 +24,7 @@ public class Role {
 	public Role() {
 		
 		id = 0;
-		role = null;
+		role = "";
 	}
 	
 	public Role(int id, String role) {
@@ -34,6 +34,8 @@ public class Role {
 	}
 	
 	public Role(String role) {
+		
+		id = 0;
 		this.role = role;
 	}
 	
@@ -66,13 +68,13 @@ public class Role {
 		
 		Role r = (Role) o;
 		
-		return r.id == id;
+		return r.role.equals(role);
 	}
 	
 	@Override
 	public int hashCode() {
 		
-		return Objects.hash(id);
+		return Objects.hash(role);
 	}
 }
 

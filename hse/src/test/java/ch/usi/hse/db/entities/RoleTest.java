@@ -15,7 +15,7 @@ public class RoleTest {
 		Role r = new Role();
 		
 		assertEquals(0, r.getId());
-		assertNull(r.getRole());
+		assertEquals("", r.getRole());
 	}
 	
 	@Test
@@ -54,8 +54,8 @@ public class RoleTest {
 	public void testEqualsAndHashCode() {
 		
 		Role r1 = new Role(1, "test1");
-		Role r2 = new Role(1, "test2");
-		Role r3 = new Role(2, "test3");
+		Role r2 = new Role(2, "test1");
+		Role r3 = new Role(3, "test3");
 		
 		assertTrue(r1.equals(r1));
 		assertTrue(r1.equals(r2));
