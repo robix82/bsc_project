@@ -19,6 +19,12 @@ import ch.usi.hse.db.repositories.UserRepository;
 @Service
 public class UserService {
 
+	private UserRepository userRepository;
+	private AdministratorRepository administratorRepository;
+	private ExperimenterRepository experimenterRepository;
+	private ParticipantRepository participantRepository;
+	private BCryptPasswordEncoder bCryptPasswordEncoder;
+	
 	@Autowired
 	public UserService(UserRepository userRepository,
 					   AdministratorRepository administratorRepository,
@@ -27,7 +33,11 @@ public class UserService {
 					   RoleRepository roleRepository,
 					   BCryptPasswordEncoder bCryptPasswordEncoder) {
 		
-		
+		this.userRepository = userRepository;
+		this.administratorRepository = administratorRepository;
+		this.experimenterRepository = experimenterRepository;
+		this.participantRepository = participantRepository;
+		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
 	}
 }
 

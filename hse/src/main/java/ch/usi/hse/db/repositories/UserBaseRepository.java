@@ -1,5 +1,7 @@
 package ch.usi.hse.db.repositories;
 
+import java.util.List;
+
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 
@@ -18,4 +20,5 @@ public interface UserBaseRepository<T extends User>
 
 	public T findById(int id);
 	public T findByUserName(String userName);
+	public List<T> findAll();
 }

@@ -44,18 +44,6 @@ public class UserRepositoriesTest {
 	@BeforeEach
 	public void setUp() {
 		
-		/*
-		Role adminRole = new Role("ADMIN");
-		Role experimenterRole = new Role("EXPERIMENTER");
-		Role participantRole = new Role("PARTICIPANT");
-		
-		roleRepo.deleteAll();
-		
-		roleRepo.save(adminRole);
-		roleRepo.save(experimenterRole);
-		roleRepo.save(participantRole);
-		*/
-		
 		adminRoles = new HashSet<>(); 
 		adminRoles.add(roleRepo.findByRole("ADMIN"));
 		experimenterRoles = new HashSet<>();
@@ -72,19 +60,18 @@ public class UserRepositoriesTest {
 	
 	@Test
 	public void setupTest() {
-		
-		List<Role> allRoles = (List<Role>) roleRepo.findAll();
-		assertEquals(3, allRoles.size());
 
-		assertEquals(4, allUsers().size());
-		assertEquals(1, allAdministrators().size());
-		assertEquals(1, allExperimenters().size());
-		assertEquals(2, allParticipants().size());
+		assertEquals(3, roleRepo.count());
+
+		assertEquals(4, userRepo.count());
+		assertEquals(1, administratorRepo.count());
+		assertEquals(1, experimenterRepo.count());
+		assertEquals(2, participantRepo.count());
 		
-		assertTrue(allAdministrators().contains(admin));
-		assertTrue(allExperimenters().contains(experimenter));
-		assertTrue(allParticipants().contains(participant1));
-		assertTrue(allParticipants().contains(participant1));
+		assertTrue(administratorRepo.findAll().contains(admin));
+		assertTrue(experimenterRepo.findAll().contains(experimenter));
+		assertTrue(participantRepo.findAll().contains(participant1));
+		assertTrue(participantRepo.findAll().contains(participant1));
 	}
 	
 	@Test
@@ -121,14 +108,14 @@ public class UserRepositoriesTest {
 		Participant newParticipant = participantRepo.save(
 									new Participant("p3", "pwd", participantRoles));
 		
-		assertEquals(7, allUsers().size());
-		assertEquals(2, allAdministrators().size());
-		assertEquals(2, allExperimenters().size());
-		assertEquals(3, allParticipants().size());
+		assertEquals(7, userRepo.count());
+		assertEquals(2, administratorRepo.count());
+		assertEquals(2, experimenterRepo.count());
+		assertEquals(3, participantRepo.count());
 		
-		assertTrue(allAdministrators().contains(newAdmin));
-		assertTrue(allExperimenters().contains(newExperimenter));
-		assertTrue(allParticipants().contains(newParticipant));
+		assertTrue(administratorRepo.findAll().contains(newAdmin));
+		assertTrue(experimenterRepo.findAll().contains(newExperimenter));
+		assertTrue(participantRepo.findAll().contains(newParticipant));
 	}
 	
 	@Test
@@ -148,34 +135,13 @@ public class UserRepositoriesTest {
 	@Test
 	public void testDelete() {
 		
-		assertEquals(2, allParticipants().size());
-		assertTrue(allUsers().contains(participant2));
+		assertEquals(2, participantRepo.count());
+		assertTrue(userRepo.findAll().contains(participant2));
 		
 		userRepo.delete(participant2);
 		
-		assertEquals(1, allParticipants().size());
-		assertFalse(allUsers().contains(participant2));
-	}
-	
-	
-	private List<User> allUsers() {
-		
-		return (List<User>) userRepo.findAll();
-	}
-	
-	private List<Administrator> allAdministrators() {
-		
-		return (List<Administrator>) administratorRepo.findAll();
-	}
-	
-	private List<Experimenter> allExperimenters() {
-		
-		return (List<Experimenter>) experimenterRepo.findAll();
-	}
-	
-	private List<Participant> allParticipants() {
-		
-		return (List<Participant>) participantRepo.findAll();
+		assertEquals(1, participantRepo.count());
+		assertFalse(userRepo.findAll().contains(participant2));
 	}
 }
 
