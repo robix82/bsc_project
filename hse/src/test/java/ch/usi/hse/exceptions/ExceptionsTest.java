@@ -11,10 +11,15 @@ public class ExceptionsTest {
 		
 		int id = 23;
 		String name = "abc";
+		String role = "<role>";
 		String msg1 = "No User with id 23 found";
 		String msg2 = "No User named abc found";
+		String msg3 = "No <role> with id 23 found";
+		String msg4 = "No <role> named abc found";
 		boolean exc1 = false;
 		boolean exc2 = false;
+		boolean exc3 = false;
+		boolean exc4 = false;
 		
 		try {
 			throw new NoSuchUserException(id);
@@ -34,8 +39,28 @@ public class ExceptionsTest {
 			exc2 = true;
 		}
 		
+		try {
+			throw new NoSuchUserException(role, id);
+		}
+		catch (Exception e) {
+			
+			assertEquals(msg3, e.getMessage());
+			exc3 = true;
+		}
+		
+		try {
+			throw new NoSuchUserException(role, name);
+		}
+		catch (Exception e) {
+			
+			assertEquals(msg4, e.getMessage());
+			exc4 = true; 
+		}
+		
 		assertTrue(exc1);
 		assertTrue(exc2);
+		assertTrue(exc3);
+		assertTrue(exc4);
 	}
 	
 	@Test

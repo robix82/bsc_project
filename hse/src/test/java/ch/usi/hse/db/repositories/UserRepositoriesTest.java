@@ -100,6 +100,8 @@ public class UserRepositoriesTest {
 		
 		assertTrue(userRepo.existsById(admin.getId()));
 		assertFalse(userRepo.existsById(admin.getId() + 999));
+		assertTrue(administratorRepo.existsById(admin.getId()));
+		assertFalse(experimenterRepo.existsById(admin.getId()));
 	}
 	
 	@Test
@@ -107,6 +109,8 @@ public class UserRepositoriesTest {
 		
 		assertTrue(userRepo.existsByUserName(admin.getUserName()));
 		assertFalse(userRepo.existsByUserName("noSuchName"));
+		assertTrue(administratorRepo.existsByUserName(admin.getUserName()));
+		assertFalse(experimenterRepo.existsByUserName(admin.getUserName()));
 	}
 
 	@Test
@@ -120,6 +124,10 @@ public class UserRepositoriesTest {
 		
 		Participant newParticipant = participantRepo.save(
 									new Participant("p3", "pwd", participantRoles));
+		
+		assertNotNull(newAdmin);
+		assertNotNull(newExperimenter);
+		assertNotNull(newParticipant);
 		
 		assertEquals(7, userRepo.count());
 		assertEquals(2, administratorRepo.count());

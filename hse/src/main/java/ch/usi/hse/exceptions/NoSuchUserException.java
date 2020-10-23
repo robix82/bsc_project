@@ -21,4 +21,22 @@ public class NoSuchUserException extends Exception {
 		
 		super("No User named " + userName + " found");
 	}
+	
+	public NoSuchUserException(String role, int id) {
+		
+		super("No " + role + " with id " + id + " found");
+	}
+	
+	public NoSuchUserException(String role, String userName) {
+		
+		super("No " + role + " named " + userName + " found");
+	}
 }
+
+
+
+
+
+
+
+

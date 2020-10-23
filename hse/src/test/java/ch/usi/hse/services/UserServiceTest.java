@@ -26,6 +26,7 @@ import ch.usi.hse.db.repositories.ParticipantRepository;
 import ch.usi.hse.db.repositories.RoleRepository;
 import ch.usi.hse.db.repositories.UserRepository;
 import ch.usi.hse.exceptions.NoSuchUserException;
+import ch.usi.hse.exceptions.UserExistsException;
 
 public class UserServiceTest {
 
@@ -52,6 +53,8 @@ public class UserServiceTest {
 	private List<Administrator> administrators;
 	private List<Experimenter> experimenters;
 	private List<Participant> participants;
+	private Set<Role> adminRoles, experimenterRoles, participantRoles;
+	private String password, encryptedPassword;
 	
 	@BeforeEach
 	public void setUp() {
@@ -60,12 +63,15 @@ public class UserServiceTest {
 		
 		// create test data
 		
-		Set<Role> adminRoles = new HashSet<>(); 
+		adminRoles = new HashSet<>(); 
 		adminRoles.add(new Role(1, "ADMIN"));
-		Set<Role> experimenterRoles = new HashSet<>();
+		experimenterRoles = new HashSet<>();
 		experimenterRoles.add(new Role(2, "EXPERIMENTER"));
-		Set<Role> participantRoles = new HashSet<>();
+		participantRoles = new HashSet<>();
 		participantRoles.add(new Role(1, "PARTICICPANT"));
+		
+		password = "pwd";
+		encryptedPassword = "pwd_e";
 		
 		users = new ArrayList<>();
 		administrators = new ArrayList<>();
@@ -92,6 +98,14 @@ public class UserServiceTest {
 								
 		// set up mock returns
 		
+		// roles
+		when(roleRepository.findByRole("ADMIN")).thenReturn(new Role(1, "ADMIN"));
+		when(roleRepository.findByRole("EXPERIMENTER")).thenReturn(new Role(2, "EXPERIMENTER"));
+		when(roleRepository.findByRole("PARTICICPANT")).thenReturn(new Role(1, "PARTICICPANT"));
+		
+		// bCrypt
+		when(bCryptPasswordEncoder.encode(password)).thenReturn(encryptedPassword);
+		
 		// count()
 		when(userRepository.count()).thenReturn((long) users.size());
 		when(administratorRepository.count()).thenReturn((long) administrators.size());
@@ -108,6 +122,12 @@ public class UserServiceTest {
 		
 		when(userRepository.existsById(anyInt())).thenReturn(false);
 		when(userRepository.existsByUserName(anyString())).thenReturn(false);
+		when(administratorRepository.existsById(anyInt())).thenReturn(false);
+		when(administratorRepository.existsByUserName(anyString())).thenReturn(false);
+		when(experimenterRepository.existsById(anyInt())).thenReturn(false);
+		when(experimenterRepository.existsByUserName(anyString())).thenReturn(false);
+		when(participantRepository.existsById(anyInt())).thenReturn(false);
+		when(participantRepository.existsByUserName(anyString())).thenReturn(false);
 		
 		for (User u : users) {
 			
@@ -118,16 +138,26 @@ public class UserServiceTest {
 		}
 		
 		for (Administrator a : administrators) {
+			
+			when(administratorRepository.existsById(a.getId())).thenReturn(true);
+			when(administratorRepository.existsByUserName(a.getUserName())).thenReturn(true);
 			when(administratorRepository.findById(a.getId())).thenReturn(a);
 			when(administratorRepository.findByUserName(a.getUserName())).thenReturn(a);
 		}
 		
 		for (Experimenter e : experimenters) {
+			
+			when(experimenterRepository.existsById(e.getId())).thenReturn(true);
+			when(experimenterRepository.existsByUserName(e.getUserName())).thenReturn(true);
 			when(experimenterRepository.findById(e.getId())).thenReturn(e);
 			when(experimenterRepository.findByUserName(e.getUserName())).thenReturn(e);
+			
 		}
 		
 		for (Participant p : participants) {
+			
+			when(participantRepository.existsById(p.getId())).thenReturn(true);
+			when(participantRepository.existsByUserName(p.getUserName())).thenReturn(true);
 			when(participantRepository.findById(p.getId())).thenReturn(p);
 			when(participantRepository.findByUserName(p.getUserName())).thenReturn(p);
 		}
@@ -210,27 +240,25 @@ public class UserServiceTest {
 	@Test
 	public void testFindUser1() {
 		
-		boolean noexc = false;
-		boolean exc = false;
-		
+		boolean noexc, exc;
+		User u = users.get(0);
 				
 		try {
 			
-			User res = testService.findUser(users.get(0).getId());
-			assertEquals(users.get(0), res);
+			User res = testService.findUser(u.getId());
+			assertEquals(u, res);
 			noexc = true;
 		}
-		catch (NoSuchUserException e) {
-
+		catch (Exception e) {
 			noexc = false;
 		}
 		
 		try {
 			
-			testService.findUser(users.get(0).getId() + 999);
+			testService.findUser(u.getId() + 999);
+			exc = false;
 		}
-		catch (NoSuchUserException e) {
-			
+		catch (NoSuchUserException e) {	
 			exc = true;
 		}
 		
@@ -241,31 +269,244 @@ public class UserServiceTest {
 	@Test
 	public void testFindUser2() {
 		
-		boolean noexc = false;
-		boolean exc = false;
+		boolean noexc, exc;
+		User u = users.get(0);
 		
 		try {
 			
-			User res = testService.findUser(users.get(0).getUserName());
-			assertEquals(users.get(0), res);
+			User res = testService.findUser(u.getUserName());
+			assertEquals(u, res);
 			noexc = true;
 		}
-		catch (NoSuchUserException e) {
-			
+		catch (Exception e) {
 			noexc = false;
 		}
 		
 		try {
 			
 			testService.findUser("xxxx");
+			exc = false;
 		}
-		catch (NoSuchUserException e) {
-			
+		catch (NoSuchUserException e) {		
 			exc = true;
 		}
 		
 		assertTrue(noexc);
 		assertTrue(exc);
+	}
+	
+	@Test
+	public void testFindAdministrator1() {
+		
+		boolean noexc, exc;
+		Administrator a = administrators.get(0);
+		
+		try {
+			
+			Administrator res = testService.findAdministrator(a.getId());
+			assertEquals(a, res);
+			noexc = true;
+		}
+		catch (Exception e) {
+			noexc = false;
+		}
+		
+		try {
+			
+			testService.findAdministrator(experimenters.get(0).getId());
+			exc = false;
+		}
+		catch (NoSuchUserException e) {	
+			exc = true;
+		}
+		
+		assertTrue(noexc);
+		assertTrue(exc);
+	}
+	
+	@Test
+	public void testFindAdministrator2() {
+		
+		boolean noexc, exc;
+		Administrator a = administrators.get(0);
+		
+		try {
+			
+			Administrator res = testService.findAdministrator(a.getUserName());
+			assertEquals(a, res);
+			noexc = true;
+		}
+		catch (Exception e) {
+			noexc = false;
+		}
+		
+		try {
+			
+			testService.findAdministrator(experimenters.get(0).getUserName());
+			exc = false;
+		}
+		catch (NoSuchUserException e) {
+			exc = true;
+		}
+		
+		assertTrue(noexc);
+		assertTrue(exc);
+	}
+	
+	@Test
+	public void testFindExperimenter1() {
+		
+		boolean noexc, exc;
+		Experimenter e = experimenters.get(0);
+		
+		try {
+			
+			Experimenter res = testService.findExperimenter(e.getId());
+			assertEquals(e, res);
+			noexc = true;
+		}
+		catch (Exception ex) {
+			noexc = false;
+		}
+		
+		try {
+			
+			testService.findExperimenter(administrators.get(0).getId());
+			exc = false;
+		}
+		catch (NoSuchUserException ex) {
+			exc = true;
+		}
+		
+		assertTrue(noexc);
+		assertTrue(exc);
+	}
+	
+	public void testFindExperimenter2() {
+		
+		boolean noexc, exc;
+		Experimenter e = experimenters.get(0);
+		
+		try {
+			
+			Experimenter res = testService.findExperimenter(e.getUserName());
+			assertEquals(e, res);
+			noexc = true;
+		}
+		catch (Exception ex) {
+			noexc = false;
+		}
+		
+		try {
+			
+			testService.findExperimenter(administrators.get(0).getUserName());
+			exc = false;
+		}
+		catch (NoSuchUserException ex) {
+			exc = true;
+		}
+		
+		assertTrue(noexc);
+		assertTrue(exc);
+	}
+	
+	@Test
+	public void testFindParticipant1() {
+		
+		boolean noexc, exc;
+		Participant p = participants.get(0);
+		
+		try {
+			
+			Participant res = testService.findParticipant(p.getId());
+			assertEquals(p, res);
+			noexc = true;
+		}
+		catch (Exception e) {
+			noexc = false;
+		}
+		
+		try {
+			
+			testService.findParticipant(administrators.get(0).getId());
+			exc = false;
+		}
+		catch (NoSuchUserException e) {
+			exc = true;
+		}
+		
+		assertTrue(noexc);
+		assertTrue(exc);
+	}
+	
+	@Test
+	public void testFindParticipant2() {
+		
+		boolean noexc, exc;
+		Participant p = participants.get(0);
+		
+		try {
+			
+			Participant res = testService.findParticipant(p.getUserName());
+			assertEquals(p, res);
+			noexc = true;
+		}
+		catch (Exception e) {
+			noexc = false;
+		}
+		
+		try {
+			
+			testService.findParticipant(administrators.get(0).getUserName());
+			exc = false;
+		}
+		catch (NoSuchUserException e) {
+			exc = true;
+		}
+		
+		assertTrue(noexc);
+		assertTrue(exc);
+	}
+	
+	@Test
+	public void testAddAdministrator() {
+		
+		boolean noexc, exc;
+		String newName = "newAdmin";
+		String existingName = participants.get(0).getUserName();
+		Administrator expected = new Administrator(newName, encryptedPassword, adminRoles);
+		when(administratorRepository.save(any(Administrator.class))).thenReturn(expected);
+		
+		try {
+			
+			Administrator newAdmin = testService.addAdministrator(newName, password);
+			assertEquals(newName, newAdmin.getUserName());
+			assertEquals(encryptedPassword, newAdmin.getPassword());
+			assertIterableEquals(adminRoles, newAdmin.getRoles());
+			noexc = true;
+		}
+		catch (Exception e) {
+			noexc = false;
+			System.out.println("EXCEPTION: " + e);
+		}
+		
+		try {
+			
+			testService.addAdministrator(existingName, password);
+			exc = false;
+		}
+		catch (UserExistsException e) {
+			exc = true;
+		}
+		
+		assertTrue(noexc);
+		assertTrue(exc);
+	}
+	
+	@Test
+	public void testAddExperimenter() {
+		
+		
 	}
 }
 
