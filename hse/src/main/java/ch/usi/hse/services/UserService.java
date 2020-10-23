@@ -314,19 +314,217 @@ public class UserService {
 		
 		Set<Role> roles = new HashSet<>();
 		roles.add(roleRepository.findByRole("EXPERIMENTER"));
-		
+
 		String pwd = bCryptPasswordEncoder.encode(password);
 		
 		Experimenter newExperimenter = new Experimenter(userName, pwd, roles);
-		
+
 		Experimenter saved = experimenterRepository.save(newExperimenter);
+		
+		return saved;
+	}
+	
+	/**
+	 * Creates a new Participant and adds it to the database
+	 * 
+	 * @param userName
+	 * @param password
+	 * @return Participant
+	 * @throws UserExistsException
+	 */
+	public Participant addParticipant(String userName, String password) 
+		throws UserExistsException {
+		
+		if (userRepository.existsByUserName(userName)) {
+			throw new UserExistsException(userName);
+		}
+		
+		Set<Role> roles = new HashSet<>();
+		roles.add(roleRepository.findByRole("PARTICIPANT"));
+		
+		String pwd = bCryptPasswordEncoder.encode(password);
+		
+		Participant newParticipant = new Participant(userName, pwd, roles);
+		
+		Participant saved = participantRepository.save(newParticipant);
 		
 		return saved;
 	}
 	
 	// UPDATE EXISTING USERS
 	
+	/**
+	 * Updates an administrator given an Administrator instance with matching id
+	 * 
+	 * @param administrator
+	 * @return Administrator
+	 * @throws NoSuchUserException
+	 * @throws UserExistsException
+	 */
+	public Administrator updateAdministrator(Administrator administrator) 
+		throws NoSuchUserException, UserExistsException {
+		
+		int id = administrator.getId();
+		
+		if (! administratorRepository.existsById(id)) {
+			throw new NoSuchUserException("administrator", id);
+		}
+		
+		Administrator found = administratorRepository.findById(id);
+		
+		// Update userName
+		
+		String name = administrator.getUserName();
+		
+		if (! name.equals(found.getUserName())) {
+			
+			if (userRepository.existsByUserName(name)) {
+				throw new UserExistsException(name);
+			}
+			
+			found.setUserName(name);
+		}
+		
+		// update password
+		
+		String password = administrator.getPassword();
+		
+		if (! password.equals(found.getPassword())) {
+
+			found.setPassword(bCryptPasswordEncoder.encode(password));
+		}
+		
+		Administrator updated = administratorRepository.save(found);
+		
+		return updated;
+	}
+	
+	/**
+	 * Updates an experimenter given an Experimenter instance with matching id
+	 * 
+	 * @param experimenter
+	 * @return Experimenter
+	 * @throws NoSuchUserException
+	 * @throws UserExistsException
+	 */
+	public Experimenter updateExperimenter(Experimenter experimenter) 
+		throws NoSuchUserException, UserExistsException {
+		
+		int id = experimenter.getId();
+		
+		if (! experimenterRepository.existsById(id)) {
+			throw new NoSuchUserException("experimenter", id);
+		}
+		
+		Experimenter found = experimenterRepository.findById(id);
+		
+		// Update userName
+		
+		String name = experimenter.getUserName();
+		
+		if (! name.equals(found.getUserName())) {
+			
+			if (userRepository.existsByUserName(name)) {
+				throw new UserExistsException(name);
+			}
+			
+			found.setUserName(name);
+		}
+		
+		// update password
+		
+		String password = experimenter.getPassword();
+		
+		if (! password.equals(found.getPassword())) {
+
+			found.setPassword(bCryptPasswordEncoder.encode(password));
+		}
+		
+		Experimenter updated = experimenterRepository.save(found);
+		
+		return updated;
+	}
+	
+	/**
+	 * Updates an participant given a Participant instance with matching id
+	 * 
+	 * @param participant
+	 * @return Participant
+	 * @throws NoSuchUserException
+	 * @throws UserExistsException
+	 */
+	public Participant updateParticipant(Participant participant) 
+		throws NoSuchUserException, UserExistsException {
+		
+		int id = participant.getId();
+		
+		if (! participantRepository.existsById(id)) {
+			throw new NoSuchUserException("experimenter", id);
+		}
+		
+		Participant found = participantRepository.findById(id);
+		
+		// Update userName
+		
+		String name = participant.getUserName();
+		
+		if (! name.equals(found.getUserName())) {
+			
+			if (userRepository.existsByUserName(name)) {
+				throw new UserExistsException(name);
+			}
+			
+			found.setUserName(name);
+		}
+		
+		// update password
+		
+		String password = participant.getPassword();
+		
+		if (! password.equals(found.getPassword())) {
+
+			found.setPassword(bCryptPasswordEncoder.encode(password));
+		}
+		
+		Participant updated = participantRepository.save(found);
+		
+		return updated;
+	}
+	
 	// DELETE SAVED USERS
+	
+	/**
+	 * removes the user with the given id
+	 * 
+	 * @param id
+	 * @throws NoSuchUserException
+	 */
+	public void removeUser(int id) throws NoSuchUserException {
+		
+		if (! userRepository.existsById(id)) {
+			throw new NoSuchUserException(id);
+		}
+		
+		User u = userRepository.findById(id);
+		userRepository.delete(u);
+	}
+	
+	/**
+	 * removes the user with the given user name
+	 * 
+	 * @param userName
+	 * @throws NoSuchUserException
+	 */
+	public void removeUser(String userName) throws NoSuchUserException {
+		
+		if (! userRepository.existsByUserName(userName)) {
+			throw new NoSuchUserException(userName);
+		}
+		
+		User u = userRepository.findByUserName(userName);
+		userRepository.delete(u);
+	}
+	
 }
 
 

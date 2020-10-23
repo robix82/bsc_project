@@ -101,7 +101,7 @@ public class UserServiceTest {
 		// roles
 		when(roleRepository.findByRole("ADMIN")).thenReturn(new Role(1, "ADMIN"));
 		when(roleRepository.findByRole("EXPERIMENTER")).thenReturn(new Role(2, "EXPERIMENTER"));
-		when(roleRepository.findByRole("PARTICICPANT")).thenReturn(new Role(1, "PARTICICPANT"));
+		when(roleRepository.findByRole("PARTICICPANT")).thenReturn(new Role(3, "PARTICICPANT"));
 		
 		// bCrypt
 		when(bCryptPasswordEncoder.encode(password)).thenReturn(encryptedPassword);
@@ -506,7 +506,330 @@ public class UserServiceTest {
 	@Test
 	public void testAddExperimenter() {
 		
+		boolean noexc, exc;
+		String newName = "newExperimenter";
+		String existingName = participants.get(0).getUserName();
+		Experimenter expected = new Experimenter(newName, encryptedPassword, experimenterRoles);
+		when(experimenterRepository.save(any(Experimenter.class))).thenReturn(expected);
 		
+		try {
+			
+			Experimenter newExperimenter = testService.addExperimenter(newName, password);
+			assertEquals(newName, newExperimenter.getUserName());
+			assertEquals(encryptedPassword, newExperimenter.getPassword());
+			assertIterableEquals(experimenterRoles, newExperimenter.getRoles());
+			noexc = true;
+		}
+		catch (Exception e) {
+			noexc = false;
+		}
+		
+		try {
+			
+			testService.addExperimenter(existingName, password);
+			exc = false;
+		}
+		catch (UserExistsException e) {
+			exc = true;
+		}
+		
+		assertTrue(noexc);
+		assertTrue(exc);
+	}
+	
+	@Test
+	public void testAddParticipant() {
+		
+		boolean noexc, exc;
+		String newName = "newParticipant";
+		String existingName = administrators.get(0).getUserName();
+		Participant expected = new Participant(newName, encryptedPassword, participantRoles);
+		when(participantRepository.save(any(Participant.class))).thenReturn(expected);
+		
+		try {
+			
+			Participant newParticipant = testService.addParticipant(newName, password);
+			assertEquals(newName, newParticipant.getUserName());
+			assertEquals(encryptedPassword, newParticipant.getPassword());
+			assertIterableEquals(participantRoles, newParticipant.getRoles());
+			noexc = true;
+		}
+		catch (Exception e) {
+			noexc = false;
+		}
+		
+		try {
+			
+			testService.addParticipant(existingName, password);
+			exc = false;
+		}
+		catch (UserExistsException e) {
+			exc = true;
+		}
+		
+		assertTrue(noexc);
+		assertTrue(exc);
+	}
+	
+	@Test
+	public void testUpdateAdministrator() {
+		
+		boolean noexc = false;
+		boolean exc1 = false;
+		boolean exc2 = false; 
+		String newName = "newAdmin";
+		String existingName = participants.get(0).getUserName();
+		String newPwd = "newPwd";
+		String newEncryptedPwd = "newPwd_e";
+		Administrator expected = new Administrator(newName, newEncryptedPwd, adminRoles);
+		when(administratorRepository.save(any(Administrator.class))).thenReturn(expected);
+		when(bCryptPasswordEncoder.encode(newPwd)).thenReturn(newEncryptedPwd);
+		
+		try {
+			
+			Administrator a = new Administrator(administrators.get(0).getId(), 
+												newName, 
+												newPwd, 
+												adminRoles);
+			
+			Administrator res = testService.updateAdministrator(a);
+			assertEquals(newName, res.getUserName());
+			assertEquals(newEncryptedPwd, res.getPassword());
+			assertIterableEquals(adminRoles, res.getRoles());
+			noexc = true;
+		}
+		catch (Exception e) {
+			noexc = false;
+		}
+		
+		try {
+			
+			Administrator a = new Administrator(participants.get(0).getId(), 
+												newName, 
+												newPwd, 
+												adminRoles);
+			
+			testService.updateAdministrator(a);
+			exc1 = false; 
+		}
+		catch (NoSuchUserException e) {
+			exc1 = true; 
+		}
+		catch (Exception ex) {
+			noexc = false;
+		}
+		
+		try {
+		
+			Administrator a = new Administrator(administrators.get(0).getId(), 
+												existingName, 
+												newPwd, 
+												adminRoles);
+
+			a.setUserName(existingName);
+			testService.updateAdministrator(a);
+			exc2 = false;
+		}
+		catch (UserExistsException e) {
+			exc2 = true;
+		}
+		catch (Exception ex) {
+			noexc = false;
+		}
+		
+		assertTrue(noexc);
+		assertTrue(exc1);
+		assertTrue(exc2);
+	}
+
+	@Test
+	public void testUpdateExperimenter() {
+		
+		boolean noexc = false;
+		boolean exc1 = false;
+		boolean exc2 = false; 
+		String newName = "newExperimenter";
+		String existingName = participants.get(0).getUserName();
+		String newPwd = "newPwd";
+		String newEncryptedPwd = "newPwd_e";
+		Experimenter expected = new Experimenter(newName, newEncryptedPwd, experimenterRoles);
+		when(experimenterRepository.save(any(Experimenter.class))).thenReturn(expected);
+		when(bCryptPasswordEncoder.encode(newPwd)).thenReturn(newEncryptedPwd);
+		
+		try {
+			
+			Experimenter newExp = new Experimenter(experimenters.get(0).getId(),
+												   newName,
+												   newPwd,
+												   experimenterRoles);
+			
+			Experimenter res = testService.updateExperimenter(newExp);
+			assertEquals(newName, res.getUserName());
+			assertEquals(newEncryptedPwd, res.getPassword());
+			assertIterableEquals(experimenterRoles, res.getRoles());
+			noexc = true;
+		}
+		catch (Exception e) {
+			noexc = false;
+		}
+		
+		try {
+			
+			Experimenter newExp = new Experimenter(administrators.get(0).getId(),
+												   newName,
+												   newPwd,
+												   experimenterRoles);
+			
+			testService.updateExperimenter(newExp);
+			exc1 = false;
+		}
+		catch (NoSuchUserException e) {
+			exc1 = true;
+		}
+		catch (Exception ex) {
+			noexc = false;
+		}
+		
+		try {
+			
+			Experimenter newExp = new Experimenter(experimenters.get(0).getId(),
+												   existingName,
+												   newPwd,
+												   experimenterRoles);
+
+			testService.updateExperimenter(newExp);
+			exc2 = false;
+		}
+		catch (UserExistsException e) {
+			exc2 = true;
+		}
+		catch (Exception ex) {
+			noexc = false;
+		}
+		
+		assertTrue(noexc);
+		assertTrue(exc1);
+		assertTrue(exc2);
+	}
+	
+	@Test
+	public void testUpdateParticipant() {
+		
+		boolean noexc = false;
+		boolean exc1 = false;
+		boolean exc2 = false; 
+		String newName = "newParticipant";
+		String existingName = administrators.get(0).getUserName();
+		String newPwd = "newPwd";
+		String newEncryptedPwd = "newPwd_e";
+		Participant expected = new Participant(newName, newEncryptedPwd, participantRoles);
+		when(participantRepository.save(any(Participant.class))).thenReturn(expected);
+		when(bCryptPasswordEncoder.encode(newPwd)).thenReturn(newEncryptedPwd);
+		
+		try {
+			
+			Participant newPart = new Participant(participants.get(0).getId(),
+												  newName,
+												  newPwd,
+												  participantRoles);
+			
+			Participant res = testService.updateParticipant(newPart);
+			assertEquals(newName, res.getUserName());
+			assertEquals(newEncryptedPwd, res.getPassword());
+			assertIterableEquals(participantRoles, res.getRoles());
+			noexc = true;
+		}
+		catch (Exception e) {
+			noexc = false;
+		}
+		
+		try {
+			
+			Participant newPart = new Participant(administrators.get(0).getId(),
+												  newName,
+												  newPwd,
+												  participantRoles);
+			
+			testService.updateParticipant(newPart);
+			exc1 = false;
+		}
+		catch (NoSuchUserException e) {
+			exc1 = true;
+		}
+		catch (Exception e) {
+			noexc = false;
+		}
+		
+		try {
+			
+			Participant newPart = new Participant(participants.get(0).getId(),
+												  existingName,
+												  newPwd,
+												  participantRoles);
+							
+			testService.updateParticipant(newPart);
+			exc2 = false;
+		}
+		catch (UserExistsException e) {
+			exc2 = true;
+		}
+		catch (Exception ex) {
+			noexc = false;
+		}
+		
+		assertTrue(noexc);
+		assertTrue(exc1);
+		assertTrue(exc2);
+	}
+	
+	@Test
+	public void testRemoveUser1() {
+		
+		boolean noexc, exc;
+		
+		try {
+			testService.removeUser(administrators.get(0).getId());
+			noexc = true;
+		}
+		catch (Exception e) {
+			noexc = false;
+		}
+		
+		try {
+			testService.removeUser(administrators.get(0).getId() + 999);
+			exc = false;
+		}
+		catch (NoSuchUserException e) {
+			exc = true;
+		}
+		
+		assertTrue(noexc);
+		assertTrue(exc);
+	}
+	
+	@Test
+	public void testRemoveUser2() {
+		
+		boolean noexc, exc;
+		
+		try {
+			testService.removeUser(administrators.get(0).getUserName());
+			noexc = true;
+		}
+		catch (Exception e) {
+			noexc = false;
+		}
+		
+		try {
+			testService.removeUser("xxx");
+			exc = false;
+		}
+		catch (NoSuchUserException e) {
+			exc = true;
+		}
+		
+		assertTrue(noexc);
+		assertTrue(exc);
 	}
 }
 
