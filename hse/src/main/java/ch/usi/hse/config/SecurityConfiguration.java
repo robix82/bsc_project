@@ -22,11 +22,18 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		
 		http  .csrf().disable()
 			.authorizeRequests()
-			.antMatchers("/").permitAll()
+			.antMatchers("/").permitAll() 
+			
+			// unrestricted access during development
 			.antMatchers("/experiments/**").permitAll()
 			.antMatchers("/indexing/**").permitAll()
+			.antMatchers("/admin/**").permitAll();
+			
+			/*
+			.antMatchers("/experiments/**").hasAuthority("EXPERIMENTER")
+			.antMatchers("/indexing/**").hasAuthority("PARTICIPANT")
 			.antMatchers("/admin/**").hasAuthority("ADMIN");
-		
+			*/
 		
 		/*
 			.anyRequest()

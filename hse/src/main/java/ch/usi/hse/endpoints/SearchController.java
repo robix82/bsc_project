@@ -1,4 +1,4 @@
-package ch.usi.hse.ui_controllers;
+package ch.usi.hse.endpoints;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,7 +16,7 @@ import ch.usi.hse.services.SearchService;
  * 
  */
 @Controller
-public class SearchUiController {
+public class SearchController {
 
 	@Autowired
 	private SearchService searchService;

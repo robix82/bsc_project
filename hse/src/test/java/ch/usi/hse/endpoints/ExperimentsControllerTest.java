@@ -1,4 +1,4 @@
-package ch.usi.hse.ui_controllers;
+package ch.usi.hse.endpoints;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -12,15 +12,15 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class IndexingUiControllerTest {
+public class ExperimentsControllerTest {
 
 	@Autowired
 	private MockMvc mvc;
 	
 	@Test
-	public void testGetIndexingUi() throws Exception {
+	public void testGetExperimentsUi() throws Exception {
 		
-		mvc.perform(get("/indexing")).andExpect(status().isOk())
-								.andExpect(view().name("indexing"));
+		mvc.perform(get("/experiments")).andExpect(status().isOk())
+								        .andExpect(view().name("experiments"));
 	}
 }

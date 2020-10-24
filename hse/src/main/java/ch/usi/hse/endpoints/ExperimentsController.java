@@ -1,28 +1,28 @@
-package ch.usi.hse.ui_controllers;
+package ch.usi.hse.endpoints;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
- * Controller class for the indexing UI page
+ * Controller class for the experiments UI page
  * 
  * @author robert.jans@usi.ch
  *
  */
 @Controller
-public class IndexingUiController {
+public class ExperimentsController {
 
 	/**
-	 * Serves the main indexing UI page
+	 * Serves the main experiments UI
 	 * 
 	 * @return ModelAndView
 	 */
-	@GetMapping("/indexing")
-	public ModelAndView getIndexingUi() {
+	@GetMapping("/experiments")
+	public ModelAndView getExperimentsUi() {
 		
 		ModelAndView mav = new ModelAndView();
-		mav.setViewName("indexing");
+		mav.setViewName("experiments");
 		
 		return mav;
 	}

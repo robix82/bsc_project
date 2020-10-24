@@ -1,4 +1,4 @@
-package ch.usi.hse.ui_controllers;
+package ch.usi.hse.endpoints;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
@@ -23,7 +23,7 @@ import ch.usi.hse.services.SearchService;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class SearchUiControllerTest {
+public class SearchControllerTest {
 
 	@Autowired
 	private MockMvc mvc;
