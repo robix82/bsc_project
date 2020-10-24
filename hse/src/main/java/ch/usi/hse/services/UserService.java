@@ -233,7 +233,7 @@ public class UserService {
 		}
 		
 		return experimenterRepository.findByUserName(userName);
-	}
+	} 
 	
 	/**
 	 * returns a saved Participant given its id
@@ -253,7 +253,7 @@ public class UserService {
 	
 	/**
 	 * returns a saved Participant given its user name
-	 * 
+	 *  
 	 * @param userName
 	 * @return Participant
 	 * @throws NoSuchUserException
@@ -273,13 +273,14 @@ public class UserService {
 	/**
 	 * Creates a new Administrator and adds it to the database
 	 * 
-	 * @param userName
-	 * @param password
+	 * @param administrator
 	 * @return Administrator
 	 * @throws UserExistsException
 	 */
-	public Administrator addAdministrator(String userName, String password)
+	public Administrator addAdministrator(Administrator administrator)
 		throws UserExistsException {
+		
+		String userName = administrator.getUserName();
 		
 		if (userRepository.existsByUserName(userName)) {
 			throw new UserExistsException(userName);
@@ -288,25 +289,27 @@ public class UserService {
 		Set<Role> roles = new HashSet<>();
 		roles.add(roleRepository.findByRole("ADMIN"));
 		
-		String pwd = bCryptPasswordEncoder.encode(password);
+		String pwd = bCryptPasswordEncoder.encode(administrator.getPassword());
 		
-		Administrator newAdmin = new Administrator(userName, pwd, roles);
+		Administrator newAdmin = new Administrator(userName, pwd);
+		newAdmin.setRoles(roles);
 		
 		Administrator saved = administratorRepository.save(newAdmin);
-		
+		 
 		return saved;
 	}
 	
 	/**
 	 * Creates a new Experimenter and adds it to the database
 	 * 
-	 * @param userName
-	 * @param password
+	 * @param experimenter
 	 * @return Experimenter
 	 * @throws UserExistsException
 	 */
-	public Experimenter addExperimenter(String userName, String password) 
+	public Experimenter addExperimenter(Experimenter experimenter) 
 		throws UserExistsException {
+		
+		String userName = experimenter.getUserName();
 		
 		if (userRepository.existsByUserName(userName)) {
 			throw new UserExistsException(userName);
@@ -315,9 +318,10 @@ public class UserService {
 		Set<Role> roles = new HashSet<>();
 		roles.add(roleRepository.findByRole("EXPERIMENTER"));
 
-		String pwd = bCryptPasswordEncoder.encode(password);
+		String pwd = bCryptPasswordEncoder.encode(experimenter.getPassword());
 		
-		Experimenter newExperimenter = new Experimenter(userName, pwd, roles);
+		Experimenter newExperimenter = new Experimenter(userName, pwd);
+		newExperimenter.setRoles(roles);
 
 		Experimenter saved = experimenterRepository.save(newExperimenter);
 		
@@ -327,13 +331,14 @@ public class UserService {
 	/**
 	 * Creates a new Participant and adds it to the database
 	 * 
-	 * @param userName
-	 * @param password
+	 * @param participant
 	 * @return Participant
 	 * @throws UserExistsException
 	 */
-	public Participant addParticipant(String userName, String password) 
+	public Participant addParticipant(Participant participant) 
 		throws UserExistsException {
+		
+		String userName = participant.getUserName();
 		
 		if (userRepository.existsByUserName(userName)) {
 			throw new UserExistsException(userName);
@@ -342,9 +347,10 @@ public class UserService {
 		Set<Role> roles = new HashSet<>();
 		roles.add(roleRepository.findByRole("PARTICIPANT"));
 		
-		String pwd = bCryptPasswordEncoder.encode(password);
+		String pwd = bCryptPasswordEncoder.encode(participant.getPassword());
 		
-		Participant newParticipant = new Participant(userName, pwd, roles);
+		Participant newParticipant = new Participant(userName, pwd);
+		newParticipant.setRoles(roles);
 		
 		Participant saved = participantRepository.save(newParticipant);
 		

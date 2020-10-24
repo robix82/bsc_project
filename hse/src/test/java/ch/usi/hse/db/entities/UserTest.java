@@ -20,18 +20,18 @@ public class UserTest {
 			super(id, userName, password, roles);
 		}
 		
-		public TestUser(String userName, String password, Set<Role> roles) {
-			super(userName, password, roles);
+		public TestUser(String userName, String password) {
+			super(userName, password);
 		}
 	}
-	
+	 
 	private static int testId;
 	private static String testName;
 	private static String testPwd;
 	private static Set<Role> testRoles;
 	
 	@BeforeAll
-	public static void init() {
+	public static void init() { 
 		
 		testId = 23;
 		testName = "name";
@@ -69,11 +69,10 @@ public class UserTest {
 	@Test
 	public void testConstructor3() {
 		
-		User u = new TestUser(testName, testPwd, testRoles);
+		User u = new TestUser(testName, testPwd);
 		assertEquals(testName, u.getUserName());
 		assertEquals(testPwd, u.getPassword());
 		assertTrue(u.getActive());
-		assertIterableEquals(testRoles, u.getRoles());
 	}
 	
 	@Test
@@ -127,6 +126,21 @@ public class UserTest {
 		u.removeRole(r);
 		
 		assertFalse(u.getRoles().contains(r));
+	}
+	
+	@Test
+	public void testEqualsAndHashCode() {
+		
+		User u1 = new TestUser(1, "name1", "pwd", testRoles); 
+		User u2 = new TestUser(2, "name1", "pwd", testRoles);
+		User u3 = new TestUser(3, "name2", "pwd", testRoles);
+		
+		assertTrue(u1.equals(u1));
+		assertTrue(u1.equals(u2));
+		assertFalse(u1.equals(u3));
+		
+		assertEquals(u1.hashCode(), u2.hashCode());
+		assertNotEquals(u1.hashCode(), u3.hashCode());
 	}
 }
 

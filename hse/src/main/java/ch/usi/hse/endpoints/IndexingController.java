@@ -2,6 +2,7 @@ package ch.usi.hse.endpoints;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -11,6 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
  *
  */
 @Controller
+@RequestMapping("/indexing")
 public class IndexingController {
 
 	/**
@@ -18,7 +20,7 @@ public class IndexingController {
 	 * 
 	 * @return ModelAndView
 	 */
-	@GetMapping("/indexing")
+	@GetMapping("/ui")
 	public ModelAndView getIndexingUi() {
 		
 		ModelAndView mav = new ModelAndView();

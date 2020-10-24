@@ -52,11 +52,10 @@ public class AdministratorTest {
 	@Test
 	public void testConstructor3() {
 		
-		Administrator a = new Administrator(testName, testPwd, testRoles);
+		Administrator a = new Administrator(testName, testPwd);
 		
 		assertEquals(testName, a.getUserName());
 		assertEquals(testPwd, a.getPassword());
-		assertIterableEquals(testRoles, a.getRoles());
 	}
 }
 

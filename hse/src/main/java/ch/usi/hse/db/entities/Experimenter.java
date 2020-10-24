@@ -23,8 +23,8 @@ public class Experimenter extends User {
 		super(id, userName, password, roles);
 	}
 	
-	public Experimenter(String userName, String password, Set<Role> roles) {
+	public Experimenter(String userName, String password) {
 		
-		super(userName, password, roles);
+		super(userName, password);
 	}
 }

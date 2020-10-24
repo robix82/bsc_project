@@ -52,11 +52,10 @@ public class ExperimenterTest {
 	@Test
 	public void testConstructor3() {
 		
-		Experimenter e = new Experimenter(testName, testPwd, testRoles);
+		Experimenter e = new Experimenter(testName, testPwd);
 		
 		assertEquals(testName, e.getUserName());
 		assertEquals(testPwd, e.getPassword());
-		assertIterableEquals(testRoles, e.getRoles());
 	}
 }
 

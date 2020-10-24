@@ -1,14 +1,14 @@
 package ch.usi.hse.db.entities;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.*;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
- * Base class representing users for seccurity/authentication
+ * Base class representing users for security/authentication
  * Planned subclasses: Administrator, Experimenter, Participant
  * 
  * @author robert.jans@usi.ch
@@ -23,7 +23,7 @@ public abstract class User {
 	@Column(name="user_id")
 	protected Integer id;
 	
-	@Column(name="user_name")
+	@Column(name="user_name", unique=true)
 	protected String userName;
 	
 	@Column(name="password")
@@ -31,8 +31,7 @@ public abstract class User {
 	
 	@Column(name="active")
 	protected boolean active;
-	
-	@JsonIgnore
+
 	@ManyToMany(cascade=CascadeType.MERGE)
 	@JoinTable(name="user_role", joinColumns=@JoinColumn(name="user_id"), 
 			   inverseJoinColumns=@JoinColumn(name="role_id"))
@@ -52,17 +51,17 @@ public abstract class User {
 		this.id = id;
 		this.userName = userName;
 		this.password = password;
-		active = true;
+		active = true; 
 		this.roles = roles;
 	}
 	
-	public User(String userName, String password, Set<Role> roles) {
+	public User(String userName, String password) {
 		
 		id = 0;
 		this.userName = userName;
 		this.password = password;
 		active = true;
-		this.roles = roles;
+		roles = new HashSet<>();
 	}
 
 	public int getId() {
@@ -111,6 +110,28 @@ public abstract class User {
 	
 	public void removeRole(Role role) {
 		roles.remove(role);
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		
+		if (o == this) {
+			return true;
+		}
+		
+		if (! (o instanceof User)) {
+			return false;
+		}
+		
+		User u = (User) o;
+		
+		return u.userName.equals(userName);
+	}
+	
+	@Override
+	public int hashCode() {
+		
+		return Objects.hash(userName);
 	}
 }
 

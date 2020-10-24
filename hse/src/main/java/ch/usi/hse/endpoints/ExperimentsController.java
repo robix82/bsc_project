@@ -2,6 +2,7 @@ package ch.usi.hse.endpoints;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -11,6 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
  *
  */
 @Controller
+@RequestMapping("/experiments")
 public class ExperimentsController {
 
 	/**
@@ -18,7 +20,7 @@ public class ExperimentsController {
 	 * 
 	 * @return ModelAndView
 	 */
-	@GetMapping("/experiments")
+	@GetMapping("/ui")
 	public ModelAndView getExperimentsUi() {
 		
 		ModelAndView mav = new ModelAndView();

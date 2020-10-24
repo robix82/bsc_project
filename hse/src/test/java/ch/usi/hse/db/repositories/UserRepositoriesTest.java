@@ -50,11 +50,20 @@ public class UserRepositoriesTest {
 		participantRoles = new HashSet<>();
 		participantRoles.add(roleRepo.findByRole("PARTICICPANT"));
 		
+		admin = new Administrator("admin", "pwd");
+		experimenter = new Experimenter("experimenter", "pwd");
+		participant1 = new Participant("p1", "pwd");
+		participant2 = new Participant("p2", "pwd");
+		admin.setRoles(adminRoles);
+		experimenter.setRoles(experimenterRoles);
+		participant1.setRoles(participantRoles);
+		participant2.setRoles(participantRoles);
+		
 		userRepo.deleteAll();
-		admin = userRepo.save(new Administrator("admin", "pwd", adminRoles));
-		experimenter = userRepo.save(new Experimenter("experimenter", "pwd", experimenterRoles));
-		participant1 = userRepo.save(new Participant("p1", "pwd", participantRoles));
-		participant2 = userRepo.save(new Participant("p2", "pwd", participantRoles));				
+		admin = userRepo.save(admin);
+		experimenter = userRepo.save(experimenter);
+		participant1 = userRepo.save(participant1);
+		participant2 = userRepo.save(participant2);	 			
 	}
 	
 	@Test
@@ -116,14 +125,16 @@ public class UserRepositoriesTest {
 	@Test
 	public void testSave() {
 		
-		Administrator newAdmin = administratorRepo.save(
-									new Administrator("admin1", "pwd", adminRoles));
+		Administrator newAdmin = new Administrator("admin1", "pwd");
+		newAdmin.setRoles(adminRoles);
+		Experimenter newExperimenter = new Experimenter("experimenter1", "pwd");
+		newExperimenter.setRoles(experimenterRoles);
+		Participant newParticipant = new Participant("p3", "pwd");
+		newParticipant.setRoles(participantRoles);
 		
-		Experimenter newExperimenter = experimenterRepo.save(
-									new Experimenter("experimenter1", "pwd", experimenterRoles));
-		
-		Participant newParticipant = participantRepo.save(
-									new Participant("p3", "pwd", participantRoles));
+		administratorRepo.save(newAdmin);
+		experimenterRepo.save(newExperimenter);
+		participantRepo.save(newParticipant);
 		
 		assertNotNull(newAdmin);
 		assertNotNull(newExperimenter);
