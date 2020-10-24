@@ -53,7 +53,7 @@ public class UserService {
 		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
 	}
 	
-	// COUNT SAVVED USERS
+	// COUNT SAVED USERS
 	
 	/**
 	 * returns the total number of saved users

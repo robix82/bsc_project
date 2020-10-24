@@ -50,6 +50,7 @@ public class UserTest {
 		assertEquals("", u.getUserName());
 		assertEquals("", u.getPassword());
 		assertNotNull(u.getRoles());
+		assertTrue(u.getActive());
 		assertEquals(0, u.getRoles().size());
 	}
 	
@@ -61,6 +62,7 @@ public class UserTest {
 		assertEquals(testId, u.getId());
 		assertEquals(testName, u.getUserName());
 		assertEquals(testPwd, u.getPassword());
+		assertTrue(u.getActive());assertTrue(u.getActive());
 		assertIterableEquals(testRoles, u.getRoles());
 	}
 	
@@ -70,6 +72,7 @@ public class UserTest {
 		User u = new TestUser(testName, testPwd, testRoles);
 		assertEquals(testName, u.getUserName());
 		assertEquals(testPwd, u.getPassword());
+		assertTrue(u.getActive());
 		assertIterableEquals(testRoles, u.getRoles());
 	}
 	
@@ -86,11 +89,13 @@ public class UserTest {
 		u.setId(testId);
 		u.setUserName(testName);
 		u.setPassword(testPwd);
+		u.setActive(false);
 		u.setRoles(testRoles);
 		
 		assertEquals(testId, u.getId());
 		assertEquals(testName, u.getUserName());
 		assertEquals(testPwd, u.getPassword());
+		assertFalse(u.getActive());
 		assertIterableEquals(testRoles, u.getRoles());
 	}
 	

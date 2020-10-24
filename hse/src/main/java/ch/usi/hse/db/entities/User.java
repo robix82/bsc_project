@@ -29,6 +29,9 @@ public abstract class User {
 	@Column(name="password")
 	protected String password;
 	
+	@Column(name="active")
+	protected boolean active;
+	
 	@JsonIgnore
 	@ManyToMany(cascade=CascadeType.MERGE)
 	@JoinTable(name="user_role", joinColumns=@JoinColumn(name="user_id"), 
@@ -40,6 +43,7 @@ public abstract class User {
 		id = 0;
 		userName = "";
 		password = "";
+		active = true;
 		roles = new HashSet<>();
 	}
 	
@@ -48,6 +52,7 @@ public abstract class User {
 		this.id = id;
 		this.userName = userName;
 		this.password = password;
+		active = true;
 		this.roles = roles;
 	}
 	
@@ -56,6 +61,7 @@ public abstract class User {
 		id = 0;
 		this.userName = userName;
 		this.password = password;
+		active = true;
 		this.roles = roles;
 	}
 
@@ -69,6 +75,10 @@ public abstract class User {
 	
 	public String getPassword() {
 		return password;
+	}
+	
+	public boolean getActive() {
+		return active;
 	}
 	
 	public Set<Role> getRoles() {
@@ -85,6 +95,10 @@ public abstract class User {
 	
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	
+	public void setActive(boolean active) {
+		this.active = active;
 	}
 	
 	public void setRoles(Set<Role> roles) {
