@@ -1,0 +1,9 @@
+ch.usi.hse
+ch.usi.hse.config
+ch.usi.hse.db.entities
+ch.usi.hse.db.repositories
+ch.usi.hse.dto
+ch.usi.hse.dummie_data
+ch.usi.hse.endpoints
+ch.usi.hse.exceptions
+ch.usi.hse.services

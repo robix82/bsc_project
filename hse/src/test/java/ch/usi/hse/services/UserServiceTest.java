@@ -253,7 +253,7 @@ public class UserServiceTest {
 			noexc = false;
 		}
 		
-		try {
+		try { 
 			
 			testService.findUser(u.getId() + 999);
 			exc = false;
@@ -382,6 +382,7 @@ public class UserServiceTest {
 		assertTrue(exc);
 	}
 	
+	@Test
 	public void testFindExperimenter2() {
 		
 		boolean noexc, exc;
@@ -474,12 +475,13 @@ public class UserServiceTest {
 		boolean noexc, exc;
 		String newName = "newAdmin";
 		String existingName = participants.get(0).getUserName();
-		Administrator expected = new Administrator(newName, encryptedPassword, adminRoles);
+		Administrator expected = new Administrator(newName, encryptedPassword);
+		expected.setRoles(adminRoles);
 		when(administratorRepository.save(any(Administrator.class))).thenReturn(expected);
 		
 		try {
 			
-			Administrator newAdmin = testService.addAdministrator(newName, password);
+			Administrator newAdmin = testService.addAdministrator(new Administrator(newName, encryptedPassword));
 			assertEquals(newName, newAdmin.getUserName());
 			assertEquals(encryptedPassword, newAdmin.getPassword());
 			assertIterableEquals(adminRoles, newAdmin.getRoles());
@@ -492,7 +494,7 @@ public class UserServiceTest {
 		
 		try {
 			
-			testService.addAdministrator(existingName, password);
+			testService.addAdministrator(new Administrator(existingName, encryptedPassword));
 			exc = false;
 		}
 		catch (UserExistsException e) {
@@ -509,12 +511,13 @@ public class UserServiceTest {
 		boolean noexc, exc;
 		String newName = "newExperimenter";
 		String existingName = participants.get(0).getUserName();
-		Experimenter expected = new Experimenter(newName, encryptedPassword, experimenterRoles);
+		Experimenter expected = new Experimenter(newName, encryptedPassword);
+		expected.setRoles(experimenterRoles);
 		when(experimenterRepository.save(any(Experimenter.class))).thenReturn(expected);
 		
 		try {
 			
-			Experimenter newExperimenter = testService.addExperimenter(newName, password);
+			Experimenter newExperimenter = testService.addExperimenter(new Experimenter(newName, encryptedPassword));
 			assertEquals(newName, newExperimenter.getUserName());
 			assertEquals(encryptedPassword, newExperimenter.getPassword());
 			assertIterableEquals(experimenterRoles, newExperimenter.getRoles());
@@ -526,7 +529,7 @@ public class UserServiceTest {
 		
 		try {
 			
-			testService.addExperimenter(existingName, password);
+			testService.addExperimenter(new Experimenter(existingName, encryptedPassword));
 			exc = false;
 		}
 		catch (UserExistsException e) {
@@ -543,12 +546,13 @@ public class UserServiceTest {
 		boolean noexc, exc;
 		String newName = "newParticipant";
 		String existingName = administrators.get(0).getUserName();
-		Participant expected = new Participant(newName, encryptedPassword, participantRoles);
+		Participant expected = new Participant(newName, encryptedPassword);
+		expected.setRoles(participantRoles);
 		when(participantRepository.save(any(Participant.class))).thenReturn(expected);
 		
 		try {
 			
-			Participant newParticipant = testService.addParticipant(newName, password);
+			Participant newParticipant = testService.addParticipant(new Participant(newName, encryptedPassword));
 			assertEquals(newName, newParticipant.getUserName());
 			assertEquals(encryptedPassword, newParticipant.getPassword());
 			assertIterableEquals(participantRoles, newParticipant.getRoles());
@@ -560,7 +564,7 @@ public class UserServiceTest {
 		
 		try {
 			
-			testService.addParticipant(existingName, password);
+			testService.addParticipant(new Participant(existingName, encryptedPassword));
 			exc = false;
 		}
 		catch (UserExistsException e) {
@@ -581,7 +585,8 @@ public class UserServiceTest {
 		String existingName = participants.get(0).getUserName();
 		String newPwd = "newPwd";
 		String newEncryptedPwd = "newPwd_e";
-		Administrator expected = new Administrator(newName, newEncryptedPwd, adminRoles);
+		Administrator expected = new Administrator(newName, newEncryptedPwd);
+		expected.setRoles(adminRoles);
 		when(administratorRepository.save(any(Administrator.class))).thenReturn(expected);
 		when(bCryptPasswordEncoder.encode(newPwd)).thenReturn(newEncryptedPwd);
 		
@@ -652,7 +657,8 @@ public class UserServiceTest {
 		String existingName = participants.get(0).getUserName();
 		String newPwd = "newPwd";
 		String newEncryptedPwd = "newPwd_e";
-		Experimenter expected = new Experimenter(newName, newEncryptedPwd, experimenterRoles);
+		Experimenter expected = new Experimenter(newName, newEncryptedPwd);
+		expected.setRoles(experimenterRoles);
 		when(experimenterRepository.save(any(Experimenter.class))).thenReturn(expected);
 		when(bCryptPasswordEncoder.encode(newPwd)).thenReturn(newEncryptedPwd);
 		
@@ -722,7 +728,8 @@ public class UserServiceTest {
 		String existingName = administrators.get(0).getUserName();
 		String newPwd = "newPwd";
 		String newEncryptedPwd = "newPwd_e";
-		Participant expected = new Participant(newName, newEncryptedPwd, participantRoles);
+		Participant expected = new Participant(newName, newEncryptedPwd);
+		expected.setRoles(participantRoles);
 		when(participantRepository.save(any(Participant.class))).thenReturn(expected);
 		when(bCryptPasswordEncoder.encode(newPwd)).thenReturn(newEncryptedPwd);
 		

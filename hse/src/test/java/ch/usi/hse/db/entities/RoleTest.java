@@ -26,7 +26,7 @@ public class RoleTest {
 		assertEquals(testId, r.getId());
 		assertEquals(testRole, r.getRole());
 	}
-	
+	 
 	@Test
 	public void testConstructor3() {
 		
@@ -60,8 +60,7 @@ public class RoleTest {
 		assertTrue(r1.equals(r1));
 		assertTrue(r1.equals(r2));
 		assertFalse(r1.equals(r3));
-		
-		assertEquals(r1.hashCode(), r1.hashCode());
+
 		assertEquals(r1.hashCode(), r2.hashCode());
 		assertNotEquals(r1.hashCode(), r3.hashCode());
 	}

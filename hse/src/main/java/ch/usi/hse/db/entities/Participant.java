@@ -23,8 +23,8 @@ public class Participant extends User {
 		super(id, userName, password, roles);
 	}
 	
-	public Participant(String userName, String password, Set<Role> roles) {
+	public Participant(String userName, String password) {
 		
-		super(userName, password, roles);
+		super(userName, password);
 	}
 }

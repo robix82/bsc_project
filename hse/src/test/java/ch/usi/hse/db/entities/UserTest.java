@@ -20,18 +20,18 @@ public class UserTest {
 			super(id, userName, password, roles);
 		}
 		
-		public TestUser(String userName, String password, Set<Role> roles) {
-			super(userName, password, roles);
+		public TestUser(String userName, String password) {
+			super(userName, password);
 		}
 	}
-	
+	 
 	private static int testId;
 	private static String testName;
 	private static String testPwd;
 	private static Set<Role> testRoles;
 	
 	@BeforeAll
-	public static void init() {
+	public static void init() { 
 		
 		testId = 23;
 		testName = "name";
@@ -50,6 +50,7 @@ public class UserTest {
 		assertEquals("", u.getUserName());
 		assertEquals("", u.getPassword());
 		assertNotNull(u.getRoles());
+		assertTrue(u.getActive());
 		assertEquals(0, u.getRoles().size());
 	}
 	
@@ -61,16 +62,17 @@ public class UserTest {
 		assertEquals(testId, u.getId());
 		assertEquals(testName, u.getUserName());
 		assertEquals(testPwd, u.getPassword());
+		assertTrue(u.getActive());assertTrue(u.getActive());
 		assertIterableEquals(testRoles, u.getRoles());
 	}
 	
 	@Test
 	public void testConstructor3() {
 		
-		User u = new TestUser(testName, testPwd, testRoles);
+		User u = new TestUser(testName, testPwd);
 		assertEquals(testName, u.getUserName());
 		assertEquals(testPwd, u.getPassword());
-		assertIterableEquals(testRoles, u.getRoles());
+		assertTrue(u.getActive());
 	}
 	
 	@Test
@@ -86,11 +88,13 @@ public class UserTest {
 		u.setId(testId);
 		u.setUserName(testName);
 		u.setPassword(testPwd);
+		u.setActive(false);
 		u.setRoles(testRoles);
 		
 		assertEquals(testId, u.getId());
 		assertEquals(testName, u.getUserName());
 		assertEquals(testPwd, u.getPassword());
+		assertFalse(u.getActive());
 		assertIterableEquals(testRoles, u.getRoles());
 	}
 	
@@ -122,6 +126,21 @@ public class UserTest {
 		u.removeRole(r);
 		
 		assertFalse(u.getRoles().contains(r));
+	}
+	
+	@Test
+	public void testEqualsAndHashCode() {
+		
+		User u1 = new TestUser(1, "name1", "pwd", testRoles); 
+		User u2 = new TestUser(2, "name1", "pwd", testRoles);
+		User u3 = new TestUser(3, "name2", "pwd", testRoles);
+		
+		assertTrue(u1.equals(u1));
+		assertTrue(u1.equals(u2));
+		assertFalse(u1.equals(u3));
+		
+		assertEquals(u1.hashCode(), u2.hashCode());
+		assertNotEquals(u1.hashCode(), u3.hashCode());
 	}
 }
 

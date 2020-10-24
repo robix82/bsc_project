@@ -23,8 +23,8 @@ public class Administrator extends User {
 		super(id, userName, password, roles);
 	}
 	
-	public Administrator(String userName, String password, Set<Role> roles) {
+	public Administrator(String userName, String password) {
 		
-		super(userName, password, roles);
+		super(userName, password);
 	}
 }

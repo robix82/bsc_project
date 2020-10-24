@@ -21,7 +21,7 @@ public class ParticipantTest {
 		testId = 23;
 		testName = "name";
 		testPwd = "testPwd";
-		testRoles = new HashSet<>();
+		testRoles = new HashSet<>(); 
 		testRoles.add(new Role(1, "ROLE_1"));
 		testRoles.add(new Role(2, "ROLE_2"));
 	}
@@ -52,11 +52,10 @@ public class ParticipantTest {
 	@Test
 	public void testConstructor3() {
 		
-		Participant p = new Participant(testName, testPwd, testRoles);
+		Participant p = new Participant(testName, testPwd);
 		
 		assertEquals(testName, p.getUserName());
 		assertEquals(testPwd, p.getPassword());
-		assertIterableEquals(testRoles, p.getRoles());
 	}
 }
 
