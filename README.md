@@ -3,7 +3,7 @@ Experimental Apparatus for a Digital Health Literacy Experiment
 
 ## HSE (Health Search Engine)
 
-HSE is the core part of the apparatus, consisting in a special purpose Lucene based search engine. HSE is implemented as a Java SpringBoot web application, using Apache Maven for dependency management and build. Javadoc describing the individual classes an methods is available under [hse_doc](https://htmlpreview.github.io/?hse_doc/index.html).
+HSE is the core part of the apparatus, consisting in a special purpose Lucene based search engine. HSE is implemented as a Java SpringBoot web application, using Apache Maven for dependency management and build. Javadoc describing the individual classes an methods is available under [hse_doc](https://htmlpreview.github.io/?https://github.com/robix82/bsc_project/blob/experimental/hse_doc/index.html).
 
 ### Run using docker-compose
 
