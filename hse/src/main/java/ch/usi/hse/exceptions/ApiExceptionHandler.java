@@ -25,7 +25,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	@ExceptionHandler(UserExistsException.class) 
 	public ResponseEntity<Object> handleUserExists(UserExistsException e) {
 		
-		HttpStatus status = HttpStatus.BAD_REQUEST;
+		HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
 		
 		ApiError err = new ApiError(status, e);
 		

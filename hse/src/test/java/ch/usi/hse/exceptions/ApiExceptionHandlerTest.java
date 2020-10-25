@@ -21,12 +21,12 @@ public class ApiExceptionHandlerTest {
 	public void testHandleUserExists() {
 		
 		UserExistsException ex = new UserExistsException(23);
-		HttpStatus expectedStatus = HttpStatus.BAD_REQUEST;
+		HttpStatus expectedStatus = HttpStatus.UNPROCESSABLE_ENTITY;
 		ApiError expectedErr = new ApiError (expectedStatus, ex);
 		
 		ResponseEntity<Object> res = handler.handleUserExists(ex);
 		
-		HttpStatus actualStatus = res.getStatusCode();
+		HttpStatus actualStatus = res.getStatusCode(); 
 		ApiError actualErr = (ApiError) res.getBody();
 		
 		assertEquals(expectedStatus, actualStatus);
