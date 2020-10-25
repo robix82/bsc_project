@@ -23,7 +23,9 @@ public class ApiError {
 	
 	public ApiError() {}
 	
-	public ApiError(HttpStatus status, String errorType, String errorMessage) {
+	public ApiError(HttpStatus status, 
+					String errorType, 
+					String errorMessage) {
 		
 		this.status = status;
 		this.errorType = errorType;
@@ -66,7 +68,20 @@ public class ApiError {
 	public void setErrorMessage(String errorMessage) {
 		this.errorMessage = errorMessage;
 	}
+	
+	public void setTimstamp(LocalDateTime timestamp) {
+		this.timestamp = timestamp;
+	}
 }
+
+
+
+
+
+
+
+
+
 
 
 

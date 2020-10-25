@@ -25,7 +25,7 @@ import ch.usi.hse.exceptions.UserExistsException;
  * Service class for accessing the User persistence layer
  * 
  * @author robert.jans@usi.ch
- *
+ * 
  */
 @Service
 public class UserService {
@@ -36,7 +36,7 @@ public class UserService {
 	private ParticipantRepository participantRepository;
 	private RoleRepository roleRepository;
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
-	
+	 
 	@Autowired
 	public UserService(UserRepository userRepository,
 					   AdministratorRepository administratorRepository,
@@ -531,6 +531,15 @@ public class UserService {
 		userRepository.delete(u);
 	}
 	
+	public void clearExperimenters() {
+		
+		experimenterRepository.deleteAll();
+	}
+	
+	public void clearParticipants() {
+		
+		participantRepository.deleteAll();
+	}
 }
 
 
