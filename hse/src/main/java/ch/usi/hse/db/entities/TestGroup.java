@@ -11,7 +11,10 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+
 
 /**
  * db entity representing test groups
@@ -19,7 +22,7 @@ import javax.persistence.OneToMany;
  * @author robert.jans@usi.ch
  *
  */
-@Entity(name="group")
+@Entity(name="test_group")
 public class TestGroup {
 
 	@Id
@@ -30,8 +33,12 @@ public class TestGroup {
 	@Column(name="name")
 	private String name;
 	
-	@OneToMany(mappedBy="group_id", fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+	@OneToMany(mappedBy="testGroup", fetch=FetchType.LAZY, cascade=CascadeType.ALL)
 	private Set<Participant> participants;
+	
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="experiment_id")
+	private Experiment experiment;
 	
 	public TestGroup() {
 		
@@ -39,11 +46,12 @@ public class TestGroup {
 		participants = new HashSet<>();
 	}
 	
-	public TestGroup(int id, String name, Set<Participant> participants) {
+	public TestGroup(int id, String name, Set<Participant> participants, Experiment experiment) {
 		
 		this.id = id;
-		this.name = name;
+		this.name = name; 
 		this.participants = participants;
+		this.experiment = experiment;
 	}
 	
 	public TestGroup(String name, Set<Participant> participants) {
@@ -68,6 +76,10 @@ public class TestGroup {
 		return name;
 	}
 	
+	public Experiment getExperiment() {
+		return experiment;
+	}
+	
 	public Set<Participant> getParticipants() {
 		return participants;
 	}
@@ -78,6 +90,15 @@ public class TestGroup {
 	
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public void setExperiment(Experiment experiment) {
+		
+		this.experiment = experiment;
+		
+		for (Participant p : participants) {
+			p.setExperimentId(experiment.getId());
+		}
 	}
 	
 	public void setParticipants(Set<Participant> participants) {

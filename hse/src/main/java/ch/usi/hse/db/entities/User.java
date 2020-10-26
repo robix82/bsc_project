@@ -38,7 +38,7 @@ public abstract class User {
 	protected Set<Role> roles;
 	
 	protected User() {
-		
+		 
 		id = 0;
 		userName = "";
 		password = "";

@@ -10,22 +10,23 @@ import org.junit.jupiter.api.Test;
 
 public class ParticipantTest {
 
-	private static int testId, testExpId, testGroupId;
+	private static int testId, testExpId;
 	private static String testName, testPwd, testGroupName;
 	private static Set<Role> testRoles;
+	private static TestGroup testGroup;
 	
 	@BeforeAll
 	public static void init() {
 		
 		testId = 23;
 		testExpId = 24;
-		testGroupId = 25;
 		testGroupName = "g1";
 		testName = "name";
 		testPwd = "testPwd";
 		testRoles = new HashSet<>(); 
 		testRoles.add(new Role(1, "ROLE_1"));
 		testRoles.add(new Role(2, "ROLE_2"));
+		testGroup = new TestGroup(testGroupName);
 	}
 	
 	
@@ -46,12 +47,11 @@ public class ParticipantTest {
 	public void testCconstructor2() {
 		
 		Participant p = new Participant(testId, testName, testPwd, testRoles,
-										testExpId, testGroupId, testGroupName);
+										testExpId, testGroup);
 		
 		assertEquals(testId, p.getId());
 		assertEquals(testExpId, p.getExperimentId());
-		assertEquals(testGroupId, p.getGroupId());
-		assertEquals(testGroupName, p.getGroupName());
+		assertEquals(testGroup, p.getTestGroup());
 		assertEquals(testName, p.getUserName());
 		assertEquals(testPwd, p.getPassword());
 		assertIterableEquals(testRoles, p.getRoles());
@@ -83,15 +83,13 @@ public class ParticipantTest {
 		Participant p = new Participant();
 		
 		assertNotEquals(testExpId, p.getExperimentId());
-		assertNotEquals(testGroupId, p.getGroupId());
+		assertNotEquals(testGroup, p.getTestGroup());
 		
 		p.setExperimentId(testExpId);
-		p.setGroupId(testGroupId);
-		p.setGroupName(testGroupName);
+		p.setTestGroup(testGroup);
 		
 		assertEquals(testExpId, p.getExperimentId());
-		assertEquals(testGroupId, p.getGroupId());
-		assertEquals(testGroupName, p.getGroupName());
+		assertEquals(testGroup, p.getTestGroup());
 	}
 }
 

@@ -14,11 +14,14 @@ public class TestGroupTest {
 	private int testId;
 	private String testName;
 	private Set<Participant> testParticipants;
+	private Experiment testExperiment;
 	
 	@BeforeEach
 	public void setUp() {
 		
 		testId = 23;
+		testExperiment = new Experiment();
+		testExperiment.setId(42);
 		testName = "testName";
 		testParticipants = new HashSet<>();
 		
@@ -26,7 +29,7 @@ public class TestGroupTest {
 		testParticipants.add(new Participant("p2", "pwd"));
 	}
 	
-	@Test
+	@Test 
 	public void testConstructor1() {
 		
 		TestGroup g = new TestGroup();
@@ -36,13 +39,14 @@ public class TestGroupTest {
 	}
 	
 	@Test
-	public void testConstructor2() {
+	public void testConstructor2() { 
 		
-		TestGroup g = new TestGroup(testId, testName, testParticipants);
+		TestGroup g = new TestGroup(testId, testName, testParticipants, testExperiment);
 		
 		assertEquals(testId, g.getId());
 		assertEquals(testName, g.getName());
 		assertIterableEquals(testParticipants, g.getParticipants());
+		assertEquals(testExperiment, g.getExperiment());
 	}
 	
 	@Test
@@ -73,16 +77,24 @@ public class TestGroupTest {
 		assertNotEquals(testId, g.getId());
 		assertNotEquals(testName, g.getName());
 		assertEquals(0, g.getParticipants().size());
+		assertNotEquals(testExperiment, g.getExperiment());
 		
 		g.setId(testId);
 		g.setName(testName);
 		g.setParticipants(testParticipants);
+		g.setExperiment(testExperiment);
 		
 		assertEquals(testId, g.getId());
 		assertEquals(testName, g.getName());
 		assertIterableEquals(testParticipants, g.getParticipants());
+		assertEquals(testExperiment, g.getExperiment());
+		
+		for (Participant p : g.getParticipants()) {
+			
+			assertEquals(testExperiment.getId(), p.getExperimentId());
+		}
 	}
-	
+	 
 	@Test
 	public void testAddParticipant() {
 		
@@ -114,11 +126,21 @@ public class TestGroupTest {
 	}
 	
 	@Test
+	public void testClearParticipants() {
+		
+		TestGroup g = new TestGroup(testName, testParticipants);
+		
+		assertNotEquals(0, g.getParticipants().size());
+		g.clearParticipants();
+		assertEquals(0, g.getParticipants().size());
+	}
+	
+	@Test
 	public void testEqualsAndHashCode() {
 		
-		TestGroup g1 = new TestGroup(1, "name1", testParticipants);
-		TestGroup g2 = new TestGroup(1, "name1", testParticipants);
-		TestGroup g3 = new TestGroup(2, "name1", testParticipants);
+		TestGroup g1 = new TestGroup(1, "name1", testParticipants, testExperiment);
+		TestGroup g2 = new TestGroup(1, "name1", testParticipants, testExperiment);
+		TestGroup g3 = new TestGroup(2, "name1", testParticipants, testExperiment); 
 		
 		assertTrue(g1.equals(g1));
 		assertTrue(g1.equals(g2));
@@ -129,7 +151,7 @@ public class TestGroupTest {
 	}
 }
 
-
+ 
 
 
 

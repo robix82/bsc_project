@@ -4,6 +4,10 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
 
 /**
  * User implementation for participants 
@@ -17,11 +21,10 @@ public class Participant extends User {
 	@Column(name="experiment_id")
 	private int experimentId;
 	
-	@Column(name="group_id")
-	private int groupId;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "group_id")
+	private TestGroup testGroup;
 	
-	@Column(name="group_name")
-	private String groupName;
 	
 	public Participant() {
 		
@@ -29,13 +32,12 @@ public class Participant extends User {
 	}
 	
 	public Participant(int id, String userName, String password, Set<Role> roles, 
-			           int experimentId, int groupId, String groupName) {
+			           int experimentId, TestGroup testGroup) {
 		
 		super(id, userName, password, roles);
 		
 		this.experimentId = experimentId;
-		this.groupId = groupId;
-		this.groupName = groupName;
+		this.testGroup = testGroup;
 	}
 	
 	public Participant(int id, String userName, String password, Set<Role> roles) {
@@ -51,25 +53,17 @@ public class Participant extends User {
 	public int getExperimentId() {
 		return experimentId;
 	}
-	 
-	public int getGroupId() {
-		return groupId;
-	}
-	
-	public String getGroupName() {
-		return groupName;
-	}
 	
 	public void setExperimentId(int experimentId) {
 		this.experimentId = experimentId;
 	}
 	
-	public void setGroupId(int groupId) {
-		this.groupId = groupId;
+	public TestGroup getTestGroup() {
+		return testGroup;
 	}
-	
-	public void setGroupName(String groupName) {
-		this.groupName = groupName;
+
+	public void setTestGroup(TestGroup testGroup) {
+		this.testGroup = testGroup;
 	}
 }
 
