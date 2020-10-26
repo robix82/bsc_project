@@ -8,6 +8,12 @@ import java.util.List;
 
 import org.springframework.data.repository.CrudRepository;
 
+/**
+ * Repository for accessing TestGroup persistence
+ * 
+ * @author robert.jans@usi.ch
+ *
+ */
 @Repository
 public interface TestGroupRepository extends CrudRepository<TestGroup, Integer> {
 

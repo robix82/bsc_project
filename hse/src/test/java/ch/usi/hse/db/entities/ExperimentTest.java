@@ -109,6 +109,18 @@ public class ExperimentTest {
 	}
 	
 	@Test
+	public void testClearTestGroups() {
+		
+		Experiment e = new Experiment(testId, testTitle, testGroups);
+		
+		assertNotEquals(0, e.getTestGroups().size());
+		
+		e.clearTestGroups();
+		
+		assertEquals(0, e.getTestGroups().size());
+	}
+	
+	@Test
 	public void testEqualsAndHashCode() {
 		
 		Experiment e1 = new Experiment(1, testTitle, testGroups);
@@ -129,7 +141,7 @@ public class ExperimentTest {
 
 
 
-
+ 
 
 
 

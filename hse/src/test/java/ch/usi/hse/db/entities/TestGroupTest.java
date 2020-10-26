@@ -134,7 +134,7 @@ public class TestGroupTest {
 		g.clearParticipants();
 		assertEquals(0, g.getParticipants().size());
 	}
-	
+	 
 	@Test
 	public void testEqualsAndHashCode() {
 		

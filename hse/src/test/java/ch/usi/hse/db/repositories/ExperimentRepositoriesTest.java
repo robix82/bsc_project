@@ -3,8 +3,6 @@ package ch.usi.hse.db.repositories;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.List;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -83,11 +81,9 @@ public class ExperimentRepositoriesTest {
 		
 		assertTrue(experimentRepo.existsById(id));
 	}
-	
-	// participant-group persistence
 
 	@Test
-	public void testParticipantGroup() {
+	public void testParticipantGroupSave() {
 		
 		Participant p = new Participant("p", "pwd");
 		TestGroup g = new TestGroup("g");
@@ -102,18 +98,10 @@ public class ExperimentRepositoriesTest {
 		TestGroup retrieved = groupRepo.findById(g_saved.getId());
 		
 		assertTrue(retrieved.getParticipants().contains(p_saved));
-		
-		assertTrue(participantRepo.existsById(p_saved.getId()));
-		
-		groupRepo.delete(retrieved);
-		
-		assertFalse(participantRepo.existsById(p_saved.getId()));
 	}
 	
-	// participant-group-experiment persistence
-	
 	@Test
-	public void testParticipantGroupExperiment() {
+	public void testParticipantGroupExperimentSave() {
 		
 		Participant p = new Participant("p", "pwd");
 		TestGroup g = new TestGroup("g");
@@ -141,6 +129,90 @@ public class ExperimentRepositoriesTest {
 		assertTrue(participantRepo.existsById(p_saved.getId()));
 		
 		experimentRepo.delete(e_saved);
+		
+		assertFalse(groupRepo.existsById(g_saved.getId()));
+		assertFalse(participantRepo.existsById(p_saved.getId()));
+	}
+	
+	@Test
+	public void testGroupToParticipantDeletionCascade1() {
+		
+		Participant p = new Participant("p", "pwd");
+		TestGroup g = new TestGroup("g");		
+		Participant p_saved = participantRepo.save(p);
+		TestGroup g_saved = groupRepo.save(g);		
+		g_saved.addParticipant(p_saved);
+		groupRepo.save(g_saved);
+		
+		assertTrue(participantRepo.existsById(p_saved.getId()));
+		
+		groupRepo.delete(g_saved);
+		
+		assertFalse(participantRepo.existsById(p_saved.getId()));
+	}
+	
+	@Test
+	public void testGroupToParticipantDeletionCascade2() {
+		
+		Participant p = new Participant("p", "pwd");
+		TestGroup g = new TestGroup("g");		
+		Participant p_saved = participantRepo.save(p);
+		TestGroup g_saved = groupRepo.save(g);		
+		g_saved.addParticipant(p_saved);
+		groupRepo.save(g_saved);
+		
+		assertTrue(participantRepo.existsById(p_saved.getId()));
+		
+		g_saved.removeParticipant(p_saved);
+		groupRepo.save(g_saved);
+		
+		assertFalse(participantRepo.existsById(p_saved.getId()));
+	}
+	
+	@Test
+	public void testExperimentToParticipantDeletionCascade1() {
+		
+		Participant p = new Participant("p", "pwd");
+		TestGroup g = new TestGroup("g");	
+		Experiment e = new Experiment("e");
+		Participant p_saved = participantRepo.save(p);
+		TestGroup g_saved = groupRepo.save(g);	
+		Experiment e_saved = experimentRepo.save(e);
+		
+		g_saved.addParticipant(p_saved);
+		e_saved.addTestGroup(g_saved);
+		groupRepo.save(g_saved);
+		experimentRepo.save(e_saved);
+		
+		assertTrue(groupRepo.existsById(g_saved.getId()));
+		assertTrue(participantRepo.existsById(p_saved.getId()));
+		
+		experimentRepo.delete(e_saved);
+		
+		assertFalse(groupRepo.existsById(g_saved.getId()));
+		assertFalse(participantRepo.existsById(p_saved.getId()));
+	}
+	
+	@Test
+	public void testExperimentToParticipantDeletionCascade2() {
+		
+		Participant p = new Participant("p", "pwd");
+		TestGroup g = new TestGroup("g");	
+		Experiment e = new Experiment("e");
+		Participant p_saved = participantRepo.save(p);
+		TestGroup g_saved = groupRepo.save(g);	
+		Experiment e_saved = experimentRepo.save(e);
+		
+		g_saved.addParticipant(p_saved);
+		e_saved.addTestGroup(g_saved);
+		groupRepo.save(g_saved);
+		experimentRepo.save(e_saved);
+		
+		assertTrue(groupRepo.existsById(g_saved.getId()));
+		assertTrue(participantRepo.existsById(p_saved.getId()));
+		
+		e_saved.removeTestGroup(g_saved);
+		experimentRepo.save(e_saved);
 		
 		assertFalse(groupRepo.existsById(g_saved.getId()));
 		assertFalse(participantRepo.existsById(p_saved.getId()));

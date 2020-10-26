@@ -33,7 +33,7 @@ public class TestGroup {
 	@Column(name="name")
 	private String name;
 	
-	@OneToMany(mappedBy="testGroup", fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+	@OneToMany(mappedBy="testGroup", fetch=FetchType.LAZY, orphanRemoval=true, cascade=CascadeType.ALL)
 	private Set<Participant> participants;
 	
 	@ManyToOne(fetch=FetchType.LAZY)

@@ -24,7 +24,7 @@ public class Participant extends User {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "group_id")
 	private TestGroup testGroup;
-	
+	 
 	
 	public Participant() {
 		

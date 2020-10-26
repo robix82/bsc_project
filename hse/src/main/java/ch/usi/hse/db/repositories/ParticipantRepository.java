@@ -5,7 +5,6 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import ch.usi.hse.db.entities.Participant;
-import ch.usi.hse.db.entities.TestGroup;
 
 /**
  * Repository for accessing Participant Users persistence

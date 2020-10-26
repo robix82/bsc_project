@@ -30,7 +30,7 @@ public class Experiment {
 	@Column(name="title")
 	private String title;
 	
-	@OneToMany(mappedBy="experiment", fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+	@OneToMany(mappedBy="experiment", fetch=FetchType.LAZY, orphanRemoval=true, cascade=CascadeType.ALL)
 	private Set<TestGroup> testGroups;
 	 
 	public Experiment() {

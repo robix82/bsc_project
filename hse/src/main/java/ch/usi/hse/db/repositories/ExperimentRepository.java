@@ -7,6 +7,12 @@ import org.springframework.stereotype.Repository;
 
 import ch.usi.hse.db.entities.Experiment;
 
+/**
+ * Repository for accessing Participant Experiments persistence
+ * 
+ * @author robert.jans@usi.ch
+ *
+ */
 @Repository
 public interface ExperimentRepository extends CrudRepository<Experiment, Integer> {
 
