@@ -34,7 +34,20 @@
 	margin-right: auto;
 } 
 
-/* INFO MODAL */
+/* CONFIRM DELETE MODAL */
+
+#confirmDeleteModal .modal-header { 
+	
+	background-color: #f56e00;
+}
+
+#deleteYesBtn {
+	margin-left: auto;
+}
+
+#deleteNoBtn {
+	margin-right: auto;
+}
 
 
 

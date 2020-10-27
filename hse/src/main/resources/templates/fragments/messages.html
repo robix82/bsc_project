@@ -1,0 +1,54 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	
+    <link rel="stylesheet" th:href="@{/lib/bootstrap/css/bootstrap.min.css}"/>
+	<link rel="stylesheet" th:href="@{/lib/icons.css}"/>
+	<link rel="stylesheet" th:href="@{/css/main.css}"/>
+
+</head>
+
+<body>
+
+<!-- workaround to make messages available in js -->
+
+<th:block th:fragment="messages">
+	
+<span id="m_add" th:text="#{m_add}" class="m_message"></span>
+<span id="m_close" th:text="#{m_close}" class="m_message"></span>
+<span id="m_ok" th:text="#{m_ok}" class="m_message"></span>
+<span id="m_yes" th:text="#{m_yes}" class="m_message"></span>
+<span id="m_no" th:text="#{m_no}" class="m_message"></span>
+
+<span id="m_delete" th:text="#{m_delete}" class="m_message"></span>
+<span id="m_error" th:text="#{m_error}" class="m_message"></span>
+<span id="m_warning" th:text="#{m_warning}" class="m_message"></span>
+<span id="m_generalError" th:text="#{m_generalError}" class="m_message"></span>
+<span id="m_saved" th:text="#{m_saved}" class="m_message"></span>
+<span id="m_deleted" th:text="#{m_deleted}" class="m_message"></span>
+
+<span id="m_userName" th:text="#{m_userName}" class="m_message"></span>
+<span id="m_password" th:text="#{m_password}" class="m_message"></span>
+<span id="m_missingUserName" th:text="#{m_missingUserName}" class="m_message"></span>
+<span id="m_missingPassword" th:text="#{m_missingPassword}" class="m_message"></span>
+<span id="m_userExists" th:text="#{m_userExists}" class="m_message"></span>
+<span id="m_userNotFound" th:text="#{m_userNotFound}" class="m_message"></span>
+
+<span id="m_search" th:text="#{m_search}" class="m_message"></span>
+<span id="m_experiments" th:text="#{m_experiments}" class="m_message"></span>
+<span id="m_indexing" th:text="#{m_indexing}" class="m_message"></span>
+<span id="m_admin" th:text="#{m_admin}" class="m_message"></span>
+<span id="m_user" th:text="#{m_user}" class="m_message"></span>
+<span id="m_users" th:text="#{m_users}" class="m_message"></span>
+<span id="m_administrator" th:text="#{m_administrator}" class="m_message"></span>
+<span id="m_administrators" th:text="#{m_administrators}" class="m_message"></span>
+<span id="m_experimenter" th:text="#{m_experimenter}" class="m_message"></span>
+<span id="m_experimenters" th:text="#{m_experimenters}" class="m_message"></span>
+<span id="m_participant" th:text="#{m_participant}" class="m_message"></span>
+<span id="m_participants" th:text="#{m_participants}" class="m_message"></span>
+	
+</th:block>
+
+</body>
+</html>

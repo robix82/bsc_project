@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,6 +27,7 @@ import ch.usi.hse.services.UserService;
  *
  */
 @Controller
+@CrossOrigin
 @RequestMapping("/admin")
 public class AdminController {
 
@@ -35,7 +37,7 @@ public class AdminController {
 	/**
 	 * Serves the main admin UI page
 	 * 
-	 * @return ModelAndView 
+	 * @return ModelAndView  
 	 */
 	@GetMapping("/ui") 
 	public ModelAndView getAdminUi() {

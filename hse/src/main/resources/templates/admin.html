@@ -13,9 +13,6 @@
 <body>
 
 <nav th:replace="fragments/general.html :: navbar"></nav>
-<div th:replace="fragments/modals.html :: infoModal"></div>
-<div th:replace="fragments/modals.html :: errorModal"></div>
-<div th:replace="fragments/modals.html :: administratorInputModal"></div>
 
 <div class="main-container">
 
@@ -40,61 +37,23 @@
 							
 				    <tbody>
 
-				      <tr>
+				      <tr th:each="administrator: ${administrators}">
 
-				        <td>21</td>
-				        <td>admin1</td>
+				        <td th:text="${administrator.id}" ></td>
+				        <td th:text="${administrator.userName}"></td>
 
 						<td class="table-space"></td>
 
 				        <td>
-							<button class="btn btn-sm btn-light">
+							<button class="btn btn-sm btn-light"
+									th:onclick="showAdminEditModal([[${administrator}]])">
 							<span class="glyphicon glyphicon-pencil"></span>
 							</button>
 						</td>
 						
 						<td>
-							<button class="btn btn-sm btn-light">
-							<span class="glyphicon glyphicon-remove"></span>
-							</button>
-						</td>
-						
-				      </tr>
-
-				      <tr>
-
-				        <td>21</td>
-				        <td>admin1</td>
-
-						<td class="table-space"></td>
-
-				        <td>
-							<button class="btn btn-sm btn-light">
-							<span class="glyphicon glyphicon-pencil"></span>
-							</button>
-						</td>
-						
-						<td>
-							<button class="btn btn-sm btn-light">
-							<span class="glyphicon glyphicon-remove"></span>
-							</button>
-						</td>
-						
-				      </tr><tr>
-
-				        <td>21</td>
-				        <td>admin1</td>
-
-						<td class="table-space"></td>
-
-				        <td>
-							<button class="btn btn-sm btn-light">
-							<span class="glyphicon glyphicon-pencil"></span>
-							</button>
-						</td>
-						
-						<td>
-							<button class="btn btn-sm btn-light">
+							<button class="btn btn-sm btn-light"
+									th:onclick="showAdminDeleteModal([[${administrator}]])">
 							<span class="glyphicon glyphicon-remove"></span>
 							</button>
 						</td>
@@ -134,13 +93,10 @@
 	/*]]>*/
 </script>
 
-<!-- pass messages to js -->
-<span id="m_missingUserName" th:text="#{m_missingUserName}" class="m_message"></span>
-<span id="m_missingPassword" th:text="#{m_missingPassword}" class="m_message"></span>
-<span id="m_error" th:text="#{m_error}" class="m_message"></span>
 
-
+<th:block th:include="fragments/messages.html :: messages"></th:block>
 <th:block th:include="fragments/general.html :: commonScripts"></th:block>
+<th:block th:include="fragments/modals.html :: modals"></th:block>
 
 <script th:src="@{/js/admin.js}"></script>
 
