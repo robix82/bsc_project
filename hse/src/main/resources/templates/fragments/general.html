@@ -10,16 +10,32 @@
     <link rel="stylesheet" th:href="@{/lib/bootstrap/css/bootstrap.min.css}"/>
 	<link rel="stylesheet" th:href="@{/lib/icons.css}"/>
 	<link rel="stylesheet" th:href="@{/css/main.css}"/>
-
+	<link rel="stylesheet" th:href="@{/css/navBar.css}" />
 </head>
 
 <body>
 
-   <th:block th:fragment="commonScripts">
+	<nav th:fragment="navbar" class="navbar navbar-light bg-light fixed-top">
+
+	  	<div id="internal-links">
+			<a class="internal-link" th:href="@{/}" th:text="#{m_search}"></a>
+			<a class="internal-link" th:href="@{/experiments/ui}" th:text="#{m_experiments}"></a>
+			<a class="internal-link" th:href="@{/indexing/ui}" th:text="#{m_indexing}"></a>
+			<a class="internal-link" th:href="@{/admin/ui}" th:text="#{m_admin}"></a>
+		</div>
+		
+		<div id="langSelectors">
+			<div class="langSelector" id="lang_it">IT</div>
+			<div class="langSelector" id="lang_en">EN</div>
+		</div>
+		
+	</nav>
+
+   	<th:block th:fragment="commonScripts">
 	
-	  <script th:src="@{/lib/jquery-3.4.1.min.js}"></script>
-	  <script th:src="@{/lib/bootstrap/js/bootstrap.min.js}"></script>
-	  <script th:src="@{/js/main.js}"></script>
+	  	<script th:src="@{/lib/jquery-3.4.1.min.js}"></script>
+	  	<script th:src="@{/lib/bootstrap/js/bootstrap.min.js}"></script>
+	  	<script th:src="@{/js/main.js}"></script>
 	
 	</th:block>
 

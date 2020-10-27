@@ -22,6 +22,14 @@ import javax.persistence.OneToMany;
 @Entity(name="experiment")
 public class Experiment {
 
+	public static enum Status {
+		
+		NOT_READY,
+		READY,
+		RUNNING,
+		COMPLETE
+	}
+	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="experiment_id")
@@ -32,11 +40,15 @@ public class Experiment {
 	
 	@OneToMany(mappedBy="experiment", fetch=FetchType.LAZY, orphanRemoval=true, cascade=CascadeType.ALL)
 	private Set<TestGroup> testGroups;
+	
+	@Column(name="status")
+	private Status status;
 	 
 	public Experiment() {
 		
-		id = 0;
+		id = 0; 
 		testGroups = new HashSet<>();
+		status = Status.NOT_READY;
 	}
 	
 	public Experiment(int id, String title, Set<TestGroup> testGroups) {
@@ -44,6 +56,7 @@ public class Experiment {
 		this.id = id;
 		this.title = title;
 		this.testGroups = testGroups;
+		status = Status.NOT_READY;
 	}
 	
 	public Experiment(String title) {
@@ -51,6 +64,7 @@ public class Experiment {
 		id = 0;
 		testGroups = new HashSet<>();
 		this.title = title;
+		status = Status.NOT_READY;
 	}
 	
 	public int getId() {
@@ -65,6 +79,10 @@ public class Experiment {
 		return testGroups;
 	}
 	
+	public Status getStatus() {
+		return status;
+	}
+	
 	public void setId(int id) {
 		this.id = id;
 	}
@@ -77,6 +95,10 @@ public class Experiment {
 		this.testGroups = testGroups;
 	}
 	
+	public void setStatus(Status status) {
+		this.status = status;
+	}
+	
 	public void addTestGroup(TestGroup group) {
 		
 		testGroups.add(group);
@@ -85,6 +107,23 @@ public class Experiment {
 	public void removeTestGroup(TestGroup group) {
 		
 		testGroups.remove(group);
+	}
+	
+	public void removeTestGroup(String groupName) {
+		
+		TestGroup toRemove = null;
+		
+		for (TestGroup g : testGroups) {
+			if (g.getName().equals(groupName)) {
+				
+				toRemove = g;
+				break;
+			}
+		}
+		
+		if (toRemove != null) {
+			testGroups.remove(toRemove);
+		}
 	}
 	
 	public void clearTestGroups() {

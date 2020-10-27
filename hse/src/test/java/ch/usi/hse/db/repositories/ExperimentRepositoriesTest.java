@@ -47,183 +47,136 @@ public class ExperimentRepositoriesTest {
 		assertNotNull(roleRepo);
 	} 
 	
-	// simple entity persistence
-	
 	@Test
-	public void testSaveParticipant() {
+	public void testSave() {
 		
 		Participant p = new Participant("p", "pwd");
-		
-		Participant saved = participantRepo.save(p);
-		int id = saved.getId();
-		
-		assertTrue(participantRepo.existsById(id));
-	}
-	
-	@Test
-	public void testSaveTestGroup() {
-		
 		TestGroup g = new TestGroup("g");
-		
-		TestGroup saved = groupRepo.save(g);
-		int id = saved.getId();
-		
-		assertTrue(groupRepo.existsById(id));
-	}
-	
-	@Test
-	public void testSaveExperiment() {
-		
 		Experiment e = new Experiment("e");
-		
-		Experiment saved = experimentRepo.save(e);
-		int id = saved.getId();
-		
-		assertTrue(experimentRepo.existsById(id));
-	}
 
-	@Test
-	public void testParticipantGroupSave() {
+		g.addParticipant(p);
+		e.addTestGroup(g);
 		
-		Participant p = new Participant("p", "pwd");
-		TestGroup g = new TestGroup("g");
+		assertEquals(0, experimentRepo.count());
+		assertEquals(0, groupRepo.count());
+		assertEquals(0, participantRepo.count());
 		
-		Participant p_saved = participantRepo.save(p);
-		TestGroup g_saved = groupRepo.save(g);
-		
-		g_saved.addParticipant(p_saved);
-		
-		groupRepo.save(g_saved);
-		
-		TestGroup retrieved = groupRepo.findById(g_saved.getId());
-		
-		assertTrue(retrieved.getParticipants().contains(p_saved));
-	}
-	
-	@Test
-	public void testParticipantGroupExperimentSave() {
-		
-		Participant p = new Participant("p", "pwd");
-		TestGroup g = new TestGroup("g");
-		Experiment e = new Experiment("e");
-		
-		Participant p_saved = participantRepo.save(p);
-		TestGroup g_saved = groupRepo.save(g);
 		Experiment e_saved = experimentRepo.save(e);
 		
-		g_saved.addParticipant(p_saved);
-		participantRepo.save(p_saved);
-		
-		e_saved.addTestGroup(g_saved);
-		groupRepo.save(g_saved); 
+		assertEquals(1, experimentRepo.count());
+		assertEquals(1, groupRepo.count());
+		assertEquals(1, participantRepo.count());
 		
 		Experiment e_retrieved = experimentRepo.findById(e_saved.getId());
 		TestGroup g_retrieved = (TestGroup) e_retrieved.getTestGroups().toArray()[0];
 		Participant p_retrieved = (Participant) g_retrieved.getParticipants().toArray()[0];
 		
-		assertEquals(e_saved, e_retrieved);
-		assertEquals(g_saved, g_retrieved);
-		assertEquals(p_saved, p_retrieved);
+		assertEquals(g_retrieved.getName(), g.getName());
+		assertEquals(p_retrieved.getUserName(), p.getUserName());
+	}
+	
+	@Test
+	public void testExperimentDeleteExperiment() {
 		
-		assertTrue(groupRepo.existsById(g_saved.getId()));
-		assertTrue(participantRepo.existsById(p_saved.getId()));
+		Participant p = new Participant("p", "pwd");
+		TestGroup g = new TestGroup("g");
+		Experiment e = new Experiment("e");
+
+		g.addParticipant(p);
+		e.addTestGroup(g);
+		
+		assertEquals(0, experimentRepo.count());
+		assertEquals(0, groupRepo.count());
+		assertEquals(0, participantRepo.count());
+		
+		Experiment e_saved = experimentRepo.save(e);
+		
+		assertEquals(1, experimentRepo.count());
+		assertEquals(1, groupRepo.count());
+		assertEquals(1, participantRepo.count());
 		
 		experimentRepo.delete(e_saved);
 		
-		assertFalse(groupRepo.existsById(g_saved.getId()));
-		assertFalse(participantRepo.existsById(p_saved.getId()));
+		assertEquals(0, experimentRepo.count());
+		assertEquals(0, groupRepo.count());
+		assertEquals(0, participantRepo.count());
 	}
 	
 	@Test
-	public void testGroupToParticipantDeletionCascade1() {
+	public void testRemoveTetGroup() {
 		
-		Participant p = new Participant("p", "pwd");
-		TestGroup g = new TestGroup("g");		
-		Participant p_saved = participantRepo.save(p);
-		TestGroup g_saved = groupRepo.save(g);		
-		g_saved.addParticipant(p_saved);
-		groupRepo.save(g_saved);
-		
-		assertTrue(participantRepo.existsById(p_saved.getId()));
-		
-		groupRepo.delete(g_saved);
-		
-		assertFalse(participantRepo.existsById(p_saved.getId()));
-	}
-	
-	@Test
-	public void testGroupToParticipantDeletionCascade2() {
-		
-		Participant p = new Participant("p", "pwd");
-		TestGroup g = new TestGroup("g");		
-		Participant p_saved = participantRepo.save(p);
-		TestGroup g_saved = groupRepo.save(g);		
-		g_saved.addParticipant(p_saved);
-		groupRepo.save(g_saved);
-		
-		assertTrue(participantRepo.existsById(p_saved.getId()));
-		
-		g_saved.removeParticipant(p_saved);
-		groupRepo.save(g_saved);
-		
-		assertFalse(participantRepo.existsById(p_saved.getId()));
-	}
-	
-	@Test
-	public void testExperimentToParticipantDeletionCascade1() {
-		
-		Participant p = new Participant("p", "pwd");
-		TestGroup g = new TestGroup("g");	
+		Participant p1 = new Participant("p1", "pwd");
+		Participant p2 = new Participant("p2", "pwd");
+		TestGroup g1 = new TestGroup("g1");
+		g1.setId(1);
+		TestGroup g2 = new TestGroup("g2");
+		g2.setId(2);
 		Experiment e = new Experiment("e");
-		Participant p_saved = participantRepo.save(p);
-		TestGroup g_saved = groupRepo.save(g);	
+
+		g1.addParticipant(p1);
+		g2.addParticipant(p2);
+		e.addTestGroup(g1);
+		e.addTestGroup(g2);
+		
+		assertEquals(0, experimentRepo.count());
+		assertEquals(0, groupRepo.count());
+		assertEquals(0, participantRepo.count());
+		
 		Experiment e_saved = experimentRepo.save(e);
 		
-		g_saved.addParticipant(p_saved);
-		e_saved.addTestGroup(g_saved);
-		groupRepo.save(g_saved);
+		assertEquals(1, experimentRepo.count());
+		assertEquals(2, groupRepo.count());
+		assertEquals(2, participantRepo.count());
+		
+		e_saved.removeTestGroup(g1.getName());
 		experimentRepo.save(e_saved);
 		
-		assertTrue(groupRepo.existsById(g_saved.getId()));
-		assertTrue(participantRepo.existsById(p_saved.getId()));
-		
-		experimentRepo.delete(e_saved);
-		
-		assertFalse(groupRepo.existsById(g_saved.getId()));
-		assertFalse(participantRepo.existsById(p_saved.getId()));
+		assertEquals(1, experimentRepo.count());
+		assertEquals(1, groupRepo.count());
+		assertEquals(1, participantRepo.count());
 	}
 	
 	@Test
-	public void testExperimentToParticipantDeletionCascade2() {
+	public void testClearTestGroups() {
 		
-		Participant p = new Participant("p", "pwd");
-		TestGroup g = new TestGroup("g");	
+		Participant p1 = new Participant("p1", "pwd");
+		Participant p2 = new Participant("p2", "pwd");
+		TestGroup g1 = new TestGroup("g1");
+		g1.setId(1);
+		TestGroup g2 = new TestGroup("g2");
+		g2.setId(2);
 		Experiment e = new Experiment("e");
-		Participant p_saved = participantRepo.save(p);
-		TestGroup g_saved = groupRepo.save(g);	
+
+		g1.addParticipant(p1);
+		g2.addParticipant(p2);
+		e.addTestGroup(g1);
+		e.addTestGroup(g2);
+		
+		assertEquals(0, experimentRepo.count());
+		assertEquals(0, groupRepo.count());
+		assertEquals(0, participantRepo.count());
+		
 		Experiment e_saved = experimentRepo.save(e);
 		
-		g_saved.addParticipant(p_saved);
-		e_saved.addTestGroup(g_saved);
-		groupRepo.save(g_saved);
+		assertEquals(1, experimentRepo.count());
+		assertEquals(2, groupRepo.count());
+		assertEquals(2, participantRepo.count());
+		
+		e_saved.clearTestGroups();
 		experimentRepo.save(e_saved);
 		
-		assertTrue(groupRepo.existsById(g_saved.getId()));
-		assertTrue(participantRepo.existsById(p_saved.getId()));
-		
-		e_saved.removeTestGroup(g_saved);
-		experimentRepo.save(e_saved);
-		
-		assertFalse(groupRepo.existsById(g_saved.getId()));
-		assertFalse(participantRepo.existsById(p_saved.getId()));
+		assertEquals(1, experimentRepo.count());
+		assertEquals(0, groupRepo.count());
+		assertEquals(0, participantRepo.count());
 	}
+
 }
 
 
 
 
 
-
+ 
 
 
 

@@ -12,6 +12,7 @@
 
 <body>
 
+<nav th:replace="fragments/general.html :: navbar"></nav>
 
 <div id="main-container">
 
@@ -27,7 +28,7 @@
 				    name="queryString" 
 				   	class="form-control form-control-lg" 
 				   	type="text" 
-				   	placeholder="Search">
+				   	th:placeholder="#{m_search}">
 		
 		<button type="submit" id="search-btn" class="btn btn-lg btn-primary">
 			<span class="glyphicon glyphicon-search"></span>

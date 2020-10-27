@@ -8,6 +8,8 @@ import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import ch.usi.hse.db.entities.Experiment.Status;
+
 public class ExperimentTest {
 
 	private int testId;
@@ -28,7 +30,7 @@ public class ExperimentTest {
 		
 		testGroups.add(g1);
 		testGroups.add(g2);
-	}
+	} 
 	
 	@Test
 	public void testConstructor1() {
@@ -37,6 +39,7 @@ public class ExperimentTest {
 		
 		assertEquals(0, e.getId());
 		assertNotNull(e.getTestGroups());
+		assertEquals(Status.NOT_READY, e.getStatus());
 	}
 	
 	@Test
@@ -47,6 +50,7 @@ public class ExperimentTest {
 		assertEquals(testId, e.getId());
 		assertEquals(testTitle, e.getTitle());
 		assertIterableEquals(testGroups, e.getTestGroups());
+		assertEquals(Status.NOT_READY, e.getStatus());
 	}
 	
 	@Test
@@ -57,6 +61,7 @@ public class ExperimentTest {
 		assertEquals(testTitle, e.getTitle());
 		assertEquals(0, e.getId());
 		assertNotNull(e.getTestGroups());
+		assertEquals(Status.NOT_READY, e.getStatus());
 	}
 	
 	@Test
@@ -71,10 +76,14 @@ public class ExperimentTest {
 		e.setId(testId);
 		e.setTitle(testTitle);
 		e.setTestGroups(testGroups);
+		e.setStatus(Status.READY);
 		
 		assertEquals(testId, e.getId());
 		assertEquals(testTitle, e.getTitle());
 		assertIterableEquals(testGroups, e.getTestGroups());
+		assertEquals(Status.READY, e.getStatus());
+		
+		System.out.println("Status: " + e.getStatus());
 	}
 	
 	@Test
@@ -94,7 +103,7 @@ public class ExperimentTest {
 	}
 	
 	@Test
-	public void testRemoveTestGroup() {
+	public void testRemoveTestGroup1() {
 		
 		Experiment e = new Experiment(testId, testTitle, testGroups);
 		TestGroup g = (TestGroup) testGroups.toArray()[0];
@@ -103,6 +112,21 @@ public class ExperimentTest {
 		assertTrue(e.getTestGroups().contains(g));
 		
 		e.removeTestGroup(g);
+		
+		assertEquals(1, e.getTestGroups().size());
+		assertFalse(e.getTestGroups().contains(g));
+	}
+	
+	@Test
+	public void testRemoveTestGroup2() {
+		
+		Experiment e = new Experiment(testId, testTitle, testGroups);
+		TestGroup g = (TestGroup) testGroups.toArray()[0];
+		
+		assertEquals(2, e.getTestGroups().size());
+		assertTrue(e.getTestGroups().contains(g));
+		
+		e.removeTestGroup(g.getName());
 		
 		assertEquals(1, e.getTestGroups().size());
 		assertFalse(e.getTestGroups().contains(g));

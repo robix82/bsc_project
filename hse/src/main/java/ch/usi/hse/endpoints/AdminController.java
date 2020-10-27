@@ -35,7 +35,7 @@ public class AdminController {
 	/**
 	 * Serves the main admin UI page
 	 * 
-	 * @return ModelAndView
+	 * @return ModelAndView 
 	 */
 	@GetMapping("/ui") 
 	public ModelAndView getAdminUi() {
