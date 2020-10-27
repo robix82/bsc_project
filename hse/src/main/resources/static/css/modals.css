@@ -1,0 +1,43 @@
+
+/* INFO MODAL */
+
+#infoModal .modal-header {
+	
+	background-color: #0ba6e3;
+}
+
+#infoModal button {
+	
+	width: 6rem;
+	margin-left: auto;
+	margin-right: auto;
+} 
+
+/* ERROR MODAL */
+
+#errorModal .modal-header { 
+	
+	background-color: #e3280b;
+}
+
+#errorModal button {
+	
+	width: 6rem;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#infoModal button {
+	
+	width: 6rem;
+	margin-left: auto;
+	margin-right: auto;
+} 
+
+/* INFO MODAL */
+
+
+
+
+
+

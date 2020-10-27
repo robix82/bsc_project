@@ -1,0 +1,48 @@
+
+#inner-container {
+	
+	display: flex;
+	flex-flow: column nowrap;
+	align-items: flex-start;
+	width: 90%;
+	margin-top: 3rem;
+}
+
+h3 {
+	
+	font-size: 16pt;
+}
+
+.user-tab {
+	
+	margin-top: 1rem;
+}
+
+.tab-header {
+	
+	display: flex;
+	flex-flow: row nowrap;
+	align-items: center;
+	justify-content: space-between;
+	width: 100%;
+	margin-bottom: .5em;
+
+}
+
+.table-space {
+	
+	width: 4em;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

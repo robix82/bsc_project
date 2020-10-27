@@ -1,0 +1,12 @@
+
+.main-container {
+	
+	display: flex;
+	flex-flow: column nowrap;
+	align-items: center;
+	padding-top:6rem;
+}
+
+.m_message {
+	display: none;
+}

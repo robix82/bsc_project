@@ -13,13 +13,132 @@
 <body>
 
 <nav th:replace="fragments/general.html :: navbar"></nav>
+<div th:replace="fragments/modals.html :: infoModal"></div>
+<div th:replace="fragments/modals.html :: errorModal"></div>
+<div th:replace="fragments/modals.html :: administratorInputModal"></div>
 
-<div id="main-container">
+<div class="main-container">
 
-	<h1>Admin</h1>
+	<h1 th:text="#{m_admin}"></h1>
 	
+	<div id="inner-container">
+	
+		<div id="users-div">
+		
+			<h2 th:text="#{m_users}"></h2>
+		
+			<div class="user-tab">
+			
+				<div class="tab-header">
+				<h3 th:text="#{m_administrators}"></h3>
+				<button id="newAdminBtn" class="btn btn-primary">
+				<span class="glyphicon glyphicon-plus"></span>
+				</button>
+				</div>
+				
+				<table class="table">
+							
+				    <tbody>
+
+				      <tr>
+
+				        <td>21</td>
+				        <td>admin1</td>
+
+						<td class="table-space"></td>
+
+				        <td>
+							<button class="btn btn-sm btn-light">
+							<span class="glyphicon glyphicon-pencil"></span>
+							</button>
+						</td>
+						
+						<td>
+							<button class="btn btn-sm btn-light">
+							<span class="glyphicon glyphicon-remove"></span>
+							</button>
+						</td>
+						
+				      </tr>
+
+				      <tr>
+
+				        <td>21</td>
+				        <td>admin1</td>
+
+						<td class="table-space"></td>
+
+				        <td>
+							<button class="btn btn-sm btn-light">
+							<span class="glyphicon glyphicon-pencil"></span>
+							</button>
+						</td>
+						
+						<td>
+							<button class="btn btn-sm btn-light">
+							<span class="glyphicon glyphicon-remove"></span>
+							</button>
+						</td>
+						
+				      </tr><tr>
+
+				        <td>21</td>
+				        <td>admin1</td>
+
+						<td class="table-space"></td>
+
+				        <td>
+							<button class="btn btn-sm btn-light">
+							<span class="glyphicon glyphicon-pencil"></span>
+							</button>
+						</td>
+						
+						<td>
+							<button class="btn btn-sm btn-light">
+							<span class="glyphicon glyphicon-remove"></span>
+							</button>
+						</td>
+						
+				      </tr>
+
+				    </tbody>
+
+				  </table>
+			
+			</div>
+			
+			<div class="user-tab">
+			
+				<h3 th:text="#{m_experimenters}"></h3>
+			
+			</div>
+			
+			<div class="user-tab">
+			
+				<h3 th:text="#{m_participants}"></h3>
+			
+			</div>
+		
+		</div>
+	
+	</div>
 	
 </div>
+
+<!-- pass user lists to js -->
+<script th:inline="javascript">
+	/*<![CDATA[*/
+	var administrators = /*[[${administrators}]]*/ "default";
+	var experimenters = /*[[${administrators}]]*/ "default";
+	var participants = /*[[${administrators}]]*/ "default";
+	/*]]>*/
+</script>
+
+<!-- pass messages to js -->
+<span id="m_missingUserName" th:text="#{m_missingUserName}" class="m_message"></span>
+<span id="m_missingPassword" th:text="#{m_missingPassword}" class="m_message"></span>
+<span id="m_error" th:text="#{m_error}" class="m_message"></span>
+
 
 <th:block th:include="fragments/general.html :: commonScripts"></th:block>
 

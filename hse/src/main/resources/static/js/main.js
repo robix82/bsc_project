@@ -1,8 +1,12 @@
 
+
+
 $(document).ready(function() {
     
 	setupLangSelect();
 });
+
+// LANGUAGE SETTINGS
 
 function setupLangSelect() {
     
@@ -19,3 +23,26 @@ function updateLangSelect(lang) {
 	
 	window.location.replace('?lang=' + lang);
 }
+
+// MODAL SHOW FUNCTIONS
+
+function showInfoModal(header, text) {
+	
+	$("#infoHeader").text(header);
+	$("#infoText").text(text);
+	$("#infoModal").modal("show");
+}
+
+function showErrorModal(header, text) {
+	
+	$("#errorHeader").text(header);
+	$("#errorText").text(text);
+	$("#errorModal").modal("show");
+}
+
+
+
+
+
+
+

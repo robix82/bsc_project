@@ -1,0 +1,121 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:fragment="general_head">
+
+	<title>HSE</title>
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+    <link rel="stylesheet" th:href="@{/lib/bootstrap/css/bootstrap.min.css}"/>
+	<link rel="stylesheet" th:href="@{/lib/icons.css}"/>
+	<link rel="stylesheet" th:href="@{/css/main.css}"/>
+	<link rel="stylesheet" th:href="@{/css/modals.css}" />
+</head>
+
+<body>
+
+<!-- GENERAL -->
+
+<div class="modal fade" id="infoModal" th:fragment="infoModal">
+		
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content">
+		
+			<div class="modal-header text-center">
+				<h4 class="modal-title w-100" id="infoHeader"></h4>
+		   	</div>
+		
+			<div class="modal-body text-center">
+		   		<div id="infoText"></div>
+			</div>
+	
+			<div class="modal-footer">
+				<button class="btn btn-primary" data-dismiss="modal">Ok</button>
+			</div>
+		
+		</div>
+	</div>
+	
+</div>
+
+<div class="modal fade" id="errorModal" th:fragment="errorModal">
+		
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content">
+		
+			<div class="modal-header text-center">
+				<h4 class="modal-title w-100" id="errorHeader"></h4>
+		   	</div>
+		
+			<div class="modal-body  text-center">
+		   		<div id="errorText"></div>
+			</div>
+		
+			<div class="modal-footer">
+				<button class="btn btn-primary" data-dismiss="modal">Ok</button>
+			</div>
+		
+		</div>
+	</div>
+	
+</div>
+
+<!-- ADMIN -->
+
+<div class="modal fade" id="administratorInputModal" th:fragment="administratorInputModal">
+		
+	<div class="modal-dialog">
+		<div class="modal-content">
+		
+			<div class="modal-header text-center">
+				<h4 class="modal-title w-100" th:text="#{m_add} + ' ' + #{m_administrator}"></h4>
+		   	</div>
+		
+			<div class="modal-body">
+			
+			
+				<div class="form-group">
+                	<label class="control-label" th:text="#{m_userName}"></label>
+                        <div>
+                            <input id="administratorUserNameInput" type="text" class="form-control input-lg">
+                        </div>
+             	</div>
+			
+				<div class="form-group">
+                	<label class="control-label" th:text="#{m_password}"></label>
+                        <div>
+                            <input id="administratorPasswordInput" type="password" class="form-control input-lg">
+                        </div>
+             	</div>
+			
+			
+			
+			</div>
+		
+			<div class="modal-footer">
+				<button class="btn btn-light" data-dismiss="modal" th:text="#{m_close}"></button>
+				<button id="submitAdministratorBtn" class="btn btn-primary" data-dismiss="modal" th:text="#{m_ok}"></button>
+			</div>
+		
+		</div>
+	</div>
+	
+</div>
+
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
