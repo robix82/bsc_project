@@ -82,8 +82,8 @@ public class UserServiceTest {
 		administrators.add(new Administrator(2, "admin2", "pdw", adminRoles));
 		experimenters.add(new Experimenter(3, "exp1", "pwd", experimenterRoles));
 		experimenters.add(new Experimenter(4, "exp2", "pwd", experimenterRoles));
-		participants.add(new Participant(5, "part1", "pwd", participantRoles));
-		participants.add(new Participant(6, "part2", "pwd", participantRoles));
+		participants.add(new Participant(5, "part1", "pwd", participantRoles, null));
+		participants.add(new Participant(6, "part2", "pwd", participantRoles, null));
 		
 		users.addAll(administrators);
 		users.addAll(experimenters);
@@ -738,7 +738,8 @@ public class UserServiceTest {
 			Participant newPart = new Participant(participants.get(0).getId(),
 												  newName,
 												  newPwd,
-												  participantRoles);
+												  participantRoles,
+												  null);
 			
 			Participant res = testService.updateParticipant(newPart);
 			assertEquals(newName, res.getUserName());
@@ -755,7 +756,8 @@ public class UserServiceTest {
 			Participant newPart = new Participant(administrators.get(0).getId(),
 												  newName,
 												  newPwd,
-												  participantRoles);
+												  participantRoles,
+												  null);
 			
 			testService.updateParticipant(newPart);
 			exc1 = false;
@@ -772,7 +774,8 @@ public class UserServiceTest {
 			Participant newPart = new Participant(participants.get(0).getId(),
 												  existingName,
 												  newPwd,
-												  participantRoles);
+												  participantRoles,
+												  null);
 							
 			testService.updateParticipant(newPart);
 			exc2 = false;

@@ -28,7 +28,7 @@ public class Experiment {
 		READY,
 		RUNNING,
 		COMPLETE
-	}
+	} 
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -55,7 +55,7 @@ public class Experiment {
 		
 		this.id = id;
 		this.title = title;
-		this.testGroups = testGroups;
+		setTestGroups(testGroups);
 		status = Status.NOT_READY;
 	}
 	
@@ -92,6 +92,15 @@ public class Experiment {
 	}
 	
 	public void setTestGroups(Set<TestGroup> testGroups) {
+		
+		if (testGroups != null) {
+			
+			for (TestGroup g : testGroups) {
+				
+				g.setExperiment(this);
+			}
+		}
+		
 		this.testGroups = testGroups;
 	}
 	
@@ -101,6 +110,7 @@ public class Experiment {
 	
 	public void addTestGroup(TestGroup group) {
 		
+		group.setExperiment(this);
 		testGroups.add(group);
 	}
 	

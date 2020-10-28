@@ -30,7 +30,7 @@ public class ExperimentTest {
 		
 		testGroups.add(g1);
 		testGroups.add(g2);
-	} 
+	}  
 	
 	@Test
 	public void testConstructor1() {
@@ -51,6 +51,13 @@ public class ExperimentTest {
 		assertEquals(testTitle, e.getTitle());
 		assertIterableEquals(testGroups, e.getTestGroups());
 		assertEquals(Status.NOT_READY, e.getStatus());
+		
+		for (TestGroup g : testGroups) {
+			
+			assertEquals(e, g.getExperiment());
+			assertEquals(e.getId(), g.getExperimentId());
+			assertEquals(e.getTitle(), g.getExperimentTitle());
+		}
 	}
 	
 	@Test
@@ -71,7 +78,7 @@ public class ExperimentTest {
 		
 		assertNotEquals(testId, e.getId());
 		assertNotEquals(testTitle, e.getTitle());
-		assertEquals(0, e.getTestGroups().size());
+		assertEquals(0, e.getTestGroups().size()); 
 		
 		e.setId(testId);
 		e.setTitle(testTitle);
@@ -83,7 +90,12 @@ public class ExperimentTest {
 		assertIterableEquals(testGroups, e.getTestGroups());
 		assertEquals(Status.READY, e.getStatus());
 		
-		System.out.println("Status: " + e.getStatus());
+		for (TestGroup g : e.getTestGroups()) {
+			
+			assertEquals(e, g.getExperiment());
+			assertEquals(e.getId(), g.getExperimentId());
+			assertEquals(e.getTitle(), g.getExperimentTitle());
+		}
 	}
 	
 	@Test

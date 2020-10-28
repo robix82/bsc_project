@@ -1,7 +1,5 @@
 package ch.usi.hse.db.repositories;
 
-import java.util.List;
-
 import javax.transaction.Transactional;
 
 import ch.usi.hse.db.entities.Participant;
@@ -15,5 +13,4 @@ import ch.usi.hse.db.entities.Participant;
 @Transactional
 public interface ParticipantRepository extends UserBaseRepository<Participant> {
 
-	public List<Participant> findByExperimentId(int experimentId);
 }

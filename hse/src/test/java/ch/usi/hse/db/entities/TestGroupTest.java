@@ -28,11 +28,11 @@ public class TestGroupTest {
 		testParticipants.add(new Participant("p1", "pwd"));
 		testParticipants.add(new Participant("p2", "pwd"));
 	}
-	
+	 
 	@Test 
 	public void testConstructor1() {
 		
-		TestGroup g = new TestGroup();
+		TestGroup g = new TestGroup(); 
 		
 		assertEquals(0, g.getId());
 		assertNotNull(g.getParticipants());
@@ -47,20 +47,21 @@ public class TestGroupTest {
 		assertEquals(testName, g.getName());
 		assertIterableEquals(testParticipants, g.getParticipants());
 		assertEquals(testExperiment, g.getExperiment());
+		assertEquals(testExperiment.getId(), g.getExperimentId());
+		assertEquals(testExperiment.getTitle(), g.getExperimentTitle());
+		
+		for (Participant p : g.getParticipants()) {
+			
+			assertEquals(g, p.getTestGroup());
+			assertEquals(g.getId(), p.getTestGroupId());
+			assertEquals(g.getName(), p.getTestGroupName());
+			assertEquals(testExperiment.getId(), p.getExperimentId());
+			assertEquals(testExperiment.getTitle(), p.getExperimentTitle());
+		}
 	}
 	
 	@Test
 	public void testConstructor3() {
-		
-		TestGroup g = new TestGroup(testName, testParticipants);
-		
-		assertEquals(0, g.getId());
-		assertEquals(testName, g.getName());
-		assertEquals(testParticipants, g.getParticipants());
-	}
-	
-	@Test
-	public void testConstructor4() {
 		
 		TestGroup g = new TestGroup(testName);
 		
@@ -74,10 +75,15 @@ public class TestGroupTest {
 		
 		TestGroup g = new TestGroup();
 		
+		int expId = 123;
+		String expTitle = "abc";
+		
 		assertNotEquals(testId, g.getId());
 		assertNotEquals(testName, g.getName());
 		assertEquals(0, g.getParticipants().size());
 		assertNotEquals(testExperiment, g.getExperiment());
+		assertNotEquals(testExperiment.getId(), g.getExperimentId());
+		assertNull(g.getExperimentTitle());
 		
 		g.setId(testId);
 		g.setName(testName);
@@ -88,17 +94,35 @@ public class TestGroupTest {
 		assertEquals(testName, g.getName());
 		assertIterableEquals(testParticipants, g.getParticipants());
 		assertEquals(testExperiment, g.getExperiment());
+		assertEquals(testExperiment.getId(), g.getExperimentId());
+		assertEquals(testExperiment.getTitle(), g.getExperimentTitle());
 		
 		for (Participant p : g.getParticipants()) {
 			
+			assertEquals(g, p.getTestGroup());
+			assertEquals(testId, p.getTestGroupId());
+			assertEquals(testName, p.getTestGroupName());
 			assertEquals(testExperiment.getId(), p.getExperimentId());
+			assertEquals(testExperiment.getTitle(), p.getExperimentTitle());
+		}
+		
+		g.setExperimentId(expId);
+		g.setExperimentTitle(expTitle);
+		
+		assertEquals(expId, g.getExperimentId());
+		assertEquals(expTitle, g.getExperimentTitle());
+		
+		for (Participant p : g.getParticipants()) {
+			
+			assertEquals(expId, p.getExperimentId());
+			assertEquals(expTitle, p.getExperimentTitle());
 		}
 	}
 	 
 	@Test
 	public void testAddParticipant() {
 		
-		TestGroup g = new TestGroup(testName, testParticipants);
+		TestGroup g = new TestGroup(testId, testName, testParticipants, testExperiment);
 		Participant newParticipant = new Participant("p3", "pwd");
 		
 		assertEquals(2, g.getParticipants().size());
@@ -108,12 +132,18 @@ public class TestGroupTest {
 		
 		assertEquals(3, g.getParticipants().size());
 		assertTrue(g.getParticipants().contains(newParticipant));
+		
+		assertEquals(g, newParticipant.getTestGroup());
+		assertEquals(g.getId(), newParticipant.getTestGroupId());
+		assertEquals(g.getName(), newParticipant.getTestGroupName());
+		assertEquals(testExperiment.getId(), newParticipant.getExperimentId());
+		assertEquals(testExperiment.getTitle(), newParticipant.getExperimentTitle());
 	}
 	
 	@Test
 	public void testRemoveParticipant() {
 		
-		TestGroup g = new TestGroup(testName, testParticipants);
+		TestGroup g = new TestGroup(testId, testName, testParticipants, testExperiment);
 		Participant p = (Participant) testParticipants.toArray()[0];  
 		
 		assertEquals(2, g.getParticipants().size());
@@ -128,7 +158,7 @@ public class TestGroupTest {
 	@Test
 	public void testClearParticipants() {
 		
-		TestGroup g = new TestGroup(testName, testParticipants);
+		TestGroup g = new TestGroup(testId, testName, testParticipants, testExperiment);
 		
 		assertNotEquals(0, g.getParticipants().size());
 		g.clearParticipants();

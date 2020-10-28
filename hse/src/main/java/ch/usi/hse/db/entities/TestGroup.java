@@ -15,6 +15,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 /**
  * db entity representing test groups
@@ -37,8 +39,15 @@ public class TestGroup {
 	private Set<Participant> participants;
 	
 	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="experiment_id")
+	@JoinColumn(name="exp_id")
+	@JsonIgnore
 	private Experiment experiment;
+	
+	@Column(name="experiment_id")
+	private int experimentId;
+	
+	@Column(name="experiment_title")
+	private String experimentTitle;
 	
 	public TestGroup() {
 		
@@ -48,17 +57,11 @@ public class TestGroup {
 	
 	public TestGroup(int id, String name, Set<Participant> participants, Experiment experiment) {
 		
-		this.id = id;
+		this.id = id; 
 		this.name = name; 
-		this.participants = participants;
-		this.experiment = experiment;
-	}
-	
-	public TestGroup(String name, Set<Participant> participants) {
-		
-		id = 0;
-		this.name = name;
-		this.participants = participants;
+
+		setParticipants(participants);
+		setExperiment(experiment);
 	}
 	
 	public TestGroup(String name) {
@@ -84,6 +87,14 @@ public class TestGroup {
 		return participants;
 	}
 	
+	public int getExperimentId() {
+		return experimentId;
+	}
+	
+	public String getExperimentTitle() {
+		return experimentTitle;
+	}
+	
 	public void setId(int id) {
 		this.id = id;
 	}
@@ -96,17 +107,51 @@ public class TestGroup {
 		
 		this.experiment = experiment;
 		
-		for (Participant p : participants) {
-			p.setExperimentId(experiment.getId());
+		if (experiment != null) {
+			
+			experimentId = experiment.getId();
+			experimentTitle = experiment.getTitle();
+			
+			for (Participant p : participants) {
+				
+				p.setExperimentId(experiment.getId());
+				p.setExperimentTitle(experiment.getTitle());
+			}
 		}
 	}
 	
 	public void setParticipants(Set<Participant> participants) {
+		
+		for (Participant p : participants) {
+			
+			p.setTestGroup(this);
+		}
+		
 		this.participants = participants;
+	}
+	
+	public void setExperimentId(int experimentId) {
+		
+		this.experimentId = experimentId;
+		
+		for (Participant p : participants) {
+			
+			p.setExperimentId(experimentId);
+		}
+	}
+	
+	public void setExperimentTitle(String experimentTitle) {
+		
+		this.experimentTitle = experimentTitle;
+		
+		for (Participant p : participants) {
+			p.setExperimentTitle(experimentTitle);
+		}
 	}
 	
 	public void addParticipant(Participant p) {
 		
+		p.setTestGroup(this);
 		participants.add(p);
 	}
 	

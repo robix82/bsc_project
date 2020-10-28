@@ -490,7 +490,7 @@ public class AdminControllerIntegrationTest {
 		
 		String url = base + "/participants";
 		int badId = participants.get(0).getId() + 999;
-		Participant participant = new Participant(badId, "p", "pwd", participantRoles);
+		Participant participant = new Participant(badId, "p", "pwd", participantRoles, null);
 		String jsonString = writer.writeValueAsString(participant);
 		
 		assertFalse(participantRepo.existsById(badId));

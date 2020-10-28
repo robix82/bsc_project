@@ -85,9 +85,9 @@ public class AdminControllerUnitTest {
 		experimenters.add(new Experimenter(4, "exp1", "pwd", new HashSet<>()));
 		experimenters.add(new Experimenter(5, "exp2", "pwd", new HashSet<>()));
 		experimenters.add(new Experimenter(6, "exp3", "pwd", new HashSet<>()));
-		participants.add(new Participant(7, "part1", "pwd", new HashSet<>()));
-		participants.add(new Participant(8, "part2", "pwd6", new HashSet<>()));
-		participants.add(new Participant(9, "part3", "pwd6", new HashSet<>()));
+		participants.add(new Participant(7, "part1", "pwd", new HashSet<>(), null));
+		participants.add(new Participant(8, "part2", "pwd6", new HashSet<>(), null));
+		participants.add(new Participant(9, "part3", "pwd6", new HashSet<>(), null));
 		
 		newAdministrator= administrators.get(0);
 		existingAdministrator= administrators.get(1);
