@@ -38,7 +38,7 @@ public class Experiment {
 	@Column(name="title")
 	private String title;
 	
-	@OneToMany(mappedBy="experiment", fetch=FetchType.LAZY, orphanRemoval=true, cascade=CascadeType.ALL)
+	@OneToMany(mappedBy="experiment", fetch=FetchType.EAGER, orphanRemoval=true, cascade=CascadeType.ALL)
 	private Set<TestGroup> testGroups;
 	
 	@Column(name="status")
@@ -49,7 +49,7 @@ public class Experiment {
 		id = 0; 
 		testGroups = new HashSet<>();
 		status = Status.NOT_READY;
-	}
+	} 
 	
 	public Experiment(int id, String title, Set<TestGroup> testGroups) {
 		

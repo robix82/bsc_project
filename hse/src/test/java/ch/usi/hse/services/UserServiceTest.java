@@ -24,6 +24,7 @@ import ch.usi.hse.db.repositories.AdministratorRepository;
 import ch.usi.hse.db.repositories.ExperimenterRepository;
 import ch.usi.hse.db.repositories.ParticipantRepository;
 import ch.usi.hse.db.repositories.RoleRepository;
+import ch.usi.hse.db.repositories.TestGroupRepository;
 import ch.usi.hse.db.repositories.UserRepository;
 import ch.usi.hse.exceptions.NoSuchUserException;
 import ch.usi.hse.exceptions.UserExistsException;
@@ -41,6 +42,9 @@ public class UserServiceTest {
 	
 	@Mock
 	private ParticipantRepository participantRepository;
+	
+	@Mock
+	private TestGroupRepository testGroupRepository;
 	
 	@Mock
 	private RoleRepository roleRepository;
@@ -93,6 +97,7 @@ public class UserServiceTest {
 									   administratorRepository,
 									   experimenterRepository,
 									   participantRepository,
+									   testGroupRepository,
 									   roleRepository,
 									   bCryptPasswordEncoder );
 								

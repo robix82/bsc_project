@@ -32,13 +32,13 @@ public abstract class User {
 	@Column(name="active")
 	protected boolean active;
 
-	@ManyToMany(cascade=CascadeType.MERGE)
+	@ManyToMany(cascade={CascadeType.PERSIST}, fetch=FetchType.EAGER)
 	@JoinTable(name="user_role", joinColumns=@JoinColumn(name="user_id"), 
 			   inverseJoinColumns=@JoinColumn(name="role_id"))
 	protected Set<Role> roles;
 	
 	protected User() {
-		 
+		  
 		id = 0;
 		userName = "";
 		password = "";
@@ -48,12 +48,12 @@ public abstract class User {
 	
 	protected User(int id, String userName, String password, Set<Role> roles) {
 		
-		this.id = id;
+		this.id = id; 
 		this.userName = userName;
 		this.password = password;
 		active = true; 
 		this.roles = roles;
-	}
+	} 
 	
 	public User(String userName, String password) {
 		

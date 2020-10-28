@@ -35,12 +35,17 @@ import ch.usi.hse.db.entities.Administrator;
 import ch.usi.hse.db.entities.Experimenter;
 import ch.usi.hse.db.entities.Participant;
 import ch.usi.hse.db.entities.Role;
+import ch.usi.hse.db.entities.TestGroup;
 import ch.usi.hse.db.repositories.AdministratorRepository;
+import ch.usi.hse.db.repositories.ExperimentRepository;
 import ch.usi.hse.db.repositories.ExperimenterRepository;
 import ch.usi.hse.db.repositories.ParticipantRepository;
 import ch.usi.hse.db.repositories.RoleRepository;
+import ch.usi.hse.db.repositories.TestGroupRepository;
 import ch.usi.hse.db.repositories.UserRepository;
 import ch.usi.hse.exceptions.ApiError;
+import ch.usi.hse.exceptions.UserExistsException;
+import ch.usi.hse.services.UserService;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -63,7 +68,13 @@ public class AdminControllerIntegrationTest {
 	private ParticipantRepository participantRepo;
 	
 	@Autowired
+	private TestGroupRepository groupRepo;
+	
+	@Autowired
 	private RoleRepository roleRepo;
+	
+	@Autowired
+	private UserService userService;
 	
 	private ObjectMapper mapper;
 	private ObjectWriter writer;
@@ -77,8 +88,10 @@ public class AdminControllerIntegrationTest {
 	 
 	private Set<Role> adminRoles, experimenterRoles, participantRoles;
 	
+	private TestGroup testGroup;
+	
 	@BeforeEach
-	public void setUp() {
+	public void setUp() throws UserExistsException {
 		
 		mapper = new ObjectMapper();
 		mapper.findAndRegisterModules();
@@ -94,41 +107,71 @@ public class AdminControllerIntegrationTest {
 		experimenterRoles.add(roleRepo.findByRole("EXPERIMENTER"));
 		participantRoles.add(roleRepo.findByRole("PARTICIPANT"));
 		
-		administrators = new ArrayList<>();
-		experimenters = new ArrayList<>();
-		participants = new ArrayList<>();
+		List<Administrator> _administrators = new ArrayList<>();
+		List<Experimenter> _experimenters = new ArrayList<>();
+		List<Participant> _participants = new ArrayList<>();
+		TestGroup _testGroup = new TestGroup("g");
 		
-		administrators.add(new Administrator("admin1", "pwd1"));
-		administrators.add(new Administrator("admin2", "pwd2"));
-		experimenters.add(new Experimenter("exp1", "pwd3"));
-		experimenters.add(new Experimenter("exp2", "pwd"));
-		participants.add(new Participant("part1", "pwd5"));
-		participants.add(new Participant("part2", "pwd6"));
+		_administrators.add(new Administrator("admin1", "pwd1"));
+		_administrators.add(new Administrator("admin2", "pwd2"));
+		_experimenters.add(new Experimenter("exp1", "pwd3"));
+		_experimenters.add(new Experimenter("exp2", "pwd"));
+		_participants.add(new Participant("part1", "pwd5"));
+		_participants.add(new Participant("part2", "pwd6"));
 		
 		userRepo.deleteAll();
+		groupRepo.deleteAll();
+
+		administrators = new ArrayList<>();
+		experimenters = new ArrayList<>();
+		participants = new ArrayList<>(); 
+
+		for (Administrator a : _administrators) {
+
+			administrators.add(userService.addAdministrator(a));
+		}
+		
+		for (Experimenter e : _experimenters) {
+ 
+			experimenters.add(userService.addExperimenter(e));
+		}
+		
+		for (Participant p : _participants) {
+
+			participants.add(userService.addParticipant(p));
+		}
+	
+	//	_testGroup.setParticipants(new HashSet<>(participants));
+		
+		testGroup = groupRepo.save(_testGroup);
+		testGroup.setParticipants(new HashSet<>(participants));
+		groupRepo.save(testGroup);
+	}
+	
+	@Test
+	public void testSetup() {
+		
+		assertIterableEquals(administrators, administratorRepo.findAll());
+		assertIterableEquals(experimenters, experimenterRepo.findAll());
+		assertIterableEquals(participants, participantRepo.findAll());
+		assertIterableEquals(participants, testGroup.getParticipants());
 		
 		for (Administrator a : administrators) {
-			
-			a.setRoles(adminRoles);
-			administratorRepo.save(a);
-			a.setId(userRepo.findByUserName(a.getUserName()).getId());
+			assertIterableEquals(adminRoles, a.getRoles());
 		}
 		
 		for (Experimenter e : experimenters) {
-			
-			e.setRoles(experimenterRoles);
-			experimenterRepo.save(e);
-			e.setId(userRepo.findByUserName(e.getUserName()).getId());
+			assertIterableEquals(experimenterRoles, e.getRoles());
 		}
 		
 		for (Participant p : participants) {
-			
-			p.setRoles(participantRoles);
-			participantRepo.save(p);
-			p.setId(userRepo.findByUserName(p.getUserName()).getId());
+			assertIterableEquals(participantRoles, p.getRoles());
 		}
 	}
 	
+	
+	
+
 	@Test
 	public void testGetAdminUi() throws Exception {
 		
@@ -139,7 +182,7 @@ public class AdminControllerIntegrationTest {
 		   .andExpect(model().attribute("experimenters", Matchers.iterableWithSize(experimenters.size())))
 		   .andExpect(model().attribute("participants", Matchers.iterableWithSize(participants.size())));
 	}
- 
+
 	@Test // add a new Administrator
 	public void testAddAdministrator1() throws Exception {
 		
@@ -283,7 +326,7 @@ public class AdminControllerIntegrationTest {
 		
 		assertEquals(oldCount, newCount);
 	}
-
+	
 	@Test
 	public void testUpdateAdministrator1() throws Exception {
 		
@@ -358,7 +401,7 @@ public class AdminControllerIntegrationTest {
 		
 		assertFalse(userRepo.existsById(badId));
 	}
-	
+
 	@Test
 	public void testUpdateExperimenter1() throws Exception {
 		
@@ -506,7 +549,7 @@ public class AdminControllerIntegrationTest {
 		
 		assertFalse(participantRepo.existsById(badId));
 	}
-	
+
 	@Test
 	public void testDeleteAdministrator1() throws Exception {
 		
@@ -616,23 +659,25 @@ public class AdminControllerIntegrationTest {
 		assertEquals(oldCount, newCount);
 		assertTrue(experimenterRepo.existsByUserName(experimenter.getUserName()));
 	}
-	
+
 	@Test
 	public void testDeleteParticipan1() throws Exception {
 		
 		String url = base + "/participants";
 		
-		Participant participant = participants.get(0);
+		Participant participant = participantRepo.findById(participants.get(0).getId());
 		int id = participant.getId();
 		String jsonString = writer.writeValueAsString(participant);
 		
 		long oldCount = participantRepo.count();
 		
 		assertTrue(participantRepo.existsById(id));
+
+		assertTrue(groupRepo.findById(participant.getTestGroupId()).getParticipants().contains(participant));
 		
 		MvcResult res = mvc.perform(delete(url).contentType(json).content(jsonString))
 				 		   .andExpect(status().isOk())
-				 		   .andReturn();
+				 		   .andReturn(); 
 		
 		Participant resBody = mapper.readValue(resString(res), Participant.class);
 		
@@ -642,6 +687,7 @@ public class AdminControllerIntegrationTest {
 		
 		assertEquals(oldCount -1, newCount);
 		assertFalse(participantRepo.existsById(id));
+		assertFalse(groupRepo.findById(participant.getTestGroupId()).getParticipants().contains(participant));
 	}
 	
 	@Test
@@ -693,23 +739,23 @@ public class AdminControllerIntegrationTest {
 		
 		String url = base + "/participants/all";
 		
-		assertNotEquals(0, participantRepo.count());
+		assertNotEquals(0, participantRepo.count());	
+		assertNotEquals(0, groupRepo.findById(testGroup.getId()).getParticipants().size());
 		
 		MvcResult res = mvc.perform(delete(url))
 				 		   .andExpect(status().isOk())
 				 		   .andReturn();
-		
+		 
 		assertEquals("Participants Cleared", resString(res));
 		
 		assertEquals(0, participantRepo.count());
+		assertEquals(0, groupRepo.findById(testGroup.getId()).getParticipants().size());
 	}
 
 	/////////////////
 
 	private String resString(MvcResult res) throws UnsupportedEncodingException {
 		
-		System.out.println("RESULT STRING:");
-		System.out.println(res.getResponse().getContentAsString());
 		
 		return res.getResponse().getContentAsString();
 	}
