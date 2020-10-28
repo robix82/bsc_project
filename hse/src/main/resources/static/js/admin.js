@@ -10,13 +10,28 @@ $(document).ready(function() {
 	console.log(participants);
 	
 	$("#newAdminBtn").on("click", () => {
-		showAddAdministratorModal();
+		showAdministratorInputModal();
 	});
 
+	$("#newExperimenterBtn").on("click", () => {
+		showExperimenterInputModal();
+	});
+	
+	$("#newParticipantBtn").on("click", () => {
+		showParticipantInputModal();
+	});
 });
 
-function showAddAdministratorModal() {
+function showAdministratorInputModal(admin) {
+	 
+	let method = "POST";
 	
+	if (admin != null) {
+		
+		method = "PUT";
+		$("#administratorUserNameInput").val(admin.userName);
+	}
+
 	$("#submitAdministratorBtn").on("click", () => {
 		
 		let uName = $("#administratorUserNameInput").val().trim();
@@ -28,44 +43,176 @@ function showAddAdministratorModal() {
 			return;
 		}
 		
-		if (pwd == "") {
+		if (admin == null && pwd == "") {
 			
 			showErrorModal(m_error, m_missingPassword);
 			return;
 		}
 
-		let newAdmin = {
-			userName: uName,
-			password: pwd
-		};
+		if (! admin) {
 			
-		postAdministrator(newAdmin);
-
-	})
+			admin = {
+				userName: uName,
+				password: pwd
+			}
+		}
+		else {
+			
+			admin.userName = uName;
+			
+			if (pwd != "") {
+				admin.password = pwd;
+			}
+		}
+			
+		submitUser(admin, "administrators", method);
+	});
 	
 	$("#administratorInputModal").modal("show"); 
 }
 
-function showAdminEditModal(admin) {
+function showExperimenterInputModal(experimenter) { 
 	
-	console.log("show edit modal");
+	let method = "POST"; 
+	
+	if (experimenter != null) {
+		 
+		method = "PUT";
+		$("#experimenterUserNameInput").val(experimenter.userName);
+	}
+	
+	$("#submitExperimenterBtn").on("click", () => {
+		
+		let uName = $("#experimenterUserNameInput").val().trim();
+		let pwd = $("#experimenterPasswordInput").val().trim();
+		
+		if (uName == "") {
+			
+			showErrorModal(m_error, m_missingUserName);
+			return;
+		}
+		
+		if (experimenter == null && pwd == "") {
+			
+			showErrorModal(m_error, m_missingPassword);
+			return;
+		}
+
+		if (! experimenter) {
+			
+			experimenter = {
+				userName: uName,
+				password: pwd
+			}
+		}
+		else {
+			
+			experimenter.userName = uName;
+			
+			if (pwd != "") {
+				experimenter.password = pwd;
+			}
+		}
+			
+		submitUser(experimenter, "experimenters", method);
+	});
+	
+	$("#experimenterInputModal").modal("show"); 
+}
+
+function showParticipantInputModal(participant) { 
+	
+	let method = "POST"; 
+	
+	if (participant != null) {
+		
+		method = "PUT";
+		$("#participantUserNameInput").val(participant.userName);
+		$("#participantExperimentInput").val(participant.experimentTitle);
+		$("#participantGroupInput").val(participant.testGroupName);
+	}
+	
+	$("#submitParticipantBtn").on("click", () => {
+		
+		let uName = $("#participantUserNameInput").val().trim();
+		let pwd = $("#participantPasswordInput").val().trim();
+		
+		if (uName == "") { 
+			
+			showErrorModal(m_error, m_missingUserName);
+			return;
+		}
+		
+		if (participant == null && pwd == "") {
+			
+			showErrorModal(m_error, m_missingPassword);
+			return;
+		}
+
+		if (! participant) {
+			
+			participant = {
+				userName: uName,
+				password: pwd,
+				testGroupName: $("#participantGroupInput").val().trim(),
+				experimentTitle: $("#participantExperimentInput").val().trim()
+			}
+		}
+		else {
+			
+			participant.userName = uName;
+			participant.testGroupName = $("#participantGroupInput").val().trim(),
+			participant.experimentTitle = $("#participantExperimentInput").val().trim()
+			
+			if (pwd != "") {
+				participant.password = pwd;
+			}
+		}
+			
+		submitUser(participant, "participants", method);
+	});
+	 
+	$("#participantInputModal").modal("show"); 
 }
 
 function showAdminDeleteModal(admin) {
 	
-	showConfirmDeleteModal(admin.userName, () =>{ deleteAdministrator(admin); })
+	showConfirmDeleteModal(admin.userName, () => { deleteUser(admin, "administrators"); });
 }
 
-function postAdministrator(administrator) {
+function showExperimenterDeleteModal(experimenter) {
 	
-	let succMsg = m_administrator + " " + administrator.userName + " " + m_saved + ".";
+	showConfirmDeleteModal(experimenter.userName, () => { deleteUser(experimenter, "experimenters"); });
+}  
+
+function showParticipantDeleteModal(participant) {
 	
-	$.ajax("/admin/administrators",
+	showConfirmDeleteModal(participant.userName, () => { deleteUser(participant, "participants"); });
+} 
+
+function submitUser(user, category, method) { 
+	
+	let msg = "";
+	
+	if (category == "administrators") {
+		msg = m_administrator;
+	}
+	else if (category == "experimenters") {
+		msg = m_experimenter;
+	}
+	else if (category == "participants") {
+		msg = m_participant;
+	}
+	
+	let succMsg = msg + " " + user.userName + " " + m_saved + ".";
+	let url = "/admin/" + category;
+	
+	$.ajax(url,
 		{
-			type: "POST",
+			type: method,
 			dataType: "json",
 			contentType: 'application/json; charset=utf-8',
-			data: JSON.stringify(administrator),
+			data: JSON.stringify(user),
 			success: () => {
 
 				showInfoModal("", succMsg, () => { location.reload(); });
@@ -78,16 +225,29 @@ function postAdministrator(administrator) {
 	);
 }
 
-function deleteAdministrator(administrator) {
+function deleteUser(user, category) {
 	
-	let succMsg = m_administrator + " " + administrator.userName + " " + m_deleted + ".";
+	let msg = "";
 	
-	$.ajax("/admin/administrators",
+	if (category == "administrators") {
+		msg = m_administrator;
+	}
+	else if (category == "experimenters") {
+		msg = m_experimenter;
+	}
+	else if (category == "participants") {
+		msg = m_participant;
+	}
+	
+	let succMsg = msg + " " + user.userName + " " + m_deleted + ".";
+	let url = "/admin/" + category;
+	
+	$.ajax(url,
 		{
 			type: "DELETE",
 			dataType: "json",
 			contentType: 'application/json; charset=utf-8',
-			data: JSON.stringify(administrator),
+			data: JSON.stringify(user),
 			success: () => {
 
 				showInfoModal("", succMsg, () => { location.reload(); });

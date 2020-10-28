@@ -37,7 +37,6 @@ import ch.usi.hse.db.entities.Participant;
 import ch.usi.hse.db.entities.Role;
 import ch.usi.hse.db.entities.TestGroup;
 import ch.usi.hse.db.repositories.AdministratorRepository;
-import ch.usi.hse.db.repositories.ExperimentRepository;
 import ch.usi.hse.db.repositories.ExperimenterRepository;
 import ch.usi.hse.db.repositories.ParticipantRepository;
 import ch.usi.hse.db.repositories.RoleRepository;

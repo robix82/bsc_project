@@ -357,6 +357,8 @@ public class UserService {
 		
 		Participant newParticipant = new Participant(userName, pwd);
 		newParticipant.setRoles(roles);
+		newParticipant.setExperimentTitle(participant.getExperimentTitle());
+		newParticipant.setTestGroupName(participant.getTestGroupName());
 		
 		Participant saved = participantRepository.save(newParticipant);
 		
@@ -497,6 +499,9 @@ public class UserService {
 
 			found.setPassword(bCryptPasswordEncoder.encode(password));
 		}
+		
+		found.setExperimentTitle(participant.getExperimentTitle());
+		found.setTestGroupName(participant.getTestGroupName());
 		
 		Participant updated = participantRepository.save(found);
 		

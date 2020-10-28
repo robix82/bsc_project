@@ -34,3 +34,35 @@ var m_experimenter = $("#m_experimenter").text();
 var m_experimenters = $("#m_experimenters").text();
 var m_participant = $("#m_participant").text();
 var m_participants = $("#m_participants").text();
+
+var m_testGroup = $("#m_testGroup").text();
+var m_experiment = $("#m_experiment").text();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

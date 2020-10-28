@@ -46,7 +46,7 @@
 
 				        <td>
 							<button class="btn btn-sm btn-light"
-									th:onclick="showAdminEditModal([[${administrator}]])">
+									th:onclick="showAdministratorInputModal([[${administrator}]])">
 							<span class="glyphicon glyphicon-pencil"></span>
 							</button>
 						</td>
@@ -68,13 +68,87 @@
 			
 			<div class="user-tab">
 			
+				<div class="tab-header">
 				<h3 th:text="#{m_experimenters}"></h3>
+				<button id="newExperimenterBtn" class="btn btn-primary">
+				<span class="glyphicon glyphicon-plus"></span>
+				</button>
+				</div>
+				
+				<table class="table">
+							
+				    <tbody>
+
+				      <tr th:each="experimenter: ${experimenters}">
+
+				        <td th:text="${experimenter.id}" ></td>
+				        <td th:text="${experimenter.userName}"></td>
+
+						<td class="table-space"></td>
+
+				        <td>
+							<button class="btn btn-sm btn-light"
+									th:onclick="showExperimenterInputModal([[${experimenter}]])">
+							<span class="glyphicon glyphicon-pencil"></span>
+							</button>
+						</td>
+						
+						<td>
+							<button class="btn btn-sm btn-light"
+									th:onclick="showExperimenterDeleteModal([[${experimenter}]])">
+							<span class="glyphicon glyphicon-remove"></span>
+							</button>
+						</td>
+						
+				      </tr>
+
+				    </tbody>
+
+				  </table>
 			
 			</div>
 			
 			<div class="user-tab">
 			
+				<div class="tab-header">
 				<h3 th:text="#{m_participants}"></h3>
+				<button id="newParticipantBtn" class="btn btn-primary">
+				<span class="glyphicon glyphicon-plus"></span>
+				</button>
+				</div>
+				
+				<table class="table">
+							
+				    <tbody>
+
+				      <tr th:each="participant: ${participants}">
+
+				        <td th:text="${participant.id}" ></td>
+				        <td th:text="${participant.userName}"></td>
+						<td th:text="${participant.experimentTitle}"></td>
+						<td th:text="${participant.testGroupName}"></td>
+
+						<td class="table-space"></td>
+
+				        <td>
+							<button class="btn btn-sm btn-light"
+									th:onclick="showParticipantInputModal([[${participant}]])">
+							<span class="glyphicon glyphicon-pencil"></span>
+							</button>
+						</td>
+						
+						<td>
+							<button class="btn btn-sm btn-light"
+									th:onclick="showParticipantDeleteModal([[${participant}]])">
+							<span class="glyphicon glyphicon-remove"></span>
+							</button>
+						</td>
+						
+				      </tr>
+
+				    </tbody>
+
+				  </table>
 			
 			</div>
 		
@@ -88,8 +162,8 @@
 <script th:inline="javascript">
 	/*<![CDATA[*/
 	var administrators = /*[[${administrators}]]*/ "default";
-	var experimenters = /*[[${administrators}]]*/ "default";
-	var participants = /*[[${administrators}]]*/ "default";
+	var experimenters = /*[[${experimenters}]]*/ "default";
+	var participants = /*[[${participants}]]*/ "default";
 	/*]]>*/
 </script>
 
