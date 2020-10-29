@@ -27,7 +27,7 @@ import ch.usi.hse.exceptions.NoSuchFileException;
 @SpringBootTest
 public class FileStorageTest {
 
-	@Value("${test_file_dir}")
+	@Value("${dir.testFiles}")
 	private String testDir;
 	
 	@Autowired

@@ -26,7 +26,7 @@ import ch.usi.hse.exceptions.NoSuchFileException;
 @Component
 public class UrlListStorage extends FileStorage {
 
-	@Value("${url_lists_dir}")
+	@Value("${dir.urlLists}")
 	private String storageDir;
 	
 	public void store(MultipartFile file) throws FileWriteException {

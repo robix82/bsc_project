@@ -27,7 +27,7 @@ import ch.usi.hse.exceptions.NoSuchFileException;
 @SpringBootTest
 public class UrlListStorageTest {
 
-	@Value("${url_lists_dir}")
+	@Value("${dir.urlLists}")
 	private String storageDir;
 	
 	@Autowired
@@ -46,7 +46,7 @@ public class UrlListStorageTest {
 		
 		String name1 = "list1.txt";
 		String name2 = "list2.txt";
-		listNames = Arrays.asList(name1, name2);
+		listNames = Arrays.asList(name1, name2); 
 		
 		savedList1 = Arrays.asList("url1", "url2", "url3");
 		savedList2 = Arrays.asList("url4", "url5", "url6");

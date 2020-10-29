@@ -63,7 +63,7 @@ public class UserServiceTest {
 	@BeforeEach
 	public void setUp() {
 		
-		initMocks(this);
+		initMocks(this); 
 		
 		// create test data
 		

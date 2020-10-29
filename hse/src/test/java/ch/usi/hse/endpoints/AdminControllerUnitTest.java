@@ -124,7 +124,7 @@ public class AdminControllerUnitTest {
 		doThrow(NoSuchUserException.class).when(userService).removeUser(newExperimenter.getId());
 		doThrow(NoSuchUserException.class).when(userService).removeUser(newParticipant.getId());
 	} 
-	
+	 
 	@Test
 	public void testGetAdminUi() throws Exception {
 		
