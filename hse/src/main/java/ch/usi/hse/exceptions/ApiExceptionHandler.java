@@ -23,7 +23,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
 	@ExceptionHandler(UserExistsException.class) 
-	public ResponseEntity<Object> handleUserExists(UserExistsException e) {
+	public ResponseEntity<Object> handleUserExistsException(UserExistsException e) {
 		
 		HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
 		
@@ -33,9 +33,49 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	}
 	
 	@ExceptionHandler(NoSuchUserException.class)
-	public ResponseEntity<Object> handleNoSuchUser(NoSuchUserException e)  {
+	public ResponseEntity<Object> handleNoSuchUserException(NoSuchUserException e)  {
 		
 		HttpStatus status = HttpStatus.NOT_FOUND;
+		
+		ApiError err = new ApiError(status, e);
+		
+		return new ResponseEntity<>(err, status);
+	}
+	
+	@ExceptionHandler(FileWriteException.class)
+	public ResponseEntity<Object> handleFileWriteException(FileWriteException e) {
+		
+		HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+		
+		ApiError err = new ApiError(status, e);
+		
+		return new ResponseEntity<>(err, status);
+	}
+	
+	@ExceptionHandler(FileReadException.class)
+	public ResponseEntity<Object> handleFileReadException(FileReadException e) {
+		
+		HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+		
+		ApiError err = new ApiError(status, e);
+		
+		return new ResponseEntity<>(err, status);
+	}
+	
+	@ExceptionHandler(NoSuchFileException.class)
+	public ResponseEntity<Object> handleNoSuchFileException(NoSuchFileException e) {
+		
+		HttpStatus status = HttpStatus.NOT_FOUND;
+		
+		ApiError err = new ApiError(status, e);
+		
+		return new ResponseEntity<>(err, status);
+	}
+	
+	@ExceptionHandler(FileDeleteException.class)
+	public ResponseEntity<Object> handleFileDeleteException(FileDeleteException e) {
+		
+		HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
 		
 		ApiError err = new ApiError(status, e);
 		

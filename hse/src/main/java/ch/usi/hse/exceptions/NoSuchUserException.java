@@ -1,7 +1,7 @@
 package ch.usi.hse.exceptions;
 
 /**
- * Exception thrown on attemts to retrieve a User
+ * Exception thrown on attempts to retrieve a User
  * by a non existing id id user name
  * 
  * @author robert.jans@usi.ch

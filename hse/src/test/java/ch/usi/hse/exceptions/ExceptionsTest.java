@@ -94,6 +94,82 @@ public class ExceptionsTest {
 		assertTrue(exc1);
 		assertTrue(exc2);
 	}
+	
+	@Test
+	public void testFileWriteException() {
+		
+		String fName = "fName";
+		String msg = "Error writing file " + fName;
+		boolean exc = false;
+		
+		try {
+			throw new FileWriteException(fName);
+		}
+		catch (Exception e) {
+			
+			assertEquals(msg, e.getMessage());
+			exc = true;
+		}
+		
+		assertTrue(exc);
+	}
+	
+	@Test
+	public void testFileReadException() {
+		
+		String fName = "fName";
+		String msg = "Error reading file " + fName;
+		boolean exc = false;
+		
+		try {
+			throw new FileReadException(fName);
+		}
+		catch (Exception e) {
+			
+			assertEquals(msg, e.getMessage());
+			exc = true;
+		}
+		
+		assertTrue(exc);
+	}
+	
+	@Test
+	public void testNoSuchFileException() {
+		
+		String fName = "fName";
+		String msg = "File " + fName + " not found";
+		boolean exc = false;
+		
+		try {
+			throw new NoSuchFileException(fName);
+		}
+		catch (Exception e) {
+			
+			assertEquals(msg, e.getMessage());
+			exc = true;
+		}
+		
+		assertTrue(exc);
+	}
+	
+	@Test
+	public void testFileDeleteException() {
+		
+		String fName = "fName";
+		String msg = "Error deleting file " + fName;
+		boolean exc = false;
+		
+		try {
+			throw new FileDeleteException(fName);
+		}
+		catch (Exception e) {
+			
+			assertEquals(msg, e.getMessage());
+			exc = true;
+		}
+		
+		assertTrue(exc);
+	}
 }
 
 
