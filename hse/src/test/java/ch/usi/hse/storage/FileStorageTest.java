@@ -77,11 +77,22 @@ public class FileStorageTest {
 	}
 	
 	@Test
-	public void testStore() throws IOException, FileWriteException {
+	public void testStore1() throws IOException, FileWriteException {
 		
 		assertEquals(1, Files.list(testDirPath).count());
 		
 		fileStorage.store(testMpFile, testDirPath);
+		
+		assertEquals(2, Files.list(testDirPath).count());
+		assertTrue(Files.exists(testDirPath.resolve(newFileName)));
+	}
+	
+	@Test
+	public void tetStore2() throws IOException, FileWriteException {
+		
+		assertEquals(1, Files.list(testDirPath).count());
+		
+		fileStorage.store(testMpFile, testDir);
 		
 		assertEquals(2, Files.list(testDirPath).count());
 		assertTrue(Files.exists(testDirPath.resolve(newFileName)));
@@ -98,7 +109,17 @@ public class FileStorageTest {
 	}
 	
 	@Test
-	public void testDelete2() throws IOException, FileDeleteException {
+	public void testDelete2() throws IOException, NoSuchFileException, FileDeleteException {
+		
+		assertEquals(1, Files.list(testDirPath).count());
+		
+		fileStorage.delete(testDir + existingFileName);
+		
+		assertEquals(0, Files.list(testDirPath).count());
+	}
+	
+	@Test
+	public void testDelete3() throws IOException, FileDeleteException {
 		
 		boolean exc = false;
 		
@@ -133,7 +154,22 @@ public class FileStorageTest {
 	}
 	
 	@Test
-	public void testGetInputStream2() throws FileReadException {
+	public void testGetInputStream2() throws NoSuchFileException, FileReadException, IOException {
+		
+		InputStream is = fileStorage.getInputStream(testDir + existingFileName);
+		
+		assertNotNull(is);
+		
+		byte[] bf = new byte[is.available()];
+		is.read(bf);
+		
+		assertArrayEquals(testBytes, bf);
+		
+		is.close();
+	}
+	
+	@Test
+	public void testGetInputStream3() throws FileReadException {
 		
 		boolean exc = false;
 		

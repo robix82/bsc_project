@@ -3,6 +3,7 @@ package ch.usi.hse.storage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 
@@ -25,7 +26,7 @@ import ch.usi.hse.exceptions.NoSuchFileException;
 public class FileStorage {
 
 	/**
-	 * Stores the given file
+	 * Stores the given MultiPartFile
 	 * 
 	 * @param file
 	 * @param dirPath
@@ -47,6 +48,20 @@ public class FileStorage {
 			
 			throw new FileWriteException(file.getOriginalFilename());
 		}
+	}
+	
+	/**
+	 * Stores the given MultiPartFile
+	 * 
+	 * @param file
+	 * @param dirPathString
+	 * @throws FileWriteException
+	 */
+	public void store(MultipartFile file, String dirPathString) throws FileWriteException {
+		
+		Path dirPath = Paths.get(dirPathString);
+		
+		store(file, dirPath);
 	}
 	
 	/**
@@ -74,6 +89,22 @@ public class FileStorage {
 		}
 	}
 	
+
+	/**
+	 * Deletes the given file
+	 * 
+	 * @param filePathString
+	 * @throws NoSuchFileException
+	 * @throws FileDeleteException
+	 */
+	public void delete(String filePathString) throws NoSuchFileException,
+											 FileDeleteException {
+		
+		Path filePath = Paths.get(filePathString);
+		
+		delete(filePath);
+	}
+	
 	/**
 	 * returns an InputStream for reading the given file
 	 * 
@@ -98,6 +129,22 @@ public class FileStorage {
 			
 			throw new FileReadException(fName);
 		}
+	}
+	
+	/**
+	 * returns an InputStream for reading the given file
+	 * 
+	 * @param filePathString
+	 * @return
+	 * @throws NoSuchFileException
+	 * @throws FileReadException
+	 */
+	public InputStream getInputStream(String filePathString) throws NoSuchFileException,
+															FileReadException {
+		
+		Path filePath = Paths.get(filePathString);
+		
+		return getInputStream(filePath);
 	}
 }
  
