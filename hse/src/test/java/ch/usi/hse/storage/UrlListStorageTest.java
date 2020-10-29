@@ -45,7 +45,7 @@ public class UrlListStorageTest {
 		storagePath = Paths.get(storageDir);
 		
 		String name1 = "list1.txt";
-		String name2 = "list2.txt";
+		String name2 = "list2.txt"; 
 		listNames = Arrays.asList(name1, name2); 
 		
 		savedList1 = Arrays.asList("url1", "url2", "url3");
@@ -67,7 +67,7 @@ public class UrlListStorageTest {
 		for (String s : savedList1) {
 			ps1.println(s);
 		}
-		
+		 
 		ps1.close();
 		
 		PrintStream ps2 = new PrintStream(new FileOutputStream(storageDir + name2));

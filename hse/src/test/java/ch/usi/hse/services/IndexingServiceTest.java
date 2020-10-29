@@ -47,7 +47,7 @@ public class IndexingServiceTest {
 		newFile = new MockMultipartFile(newName,
 										newName,
 										MediaType.TEXT_PLAIN_VALUE,
-										"some text".getBytes());
+					 					"some text".getBytes());
 		
 		when(urlListStorage.savedFiles()).thenReturn(fileList);
 		doNothing().when(urlListStorage).store(newFile);

@@ -169,7 +169,7 @@ public class AdminControllerIntegrationTest {
 	}
 	
 	
-	
+	 
 
 	@Test
 	public void testGetAdminUi() throws Exception {

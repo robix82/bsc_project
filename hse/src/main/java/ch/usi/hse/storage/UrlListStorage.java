@@ -29,12 +29,25 @@ public class UrlListStorage extends FileStorage {
 	@Value("${dir.urlLists}")
 	private String storageDir;
 	
+	/**
+	 * stores the given file
+	 * 
+	 * @param file
+	 * @throws FileWriteException
+	 */
 	public void store(MultipartFile file) throws FileWriteException {
 		
 		Path path = Paths.get(storageDir);
 		store(file, path);
 	}
 	
+	/**
+	 * deletes the file with the given name
+	 * 
+	 * @param fileName
+	 * @throws NoSuchFileException
+	 * @throws FileDeleteException
+	 */
 	public void delete(String fileName) throws NoSuchFileException, FileDeleteException {
 		
 		Path path = Paths.get(storageDir);
@@ -43,6 +56,14 @@ public class UrlListStorage extends FileStorage {
 		delete(filePath);
 	}
 	
+	/**
+	 * returns the lines in from the file with the given name
+	 * 
+	 * @param fileName
+	 * @return
+	 * @throws NoSuchFileException
+	 * @throws FileReadException
+	 */
 	public List<String> getLines(String fileName) throws NoSuchFileException, FileReadException {
 		
 		Path path = Paths.get(storageDir);
@@ -60,6 +81,12 @@ public class UrlListStorage extends FileStorage {
 		}
 	}
 	
+	/**
+	 * returns the file names of the saved files
+	 * 
+	 * @return
+	 * @throws FileReadException
+	 */
 	public List<String> savedFiles() throws FileReadException {
 		
 		Path path = Paths.get(storageDir);

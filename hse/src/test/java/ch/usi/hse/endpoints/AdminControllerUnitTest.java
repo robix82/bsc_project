@@ -116,7 +116,7 @@ public class AdminControllerUnitTest {
 		when(userService.updateExperimenter(existingExperimenter)).thenReturn(existingExperimenter);
 		when(userService.updateExperimenter(newExperimenter)).thenThrow(NoSuchUserException.class);
 		when(userService.updateExperimenter(existingNameExperimenter)).thenThrow(UserExistsException.class);
-		when(userService.updateParticipant(existingParticipant)).thenReturn(existingParticipant);
+		when(userService.updateParticipant(existingParticipant)).thenReturn(existingParticipant); 
 		when(userService.updateParticipant(newParticipant)).thenThrow(NoSuchUserException.class);
 		when(userService.updateParticipant(existingNameParticipant)).thenThrow(UserExistsException.class);
 		
