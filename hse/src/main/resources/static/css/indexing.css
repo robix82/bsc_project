@@ -43,9 +43,19 @@ h3 {
 	justify-content: space-between;
 }
 
+.urlFileName {
+	
+	margin-right: auto;
+}
+
 .url-lists-row button {
 
-	margin-left: 6em;	
+	margin-left: .5em;	
+}
+
+.dl-link {
+	
+	color: black;
 }
 
 /* FILE INPUT */

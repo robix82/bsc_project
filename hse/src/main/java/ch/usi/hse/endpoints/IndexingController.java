@@ -2,6 +2,12 @@ package ch.usi.hse.endpoints;
 
 
 
+import java.io.IOException;
+import java.io.InputStream;
+
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.core.MediaType;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.util.FileCopyUtils;
 
 import ch.usi.hse.exceptions.FileDeleteException;
 import ch.usi.hse.exceptions.FileReadException;
@@ -86,6 +93,23 @@ public class IndexingController {
 		indexingService.removeUrlList(fileName);
 		
 		return new ResponseEntity<>(msg, HttpStatus.OK);
+	}
+	
+	@GetMapping("/urlLists/dl")
+	public void downloadUrlList(HttpServletResponse response, @RequestParam String fileName) 
+			throws NoSuchFileException, FileReadException {
+		 
+		InputStream is = indexingService.getUrlListFile(fileName);
+		
+		response.setContentType(MediaType.TEXT_PLAIN);
+		response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
+		
+		try {
+			FileCopyUtils.copy(is, response.getOutputStream());
+		}
+		catch (IOException e) {
+			throw new FileReadException(fileName);
+		}
 	}
 }
 

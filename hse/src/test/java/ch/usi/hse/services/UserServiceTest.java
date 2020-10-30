@@ -77,7 +77,7 @@ public class UserServiceTest {
 		password = "pwd";
 		encryptedPassword = "pwd_e";
 		
-		users = new ArrayList<>();
+		users = new ArrayList<>(); 
 		administrators = new ArrayList<>();
 		experimenters = new ArrayList<>();
 		participants = new ArrayList<>();

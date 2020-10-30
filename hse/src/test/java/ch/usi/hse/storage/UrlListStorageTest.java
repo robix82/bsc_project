@@ -2,8 +2,10 @@ package ch.usi.hse.storage;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -11,6 +13,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Arrays;
 
+import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +40,7 @@ public class UrlListStorageTest {
 	
 	private List<String> savedList1, savedList2, newList, listNames;
 	private String newName;
+	private byte[] savedBytes; 
 	
 	@BeforeEach
 	public void setUp() throws IOException {
@@ -76,7 +80,10 @@ public class UrlListStorageTest {
 			ps2.println(s);
 		}
 		
-		ps2.close();
+		ps2.close(); 
+		
+		File f = new File(storageDir + name1);
+		savedBytes = FileUtils.readFileToByteArray(f);
 	}
 	
 	@Test
@@ -176,6 +183,37 @@ public class UrlListStorageTest {
 		assertEquals(2, fileNames.size());
 		assertTrue(fileNames.contains(listNames.get(0)));
 		assertTrue(fileNames.contains(listNames.get(1)));
+	}
+	
+	@Test
+	public void testgGetFileAsStream1() throws NoSuchFileException, FileReadException, IOException {
+		
+		InputStream is = listStorage.getFileAsStream(listNames.get(0));
+		
+		assertNotNull(is);
+		
+		byte[] bf = new byte[is.available()];
+		is.read(bf);
+		is.close();
+		
+		assertArrayEquals(savedBytes, bf);
+	}
+	
+	@Test
+	public void testGetFileAsStream2() throws FileReadException, IOException {
+		
+		boolean exc = false;
+		
+		try {
+			listStorage.getFileAsStream(newName);
+		}
+		catch (NoSuchFileException e) {
+			
+			assertTrue(e.getMessage().contains(newName));
+			exc = true;
+		}
+		
+		assertTrue(exc);
 	}
 }
 

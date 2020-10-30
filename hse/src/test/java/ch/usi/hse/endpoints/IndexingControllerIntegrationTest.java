@@ -1,6 +1,6 @@
 package ch.usi.hse.endpoints;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -20,6 +21,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Arrays;
 
+import org.apache.commons.io.FileUtils;
 import org.hamcrest.Matchers;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -60,7 +62,7 @@ public class IndexingControllerIntegrationTest {
 	private ObjectMapper mapper;
 	private ObjectWriter writer;
 	private MediaType json;
-	
+	 
 	@BeforeEach
 	public void setUp() throws IOException {
 		
@@ -176,6 +178,45 @@ public class IndexingControllerIntegrationTest {
 		assertEquals("NoSuchFileException", err.getErrorType());
 		assertTrue(err.getErrorMessage().contains(newUrlListName));
 	}
+	
+	@Test
+	public void testDownloadUrlList1() throws Exception {
+		
+		File f = new File(urlListsDir + urlListName1);
+		byte[] expectedBytes = FileUtils.readFileToByteArray(f);
+		
+		String url = UriComponentsBuilder.fromUriString(base + "/urlLists/dl")
+				 						 .queryParam("fileName", urlListName1)
+				 						 .build()
+				 						 .toUriString();
+		
+		MvcResult res = mvc.perform(get(url))
+				 		   .andExpect(status().isOk())
+				 		   .andReturn();
+		
+		byte[] resBody = res.getResponse().getContentAsByteArray();
+		
+		assertArrayEquals(expectedBytes, resBody);
+	}
+	
+	@Test
+	public void testDownloadUrlList2() throws Exception {
+		
+		String url = UriComponentsBuilder.fromUriString(base + "/urlLists/dl")
+										 .queryParam("fileName", newUrlListName)
+										 .build()
+										 .toUriString();
+		
+		MvcResult res = mvc.perform(get(url))
+				 		   .andExpect(status().isNotFound())
+				 		   .andReturn();
+		
+		ApiError err = mapper.readValue(resString(res), ApiError.class);
+		
+		assertEquals("NoSuchFileException", err.getErrorType());
+		assertTrue(err.getErrorMessage().contains(newUrlListName));
+	}
+	
 	
 		///////////////////
 	

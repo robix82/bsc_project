@@ -1,5 +1,6 @@
 package ch.usi.hse.services;
 
+import java.io.InputStream;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,11 +59,16 @@ public class IndexingService {
 		
 		urlListStorage.delete(fileName);
 	}
+	
+	public InputStream getUrlListFile(String fileName) throws NoSuchFileException, FileReadException {
+		
+		return urlListStorage.getFileAsStream(fileName);
+	}
 }
 
 
 
 
-
+ 
 
 

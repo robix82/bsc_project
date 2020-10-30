@@ -39,7 +39,10 @@ var m_experiment = $("#m_experiment").text();
 
 var m_upload = $("#m_upload").text();
 var m_file = $("#m_file").text();
-var m_submit = $("#m_submitm_submit").text();
+var m_submit = $("#m_submit").text();
+var m_uploadError = $("#m_uploadError").text();
+var m_fileNotFound = $("#m_fileNotFound").text();
+var m_fileReadErrorm_fileReadError = $("#m_fileReadError").text();
 
 var m_urlList = $("#m_urlList").text();
 var m_urlLists = $("#m_urlLists").text();

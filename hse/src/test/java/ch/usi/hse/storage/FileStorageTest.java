@@ -162,10 +162,9 @@ public class FileStorageTest {
 		
 		byte[] bf = new byte[is.available()];
 		is.read(bf);
-		
-		assertArrayEquals(testBytes, bf);
-		
 		is.close();
+		
+		assertArrayEquals(testBytes, bf);		
 	}
 	
 	@Test

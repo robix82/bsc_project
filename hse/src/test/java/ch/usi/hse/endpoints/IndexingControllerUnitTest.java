@@ -13,6 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import java.util.List;
+import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.util.Arrays;
@@ -55,11 +56,12 @@ public class IndexingControllerUnitTest {
 	private String urlListName1, urlListName2, 
 				   newUrlListName, badUrlListName;
 	private MockMultipartFile newUrlListFile, badUrlListFile;
+	private byte[] savedBytes;
 	
 	private ObjectMapper mapper;
 	private ObjectWriter writer;
 	private MediaType json;
-	
+	 
 	@BeforeEach
 	public void setUp() throws FileReadException, FileWriteException, NoSuchFileException, FileDeleteException {
 		
@@ -85,6 +87,8 @@ public class IndexingControllerUnitTest {
 										       newUrlListName, 
 										       MediaType.TEXT_PLAIN_VALUE, 
 										       "content".getBytes()); 
+		
+		savedBytes = "some content".getBytes();
 		 
 		when(indexingService.savedUrlLists()).thenReturn(urlListNames);
 		doNothing().when(indexingService).addUrlList(newUrlListFile);
@@ -94,6 +98,11 @@ public class IndexingControllerUnitTest {
 		doNothing().when(indexingService).removeUrlList(urlListName2);
 		doThrow(new NoSuchFileException(newUrlListName)).when(indexingService).removeUrlList(newUrlListName);
 		doThrow(new FileDeleteException(badUrlListName)).when(indexingService).removeUrlList(badUrlListName);
+		
+		when(indexingService.getUrlListFile(urlListName1)).thenReturn(new ByteArrayInputStream(savedBytes));
+		when(indexingService.getUrlListFile(urlListName2)).thenReturn(new ByteArrayInputStream(savedBytes));
+		doThrow(new NoSuchFileException(newUrlListName)).when(indexingService).getUrlListFile(newUrlListName);
+		doThrow(new FileReadException(badUrlListName)).when(indexingService).getUrlListFile(badUrlListName);
 	}
 	 
 	@Test
@@ -183,6 +192,56 @@ public class IndexingControllerUnitTest {
 		ApiError err = mapper.readValue(resString(res), ApiError.class);
 		
 		assertEquals("FileDeleteException", err.getErrorType());
+		assertTrue(err.getErrorMessage().contains(badUrlListName));
+	}
+	
+	@Test
+	public void testDownloadUrlList1() throws Exception {
+		
+		String url = UriComponentsBuilder.fromUriString(base + "/urlLists/dl")
+				 						 .queryParam("fileName", urlListName1)
+				 						 .build().toUriString();
+		
+		MvcResult res = mvc.perform(get(url))
+				 		   .andExpect(status().isOk())
+				 		   .andReturn();
+		
+		byte[] resBody = res.getResponse().getContentAsByteArray();
+		
+		assertArrayEquals(savedBytes, resBody);
+	}
+	
+	@Test
+	public void testDownloadUrlList2() throws Exception {
+		
+		String url = UriComponentsBuilder.fromUriString(base + "/urlLists/dl")
+				 						 .queryParam("fileName", newUrlListName)
+				 						 .build().toUriString();
+		
+		MvcResult res = mvc.perform(get(url))
+				 		   .andExpect(status().isNotFound())
+				 		   .andReturn();
+		
+		ApiError err = mapper.readValue(resString(res), ApiError.class);
+		
+		assertEquals("NoSuchFileException", err.getErrorType());
+		assertTrue(err.getErrorMessage().contains(newUrlListName));
+	}
+	
+	@Test
+	public void testDownloadUrlList3() throws Exception {
+		
+		String url = UriComponentsBuilder.fromUriString(base + "/urlLists/dl")
+				 						 .queryParam("fileName", badUrlListName)
+				 						 .build().toUriString();
+		
+		MvcResult res = mvc.perform(get(url))
+				 		   .andExpect(status().isInternalServerError())
+				 		   .andReturn();
+		
+		ApiError err = mapper.readValue(resString(res), ApiError.class);
+		
+		assertEquals("FileReadException", err.getErrorType());
 		assertTrue(err.getErrorMessage().contains(badUrlListName));
 	}
 	

@@ -6,6 +6,9 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -34,13 +37,15 @@ public class IndexingServiceTest {
 	private List<String> fileList;
 	private String existingName, newName, badName;
 	private MockMultipartFile newFile, badFile;
+	private byte[] savedBytes;
 	
 	@BeforeEach
 	public void setUp() throws FileReadException, FileWriteException, NoSuchFileException, FileDeleteException {
 		
 		fileList = Arrays.asList("urls1.txt", "urls2.txt", "urls3.txt");
+		savedBytes = "content".getBytes();
 		
-		existingName = fileList.get(0);
+		existingName = fileList.get(0); 
 		newName = "urls4.txt";
 		badName = "bad.txt";
 		
@@ -55,6 +60,9 @@ public class IndexingServiceTest {
 		doThrow(FileWriteException.class).when(urlListStorage).store(badFile);
 		doThrow(FileDeleteException.class).when(urlListStorage).delete(badName);
 		doThrow(NoSuchFileException.class).when(urlListStorage).delete(newName);
+		
+		when(urlListStorage.getFileAsStream(existingName)).thenReturn(new ByteArrayInputStream(savedBytes));
+		doThrow(NoSuchFileException.class).when(urlListStorage).getFileAsStream(newName);
 	}
 	
 	@Test
@@ -134,6 +142,35 @@ public class IndexingServiceTest {
 		
 		try {
 			service.removeUrlList(newName);
+		}
+		catch (NoSuchFileException e) {
+			exc = true;
+		}
+		
+		assertTrue(exc);
+	}
+	
+	@Test
+	public void testGetUrlListFile1() throws NoSuchFileException, FileReadException, IOException {
+		
+		InputStream is = service.getUrlListFile(existingName);
+		
+		assertNotNull(is);
+		
+		byte[] bf = new byte[is.available()];
+		is.read(bf);
+		is.close();
+		
+		assertArrayEquals(savedBytes, bf);
+	}
+	
+	@Test
+	public void testGetUrlListFile2() throws FileReadException {
+		
+		boolean exc = false;
+		
+		try {
+			service.getUrlListFile(newName);
 		}
 		catch (NoSuchFileException e) {
 			exc = true;

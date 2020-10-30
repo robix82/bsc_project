@@ -76,13 +76,27 @@ function handleHttpError(err) {
 
 function handleApiError(errJson) {
 	
-	if (errJson.errorType == "UserExistsException") {
+	let errType = errJson.errorType;
+	
+	if (errType == "UserExistsException") {
 		
 		showErrorModal(m_error, m_userExists);
 	}
-	else if (errJson.errorType == "NoSuchUserException") {
+	else if (errType == "NoSuchUserException") {
 		
 		showErrorModal(m_error, m_userNotFound);
+	}
+	else if (errType == "FileReadException") {
+		
+		showErrorModal(m_error, m_fileReadError);
+	}
+	else if (errType == "FileWriteException") {
+		
+		showErrorModal(m_error, m_uploadError);
+	}
+	else if (errType == "NoSuchFileException") {
+		
+		showErrorModal(m_error, m_fileNotFound);
 	}
 	else {
 

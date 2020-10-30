@@ -1,6 +1,7 @@
 package ch.usi.hse.storage;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -101,6 +102,23 @@ public class UrlListStorage extends FileStorage {
 		catch (IOException e) {
 			throw new FileReadException(storageDir);
 		}
+	}
+	
+	/**
+	 * returns an InputStream for reading the given file
+	 * 
+	 * @param fileName
+	 * @return
+	 * @throws NoSuchFileException
+	 * @throws FileReadException
+	 */
+	public InputStream getFileAsStream(String fileName) 
+			throws NoSuchFileException, FileReadException {
+		
+		Path path = Paths.get(storageDir);
+		Path filePath = path.resolve(fileName);
+		
+		return getInputStream(filePath);
 	}
 }
 

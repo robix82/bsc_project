@@ -34,7 +34,13 @@
 			
 						<div class="url-lists-row">
 							
-							<span th:text="${urlList}"></span>
+							<span class="urlFileName" th:text="${urlList}"></span>
+						
+							<button class="btn btn-sm btn-light">
+							<a class="dl-link" th:href="@{/indexing/urlLists/dl?fileName=} + ${urlList}">
+							<span class="glyphicon glyphicon-save"></span>
+							</a>
+							</button>
 						
 							<button class="btn btn-sm btn-light"
 									th:onclick="showUrlListDeleteModal([[${urlList}]])">
@@ -48,17 +54,37 @@
 				</div>
 				
 				<div class="input-group">
-			  <span class="input-group-btn">
-			    <span class="btn btn-light btn-file" th:text="#{m_add}">
-			     
-			      <input id="btnChooseUrlFile" type="file">
-			    </span>
-			  </span>
-			  <input data-url="/upload" accept="image/jpeg" readonly="readonly" th:placeholder="#{m_file}" class="form-control" name="filename" type="text">
-			  <span class="input-group-btn">
-			    <span class="btn btn-primary btn-file" th:text="#{m_submit}">
-			    </span>
-			</div>
+				
+					<span class="input-group-btn">
+			
+					   	<span class="btn btn-light btn-file">
+		
+							<span th:text="#{m_add}"></span>
+		
+					      		<input id="urlListFileInput"
+									   data-url="/upload" 
+									   accept="text/plain" 
+									   name="image" 
+									   type="file">
+	
+					    	</span>
+	
+					  	</span>
+					
+					<input id="urlListFilePreview"
+						   readonly="readonly" 
+						   th:placeholder="#{m_file}" 
+						   class="form-control" 
+						   name="filename" 
+						   type="text">
+						
+					<span class="btn btn-primary btn-file"
+						  th:text="#{m_submit}"
+						  th:onclick="submitUrlFile()">
+					
+					</span>	
+					
+				</div>
 			
 			</div>
 
