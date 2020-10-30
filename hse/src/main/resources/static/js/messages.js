@@ -25,7 +25,6 @@ var m_search = $("#m_search").text();
 var m_experiments = $("#m_experiments").text();
 var m_indexing = $("#m_indexing").text();
 var m_admin = $("#m_admin").text();
-
 var m_user = $("#m_user").text();
 var m_users = $("#m_users").text();
 var m_administrator = $("#m_administrator").text();
@@ -37,6 +36,13 @@ var m_participants = $("#m_participants").text();
 
 var m_testGroup = $("#m_testGroup").text();
 var m_experiment = $("#m_experiment").text();
+
+var m_upload = $("#m_upload").text();
+var m_file = $("#m_file").text();
+var m_submit = $("#m_submitm_submit").text();
+
+var m_urlList = $("#m_urlList").text();
+var m_urlLists = $("#m_urlLists").text();
 
 
 

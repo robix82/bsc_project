@@ -8,18 +8,6 @@ $(document).ready(function() {
 	console.log(experimenters);
 	console.log("Participants:");
 	console.log(participants);
-	
-	$("#newAdminBtn").on("click", () => {
-		showAdministratorInputModal();
-	});
-
-	$("#newExperimenterBtn").on("click", () => {
-		showExperimenterInputModal();
-	});
-	
-	$("#newParticipantBtn").on("click", () => {
-		showParticipantInputModal();
-	});
 });
 
 function showAdministratorInputModal(admin) {

@@ -28,7 +28,7 @@
 			
 				<div class="tab-header">
 				<h3 th:text="#{m_administrators}"></h3>
-				<button id="newAdminBtn" class="btn btn-primary">
+				<button class="btn btn-primary" th:onclick="showAdministratorInputModal()">
 				<span class="glyphicon glyphicon-plus"></span>
 				</button>
 				</div>
@@ -70,7 +70,7 @@
 			
 				<div class="tab-header">
 				<h3 th:text="#{m_experimenters}"></h3>
-				<button id="newExperimenterBtn" class="btn btn-primary">
+				<button class="btn btn-primary" th:onclick="showExperimenterInputModal()">
 				<span class="glyphicon glyphicon-plus"></span>
 				</button>
 				</div>
@@ -112,7 +112,7 @@
 			
 				<div class="tab-header">
 				<h3 th:text="#{m_participants}"></h3>
-				<button id="newParticipantBtn" class="btn btn-primary">
+				<button class="btn btn-primary" th:onclick="showParticipantInputModal()">
 				<span class="glyphicon glyphicon-plus"></span>
 				</button>
 				</div>

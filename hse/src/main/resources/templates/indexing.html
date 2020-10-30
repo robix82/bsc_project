@@ -18,11 +18,71 @@
 
 	<h1 th:text="#{m_indexing}"></h1>
 	
+	<div id="inner-container">
+	
+		<div id="url-lists-div">
+			
+			<div id="url-lists-tab">
+			
+				<div class="tab-header">
+				<h3 th:text="#{m_urlLists}"></h3>
+				</div>
+				
+				<div id="url-lists-list" class="list-group list-group-flush">
+								
+				  	<div th:each="urlList : ${urlLists}" class="list-group-item list-group-item-action list-group-item-light">
+			
+						<div class="url-lists-row">
+							
+							<span th:text="${urlList}"></span>
+						
+							<button class="btn btn-sm btn-light"
+									th:onclick="showUrlListDeleteModal([[${urlList}]])">
+							<span class="glyphicon glyphicon-trash"></span>
+							</button>
+							
+						</div>
+						
+				  	</div>
+			
+				</div>
+				
+				<div class="input-group">
+			  <span class="input-group-btn">
+			    <span class="btn btn-light btn-file" th:text="#{m_add}">
+			     
+			      <input id="btnChooseUrlFile" type="file">
+			    </span>
+			  </span>
+			  <input data-url="/upload" accept="image/jpeg" readonly="readonly" th:placeholder="#{m_file}" class="form-control" name="filename" type="text">
+			  <span class="input-group-btn">
+			    <span class="btn btn-primary btn-file" th:text="#{m_submit}">
+			    </span>
+			</div>
+			
+			</div>
+
+    		
+		
+		</div>
+	
+	</div>
+	
+	
+	
 	
 </div>
 
+<!-- pass variables to js -->
+<script th:inline="javascript">
+	/*<![CDATA[*/
+	var urlLists = /*[[${urlLists}]]*/ "default";
+	/*]]>*/
+</script>
+
 <th:block th:include="fragments/messages.html :: messages"></th:block>
 <th:block th:include="fragments/general.html :: commonScripts"></th:block>
+<th:block th:include="fragments/modals.html :: modals"></th:block>
 
 <script th:src="@{/js/indexing.js}"></script>
 
