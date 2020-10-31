@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 public class DirectoryPaths {
 
 	private String urlLists;
+	private String indices;
 	private String testFiles;
 	
 	public String getUrlLists() {
@@ -24,5 +25,13 @@ public class DirectoryPaths {
 	
 	public void setTestFiles(String testFiles) {
 		this.testFiles = testFiles;
+	}
+	
+	public String getIndices() {
+		return indices;
+	}
+	
+	public void setIndices(String indices) {
+		this.indices = indices;
 	}
 }

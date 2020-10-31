@@ -14,7 +14,8 @@ services:
     networks:
       - hse-network
     volumes:
-      - hse-url-lists:/data/urlLists
+      - hse-data-urlLists:/data/urlLists
+      - hse-data-indices:/data/indices
 
   hse-mysql:
     image: mysql
@@ -34,7 +35,8 @@ networks:
 
 volumes:
   hse-datavolume:
-  hse-url-lists:
+  hse-data-urlLists:
+  hse-data-indices:
 
 
 
