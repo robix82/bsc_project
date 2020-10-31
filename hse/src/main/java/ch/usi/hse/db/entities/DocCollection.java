@@ -38,7 +38,7 @@ public class DocCollection {
 	
 	@Column(name="indexed")
 	private boolean indexed;
-	
+	 
 	public DocCollection() {
 		
 		id = 0;

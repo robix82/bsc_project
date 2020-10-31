@@ -44,7 +44,7 @@ public class AdminController {
 		
 		
 		ModelAndView mav = new ModelAndView();
-		mav.setViewName("admin");
+		mav.setViewName("admin"); 
 		 
 		mav.addObject("administrators", userService.allAdministrators());
 		mav.addObject("experimenters", userService.allExperimenters());

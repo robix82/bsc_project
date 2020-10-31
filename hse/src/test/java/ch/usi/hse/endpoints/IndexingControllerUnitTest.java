@@ -16,6 +16,7 @@ import java.util.List;
 import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -33,6 +34,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
+import ch.usi.hse.db.entities.DocCollection;
 import ch.usi.hse.exceptions.ApiError;
 import ch.usi.hse.exceptions.FileDeleteException;
 import ch.usi.hse.exceptions.FileReadException;
@@ -58,6 +60,8 @@ public class IndexingControllerUnitTest {
 	private MockMultipartFile newUrlListFile, badUrlListFile;
 	private byte[] savedBytes;
 	
+	private List<DocCollection> docCollections;
+	
 	private ObjectMapper mapper;
 	private ObjectWriter writer;
 	private MediaType json;
@@ -71,6 +75,8 @@ public class IndexingControllerUnitTest {
 		json = new MediaType(MediaType.APPLICATION_JSON.getType(), 
 			       MediaType.APPLICATION_JSON.getSubtype(), 
 			       Charset.forName("utf8"));
+		
+		// URL LISTS
 		
 		urlListName1 = "uels1.txt";
 		urlListName2 = "urls2.txt";
@@ -89,6 +95,17 @@ public class IndexingControllerUnitTest {
 										       "content".getBytes()); 
 		
 		savedBytes = "some content".getBytes();
+		
+		// DOC COLLECTIONS 
+		
+		DocCollection c1 = new DocCollection("c1", urlListName1);
+		DocCollection c2 = new DocCollection("c2", urlListName2);
+		c1.setId(1);
+		c2.setId(2);
+		
+		docCollections = List.of(c1, c2);
+		
+		// MOCK RESPONSES
 		 
 		when(indexingService.savedUrlLists()).thenReturn(urlListNames);
 		doNothing().when(indexingService).addUrlList(newUrlListFile);
@@ -103,6 +120,8 @@ public class IndexingControllerUnitTest {
 		when(indexingService.getUrlListFile(urlListName2)).thenReturn(new ByteArrayInputStream(savedBytes));
 		doThrow(new NoSuchFileException(newUrlListName)).when(indexingService).getUrlListFile(newUrlListName);
 		doThrow(new FileReadException(badUrlListName)).when(indexingService).getUrlListFile(badUrlListName);
+		
+		when(indexingService.docCollections()).thenReturn(docCollections);
 	}
 	 
 	@Test
@@ -111,6 +130,7 @@ public class IndexingControllerUnitTest {
 		mvc.perform(get(base + "/ui"))
 		   .andExpect(status().isOk())
 		   .andExpect(model().attribute("urlLists", is(urlListNames)))
+		   .andExpect(model().attribute("docCollections", is(docCollections)))
 		   .andExpect(view().name("indexing"));
 	}
 	

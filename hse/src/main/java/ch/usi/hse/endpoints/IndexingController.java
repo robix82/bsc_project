@@ -54,10 +54,11 @@ public class IndexingController {
 		ModelAndView mav = new ModelAndView();
 		mav.setViewName("indexing");
 		mav.addObject("urlLists", indexingService.savedUrlLists());
+		mav.addObject("docCollections", indexingService.docCollections());
 		
-		return mav;
+		return mav; 
 	}
-
+ 
 	/**
 	 * upload a new url list (text file)
 	 * 
@@ -95,6 +96,14 @@ public class IndexingController {
 		return new ResponseEntity<>(msg, HttpStatus.OK);
 	}
 	
+	/**
+	 * download a saved url list
+	 * 
+	 * @param response
+	 * @param fileName
+	 * @throws NoSuchFileException
+	 * @throws FileReadException
+	 */
 	@GetMapping("/urlLists/dl")
 	public void downloadUrlList(HttpServletResponse response, @RequestParam String fileName) 
 			throws NoSuchFileException, FileReadException {

@@ -23,7 +23,8 @@ import java.util.Arrays;
 
 import org.apache.commons.io.FileUtils;
 import org.hamcrest.Matchers;
-
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
+import ch.usi.hse.db.entities.DocCollection;
+import ch.usi.hse.db.repositories.DocCollectionRepository;
 import ch.usi.hse.exceptions.ApiError;
 
 @SpringBootTest
@@ -47,6 +50,9 @@ public class IndexingControllerIntegrationTest {
 
 	@Value("${dir.urlLists}")
 	private String urlListsDir;
+	
+	@Autowired
+	private DocCollectionRepository collectionRepo;
 	
 	private String base = "/indexing";
 	
@@ -59,9 +65,12 @@ public class IndexingControllerIntegrationTest {
 	private String urlListName1, urlListName2, newUrlListName;
 	private MockMultipartFile newUrlListFile;
 	
+	private List<DocCollection> docCollections;
+	
 	private ObjectMapper mapper;
 	private ObjectWriter writer;
 	private MediaType json; 
+	
 	 
 	@BeforeEach
 	public void setUp() throws IOException {
@@ -88,14 +97,15 @@ public class IndexingControllerIntegrationTest {
 											   MediaType.TEXT_PLAIN_VALUE,
 											   "content".getBytes());
 		
-		Files.list(urlListsPath).forEach(f -> {
-			try {
-				Files.deleteIfExists(f);
-			} 
-			catch (IOException e) {
-				e.printStackTrace();
-			}
-		});
+		DocCollection c1 = new DocCollection("c1", urlListName1);
+		DocCollection c2 = new DocCollection("c2", urlListName2);
+		c1.setId(1);
+		c2.setId(2);
+		
+		docCollections = List.of(collectionRepo.save(c1),
+								 collectionRepo.save(c2));
+		
+		clearTestFiles();
 		
 		PrintStream ps1 = new PrintStream(new FileOutputStream(urlListsDir + urlListName1));
 		
@@ -114,12 +124,19 @@ public class IndexingControllerIntegrationTest {
 		ps2.close();
 	}
 	
+	@AfterEach
+	public void cleanup() throws IOException {
+		
+		clearTestFiles();
+	}
+	 
 	@Test
 	public void testGetIndexingUi() throws Exception {
 		
 		mvc.perform(get(base + "/ui"))
 		   .andExpect(status().isOk())
 		   .andExpect(model().attribute("urlLists", Matchers.iterableWithSize(urlListNames.size())))
+		   .andExpect(model().attribute("docCollections", Matchers.iterableWithSize(docCollections.size())))
 		   .andExpect(view().name("indexing"));
 	}
 	
@@ -223,6 +240,18 @@ public class IndexingControllerIntegrationTest {
 	private String resString(MvcResult res) throws UnsupportedEncodingException {
 	
 		return res.getResponse().getContentAsString();
+	}
+	
+	private void clearTestFiles() throws IOException {
+		
+		Files.list(urlListsPath).forEach(f -> {
+			try {
+				Files.deleteIfExists(f);
+			} 
+			catch (IOException e) {
+				e.printStackTrace();
+			}
+		});
 	}
 }
 

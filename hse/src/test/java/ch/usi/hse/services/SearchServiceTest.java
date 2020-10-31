@@ -25,4 +25,4 @@ public class SearchServiceTest {
 		
 		assertEquals(testQueryString, srl.getQueryString());
 	}
-}
+} 

@@ -22,6 +22,7 @@ import org.springframework.mock.web.MockMultipartFile;
 
 import ch.usi.hse.db.entities.DocCollection;
 import ch.usi.hse.db.repositories.DocCollectionRepository;
+import ch.usi.hse.dto.IndexingResult;
 import ch.usi.hse.exceptions.DocCollectionExistsException;
 import ch.usi.hse.exceptions.FileDeleteException;
 import ch.usi.hse.exceptions.FileReadException;
@@ -29,6 +30,7 @@ import ch.usi.hse.exceptions.FileWriteException;
 import ch.usi.hse.exceptions.LanguageNotSupportedException;
 import ch.usi.hse.exceptions.NoSuchDocCollectionException;
 import ch.usi.hse.exceptions.NoSuchFileException;
+import ch.usi.hse.indexing.IndexBuilder;
 import ch.usi.hse.storage.UrlListStorage;
 
 @SpringBootTest
@@ -38,8 +40,11 @@ public class IndexingServiceTest {
 	private UrlListStorage urlListStorage;
 	
 	@MockBean
-	private DocCollectionRepository collectionRepo;
+	private IndexBuilder indexBuilder;
 	
+	@MockBean
+	private DocCollectionRepository collectionRepo;
+		
 	@Autowired
 	private IndexingService service;
 	
@@ -103,6 +108,8 @@ public class IndexingServiceTest {
 		when(collectionRepo.save(existingDocCollection)).thenReturn(existingDocCollection);
 		when(collectionRepo.findById(existingDocCollection.getId())).thenReturn(existingDocCollection);
 		doNothing().when(collectionRepo).delete(existingDocCollection);
+		
+		when(indexBuilder.buildIndex(any(DocCollection.class))).thenReturn(new IndexingResult());
 	}
 	
 	// URL LISTS
@@ -431,6 +438,14 @@ public class IndexingServiceTest {
 		}
 		
 		assertTrue(exc);
+	}
+	
+	@Test
+	public void testBuildIndex() {
+		
+		IndexingResult res = indexBuilder.buildIndex(existingDocCollection);
+		
+		assertNotNull(res);
 	}
 }
 

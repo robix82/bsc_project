@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import ch.usi.hse.db.entities.DocCollection;
 import ch.usi.hse.db.repositories.DocCollectionRepository;
+import ch.usi.hse.dto.IndexingResult;
 import ch.usi.hse.exceptions.DocCollectionExistsException;
 import ch.usi.hse.exceptions.FileDeleteException;
 import ch.usi.hse.exceptions.FileReadException;
@@ -18,6 +19,7 @@ import ch.usi.hse.exceptions.FileWriteException;
 import ch.usi.hse.exceptions.LanguageNotSupportedException;
 import ch.usi.hse.exceptions.NoSuchDocCollectionException;
 import ch.usi.hse.exceptions.NoSuchFileException;
+import ch.usi.hse.indexing.IndexBuilder;
 import ch.usi.hse.storage.UrlListStorage;
 
 
@@ -34,9 +36,12 @@ public class IndexingService {
 	private UrlListStorage urlListStorage;
 	
 	@Autowired
+	private IndexBuilder indexBuilder;
+	
+	@Autowired
 	private DocCollectionRepository collectionRepo;
 	
-	/**
+	/** 
 	 * 
 	 * @return names of the saved url list files
 	 * @throws FileReadException
@@ -97,7 +102,7 @@ public class IndexingService {
 	/**
 	 * adds the given DocCollection to the database
 	 * 
-	 * @param docCollection
+	 * @param docCollection 
 	 * @return
 	 * @throws LanguageNotSupportedException
 	 * @throws DocCollectionExistsException
@@ -139,6 +144,17 @@ public class IndexingService {
 		return saved;
 	}
 	
+	/**
+	 * updates the database entry for the given DocCollection
+	 * 
+	 * @param docCollection
+	 * @return
+	 * @throws NoSuchDocCollectionException
+	 * @throws NoSuchFileException
+	 * @throws LanguageNotSupportedException
+	 * @throws FileReadException
+	 * @throws DocCollectionExistsException
+	 */
 	public DocCollection updateDocCollection(DocCollection docCollection) 
 			throws NoSuchDocCollectionException, 
 				   NoSuchFileException, 
@@ -199,6 +215,17 @@ public class IndexingService {
 		}
 		
 		collectionRepo.delete(docCollection);
+	}
+	
+	/**
+	 * initiates the indexing process for the given DocCollection
+	 * 
+	 * @param docCollection
+	 * @return
+	 */
+	public IndexingResult buildIndex(DocCollection docCollection) {
+		
+		return indexBuilder.buildIndex(docCollection);
 	}
 }
 
