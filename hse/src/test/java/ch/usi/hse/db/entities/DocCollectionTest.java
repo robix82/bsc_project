@@ -28,7 +28,7 @@ public class DocCollectionTest {
 		assertEquals(0, c.getId());
 		assertFalse(c.getIndexed());
 		assertEquals(testName, c.getName());
-		assertEquals(testUrlList, c.getUrlList());
+		assertEquals(testUrlList, c.getUrlListName());
 	}
 	
 	@Test
@@ -38,20 +38,20 @@ public class DocCollectionTest {
 		
 		assertNotEquals(testId, c.getId());
 		assertNotEquals(testName, c.getName());
-		assertNotEquals(testUrlList, c.getUrlList());
-		assertNotEquals(testIndexDir, c.getIndexDir());
+		assertNotEquals(testUrlList, c.getUrlListName());
+		assertNotEquals(testIndexDir, c.getIndexDirName());
 		assertFalse(c.getIndexed());
 		
 		c.setId(testId);
 		c.setName(testName);
-		c.setUrlList(testUrlList);
-		c.setIndexDir(testIndexDir);
+		c.setUrlListName(testUrlList);
+		c.setIndexDirName(testIndexDir);
 		c.setIndexed(true);
 		
 		assertEquals(testId, c.getId());
 		assertEquals(testName, c.getName());
-		assertEquals(testUrlList, c.getUrlList());
-		assertEquals(testIndexDir, c.getIndexDir());
+		assertEquals(testUrlList, c.getUrlListName());
+		assertEquals(testIndexDir, c.getIndexDirName());
 		assertTrue(c.getIndexed());
 	}
 	

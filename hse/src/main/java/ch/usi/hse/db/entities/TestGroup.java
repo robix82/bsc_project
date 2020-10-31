@@ -12,6 +12,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
@@ -44,6 +46,11 @@ public class TestGroup {
 	@JsonIgnore
 	private Experiment experiment;
 	
+	@ManyToMany
+	@JoinTable(name="test_group_doc_collection", joinColumns=@JoinColumn(name="test_group_id"), 
+	   		   inverseJoinColumns=@JoinColumn(name="doc_collection_id"))
+	public Set<DocCollection> docCollections;
+	
 	@Column(name="experiment_id")
 	private int experimentId;
 	
@@ -54,6 +61,7 @@ public class TestGroup {
 		
 		id = 0;
 		participants = new HashSet<>();
+		docCollections = new HashSet<>();
 	}
 	
 	public TestGroup(int id, String name, Set<Participant> participants, Experiment experiment) {
@@ -63,6 +71,7 @@ public class TestGroup {
 
 		setParticipants(participants);
 		setExperiment(experiment);
+		docCollections = new HashSet<>();
 	}
 	
 	public TestGroup(String name) {
@@ -70,6 +79,7 @@ public class TestGroup {
 		id = 0;
 		this.name = name;
 		this.participants = new HashSet<>();
+		docCollections = new HashSet<>();
 	}
 	
 	public int getId() {
@@ -94,6 +104,10 @@ public class TestGroup {
 	
 	public String getExperimentTitle() {
 		return experimentTitle;
+	}
+	
+	public Set<DocCollection> getDocCollections() {
+		return docCollections;
 	}
 	
 	public void setId(int id) {
@@ -166,6 +180,25 @@ public class TestGroup {
 		participants.clear();
 	}
 	
+	public void setDocCollections(Set<DocCollection> docCollections) {
+		this.docCollections = docCollections;
+	}
+	
+	public void addDocCollection(DocCollection c) {
+		
+		docCollections.add(c);
+	}
+	
+	public void removeDocCollection(DocCollection c) {
+		
+		docCollections.remove(c);
+	}
+	
+	public void clearDocCollections() {
+		
+		docCollections.clear();
+	}
+	
 	@Override
 	public boolean equals(Object o) {
 		
@@ -181,7 +214,7 @@ public class TestGroup {
 		
 		return g.id.equals(id);
 	}
-	
+	 
 	@Override
 	public int hashCode() {
 		
