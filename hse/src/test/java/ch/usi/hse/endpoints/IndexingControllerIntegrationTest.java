@@ -61,7 +61,7 @@ public class IndexingControllerIntegrationTest {
 	
 	private ObjectMapper mapper;
 	private ObjectWriter writer;
-	private MediaType json;
+	private MediaType json; 
 	 
 	@BeforeEach
 	public void setUp() throws IOException {

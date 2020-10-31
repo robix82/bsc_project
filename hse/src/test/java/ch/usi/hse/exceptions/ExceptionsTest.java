@@ -21,8 +21,8 @@ public class ExceptionsTest {
 		boolean exc3 = false;
 		boolean exc4 = false;
 		
-		try {
-			throw new NoSuchUserException(id);
+		try { 
+			throw new NoSuchUserException(id); 
 		}
 		catch (Exception e) {
 			
@@ -170,11 +170,81 @@ public class ExceptionsTest {
 		
 		assertTrue(exc);
 	}
+	
+	@Test
+	public void testLanguageNotSupportedException() {
+		
+		String language = "XY";
+		String msg = "Language " + language + " is not supported";
+		boolean exc = false;
+		
+		try {
+			throw new LanguageNotSupportedException(language);
+		}
+		catch (Exception e) {
+			
+			assertEquals(msg, e.getMessage());
+			exc = true;
+		}
+		
+		assertTrue(exc);
+	}
+	
+	@Test
+	public void testDocCollectionExxistsException() {
+		
+		int id = 23;
+		String name = "name";
+		String msg1 = "A DocCollection with id " + id + " already exists";
+		String msg2 = "A DocCollection with name " + name + " already exists";
+		boolean exc1 = false;
+		boolean exc2 = false;
+		
+		try {
+			throw new DocCollectionExistsException(id);
+		}
+		catch (Exception e) {
+			
+			assertEquals(msg1, e.getMessage());
+			exc1 = true;
+		}
+		
+		try {
+			throw new DocCollectionExistsException(name);
+		}
+		catch (Exception e) {
+			
+			assertEquals(msg2, e.getMessage());
+			exc2 = true;
+		}
+		
+		assertTrue(exc1);
+		assertTrue(exc2);
+	}
+	
+	@Test
+	public void testNoSuchDocCollectionExcception() {
+		
+		int id = 23;
+		String msg = "No DocCollection with id " + id + " found";
+		boolean exc = false;
+		
+		try {
+			throw new NoSuchDocCollectionException(id);
+		}
+		catch (Exception e) {
+			
+			assertEquals(msg, e.getMessage());
+			exc = true;
+		}
+		
+		assertTrue(exc);
+	}
 }
 
 
 
-
+ 
 
 
 

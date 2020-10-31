@@ -4,10 +4,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
+import ch.usi.hse.config.Language;
+
 public class DocCollectionTest {
 
 	private int testId =23;
 	private String testName = "testName";
+	private String testLanguage = "EN";
 	private String testUrlList = "testUrlList";
 	private String testIndexDir = "testIndexDir";
 	
@@ -17,15 +20,17 @@ public class DocCollectionTest {
 		DocCollection c = new DocCollection();
 		
 		assertEquals(0, c.getId());
+		assertEquals(Language.IT, c.getLanguage());
 		assertFalse(c.getIndexed());
 	}
 	
 	@Test
-	public void testConstructor2() {
+	public void testConstructor2() { 
 		
 		DocCollection c = new DocCollection(testName, testUrlList);
 		
-		assertEquals(0, c.getId());
+		assertEquals(0, c.getId()); 
+		assertEquals(Language.IT, c.getLanguage());
 		assertFalse(c.getIndexed());
 		assertEquals(testName, c.getName());
 		assertEquals(testUrlList, c.getUrlListName());
@@ -38,18 +43,21 @@ public class DocCollectionTest {
 		
 		assertNotEquals(testId, c.getId());
 		assertNotEquals(testName, c.getName());
+		assertNotEquals(testLanguage, c.getLanguage());
 		assertNotEquals(testUrlList, c.getUrlListName());
 		assertNotEquals(testIndexDir, c.getIndexDirName());
 		assertFalse(c.getIndexed());
 		
 		c.setId(testId);
 		c.setName(testName);
+		c.setLanguage(testLanguage);
 		c.setUrlListName(testUrlList);
 		c.setIndexDirName(testIndexDir);
 		c.setIndexed(true);
 		
 		assertEquals(testId, c.getId());
 		assertEquals(testName, c.getName());
+		assertEquals(testLanguage, c.getLanguage());
 		assertEquals(testUrlList, c.getUrlListName());
 		assertEquals(testIndexDir, c.getIndexDirName());
 		assertTrue(c.getIndexed());

@@ -12,4 +12,5 @@ public interface DocCollectionRepository extends CrudRepository<DocCollection, I
 
 	public DocCollection findById(int id);
 	public List<DocCollection> findAll();
+	public boolean existsByName(String name);
 }

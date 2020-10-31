@@ -37,7 +37,7 @@ import ch.usi.hse.services.IndexingService;
 @Controller
 @CrossOrigin
 @RequestMapping("/indexing")
-public class IndexingController {
+public class IndexingController { 
 
 	@Autowired
 	private IndexingService indexingService;

@@ -44,7 +44,7 @@ import ch.usi.hse.services.IndexingService;
 @AutoConfigureMockMvc
 public class IndexingControllerUnitTest {
 
-	@Autowired
+	@Autowired 
 	private MockMvc mvc;
 	
 	@MockBean

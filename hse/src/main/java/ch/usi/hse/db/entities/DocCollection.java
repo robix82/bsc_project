@@ -8,6 +8,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import ch.usi.hse.config.Language;
+
 /**
  * db entity representing indexed document collections
  * 
@@ -25,6 +27,9 @@ public class DocCollection {
 	@Column(name="name")
 	private String name;
 	
+	@Column(name="language")
+	private String language;
+	
 	@Column(name="url_list")
 	private String urlListName;
 	
@@ -38,23 +43,29 @@ public class DocCollection {
 		
 		id = 0;
 		indexed = false;
+		language = Language.IT;
 	}
 	
 	public DocCollection(String name, String urlList) {
 		
 		id = 0;
+		indexed = false;
+		language = Language.IT;
 		this.name = name;
 		this.urlListName = urlList;
-		indexed = false;
 	}
 	
-	public int getId() {
+	public int getId() { 
 		return id;
 	}
 	
 	public String getName() {
 		return name;
 	}
+	
+	public String getLanguage() {
+		return language;
+	} 
 	
 	public String getUrlListName() {
 		return urlListName;
@@ -74,6 +85,10 @@ public class DocCollection {
 	
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public void setLanguage(String language) {
+		this.language = language;
 	}
 	
 	public void setUrlListName(String urlListName) {

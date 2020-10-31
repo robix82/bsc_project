@@ -27,7 +27,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		
 		HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
 		
-		ApiError err = new ApiError(status, e);
+		ApiError err = new ApiError(status, e);  
 		
 		return new ResponseEntity<>(err, status);
 	}
@@ -76,6 +76,36 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	public ResponseEntity<Object> handleFileDeleteException(FileDeleteException e) {
 		
 		HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+		
+		ApiError err = new ApiError(status, e);
+		
+		return new ResponseEntity<>(err, status);
+	}
+	
+	@ExceptionHandler(LanguageNotSupportedException.class)
+	public ResponseEntity<Object> handleLanguageNotSupportedException(LanguageNotSupportedException e) {
+		
+		HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
+		
+		ApiError err = new ApiError(status, e);
+		
+		return new ResponseEntity<>(err, status);
+	}
+	
+	@ExceptionHandler(DocCollectionExistsException.class)
+	public ResponseEntity<Object> handleDocCollectionExistsException(DocCollectionExistsException e) {
+		
+		HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
+		
+		ApiError err = new ApiError(status, e);
+		
+		return new ResponseEntity<>(err, status);
+	}
+	
+	@ExceptionHandler(NoSuchDocCollectionException.class) 
+	public ResponseEntity<Object> handleNoSuchDocCollectionException(NoSuchDocCollectionException e) {
+		
+		HttpStatus status = HttpStatus.NOT_FOUND;
 		
 		ApiError err = new ApiError(status, e);
 		

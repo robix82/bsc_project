@@ -19,7 +19,7 @@ public class ApiExceptionHandlerTest {
 	
 	@Test
 	public void testHandleUserExists() {
-		
+		 
 		UserExistsException ex = new UserExistsException(23);
 		HttpStatus expectedStatus = HttpStatus.UNPROCESSABLE_ENTITY;
 		ApiError expectedErr = new ApiError (expectedStatus, ex);
@@ -27,7 +27,7 @@ public class ApiExceptionHandlerTest {
 		ResponseEntity<Object> res = handler.handleUserExistsException(ex);
 		
 		HttpStatus actualStatus = res.getStatusCode(); 
-		ApiError actualErr = (ApiError) res.getBody();
+		ApiError actualErr = (ApiError) res.getBody(); 
 		
 		assertEquals(expectedStatus, actualStatus);
 		assertEquals(expectedErr.getStatus(), actualErr.getStatus());
@@ -115,6 +115,60 @@ public class ApiExceptionHandlerTest {
 		ApiError expectedErr = new ApiError(expectedStatus, ex);
 		
 		ResponseEntity<Object> res = handler.handleFileDeleteException(ex);
+		
+		HttpStatus actualStatus = res.getStatusCode();
+		ApiError actualErr = (ApiError) res.getBody();
+		
+		assertEquals(expectedStatus, actualStatus);
+		assertEquals(expectedErr.getStatus(), actualErr.getStatus());
+		assertEquals(expectedErr.getErrorType(), actualErr.getErrorType());
+		assertEquals(expectedErr.getErrorMessage(), actualErr.getErrorMessage());
+	}
+	
+	@Test
+	public void testHandleLanguageNotSupportedException() {
+		
+		LanguageNotSupportedException ex = new LanguageNotSupportedException("XY");
+		HttpStatus expectedStatus = HttpStatus.UNPROCESSABLE_ENTITY;
+		ApiError expectedErr = new ApiError(expectedStatus, ex);
+		
+		ResponseEntity<Object> res = handler.handleLanguageNotSupportedException(ex);
+		
+		HttpStatus actualStatus = res.getStatusCode();
+		ApiError actualErr = (ApiError) res.getBody();
+		
+		assertEquals(expectedStatus, actualStatus);
+		assertEquals(expectedErr.getStatus(), actualErr.getStatus());
+		assertEquals(expectedErr.getErrorType(), actualErr.getErrorType());
+		assertEquals(expectedErr.getErrorMessage(), actualErr.getErrorMessage());
+	}
+	
+	@Test
+	public void testHandleDocCollectionExistsException() {
+		
+		DocCollectionExistsException ex = new DocCollectionExistsException(23);
+		HttpStatus expectedStatus = HttpStatus.UNPROCESSABLE_ENTITY;
+		ApiError expectedErr = new ApiError(expectedStatus, ex);
+		
+		ResponseEntity<Object> res = handler.handleDocCollectionExistsException(ex);
+		
+		HttpStatus actualStatus = res.getStatusCode();
+		ApiError actualErr = (ApiError) res.getBody();
+		
+		assertEquals(expectedStatus, actualStatus);
+		assertEquals(expectedErr.getStatus(), actualErr.getStatus());
+		assertEquals(expectedErr.getErrorType(), actualErr.getErrorType());
+		assertEquals(expectedErr.getErrorMessage(), actualErr.getErrorMessage());
+	}
+	
+	@Test
+	public void testHandleNoSuchDocCollectionException() {
+		
+		NoSuchDocCollectionException ex = new NoSuchDocCollectionException(23);
+		HttpStatus expectedStatus = HttpStatus.NOT_FOUND;
+		ApiError expectedErr = new ApiError(expectedStatus, ex);
+		
+		ResponseEntity<Object> res = handler.handleNoSuchDocCollectionException(ex);
 		
 		HttpStatus actualStatus = res.getStatusCode();
 		ApiError actualErr = (ApiError) res.getBody();
