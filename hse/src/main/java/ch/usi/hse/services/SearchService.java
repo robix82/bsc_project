@@ -1,9 +1,10 @@
 package ch.usi.hse.services;
 
+import static ch.usi.hse.retrieval.SearchData.*;
+
 import org.springframework.stereotype.Service;
 
-import static ch.usi.hse.dummie_data.SearchData.*;
-import ch.usi.hse.dto.SearchResultList;
+import ch.usi.hse.retrieval.SearchResultList;
 
 /**
  * Service class for interacting with the Lucene Search API

@@ -16,16 +16,23 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.util.FileCopyUtils;
 
+import ch.usi.hse.db.entities.DocCollection;
+import ch.usi.hse.exceptions.DocCollectionExistsException;
 import ch.usi.hse.exceptions.FileDeleteException;
 import ch.usi.hse.exceptions.FileReadException;
 import ch.usi.hse.exceptions.FileWriteException;
+import ch.usi.hse.exceptions.LanguageNotSupportedException;
+import ch.usi.hse.exceptions.NoSuchDocCollectionException;
 import ch.usi.hse.exceptions.NoSuchFileException;
+import ch.usi.hse.indexing.IndexingResult;
 import ch.usi.hse.services.IndexingService;
 
 /**
@@ -119,6 +126,90 @@ public class IndexingController {
 		catch (IOException e) {
 			throw new FileReadException(fileName);
 		}
+	}
+	
+	/**
+	 * Add a new DocCollection entry to the database
+	 * 
+	 * @param docCollection
+	 * @return
+	 * @throws LanguageNotSupportedException
+	 * @throws DocCollectionExistsException
+	 * @throws NoSuchFileException
+	 * @throws FileReadException
+	 */
+	@PostMapping("/docCollections")
+	public ResponseEntity<DocCollection> postDocCollection(@RequestBody DocCollection docCollection) 
+			throws LanguageNotSupportedException, 
+				   DocCollectionExistsException, 
+				   NoSuchFileException, 
+				   FileReadException {
+		
+		DocCollection saved = indexingService.addDocCollection(docCollection);
+		
+		return new ResponseEntity<>(saved, HttpStatus.CREATED);
+	}
+	
+	/**
+	 * update the database entry of an existing DocCollection
+	 * 
+	 * @param docCollection
+	 * @return
+	 * @throws NoSuchDocCollectionException
+	 * @throws NoSuchFileException
+	 * @throws LanguageNotSupportedException
+	 * @throws FileReadException
+	 * @throws DocCollectionExistsException
+	 */
+	@PutMapping("/docCollections")
+	public ResponseEntity<DocCollection> updateDocCollection(@RequestBody DocCollection docCollection) 
+			throws NoSuchDocCollectionException, 
+				   NoSuchFileException, 
+				   LanguageNotSupportedException, 
+				   FileReadException, 
+				   DocCollectionExistsException {
+		
+		DocCollection updated = indexingService.updateDocCollection(docCollection);
+		
+		return new ResponseEntity<>(updated, HttpStatus.OK);
+	}
+	
+	/**
+	 * removes the give DocCollection entry from the database
+	 * 
+	 * @param docCollection
+	 * @return
+	 * @throws NoSuchDocCollectionException
+	 */
+	@DeleteMapping("/docCollections")
+	public ResponseEntity<DocCollection> deleteDocCollection(@RequestBody DocCollection docCollection) 
+			throws NoSuchDocCollectionException {
+		
+		indexingService.removeDocCollection(docCollection);
+		
+		return new ResponseEntity<>(docCollection, HttpStatus.OK);
+	}
+	
+	/**
+	 * initiate the indexing process for the given DocCollection 
+	 * 
+	 * @param docCollection
+	 * @return
+	 * @throws NoSuchDocCollectionException
+	 * @throws LanguageNotSupportedException
+	 * @throws NoSuchFileException
+	 * @throws FileReadException
+	 */
+	@PostMapping("/buildIndex")
+	public ResponseEntity<IndexingResult> buildIndex(@RequestBody DocCollection docCollection) 
+			throws NoSuchDocCollectionException, 
+				   LanguageNotSupportedException, 
+				   NoSuchFileException, 
+				   FileReadException {
+		
+		IndexingResult result = indexingService.buildIndex(docCollection);
+		
+		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 }
 

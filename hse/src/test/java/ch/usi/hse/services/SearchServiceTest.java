@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import ch.usi.hse.dto.SearchResultList;
+import ch.usi.hse.retrieval.SearchResultList;
 
 public class SearchServiceTest {
 

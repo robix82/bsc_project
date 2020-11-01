@@ -7,6 +7,8 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
+import ch.usi.hse.indexing.IndexingResult;
+
 public class IndexingResultTest {
 
 	private String collectionName = "c_name";

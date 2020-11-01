@@ -11,7 +11,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import ch.usi.hse.db.entities.DocCollection;
 import ch.usi.hse.db.repositories.DocCollectionRepository;
-import ch.usi.hse.dto.IndexingResult;
 import ch.usi.hse.exceptions.DocCollectionExistsException;
 import ch.usi.hse.exceptions.FileDeleteException;
 import ch.usi.hse.exceptions.FileReadException;
@@ -20,6 +19,7 @@ import ch.usi.hse.exceptions.LanguageNotSupportedException;
 import ch.usi.hse.exceptions.NoSuchDocCollectionException;
 import ch.usi.hse.exceptions.NoSuchFileException;
 import ch.usi.hse.indexing.IndexBuilder;
+import ch.usi.hse.indexing.IndexingResult;
 import ch.usi.hse.storage.UrlListStorage;
 
 
@@ -222,8 +222,31 @@ public class IndexingService {
 	 * 
 	 * @param docCollection
 	 * @return
+	 * @throws NoSuchDocCollectionException 
+	 * @throws LanguageNotSupportedException 
+	 * @throws NoSuchFileException 
+	 * @throws FileReadException 
 	 */
-	public IndexingResult buildIndex(DocCollection docCollection) {
+	public IndexingResult buildIndex(DocCollection docCollection) 
+			throws NoSuchDocCollectionException, LanguageNotSupportedException, NoSuchFileException, FileReadException {
+		
+		int id = docCollection.getId();
+		
+		if (! collectionRepo.existsById(id)) {
+			throw new NoSuchDocCollectionException(id);
+		}
+		
+		String urlListName = docCollection.getUrlListName();
+		
+		if (! savedUrlLists().contains(urlListName)) {
+			throw new NoSuchFileException(urlListName);
+		}
+		
+		String language = docCollection.getLanguage();
+		
+		if (! Language.isSupported(language)) {
+			throw new LanguageNotSupportedException(language);
+		}
 		
 		return indexBuilder.buildIndex(docCollection);
 	}

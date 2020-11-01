@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import ch.usi.hse.dto.SearchResultList;
+import ch.usi.hse.retrieval.SearchResultList;
 import ch.usi.hse.services.SearchService;
 
 /**

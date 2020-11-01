@@ -22,7 +22,6 @@ import org.springframework.mock.web.MockMultipartFile;
 
 import ch.usi.hse.db.entities.DocCollection;
 import ch.usi.hse.db.repositories.DocCollectionRepository;
-import ch.usi.hse.dto.IndexingResult;
 import ch.usi.hse.exceptions.DocCollectionExistsException;
 import ch.usi.hse.exceptions.FileDeleteException;
 import ch.usi.hse.exceptions.FileReadException;
@@ -31,6 +30,7 @@ import ch.usi.hse.exceptions.LanguageNotSupportedException;
 import ch.usi.hse.exceptions.NoSuchDocCollectionException;
 import ch.usi.hse.exceptions.NoSuchFileException;
 import ch.usi.hse.indexing.IndexBuilder;
+import ch.usi.hse.indexing.IndexingResult;
 import ch.usi.hse.storage.UrlListStorage;
 
 @SpringBootTest
@@ -441,11 +441,72 @@ public class IndexingServiceTest {
 	}
 	
 	@Test
-	public void testBuildIndex() {
+	public void testBuildIndex1() {
 		
 		IndexingResult res = indexBuilder.buildIndex(existingDocCollection);
 		
 		assertNotNull(res);
+	}
+	
+	@Test
+	public void testBuildIndex2() throws LanguageNotSupportedException, 
+										 NoSuchFileException, 
+										 FileReadException {
+		
+		int badId = 87645;
+		newDocCollection.setId(badId);
+		
+		boolean exc = false;
+		
+		try {
+				service.buildIndex(newDocCollection);
+		}
+		catch (NoSuchDocCollectionException e) {
+			
+			assertTrue(e.getMessage().contains(Integer.toString(badId)));
+			exc = true;
+		}
+		
+		assertTrue(exc);
+	}
+	
+	@Test
+	public void testBuildIndex3() throws Exception {
+		
+		existingDocCollection.setUrlListName(newUrlListName);
+		
+		boolean exc = false;
+		
+		try {
+			service.buildIndex(existingDocCollection);
+		}
+		catch (NoSuchFileException e) {
+			
+			assertTrue(e.getMessage().contains(newUrlListName));
+			exc = true;
+		}
+		
+		assertTrue(exc);
+	}
+	
+	@Test
+	public void testBuildIndex4() throws Exception {
+		
+		String badLanguage = "xy";
+		existingDocCollection.setLanguage(badLanguage);
+		
+		boolean exc = false;
+		
+		try {
+			service.buildIndex(existingDocCollection);
+		}
+		catch (LanguageNotSupportedException e) {
+			
+			assertTrue(e.getMessage().contains(badLanguage));
+			exc = true;
+		}
+		
+		assertTrue(exc);
 	}
 }
 

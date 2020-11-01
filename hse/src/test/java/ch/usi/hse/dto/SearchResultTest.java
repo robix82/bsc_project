@@ -8,6 +8,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import ch.usi.hse.retrieval.SearchResult;
+
 import java.util.ArrayList;
 import java.util.List;
 

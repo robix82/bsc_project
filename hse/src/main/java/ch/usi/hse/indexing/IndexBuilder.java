@@ -3,7 +3,6 @@ package ch.usi.hse.indexing;
 import org.springframework.stereotype.Component;
 
 import ch.usi.hse.db.entities.DocCollection;
-import ch.usi.hse.dto.IndexingResult;
 
 @Component
 public class IndexBuilder {

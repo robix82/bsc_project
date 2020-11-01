@@ -1,5 +1,6 @@
 package ch.usi.hse.endpoints;
 
+import static ch.usi.hse.retrieval.SearchData.dummieSearchResultList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -17,8 +18,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import static ch.usi.hse.dummie_data.SearchData.dummieSearchResultList;
-import ch.usi.hse.dto.SearchResultList;
+import ch.usi.hse.retrieval.SearchResultList;
 import ch.usi.hse.services.SearchService;
 
 @SpringBootTest

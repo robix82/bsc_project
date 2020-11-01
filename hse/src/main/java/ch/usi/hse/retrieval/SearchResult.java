@@ -1,4 +1,4 @@
-package ch.usi.hse.dto;
+package ch.usi.hse.retrieval;
 
 import java.util.Objects;
 

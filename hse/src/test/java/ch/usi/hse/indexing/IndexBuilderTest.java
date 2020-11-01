@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import ch.usi.hse.db.entities.DocCollection;
-import ch.usi.hse.dto.IndexingResult;
 
 @SpringBootTest
 public class IndexBuilderTest {

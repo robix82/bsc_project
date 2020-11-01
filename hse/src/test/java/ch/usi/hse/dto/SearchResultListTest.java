@@ -1,13 +1,16 @@
 package ch.usi.hse.dto;
 
+import static ch.usi.hse.retrieval.SearchData.dummieSearchResults;
 import static org.junit.jupiter.api.Assertions.*;
-import static ch.usi.hse.dummie_data.SearchData.dummieSearchResults;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import ch.usi.hse.retrieval.SearchResult;
+import ch.usi.hse.retrieval.SearchResultList;
 
 public class SearchResultListTest {
 
