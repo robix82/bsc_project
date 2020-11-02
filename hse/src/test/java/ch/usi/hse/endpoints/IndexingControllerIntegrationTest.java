@@ -572,33 +572,39 @@ public class IndexingControllerIntegrationTest {
 	
 	private void clearTestFiles() throws IOException {
 		
-		Files.list(urlListsPath).forEach(f -> {
-			try {
-				Files.deleteIfExists(f);
-			} 
-			catch (IOException e) {
-				e.printStackTrace();
-			}
-		});
-		
-		Files.list(indexDirPath).forEach(f -> {
+		if (Files.exists(urlListsPath)) {
 			
-			try {
+			Files.list(urlListsPath).forEach(f -> {
+				try {
+					Files.deleteIfExists(f);
+				} 
+				catch (IOException e) {
+					e.printStackTrace();
+				}
+			});
+		}
+		
+		if (Files.exists(indexDirPath)) {
+		
+			Files.list(indexDirPath).forEach(f -> {
 				
-				Files.list(f).forEach(x -> { try {
-													Files.deleteIfExists(x);
-										  		} 
-										  		catch (IOException e) {
-										  			e.printStackTrace();
-										  		}
-										}); 
-				
-				Files.deleteIfExists(f);
-			} 
-			catch (IOException e) {
-				e.printStackTrace();
-			}
-		});
+				try {
+					
+					Files.list(f).forEach(x -> { try {
+														Files.deleteIfExists(x);
+											  		} 
+											  		catch (IOException e) {
+											  			e.printStackTrace();
+											  		}
+											}); 
+					
+					Files.deleteIfExists(f);
+				} 
+				catch (IOException e) {
+					e.printStackTrace();
+				}
+			});
+		}
 	}
 }
 
