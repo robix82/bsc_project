@@ -1,5 +1,6 @@
 package ch.usi.hse.endpoints;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -41,6 +42,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
+import ch.usi.hse.config.Language;
 import ch.usi.hse.db.entities.DocCollection;
 import ch.usi.hse.db.repositories.DocCollectionRepository;
 import ch.usi.hse.exceptions.ApiError;
@@ -53,6 +55,9 @@ public class IndexingControllerIntegrationTest {
 	@Value("${dir.urlLists}")
 	private String urlListsDir;
 	
+	@Value("${dir.indices}")
+	private String indexDir;
+	
 	@Autowired
 	private DocCollectionRepository collectionRepo;
 	
@@ -61,7 +66,7 @@ public class IndexingControllerIntegrationTest {
 	@Autowired
 	private MockMvc mvc;
 	
-	private Path urlListsPath;
+	private Path urlListsPath, indexDirPath;
 	
 	private List<String> urlListNames, urls1, urls2;
 	private String urlListName1, urlListName2, newUrlListName;
@@ -86,6 +91,7 @@ public class IndexingControllerIntegrationTest {
 			       Charset.forName("utf8"));
 		
 		urlListsPath = Paths.get(urlListsDir);
+		indexDirPath = Paths.get(indexDir);
 		
 		urlListName1 = "urls1.txt";
 		urlListName2 = "urls2.txt";
@@ -104,14 +110,14 @@ public class IndexingControllerIntegrationTest {
 		DocCollection c2 = new DocCollection("c2", urlListName2);
 		c1.setId(1);
 		c2.setId(2);
-		c1.setIndexDirName("indexDir1");
-		c1.setIndexDirName("indexDir2");
+		c1.setIndexDir(indexDir + "c1");
+		c2.setIndexDir(indexDir + "c2");
 		
 		docCollections = List.of(collectionRepo.save(c1),
 								 collectionRepo.save(c2));
 		
 		newDocCollection = new DocCollection("c3", urlListName2);
-		newDocCollection.setIndexDirName("indexDir3");
+		newDocCollection.setIndexDir(indexDir + "c3");
 		
 		clearTestFiles();
 		
@@ -145,6 +151,7 @@ public class IndexingControllerIntegrationTest {
 		   .andExpect(status().isOk())
 		   .andExpect(model().attribute("urlLists", Matchers.iterableWithSize(urlListNames.size())))
 		   .andExpect(model().attribute("docCollections", Matchers.iterableWithSize(docCollections.size())))
+		   .andExpect(model().attribute("languages", is(Language.languages)))
 		   .andExpect(view().name("indexing"));
 	}
 	
@@ -251,8 +258,10 @@ public class IndexingControllerIntegrationTest {
 	public void testAddDocCollection1() throws Exception {
 		
 		String jsonString = writer.writeValueAsString(newDocCollection);
+		String dirName = indexDir + newDocCollection.getName();
 		
 		long countBefore = collectionRepo.count();
+		assertFalse(Files.exists(Paths.get(dirName)));
 		
 		MvcResult res = mvc.perform(post(base + "/docCollections").contentType(json).content(jsonString))
 				 		   .andExpect(status().isCreated())
@@ -260,9 +269,11 @@ public class IndexingControllerIntegrationTest {
 		
 		DocCollection resBody = mapper.readValue(resString(res), DocCollection.class);	
 		assertEquals(newDocCollection.getName(), resBody.getName());
+		assertEquals(dirName, resBody.getIndexDir());
 		
 		long countAfter = collectionRepo.count();
 		assertEquals(countBefore +1, countAfter);
+		assertTrue(Files.exists(Paths.get(dirName)));
 	}
 	
 	@Test // collection with existing id
@@ -336,21 +347,19 @@ public class IndexingControllerIntegrationTest {
 	public void testUpdateDocCollection1() throws Exception {
 		
 		String newName = "newName";
-		String indexDirName = "dirName";
 		DocCollection existingCollection = docCollections.get(0);
+		String oldDir = existingCollection.getIndexDir();
+		Files.createDirectory(Paths.get(oldDir));
+		String newDir = indexDir + newName;
+		
 		existingCollection.setName(newName);
-		existingCollection.setIndexDirName(indexDirName);
 		existingCollection.setLanguage("EN");
 		existingCollection.setUrlListName(urlListName2);
-		existingCollection.setIndexed(true);
+		existingCollection.setIndexed(true); 
 		String jsonString = writer.writeValueAsString(existingCollection);
 		
-		DocCollection foundBefore = collectionRepo.findById(existingCollection.getId());
-		assertNotEquals(existingCollection.getName(), foundBefore.getName());
-		assertNotEquals(existingCollection.getLanguage(), foundBefore.getLanguage());
-		assertNotEquals(existingCollection.getUrlListName(), foundBefore.getUrlListName());
-		assertNotEquals(existingCollection.getIndexDirName(), foundBefore.getIndexDirName());
-		assertNotEquals(existingCollection.getIndexed(), foundBefore.getIndexed());
+		assertTrue(Files.exists(Paths.get(oldDir)));
+		assertFalse(Files.exists(Paths.get(newDir)));
 		
 		MvcResult res = mvc.perform(put(base + "/docCollections").contentType(json).content(jsonString))
 				 		   .andExpect(status().isOk())
@@ -360,11 +369,14 @@ public class IndexingControllerIntegrationTest {
 		assertEquals(existingCollection, resBody);
 
 		DocCollection foundAfter = collectionRepo.findById(existingCollection.getId());
-		assertEquals(existingCollection.getName(), foundAfter.getName());
+		assertEquals(newName, foundAfter.getName());
 		assertEquals(existingCollection.getLanguage(), foundAfter.getLanguage());
 		assertEquals(existingCollection.getUrlListName(), foundAfter.getUrlListName());
-		assertEquals(existingCollection.getIndexDirName(), foundAfter.getIndexDirName());
+		assertEquals(newDir, foundAfter.getIndexDir());
 		assertEquals(existingCollection.getIndexed(), foundAfter.getIndexed());
+		
+		assertFalse(Files.exists(Paths.get(oldDir)));
+		assertTrue(Files.exists(Paths.get(newDir)));
 	}
 	
 	@Test // update on non-existing id
@@ -442,9 +454,12 @@ public class IndexingControllerIntegrationTest {
 	public void testDeleteDocCollection1() throws Exception {
 		
 		DocCollection existingCollection = docCollections.get(0);
+		String dir = existingCollection.getIndexDir();
+		Files.createDirectory(Paths.get(dir));
 		String jsonString = writer.writeValueAsString(existingCollection);
 		
 		long countBefore = collectionRepo.count();
+		assertTrue(Files.exists(Paths.get(dir)));
 		
 		assertTrue(collectionRepo.existsById(existingCollection.getId()));
 		
@@ -458,6 +473,7 @@ public class IndexingControllerIntegrationTest {
 		
 		assertEquals(countBefore -1, collectionRepo.count());
 		assertFalse(collectionRepo.existsById(existingCollection.getId()));
+		assertFalse(Files.exists(Paths.get(dir)));
 	}
 	
 	@Test
@@ -564,11 +580,30 @@ public class IndexingControllerIntegrationTest {
 				e.printStackTrace();
 			}
 		});
+		
+		Files.list(indexDirPath).forEach(f -> {
+			
+			try {
+				
+				Files.list(f).forEach(x -> { try {
+													Files.deleteIfExists(x);
+										  		} 
+										  		catch (IOException e) {
+										  			e.printStackTrace();
+										  		}
+										}); 
+				
+				Files.deleteIfExists(f);
+			} 
+			catch (IOException e) {
+				e.printStackTrace();
+			}
+		});
 	}
 }
 
-
-
+ 
+ 
 
 
 

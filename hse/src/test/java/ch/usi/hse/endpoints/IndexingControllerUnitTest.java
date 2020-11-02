@@ -36,6 +36,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
+import ch.usi.hse.config.Language;
 import ch.usi.hse.db.entities.DocCollection;
 import ch.usi.hse.exceptions.ApiError;
 import ch.usi.hse.exceptions.FileDeleteException;
@@ -158,6 +159,7 @@ public class IndexingControllerUnitTest {
 		   .andExpect(status().isOk())
 		   .andExpect(model().attribute("urlLists", is(urlListNames)))
 		   .andExpect(model().attribute("docCollections", is(docCollections)))
+		   .andExpect(model().attribute("languages", is(Language.languages)))
 		   .andExpect(view().name("indexing"));
 	}
 	

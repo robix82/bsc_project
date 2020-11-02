@@ -34,7 +34,7 @@ public class DocCollection {
 	private String urlListName;
 	
 	@Column(name="index_dir")
-	private String indexDirName;
+	private String indexDir;
 	
 	@Column(name="indexed")
 	private boolean indexed;
@@ -71,8 +71,8 @@ public class DocCollection {
 		return urlListName;
 	}
 	
-	public String getIndexDirName() {
-		return indexDirName;
+	public String getIndexDir() {
+		return indexDir;
 	}
 	
 	public boolean getIndexed() {
@@ -85,18 +85,18 @@ public class DocCollection {
 	
 	public void setName(String name) {
 		this.name = name;
-	}
+	} 
 	
 	public void setLanguage(String language) {
 		this.language = language;
-	}
+	} 
 	
 	public void setUrlListName(String urlListName) {
 		this.urlListName = urlListName;
 	}
 	
-	public void setIndexDirName(String indexDirName) {
-		this.indexDirName = indexDirName;
+	public void setIndexDir(String indexDir) {
+		this.indexDir = indexDir;
 	}
 	
 	public void setIndexed(boolean indexed) {

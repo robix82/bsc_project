@@ -175,7 +175,9 @@ function showExperimenterDeleteModal(experimenter) {
 
 function showParticipantDeleteModal(participant) {
 	
-	showConfirmDeleteModal(participant.userName, () => { deleteUser(participant, "participants"); });
+	showConfirmDeleteModal(participant.userName, () => { 
+		deleteUser(participant, "participants"); 
+	});
 } 
 
 function submitUser(user, category, method) { 

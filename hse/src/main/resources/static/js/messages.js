@@ -13,6 +13,8 @@ var m_warning = $("#m_warning").text();
 var m_generalError = $("#m_generalError").text();
 var m_saved = $("#m_saved").text();
 var m_deleted = $("#m_deleted").text();
+var m_saved_f = $("#m_saved_f").text();
+var m_deleted_f = $("#m_deleted_f").text();
 
 var m_userName = $("#m_userName").text();
 var m_password = $("#m_password").text();
@@ -47,8 +49,14 @@ var m_fileReadErrorm_fileReadError = $("#m_fileReadError").text();
 var m_urlList = $("#m_urlList").text();
 var m_urlLists = $("#m_urlLists").text();
 
-
-
+var m_collection = $("#m_collection").text();
+var m_docCollection = $("#m_docCollection").text();
+var m_docCollections = $("#m_docCollections").text();
+var m_collectionName = $("#m_collectionName").text();
+var m_language = $("#m_language").text();
+var m_missingCollectionName = $("#m_missingCollectionName").text();
+var m_collectionExists = $("#m_collectionExists").text();
+var m_collectionNotFound = $("#m_collectionNotFound").text();
 
 
 

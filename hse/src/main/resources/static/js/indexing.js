@@ -1,10 +1,9 @@
 
 $(document).ready(function() {
-	
-	console.log(urlLists);
 		
 	$("#urlListFileInput").on("change", () => {
-		$("#urlListFilePreview").val($("#urlListFileInput").val().split("\\").pop());
+
+		submitUrlFile();
 	});
 });
 
@@ -14,7 +13,7 @@ function submitUrlFile() {
 	
 	if ($("#urlListFileInput")[0].files.length > 0) {
 		
-		let succMsg = m_file + " " + $("#urlListFilePreview").val() + " " + m_saved;
+		let succMsg = m_file + " " + $("#urlListFileInput").val().split("\\").pop() + " " + m_saved;
 		
 		formData.append("file", $("#urlListFileInput")[0].files[0]);
 		
@@ -33,6 +32,64 @@ function submitUrlFile() {
 		});
 	}
 }
+
+function showDocCollectionInputModal(collection) {
+	
+	let method = "POST";
+	
+	if (collection) {
+		
+		method = "PUT";
+		
+		$("#collectionNameInput").val(collection.name);
+		$("#urlListSelect").val(collection.urlListName);
+		$("#collectionLanguageSelect").val(collection.language);
+	}
+	
+	$("#submitDocCollectionBtn").on("click", () => {
+		
+		
+		
+		let name = $("#collectionNameInput").val().trim();
+		let urlListName = $("#urlListSelect").val().trim();
+		let language = $("#collectionLanguageSelect").val().trim();
+		
+		if (name == "") {
+			showErrorModal(m_error, m_missingCollectionName);
+			return;
+		}
+		
+		if (! collection) {
+			collection = {};
+		}
+		
+		collection.name = name;
+		collection.urlListName = urlListName;
+		collection.language = language;
+		
+		let succMsg = m_collection + " " + name + " " + m_saved_f
+		
+		$.ajax("/indexing/docCollections",
+		{
+			type: method,
+			dataType: "json",
+			contentType: 'application/json; charset=utf-8',
+			data: JSON.stringify(collection),
+			success: () => {
+
+				showInfoModal("", succMsg, () => { location.reload(); });
+			},
+			error: (err) => {  
+
+				handleHttpError(err);
+			}
+		}
+	);
+	});
+	
+	$("#docCollectionInputModal").modal("show");
+}
+
 
 function showUrlListDeleteModal(fileName) {
 	
@@ -57,7 +114,34 @@ function showUrlListDeleteModal(fileName) {
 	});
 }
 
+function showCollectionDeleteModal(collection) {
+	
+	showConfirmDeleteModal(collection.name, () => { 
+		deleteCollection(collection); 
+	});
+}
 
+function deleteCollection(collection) {
+	
+	let succMsg = m_collection + " " + collection.name + " " + m_deleted_f + ".";
+	
+	$.ajax("/indexing/docCollections",
+		{
+			type: "DELETE",
+			dataType: "json",
+			contentType: 'application/json; charset=utf-8',
+			data: JSON.stringify(collection),
+			success: () => {
+
+				showInfoModal("", succMsg, () => { location.reload(); });
+			},
+			error: (err) => { 
+
+				handleHttpError(err);
+			}
+		}
+	);
+} 
 
 
 

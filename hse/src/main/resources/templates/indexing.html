@@ -20,36 +20,42 @@
 	
 	<div id="inner-container">
 	
-		<div id="url-lists-div">
+		<div class="tab-container">
 			
-			<div id="url-lists-tab">
+			<div class="list-tab" id="url-lists-tab">
 			
 				<div class="tab-header">
 				<h3 th:text="#{m_urlLists}"></h3>
 				</div>
 				
-				<div id="url-lists-list" class="list-group list-group-flush">
+				<div id="url-lists-list">
 								
-				  	<div th:each="urlList : ${urlLists}" class="list-group-item list-group-item-action list-group-item-light">
+				  	<table class="table table-hover">
 			
-						<div class="url-lists-row">
+						<tr th:each="urlList : ${urlLists}"  class="list-row table-light">
 							
-							<span class="urlFileName" th:text="${urlList}"></span>
-						
-							<button class="btn btn-sm btn-light">
-							<a class="dl-link" th:href="@{/indexing/urlLists/dl?fileName=} + ${urlList}">
-							<span class="glyphicon glyphicon-save"></span>
-							</a>
-							</button>
-						
-							<button class="btn btn-sm btn-light"
-									th:onclick="showUrlListDeleteModal([[${urlList}]])">
-							<span class="glyphicon glyphicon-trash"></span>
-							</button>
+							<td class="urlFileName" th:text="${urlList}"></td>
 							
-						</div>
+							<td class="table-space"></td>
+							
+							<td>
+								<button class="btn btn-sm btn-light">
+								<a class="dl-link" th:href="@{/indexing/urlLists/dl?fileName=} + ${urlList}">
+								<span class="glyphicon glyphicon-save"></span>
+								</a>
+								</button>
+							</td>
 						
-				  	</div>
+							<td>
+								<button class="btn btn-sm btn-light"
+										th:onclick="showUrlListDeleteModal([[${urlList}]])">
+								<span class="glyphicon glyphicon-trash"></span>
+								</button>
+							</td>
+							
+						</tr>
+						
+				  	</table>
 			
 				</div>
 				
@@ -57,32 +63,69 @@
 				
 					<span class="input-group-btn">
 			
-					   	<span class="btn btn-light btn-file">
+					   	<span class="btn btn-primary btn-file">
 		
-							<span th:text="#{m_add}"></span>
+							<span class="glyphicon glyphicon-plus"></span>
 		
 					      		<input id="urlListFileInput"
 									   data-url="/upload" 
 									   accept="text/plain" 
-									   name="image" 
 									   type="file">
 	
 					    	</span>
 	
 					  	</span>
-
-					<input id="urlListFilePreview"
-						   readonly="readonly" 
-						   th:placeholder="#{m_file}" 
-						   class="form-control" 
-						   name="filename" 
-						   type="text">
-						
-					<span class="btn btn-primary btn-file"
-						  th:text="#{m_submit}"
-						  th:onclick="submitUrlFile()">
 					
-					</span>	
+				</div>
+			
+			</div>
+			
+			<div class="list-tab" id="doc-collections-tab">
+			
+				<div class="tab-header">
+				<h3 th:text="#{m_docCollections}"></h3>
+				</div>
+				
+				<div id="doc-collections-list">
+								
+				  	<table class="table table-hover">
+			
+						<tbody>
+					      <tr th:each="collection : ${docCollections}"  class="list-row table-light">
+
+					        <td th:text="${collection.id}"></td>
+							<td th:text="${collection.name}"></td>
+							<td th:text="${collection.urlListName}"></td>
+							<td th:text="${collection.language}"></td>
+							<td class="table-space"></td>
+							
+							<td>
+								<button class="btn btn-sm btn-light"
+										th:onclick="showDocCollectionInputModal([[${collection}]])">
+								<span class="glyphicon glyphicon-pencil"></span>
+								</button>
+							</td>
+							
+							<td>
+								<button class="btn btn-sm btn-light"
+										th:onclick="showCollectionDeleteModal([[${collection}]])">
+								<span class="glyphicon glyphicon-trash"></span>
+								</button>
+							</td>
+							
+					      </tr>
+    					</tbody>
+			
+				  	</table>
+			
+			
+				</div>
+				
+				<div>
+				
+					<button class="btn btn-primary" th:onclick="showDocCollectionInputModal()">
+					<span class="glyphicon glyphicon-plus"></span>
+					</button>
 					
 				</div>
 			

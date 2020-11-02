@@ -15,6 +15,7 @@ import java.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -36,6 +37,9 @@ import ch.usi.hse.storage.UrlListStorage;
 @SpringBootTest
 public class IndexingServiceTest {
 
+	@Value("${dir.indices}")
+	private String indexDir;
+	
 	@MockBean
 	private UrlListStorage urlListStorage;
 	
@@ -84,9 +88,12 @@ public class IndexingServiceTest {
 		c1.setUrlListName(existingUrlListName);
 		c2.setUrlListName(existingUrlListName);
 		c3.setUrlListName(existingUrlListName);
+		c1.setIndexDir(indexDir + "c1");
+		c2.setIndexDir(indexDir + "c2");
+		c3.setIndexDir(indexDir + "c3");
 		
 		savedDocCollections = List.of(c1, c2);
-		existingDocCollection = c1;
+		existingDocCollection = c1; 
 		newDocCollection = c3;
 		
 		when(urlListStorage.savedFiles()).thenReturn(fileList);
@@ -113,7 +120,7 @@ public class IndexingServiceTest {
 	}
 	
 	// URL LISTS
-	
+	 
 	@Test
 	public void testSavedUrlLists() throws FileReadException {
 		
@@ -244,6 +251,7 @@ public class IndexingServiceTest {
 		DocCollection saved = service.addDocCollection(newDocCollection);
 		
 		assertEquals(newDocCollection, saved);
+		assertEquals(indexDir + newDocCollection.getName(), saved.getIndexDir());
 	}
 	
 	@Test
@@ -322,13 +330,14 @@ public class IndexingServiceTest {
 	@Test
 	public void testUpdateDocCollection1() throws Exception {
 		
-		existingDocCollection.setIndexDirName("newName");
+		String newName = "newCollection";
+		existingDocCollection.setName(newName);
 		
 		DocCollection updated = service.updateDocCollection(existingDocCollection);
 		
 		assertEquals(existingDocCollection, updated);
 	}
-	
+	 
 	@Test
 	public void testUpdateDocCollection2() throws Exception {
 		
@@ -424,7 +433,7 @@ public class IndexingServiceTest {
 	}
 	
 	@Test
-	public void testRemoveDocCollection2() {
+	public void testRemoveDocCollection2() throws FileDeleteException {
 		
 		boolean exc = false;
 		
@@ -432,7 +441,7 @@ public class IndexingServiceTest {
 			service.removeDocCollection(newDocCollection);
 		}
 		catch (NoSuchDocCollectionException e) {
-			
+			 
 			assertTrue(e.getMessage().contains(Integer.toString(newDocCollection.getId())));
 			exc = true;
 		}
@@ -519,7 +528,7 @@ public class IndexingServiceTest {
 
 
 
-
+ 
 
 
 

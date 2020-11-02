@@ -98,6 +98,14 @@ function handleApiError(errJson) {
 		
 		showErrorModal(m_error, m_fileNotFound);
 	}
+	else if (errType == "DocCollectionExistsException") {
+		
+		showErrorModal(m_error, m_collectionExists);
+	}
+	else if (errType == "NoSuchCollectionException") {
+		
+		showErrorModal(m_error, m_collectionNotFound);
+	}
 	else {
 
 		console.log(err);

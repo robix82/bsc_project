@@ -2,10 +2,15 @@ package ch.usi.hse.services;
 
 import ch.usi.hse.config.Language;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -32,6 +37,9 @@ import ch.usi.hse.storage.UrlListStorage;
 @Service
 public class IndexingService {
 
+	@Value("${dir.indices}")
+	private String indexDir;
+	
 	@Autowired
 	private UrlListStorage urlListStorage;
 	
@@ -61,7 +69,7 @@ public class IndexingService {
 		
 		urlListStorage.store(file);
 	}
-	
+	 
 	
 	/**
 	 * remove the file with the given file name
@@ -108,15 +116,17 @@ public class IndexingService {
 	 * @throws DocCollectionExistsException
 	 * @throws NoSuchFileException
 	 * @throws FileReadException
+	 * @throws FileWriteException 
 	 */
 	public DocCollection addDocCollection(DocCollection docCollection) 
 			throws LanguageNotSupportedException, 
 				   DocCollectionExistsException, 
 				   NoSuchFileException, 
-				   FileReadException {
+				   FileReadException, 
+				   FileWriteException {
 		
 		int id = docCollection.getId();
-		
+		 
 		if (collectionRepo.existsById(id)) {
 			throw new DocCollectionExistsException(id);
 		}
@@ -138,6 +148,21 @@ public class IndexingService {
 		if (collectionRepo.existsByName(name)) {
 			throw new DocCollectionExistsException(name);
 		}
+		
+		String dirName = indexDir + name;
+		Path dirPath = Paths.get(dirName);
+		
+		if (! Files.exists(dirPath)) {
+			
+			try {
+				Files.createDirectory(dirPath);
+			}
+			catch (IOException e) {
+				throw new FileWriteException(dirName);
+			}
+		}
+		
+		docCollection.setIndexDir(dirName);
 		 
 		DocCollection saved = collectionRepo.save(docCollection);
 		
@@ -154,13 +179,17 @@ public class IndexingService {
 	 * @throws LanguageNotSupportedException
 	 * @throws FileReadException
 	 * @throws DocCollectionExistsException
+	 * @throws FileDeleteException 
+	 * @throws FileWriteException 
 	 */
 	public DocCollection updateDocCollection(DocCollection docCollection) 
 			throws NoSuchDocCollectionException, 
 				   NoSuchFileException, 
 				   LanguageNotSupportedException, 
 				   FileReadException, 
-				   DocCollectionExistsException {
+				   DocCollectionExistsException, 
+				   FileDeleteException, 
+				   FileWriteException {
 		
 		int id = docCollection.getId();
 		
@@ -178,22 +207,50 @@ public class IndexingService {
 		
 		if (! Language.isSupported(language)) {
 			throw new LanguageNotSupportedException(language);
-		}
+		} 
 		
 		DocCollection found = collectionRepo.findById(id);
 		
 		String name = docCollection.getName();
-		
-		if ((! name.equals(found.getName()) && collectionRepo.existsByName(name))) {
-			throw new DocCollectionExistsException(name);
+	
+		if (! name.equals(found.getName())) {
+			
+			System.out.println("ENTERING NAME UPDATE");
+			
+			if (collectionRepo.existsByName(name)) {
+				throw new DocCollectionExistsException(name);
+			}
+			
+			String oldDir = found.getIndexDir();
+			String newDir = indexDir + name;
+			Path oldPath = Paths.get(oldDir);
+			Path newPath = Paths.get(newDir);
+			
+			try {
+				if (Files.exists(oldPath)) {
+					Files.delete(oldPath); 
+				}
+			}
+			catch (IOException e) {
+				throw new FileDeleteException(oldDir);
+			}
+			
+			try {
+				if (! Files.exists(newPath)) {
+					Files.createDirectory(newPath);
+				}
+			}
+			catch (IOException e) {
+				throw new FileWriteException(newDir);
+			}
+			
+			found.setName(name);
+			found.setIndexDir(newDir);			
 		}
 		
-		found.setName(name);
 		found.setLanguage(language);
 		found.setUrlListName(urlListName);
-		found.setIndexDirName(docCollection.getIndexDirName());
 		found.setIndexed(docCollection.getIndexed());
-		
 		DocCollection updated = collectionRepo.save(found);
 		
 		return updated;
@@ -204,14 +261,27 @@ public class IndexingService {
 	 * 
 	 * @param docCollection
 	 * @throws NoSuchDocCollectionException
+	 * @throws FileDeleteException 
 	 */
 	public void removeDocCollection(DocCollection docCollection) 
-			throws NoSuchDocCollectionException {
+			throws NoSuchDocCollectionException, FileDeleteException {
 		
 		int id = docCollection.getId();
 		
 		if (! collectionRepo.existsById(id)) {
 			throw new NoSuchDocCollectionException(id);
+		}
+		
+		Path dirPath = Paths.get(docCollection.getIndexDir());
+		
+		if (Files.exists(dirPath)) {
+			
+			try {
+				Files.delete(dirPath);
+			}
+			catch (IOException e) { 
+				throw new FileDeleteException(docCollection.getIndexDir());
+			}
 		}
 		
 		collectionRepo.delete(docCollection);
@@ -252,7 +322,7 @@ public class IndexingService {
 	}
 }
 
-
+ 
 
 
  
