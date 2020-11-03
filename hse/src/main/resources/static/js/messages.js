@@ -66,7 +66,8 @@ var m_processed = $("#m_processed").text();
 var m_skipped = $("#m_skipped").text();
 var m_doIndex = $("#m_doIndex").text();
 
-
+var m_timeElapsed = $("#m_timeElapsed").text();
+var m_processing = $("#m_processing").text();
 
 
 

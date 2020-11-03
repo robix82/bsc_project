@@ -2,6 +2,8 @@ package ch.usi.hse.indexing;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +43,13 @@ public class IndexBuilder {
 		
 		List<String> urls = urlLists.getLines(collection.getUrlListName());
 
+		Instant start = Instant.now();
+		
 		Downloader.process(urls, res, storagePath);
+		
+		Instant end = Instant.now();
+		
+		res.setTimeElapsed(Duration.between(start, end).toSeconds());
 	
 		return res;
 	}

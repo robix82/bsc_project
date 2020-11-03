@@ -9,6 +9,7 @@ public class IndexingResult {
 	private Integer processedUrls;
 	private Integer indexed;
 	private Integer skipped;
+	private long timeElapsed; // seconds
 	
 	public IndexingResult() {
 		
@@ -17,16 +18,18 @@ public class IndexingResult {
 		processedUrls = 0;
 		indexed = 0;
 		skipped = 0;
+		timeElapsed = 0;
 	}
 	
 	public IndexingResult(String collectionName, String urlListName, 
-						  int processedUrls, int indexed, int skipped) {
+						  int processedUrls, int indexed, int skipped, long timeElapsed) {
 		
 		this.collectionName = collectionName;
 		this.urlListName = urlListName;
 		this.processedUrls = processedUrls;
 		this.indexed = indexed;
 		this.skipped = skipped;
+		this.timeElapsed = timeElapsed;
 	}
 	
 	public String getCollectionName() {
@@ -49,6 +52,10 @@ public class IndexingResult {
 		return skipped;
 	}
 	
+	public long getTimeElapsed() {
+		return timeElapsed;
+	}
+	
 	public void setCollectionName(String collectionName) {
 		this.collectionName = collectionName;
 	}
@@ -67,6 +74,10 @@ public class IndexingResult {
 	
 	public void setSkipped(int skipped) {
 		this.skipped = skipped;
+	}
+	
+	public void setTimeElapsed(long timeElapsed) {
+		this.timeElapsed = timeElapsed;
 	}
 	
 	public void incProcessed() {

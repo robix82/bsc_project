@@ -95,6 +95,25 @@
 	
 </div>
 
+<div class="modal fade" id="processingModal">
+		
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content">
+		
+			<div class="modal-header text-center">
+				<h4 class="modal-title w-100" th:text="#{m_processing}"></h4>
+		   	</div>
+		
+			<div class="modal-body text-center">
+			
+				<div class="spinner-border text-primary"></div>
+			
+			</div>
+		
+		</div>
+	</div>
+</div>
+
 <!-- ADMIN -->
 
 <div class="modal fade" id="administratorInputModal">
@@ -356,6 +375,11 @@
 				<br />
 				<span th:text="#{m_skipped} + ':  '"></span>
 				<span id="irSkipped"></span>
+				<br />
+				<span th:text="#{m_timeElapsed} + ':  '"></span>
+				<span id="irTime"></span>
+				<span> s</span>
+				<br />
 			
 			</div>
 		

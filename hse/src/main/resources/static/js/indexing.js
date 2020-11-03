@@ -145,6 +145,8 @@ function deleteCollection(collection) {
 
 function doIndex(collection) {
 	
+	$("#processingModal").modal("show");
+	
 	$.ajax("/indexing/buildIndex",
 			{
 				type: "POST",
@@ -153,10 +155,12 @@ function doIndex(collection) {
 				data: JSON.stringify(collection),
 				success: (res) => {
 	
+					$("#processingModal").modal("hide");
 					showIndexingResult(res);
 				},
 				error: (err) => {  
 	
+					$("#processingModal").modal("hide");
 					handleHttpError(err);
 				}
 			}
@@ -172,6 +176,7 @@ function showIndexingResult(res) {
 	$("#irProcessed").text(res.processedUrls);
 	$("#irIndexed").text(res.indexed);
 	$("#irSkipped").text(res.skipped);
+	$("#irTime").text(res.timeElapsed);
 	
 	$("#irOkBtn").on("click", () => { location.reload(); });
 	

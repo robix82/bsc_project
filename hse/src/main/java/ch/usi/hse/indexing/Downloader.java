@@ -39,11 +39,14 @@ public class Downloader {
 			try {
 				
 				Document doc = Jsoup.connect(url).get();				
-				String textData = doc.data();
+				String data = doc.data();
 				
-				String fName = "f_" + (++count);
-				Path file = Files.createFile(dirPath.resolve(fName));
-				Files.writeString(file, textData);
+				if (storageDir != null) {
+				
+					String fName = "f_" + (++count);
+					Path file = Files.createFile(dirPath.resolve(fName));
+					Files.writeString(file, data);
+				}
 			}
 			catch (IOException e) {
 				
