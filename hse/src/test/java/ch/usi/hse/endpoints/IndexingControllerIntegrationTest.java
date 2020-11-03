@@ -46,7 +46,6 @@ import ch.usi.hse.config.Language;
 import ch.usi.hse.db.entities.DocCollection;
 import ch.usi.hse.db.repositories.DocCollectionRepository;
 import ch.usi.hse.exceptions.ApiError;
-import ch.usi.hse.indexing.IndexingResult;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -492,7 +491,7 @@ public class IndexingControllerIntegrationTest {
 		assertEquals("NoSuchDocCollectionException", err.getErrorType());
 		assertTrue(err.getErrorMessage().contains(Integer.toString(badId)));
 	}
-	
+	/*
 	@Test
 	public void testBuildIndex1() throws Exception {
 		
@@ -561,7 +560,7 @@ public class IndexingControllerIntegrationTest {
 		assertTrue(err.getErrorMessage().contains(badLanguage));
 	}
 	
-	
+	*/
 	
 		///////////////////
 	

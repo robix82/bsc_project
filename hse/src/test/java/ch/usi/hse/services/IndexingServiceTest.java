@@ -116,7 +116,7 @@ public class IndexingServiceTest {
 		when(collectionRepo.findById(existingDocCollection.getId())).thenReturn(existingDocCollection);
 		doNothing().when(collectionRepo).delete(existingDocCollection);
 		
-		when(indexBuilder.buildIndex(any(DocCollection.class))).thenReturn(new IndexingResult());
+		when(indexBuilder.buildIndex(any(DocCollection.class), false)).thenReturn(new IndexingResult());
 	}
 	
 	// URL LISTS
@@ -450,9 +450,9 @@ public class IndexingServiceTest {
 	}
 	
 	@Test
-	public void testBuildIndex1() {
+	public void testBuildIndex1() throws NoSuchFileException, FileReadException, FileWriteException {
 		
-		IndexingResult res = indexBuilder.buildIndex(existingDocCollection);
+		IndexingResult res = indexBuilder.buildIndex(existingDocCollection, false);
 		
 		assertNotNull(res);
 	}
@@ -460,7 +460,7 @@ public class IndexingServiceTest {
 	@Test
 	public void testBuildIndex2() throws LanguageNotSupportedException, 
 										 NoSuchFileException, 
-										 FileReadException {
+										 FileReadException, FileWriteException {
 		
 		int badId = 87645;
 		newDocCollection.setId(badId);
@@ -468,7 +468,7 @@ public class IndexingServiceTest {
 		boolean exc = false;
 		
 		try {
-				service.buildIndex(newDocCollection);
+				service.buildIndex(newDocCollection, false);
 		}
 		catch (NoSuchDocCollectionException e) {
 			
@@ -487,7 +487,7 @@ public class IndexingServiceTest {
 		boolean exc = false;
 		
 		try {
-			service.buildIndex(existingDocCollection);
+			service.buildIndex(existingDocCollection, false);
 		}
 		catch (NoSuchFileException e) {
 			
@@ -507,7 +507,7 @@ public class IndexingServiceTest {
 		boolean exc = false;
 		
 		try {
-			service.buildIndex(existingDocCollection);
+			service.buildIndex(existingDocCollection, false);
 		}
 		catch (LanguageNotSupportedException e) {
 			

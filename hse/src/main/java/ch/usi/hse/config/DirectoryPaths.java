@@ -10,6 +10,7 @@ public class DirectoryPaths {
 	private String urlLists;
 	private String indices;
 	private String testFiles;
+	private String rawDl;
 	
 	public String getUrlLists() {
 		return urlLists;
@@ -34,4 +35,29 @@ public class DirectoryPaths {
 	public void setIndices(String indices) {
 		this.indices = indices;
 	}
+
+	public String getRawDl() {
+		return rawDl;
+	}
+	
+	public void setRawDl(String rawDl) {
+		this.rawDl = rawDl;
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

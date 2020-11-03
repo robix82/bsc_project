@@ -296,9 +296,14 @@ public class IndexingService {
 	 * @throws LanguageNotSupportedException 
 	 * @throws NoSuchFileException 
 	 * @throws FileReadException 
+	 * @throws FileWriteException 
 	 */
-	public IndexingResult buildIndex(DocCollection docCollection) 
-			throws NoSuchDocCollectionException, LanguageNotSupportedException, NoSuchFileException, FileReadException {
+	public IndexingResult buildIndex(DocCollection docCollection, boolean storeRawFiles) 
+			throws NoSuchDocCollectionException, 
+				   LanguageNotSupportedException, 
+				   NoSuchFileException, 
+				   FileReadException, 
+				   FileWriteException {
 		
 		int id = docCollection.getId();
 		
@@ -318,7 +323,7 @@ public class IndexingService {
 			throw new LanguageNotSupportedException(language);
 		}
 		
-		IndexingResult res = indexBuilder.buildIndex(docCollection);
+		IndexingResult res = indexBuilder.buildIndex(docCollection, storeRawFiles);
 		
 		docCollection.setIndexed(true);
 		collectionRepo.save(docCollection);

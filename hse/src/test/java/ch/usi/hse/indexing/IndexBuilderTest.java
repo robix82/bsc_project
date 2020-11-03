@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import ch.usi.hse.db.entities.DocCollection;
+
 
 @SpringBootTest
 public class IndexBuilderTest {
@@ -15,19 +15,27 @@ public class IndexBuilderTest {
 	@Autowired
 	private IndexBuilder indexBuilder;
 	
-	private DocCollection docCollection;
+//	private DocCollection docCollection;
 	
 	@BeforeEach
 	public void setUp() {
 		
-		docCollection = new DocCollection("collection", "urlList");
+//		docCollection = new DocCollection("collection", "urlList");
 	}
 	
 	@Test
+	public void testSetup() {
+		
+		assertNotNull(indexBuilder);
+	}
+	
+	/*
+	@Test
 	public void testBuildIndex1() {
 		
-		IndexingResult res = indexBuilder.buildIndex(docCollection);
+		IndexingResult res = indexBuilder.buildIndex(docCollection, false);
 		
 		assertNotNull(res);
 	}
+	*/
 }

@@ -208,15 +208,17 @@ public class IndexingController {
 	 * @throws LanguageNotSupportedException
 	 * @throws NoSuchFileException
 	 * @throws FileReadException
+	 * @throws FileWriteException 
 	 */
 	@PostMapping("/buildIndex")
 	public ResponseEntity<IndexingResult> buildIndex(@RequestBody DocCollection docCollection) 
 			throws NoSuchDocCollectionException, 
 				   LanguageNotSupportedException, 
 				   NoSuchFileException, 
-				   FileReadException {
+				   FileReadException, 
+				   FileWriteException {
 		
-		IndexingResult result = indexingService.buildIndex(docCollection);
+		IndexingResult result = indexingService.buildIndex(docCollection, true);
 		
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}

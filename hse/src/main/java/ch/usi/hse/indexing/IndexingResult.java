@@ -69,6 +69,19 @@ public class IndexingResult {
 		this.skipped = skipped;
 	}
 	
+	public void incProcessed() {
+		++processedUrls;
+	}
+	
+	public void incIndexed() {
+		++indexed;
+	}
+	
+	public void incSkipped() {
+		++skipped;
+	}
+	
+	
 	@Override
 	public boolean equals(Object o) {
 		

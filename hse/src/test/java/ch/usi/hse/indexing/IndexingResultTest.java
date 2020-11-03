@@ -1,4 +1,4 @@
-package ch.usi.hse.dto;
+package ch.usi.hse.indexing;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import ch.usi.hse.indexing.IndexingResult;
 
 public class IndexingResultTest {
 
@@ -101,6 +100,45 @@ public class IndexingResultTest {
 			assertFalse(r1.equals(r));
 			assertNotEquals(r1.hashCode(), r.hashCode());
 		}
+	}
+	
+	@Test
+	public void testIncProcessed() {
+		
+		IndexingResult r1 = new IndexingResult(collectionName, urlListName, 
+				   							   urls, indexed, skipped);
+		
+		int before = r1.getProcessedUrls();
+		
+		r1.incProcessed();
+		
+		assertEquals(before +1, r1.getProcessedUrls());
+	}
+	
+	@Test
+	public void testIncIndexed() {
+		
+		IndexingResult r1 = new IndexingResult(collectionName, urlListName, 
+				   							   urls, indexed, skipped);
+		
+		int before = r1.getIndexed();
+		
+		r1.incIndexed();
+		
+		assertEquals(before +1, r1.getIndexed());
+	}
+	
+	@Test
+	public void testIncSkipped() {
+		
+		IndexingResult r1 = new IndexingResult(collectionName, urlListName, 
+				   							   urls, indexed, skipped);
+		
+		int before = r1.getSkipped();
+		
+		r1.incSkipped();
+		
+		assertEquals(before +1, r1.getSkipped());
 	}
 }
 
