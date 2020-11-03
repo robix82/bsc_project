@@ -97,6 +97,8 @@
 							<td th:text="${collection.name}"></td>
 							<td th:text="${collection.urlListName}"></td>
 							<td th:text="${collection.language}"></td>
+							<td th:if="${collection.indexed}" class="text-green" th:text="#{m_indexed}"></td>
+							<td th:unless="${collection.indexed}" class="text-red" th:utext="#{m_notIndexed}"></td>
 							<td class="table-space"></td>
 							
 							<td>
@@ -110,6 +112,13 @@
 								<button class="btn btn-sm btn-light"
 										th:onclick="showCollectionDeleteModal([[${collection}]])">
 								<span class="glyphicon glyphicon-trash"></span>
+								</button>
+							</td>
+							
+							<td>
+								<button class="btn btn-sm btn-light"
+										th:text="#{m_doIndex}"
+										th:onclick="doIndex([[${collection}]])"
 								</button>
 							</td>
 							

@@ -76,9 +76,18 @@ tr {
 
 #doc-collections-list {
 	 
-	min-width: 30em;
+/*	min-width: 30em;*/
 }
 
+.text-green {
+	
+	color: green; 
+}
+
+.text-red {
+	
+	color: red;
+}
 
 
 /* FILE INPUT */

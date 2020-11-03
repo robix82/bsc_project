@@ -70,21 +70,21 @@ function showDocCollectionInputModal(collection) {
 		let succMsg = m_collection + " " + name + " " + m_saved_f
 		
 		$.ajax("/indexing/docCollections",
-		{
-			type: method,
-			dataType: "json",
-			contentType: 'application/json; charset=utf-8',
-			data: JSON.stringify(collection),
-			success: () => {
-
-				showInfoModal("", succMsg, () => { location.reload(); });
-			},
-			error: (err) => {  
-
-				handleHttpError(err);
+			{
+				type: method,
+				dataType: "json",
+				contentType: 'application/json; charset=utf-8',
+				data: JSON.stringify(collection),
+				success: () => {
+	
+					showInfoModal("", succMsg, () => { location.reload(); });
+				},
+				error: (err) => {  
+	
+					handleHttpError(err);
+				}
 			}
-		}
-	);
+		);
 	});
 	
 	$("#docCollectionInputModal").modal("show");
@@ -143,7 +143,40 @@ function deleteCollection(collection) {
 	);
 } 
 
+function doIndex(collection) {
+	
+	$.ajax("/indexing/buildIndex",
+			{
+				type: "POST",
+				dataType: "json",
+				contentType: 'application/json; charset=utf-8',
+				data: JSON.stringify(collection),
+				success: (res) => {
+	
+					showIndexingResult(res);
+				},
+				error: (err) => {  
+	
+					handleHttpError(err);
+				}
+			}
+	);
+}
 
+function showIndexingResult(res) {
+	
+	// set fields of indexingResultModal
+	
+	$("#irCollectionName").text(res.collectionName);
+	$("#irUrlListName").text(res.urlListName);
+	$("#irProcessed").text(res.processedUrls);
+	$("#irIndexed").text(res.indexed);
+	$("#irSkipped").text(res.skipped);
+	
+	$("#irOkBtn").on("click", () => { location.reload(); });
+	
+	$("#indexingResultModal").modal("show");
+}
 
 
 

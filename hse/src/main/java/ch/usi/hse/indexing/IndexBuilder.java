@@ -8,9 +8,12 @@ import ch.usi.hse.db.entities.DocCollection;
 public class IndexBuilder {
 
 	public IndexingResult buildIndex(DocCollection collection) {
+
 		
-		// TODO: call download, text extraction and indexing
+		IndexingResult res = new IndexingResult();
+		res.setCollectionName(collection.getName());
+		res.setUrlListName(collection.getUrlListName());
 		
-		return new IndexingResult();
+		return res;
 	}
 }

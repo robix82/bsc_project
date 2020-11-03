@@ -331,8 +331,48 @@
 	
 </div>
 
-
-
+<div class="modal fade" id="indexingResultModal">
+		
+	<div class="modal-dialog">
+		<div class="modal-content">
+		
+			<div class="modal-header text-center">
+				<h4 class="modal-title w-100" th:text="#{m_index} + ' ' + #{m_created}"></h4>
+		   	</div>
+		
+			<div class="modal-body">
+			
+				<span th:text="#{m_collection} + ':  '"></span>
+				<span id="irCollectionName"></span>
+				<br />
+				<span th:text="#{m_urlList} + ':  '"></span>
+				<span id="irUrlListName"></span>
+				<br />
+				<span th:text="#{m_processed} + ':  '"></span>
+				<span id="irProcessed"></span>
+				<br />
+				<span th:text="#{m_indexed} + ':  '"></span>
+				<span id="irIndexed"></span>
+				<br />
+				<span th:text="#{m_skipped} + ':  '"></span>
+				<span id="irSkipped"></span>
+			
+			</div>
+		
+			<div class="modal-footer">
+				
+				<button id="irOkBtn"
+						class="btn btn-primary" 
+						data-dismiss="modal" 
+						th:text="#{m_ok}">
+				</button>
+				
+			</div>
+		
+		</div>
+	</div>
+	
+</div>
 
 
 

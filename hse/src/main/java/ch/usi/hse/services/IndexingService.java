@@ -318,7 +318,12 @@ public class IndexingService {
 			throw new LanguageNotSupportedException(language);
 		}
 		
-		return indexBuilder.buildIndex(docCollection);
+		IndexingResult res = indexBuilder.buildIndex(docCollection);
+		
+		docCollection.setIndexed(true);
+		collectionRepo.save(docCollection);
+		
+		return res;
 	}
 }
 

@@ -15,6 +15,7 @@ var m_saved = $("#m_saved").text();
 var m_deleted = $("#m_deleted").text();
 var m_saved_f = $("#m_saved_f").text();
 var m_deleted_f = $("#m_deleted_f").text();
+var m_created = $("#m_created").text(); 
 
 var m_userName = $("#m_userName").text();
 var m_password = $("#m_password").text();
@@ -57,8 +58,13 @@ var m_language = $("#m_language").text();
 var m_missingCollectionName = $("#m_missingCollectionName").text();
 var m_collectionExists = $("#m_collectionExists").text();
 var m_collectionNotFound = $("#m_collectionNotFound").text();
+var m_indexed = $("#m_indexed").text();
+var m_notIndexed = $("#m_notIndexed").text();
 
-
+var m_index = $("#m_index").text();
+var m_processed = $("#m_processed").text();
+var m_skipped = $("#m_skipped").text();
+var m_doIndex = $("#m_doIndex").text();
 
 
 
