@@ -49,6 +49,26 @@
 	margin-right: auto;
 }
 
+/* INDEXING RESULT MODAL */
+
+#indexingResultOuterBody {
+	
+	display: flex;
+	flex-flow: row nowrap;
+	justify-content: center;
+}
+
+#indexingResultInnerBody {
+	
+	text-align: left;
+}
+
+#indexingResultModal button {
+	
+	width: 6em;
+	margin-left: auto;
+	margin-right: auto;
+}
 
 
 

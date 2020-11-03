@@ -24,7 +24,7 @@ import ch.usi.hse.exceptions.NoSuchFileException;
  * @author robert.jans@usi.ch
  *
  */
-@Component
+@Component("UrlListStorage")
 public class UrlListStorage extends FileStorage {
 
 	@Value("${dir.urlLists}")

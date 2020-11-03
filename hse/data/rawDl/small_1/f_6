@@ -106,7 +106,7 @@ var SALheaderOptions = {
             ga('send', 'pageview');
         }
      END ANALYTICS 
-		var nonce = 'cc7a40972022843d384e9113acc327852340fe32';
+		var nonce = 'eb09f196da8fd86aeb1051ad62cbd873641aacc4';
 		var sw = document.documentElement.clientWidth,
 			larghezzaSitoAdv = sw,
 			isTouch = "ontouchstart"in window||navigator.msMaxTouchPoints>0,
@@ -236,19 +236,19 @@ postTcfReady(startAdsense);
             async: true
         }, "pushNotificationChain"))
         .then(element => mmLoader({
-            src: "/js/push/api.js?cb=cc7a40972022843d384e9113acc327852340fe32",
+            src: "/js/push/api.js?cb=eb09f196da8fd86aeb1051ad62cbd873641aacc4",
             async: true
         }, "pushNotificationChain"))
         .then(element => mmLoader({
-            src: "/js/push/object.js?cb=cc7a40972022843d384e9113acc327852340fe32",
+            src: "/js/push/object.js?cb=eb09f196da8fd86aeb1051ad62cbd873641aacc4",
             async: true
         }, "pushNotificationChain"))
         .then(element => mmLoader({
-            src: "/js/push/frontend.js?cb=cc7a40972022843d384e9113acc327852340fe32",
+            src: "/js/push/frontend.js?cb=eb09f196da8fd86aeb1051ad62cbd873641aacc4",
             async: true
         }, "pushNotificationChain"))
         .then(element => mmLoader({
-            src: "/js/push/client.js?cb=cc7a40972022843d384e9113acc327852340fe32",
+            src: "/js/push/client.js?cb=eb09f196da8fd86aeb1051ad62cbd873641aacc4",
             async: true
         }, "pushNotificationChain"));
     }, 5000);
@@ -305,4 +305,4 @@ postTcfReady(startAdsense);
         });
     }
     addWebVitals();
-html body {opacity:1;} Time 0,194 PHP 0,044 Database 24/0,149 Search 1/0,026 
+html body {opacity:1;} Time 0,199 PHP 0,055 Database 24/0,144 Search 1/0,036 

@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.StandardOpenOption;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,7 +23,7 @@ import ch.usi.hse.exceptions.NoSuchFileException;
  * @author robert.jans@usi.ch
  *
  */
-@Component
+@Component("FileStorage")
 public class FileStorage {
 
 	/**
@@ -47,6 +48,18 @@ public class FileStorage {
 		catch (IOException e) {
 			
 			throw new FileWriteException(file.getOriginalFilename());
+		}
+	}
+	
+	public void store(String content, Path filePath) throws FileWriteException {
+		
+		try {
+			Files.writeString(filePath, content, StandardOpenOption.CREATE,
+			         							 StandardOpenOption.TRUNCATE_EXISTING);
+		} 
+		catch (IOException e) {
+
+			throw new FileWriteException(filePath.toString());
 		}
 	}
 	
