@@ -1,6 +1,7 @@
 package ch.usi.hse.indexing;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -37,13 +38,11 @@ public class IndexBuilder {
 	@Qualifier("UrlListStorage")
 	private UrlListStorage urlLists;
 	
-	private long minLength = 100;
-	
 	private DocCollection collection;
 	private boolean storeRawFiles;
 	private IndexingResult indexingResult;
 	private Path rawFilePath;
-	private int fileCount;
+	private int htmlCount, pdfCount;
 
 	public IndexingResult buildIndex(DocCollection collection, 
 									 boolean storeRawFiles, 
@@ -53,7 +52,8 @@ public class IndexBuilder {
 		
 		this.collection = collection;
 		this.storeRawFiles = storeRawFiles;
-		fileCount = 0; 
+		htmlCount = 0;
+		pdfCount = 0;
 		
 		if (storeRawFiles || storeExtracted) {
 			
@@ -96,39 +96,60 @@ public class IndexBuilder {
 	
 	private void processHtml(String url) throws FileWriteException {
 		
-		String data = downloadHtml(url);
+		InputStream is;
 		
-		if (data.length() < minLength) {
+		try {
+			is = downloader.fetch(url);
+		}
+		catch (IOException e) {
 			
+			System.out.println("HTML DOWNLOAD ERROR: skipping " + url);
 			indexingResult.incSkipped();
+			return;
 		}
 		
 		if (storeRawFiles) {
 			
-			String fName = "f_" + (++fileCount) + ".html";
+			String fName = "f_" + (++htmlCount) + ".html";
 			Path fPath = rawFilePath.resolve(fName);
-			storage.store(data, fPath);
+			storage.store(is, fPath);
 		}
-	}
-	
-	private void processPdf(String url) {
-		
-		System.out.println("PFD PROCCESSING NOT IMPLEMENTED: SKIPPING");
-		indexingResult.incSkipped();
-	}
-	
-	private String downloadHtml(String url) {
-		
-		String data = "";
 		
 		try {
-			data = downloader.fetch(url);
+			is.close();
 		}
 		catch (IOException e) {
-			System.out.println("DOWNLOAD ERROR: skipping " + url);
+			e.printStackTrace();
+		}
+	}
+	
+	private void processPdf(String url) throws FileWriteException {
+		
+		InputStream is;
+		
+		try {
+			is = downloader.fetch(url);
+		}
+		catch (IOException e) {
+			
+			System.out.println("PDF DOWNLOAD ERROR: skipping " + url);
+			indexingResult.incSkipped();
+			return;
 		}
 		
-		return data;
+		if (storeRawFiles && is != null) {
+			
+			String fName = "f_" + (++pdfCount) + ".pdf";
+			Path fPath = rawFilePath.resolve(fName);
+			storage.store(is, fPath);
+		}
+		
+		try {
+			is.close();
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void initializeDirectories() throws FileWriteException {

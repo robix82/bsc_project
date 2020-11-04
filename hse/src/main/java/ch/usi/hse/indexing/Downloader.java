@@ -1,19 +1,18 @@
 package ch.usi.hse.indexing;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.springframework.stereotype.Component;
 
 @Component
 public class Downloader {
 	
-	public String fetch(String url) throws IOException {
+	public InputStream fetch(String urlString) throws IOException {
 		
-		Document doc = Jsoup.connect(url).get();
-		
-		return doc.data();
+		URL url = new URL(urlString);
+		return url.openStream();
 	}
 }
 
