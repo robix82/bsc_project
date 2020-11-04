@@ -1,0 +1,30 @@
+
+    // patch for cookielaw oneTrust Cookies Consent to work with webcomponents shady polyfill
+    if (document.__shady_native_querySelectorAll) {
+        var shadySelectorAll = document.querySelectorAll;
+
+        DocumentFragment.prototype.querySelectorAll = function (selectors) {
+            if (selectors === ".ot-pc-refuse-all-handler") {
+                return document.__shady_native_querySelectorAll(selectors);
+            }
+            return shadySelectorAll.call(this, selectors);
+        }
+    }
+
+    { "@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type":"ListItem","position":4,"name":"Disturbi del sonno? Fate il test!","item":"https://www.helsana.ch/it/blog/temi/consigli-per-la-salute/test-del-sonno.html"},{"@type":"ListItem","position":3,"name":"Consigli per la salute","item":"https://www.helsana.ch/it/blog/temi/consigli-per-la-salute.html"},{"@type":"ListItem","position":2,"name":"Temi","item":"https://www.helsana.ch/it/blog/temi.html"},{"@type":"ListItem","position":1,"name":"Blog","item":"https://www.helsana.ch/it/blog.html"}] }
+
+    // add workaround until digitalData is fixed
+    // todo remove later
+    window.digitalData = window.digitalData || {};
+ OneTrust Cookies Consent Notice function OptanonWrapper() {}
+    /* IE11 OneTrust Cookies Consent Notice fixes */
+    @media screen and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+        #onetrust-consent-sdk #onetrust-banner-sdk {
+            overflow: hidden !important;
+        }
+
+        #onetrust-banner-sdk .ot-sdk-container .ot-sdk-row {
+            margin-left: 10px !important;
+        }
+    }
+suppress HtmlUnknownTargetGoogle Tag Managerwindow.__qsRuntimeConfiguration__={"metadata":{"language":"it"},"runtime":200};area-ref: content-16area-ref: content-17area-ref: content-18area-ref: content-19area-ref: content-20area-ref: content-21area-ref: content-22area-ref: content-23area-ref: content-24area-ref: content-25area-ref: content-26area-ref: content-27area-ref: content-28area-ref: content-29area-ref: content-30area-ref: content-31area-ref: content-40area-ref: content-41area-ref: columns-38area-ref: columns-39area-ref: content-32area-ref: content-33area-ref: content-37area-ref: columns-36area-ref: content-34 FORM TITLE  FORM  MESSAGES area-ref: content-35area-ref: main-1area-ref: main-2area-ref: main-3area-ref: main-4area-ref: main-5area-ref: main-6area-ref: main-7area-ref: main-8area-ref: main-9area-ref: main-10area-ref: main-11area-ref: main-12area-ref: main-13area-ref: main-14area-ref: main-15 Google Tag Manager (noscript) 

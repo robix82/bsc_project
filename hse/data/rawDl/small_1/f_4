@@ -1519,7 +1519,7 @@
                          ko:if $root.isCurrentLS('7b63a32f-2348-4c53-ab9b-fde3c296fe5b')  /ko  PLACEHOLDER FOR LETTER SPINE MODAL   ----------------------      | Tu => Tuberculosis |      ----------------------    DO NOT ADD ANYTHING INSIDE THIS DIV, BECAUSE ALL OF THE CONTENT WILL BE DELETED 
     MManual.Feature = MManual.Feature || {};
     MManual.Feature.LetterSpine = MManual.Feature.LetterSpine || {};
-    MManual.Feature.LetterSpine.Id = '19f0c996-2797-480f-925d-b0729c3603df';
+    MManual.Feature.LetterSpine.Id = '068597be-af26-42c7-8f50-698ef79b3752';
 
     $(".clear-edition-switch").click(function (event) {
         event.preventDefault();
@@ -1580,7 +1580,7 @@
                          ko:if $root.isCurrentLS('7b63a32f-2348-4c53-ab9b-fde3c296fe5b')  /ko  PLACEHOLDER FOR LETTER SPINE MODAL   ----------------------      | Tu => Tuberculosis |      ----------------------    DO NOT ADD ANYTHING INSIDE THIS DIV, BECAUSE ALL OF THE CONTENT WILL BE DELETED 
     MManual.Feature = MManual.Feature || {};
     MManual.Feature.LetterSpine = MManual.Feature.LetterSpine || {};
-    MManual.Feature.LetterSpine.Id = '19f0c996-2797-480f-925d-b0729c3603df';
+    MManual.Feature.LetterSpine.Id = '068597be-af26-42c7-8f50-698ef79b3752';
 <a href="#" aria-label="bookmark" onclick="bookmarkPage(this);">
         <div class="breadcrumb__icons--img breadcrumb__icons--bookmark"></div>
     </a><a class="actiontoolbar__button actiontoolbar__icon actiontoolbar__icon--bookmark" onclick="bookmarkPage(this);" href="#"></a><a class="actiontoolbar__button actiontoolbar__icon actiontoolbar__icon--bookmark" onclick="bookmarkPage(this);" href="#"></a>
@@ -1592,7 +1592,7 @@
                 var valueBaseUrl = getBaseUrl(value);
                 value = MManual.quizzes.getCorrectQuizzesUrlWithLanguages(value, valueBaseUrl) + answerChoice;
             }
-            var startLink = 'https://it.msdmanualquiz.com/gcn/startquizdirect/1248?base_url=https%3A%2F%2Fwww.msdmanuals.com%2Fit&language=it';
+            var startLink = 'https://it.msdmanualquiz.com/gcn/startquizdirect/812?base_url=https%3A%2F%2Fwww.msdmanuals.com%2Fit&language=it';
             var quizzesBaseUrl = getBaseUrl(startLink);
             startLink = MManual.quizzes.getCorrectQuizzesUrlWithLanguages(startLink, quizzesBaseUrl);
 
@@ -1605,12 +1605,12 @@
 
         MManual.MultimediaPopupViewModel.showPopup({
             item: ko.mapping.fromJS({
-                Title:'Sindrome dolorosa regionale complessa',
+                Title:'Malattia di Creutzfeld-Jakob (CJD)',
                 MediaType : 'quiz',
                 MediaNameTranslated : 'Quiz',
                 ThumbnailUrl : '/Content/Images/Redesign/quizzes/quizzes_lightbulb_blue.png',
                 IframeSrc: fullLink,
-                UniqueId: '1248'
+                UniqueId: '812'
             })
         });
 
@@ -1620,7 +1620,7 @@
         }
 
  Diagnostic information 
-Current utc time : 2020-11-03T18:42:39
+Current utc time : 2020-11-04T09:06:25
 
     var resources = [{"Name":"Figura 1","Description":"Elettroencefalografia in sonno non-REM (NREM, non-rapid eye movement)","Url":"#v42367116_it","Type":0,"VasontType":1,"SitecoreItemId":"232f742e-3523-46cd-926b-944fbe7dc85e","IncludedResources":null,"BrightcoveVideoId":null,"MultimediaItem":{"ItemId":"232f742e-3523-46cd-926b-944fbe7dc85e","Title":"Elettroencefalografia in sonno non-REM (NREM, non-rapid eye movement)","Description":"<a id=\"v42367123_it\" class=\"anchor\"></a><div class=\"para\" >    <p >Questi tracciati elettroencefalografici mostrano le caratteristiche onde teta, i fusi del sonno e i complessi K durante gli stadi 1 (N1), 2 (N2) e 3 (N3) del sonno non associato a movimenti oculari rapidi.</p></div>","ImageUrl":"/-/media/manual/professional/images/neu_non_rem_nrem_sleep_it.jpg?thn=0&sc_lang=it","ThumbnailUrl":"/-/media/manual/professional/images/neu_non_rem_nrem_sleep_it.jpg?mw=350&amp;thn=0&amp;sc_lang=it","MediaType":"image","MediaNameTranslated":"Immagine","UniqueId":"NEU_NREM_sleep_v1_it.eps","Alt":"Elettroencefalografia in sonno non-REM (NREM, non-rapid eye movement)","Credits":"","IsRestricted":false}},{"Name":"Figura 2","Description":"Elettroencefalografia nel sonno associato a movimenti oculari rapidi (REM)","Url":"#v42367224_it","Type":0,"VasontType":1,"SitecoreItemId":"1d3c3c16-b033-4c63-b204-32463959cc13","IncludedResources":null,"BrightcoveVideoId":null,"MultimediaItem":{"ItemId":"1d3c3c16-b033-4c63-b204-32463959cc13","Title":"Elettroencefalografia nel sonno associato a movimenti oculari rapidi (REM)","Description":"<a id=\"v42367284_it\" class=\"anchor\"></a><div class=\"para\" >    <p >Questa figura comprende un tracciato elettroencefalografico (che mostra le caratteristiche onde a dente di sega) e un tracciato oculare (che mostra movimenti oculari rapidi), che si verificano durante il sonno REM.</p></div>","ImageUrl":"/-/media/manual/professional/images/neu_rem_sleep_it.jpg?thn=0&sc_lang=it","ThumbnailUrl":"/-/media/manual/professional/images/neu_rem_sleep_it.jpg?mw=350&amp;thn=0&amp;sc_lang=it","MediaType":"image","MediaNameTranslated":"Immagine","UniqueId":"NEU_REM_sleep_v1_it.eps","Alt":"Elettroencefalografia nel sonno associato a movimenti oculari rapidi (REM)","Credits":"","IsRestricted":false}},{"Name":"Figura 3","Description":"Tipico schema del sonno nei giovani adulti","Url":"#v1038784_it","Type":0,"VasontType":1,"SitecoreItemId":"71488f05-452d-4bf0-8d1c-5be09ff1e242","IncludedResources":null,"BrightcoveVideoId":null,"MultimediaItem":{"ItemId":"71488f05-452d-4bf0-8d1c-5be09ff1e242","Title":"Tipico schema del sonno nei giovani adulti","Description":"<a id=\"v1038789_it\" class=\"anchor\"></a><div class=\"para\" >    <p >La fase del sonno con movimenti rapidi degli occhi (REM) si presenta ciclicamente durante la notte, ogni 90-120 min.  Brevi periodi di veglia (fase W, per wakefulness) si verificano periodicamente.  Il tempo del sonno &#232; suddiviso nel modo seguente:</p></div><div class=\"list\">    <ul data-mmanualobjecttype=\"List\"  class=\"topic__list\">            <li class=\"topic__listitem\"><a id=\"v2074337_it\" class=\"anchor\"></a><div class=\"para\" >    <p >Stadio N1: 2-5%</p></div></li>            <li class=\"topic__listitem\"><a id=\"v2074339_it\" class=\"anchor\"></a><div class=\"para\" >    <p >Stadio N2: 45-55%</p></div></li>            <li class=\"topic__listitem\"><a id=\"v2074341_it\" class=\"anchor\"></a><div class=\"para\" >    <p >Stadio N3: 13-23%</p></div></li>            <li class=\"topic__listitem\"><a id=\"v2074345_it\" class=\"anchor\"></a><div class=\"para\" >    <p >REM: 20-25%</p></div></li>    </ul></div>","ImageUrl":"/-/media/manual/professional/images/neu_sleep_pattern_it.gif?thn=0&sc_lang=it","ThumbnailUrl":"/-/media/manual/professional/images/neu_sleep_pattern_it.gif?mw=350&amp;thn=0&amp;sc_lang=it","MediaType":"image","MediaNameTranslated":"Immagine","UniqueId":"NEU_sleep_pattern_it.ai","Alt":"Tipico schema del sonno nei giovani adulti","Credits":"","IsRestricted":false}},{"Name":"Tabella 1","Description":"Alcune cause di insonnia ed eccessiva sonnolenza diurna","Url":"#v7528809_it","Type":2,"VasontType":0,"SitecoreItemId":null,"IncludedResources":null,"BrightcoveVideoId":null,"MultimediaItem":{"ItemId":"a824539b-3ecc-41fb-b733-1b702a9a2da0","Title":"Alcune cause di insonnia ed eccessiva sonnolenza diurna","Description":null,"ImageUrl":null,"ThumbnailUrl":"/Content/Images/Redesign/table/icon_table_red.png","MediaType":"table","MediaNameTranslated":"Tabella","UniqueId":"v7528810_it"}},{"Name":"Tabella 2","Description":"Alcune sostanze che interferiscono col sonno","Url":"#v7528944_it","Type":2,"VasontType":0,"SitecoreItemId":null,"IncludedResources":null,"BrightcoveVideoId":null,"MultimediaItem":{"ItemId":"105c6364-c380-4f90-9cc0-944fe543d311","Title":"Alcune sostanze che interferiscono col sonno","Description":null,"ImageUrl":null,"ThumbnailUrl":"/Content/Images/Redesign/table/icon_table_red.png","MediaType":"table","MediaNameTranslated":"Tabella","UniqueId":"v7528945_it"}},{"Name":"Tabella 3","Description":"Scala della sonnolenza di Epworth","Url":"#v1038992_it","Type":2,"VasontType":0,"SitecoreItemId":null,"IncludedResources":null,"BrightcoveVideoId":null,"MultimediaItem":{"ItemId":"3ba8e032-279f-4fe1-b497-a4b2d87033a1","Title":"Scala della sonnolenza di Epworth","Description":null,"ImageUrl":null,"ThumbnailUrl":"/Content/Images/Redesign/table/icon_table_red.png","MediaType":"table","MediaNameTranslated":"Tabella","UniqueId":"v1038994_it"}},{"Name":"Calcolatore 1","Description":"Scala della sonnolenza di Epworth","Url":null,"Type":6,"VasontType":7,"SitecoreItemId":"50f8a323-7978-40e9-bc1d-19021ca31562","IncludedResources":null,"BrightcoveVideoId":null,"MultimediaItem":{"ItemId":"00000000-0000-0000-0000-000000000000","Title":"Scala della sonnolenza di Epworth","Description":null,"ImageUrl":null,"ThumbnailUrl":"/Content/Images/Redesign/calculator/icon_calculator_red.png","MediaType":"clinicalcalculator","MediaNameTranslated":"Calcolatore Clinico","UniqueId":"v13948909_it","IframeSrc":"/medical-calculators/EpworthSleepScale-it.htm"}},{"Name":"Tabella 4","Description":"Questionario STOP-BANG per le apnee ostruttive del sonno","Url":"#v7528997_it","Type":2,"VasontType":0,"SitecoreItemId":null,"IncludedResources":null,"BrightcoveVideoId":null,"MultimediaItem":{"ItemId":"65e035b4-0d88-4ae2-8d5c-e53b67cec5de","Title":"Questionario STOP-BANG per le apnee ostruttive del sonno","Description":null,"ImageUrl":null,"ThumbnailUrl":"/Content/Images/Redesign/table/icon_table_red.png","MediaType":"table","MediaNameTranslated":"Tabella","UniqueId":"v7528998_it"}},{"Name":"Tabella 5","Description":"Igiene del sonno","Url":"#v41413034_it","Type":2,"VasontType":0,"SitecoreItemId":null,"IncludedResources":null,"BrightcoveVideoId":null,"MultimediaItem":{"ItemId":"90bdfbd9-6fd0-4c7f-b70e-38761174c51e","Title":"Igiene del sonno","Description":null,"ImageUrl":null,"ThumbnailUrl":"/Content/Images/Redesign/table/icon_table_red.png","MediaType":"table","MediaNameTranslated":"Tabella","UniqueId":"v41413035_it"}},{"Name":"Tabella 6","Description":"Linee guida per l'uso degli ipnotici","Url":"#v1039146_it","Type":2,"VasontType":0,"SitecoreItemId":null,"IncludedResources":null,"BrightcoveVideoId":null,"MultimediaItem":{"ItemId":"3d306374-9e06-4fb8-970e-5faf503352cb","Title":"Linee guida per l'uso degli ipnotici","Description":null,"ImageUrl":null,"ThumbnailUrl":"/Content/Images/Redesign/table/icon_table_red.png","MediaType":"table","MediaNameTranslated":"Tabella","UniqueId":"v1039148_it"}},{"Name":"Tabella 7","Description":"Ipnotici orali di uso comune","Url":"#v1039195_it","Type":2,"VasontType":0,"SitecoreItemId":null,"IncludedResources":null,"BrightcoveVideoId":null,"MultimediaItem":{"ItemId":"20534e3b-c067-4b87-b466-5b77d2a73f4d","Title":"Ipnotici orali di uso comune","Description":null,"ImageUrl":null,"ThumbnailUrl":"/Content/Images/Redesign/table/icon_table_red.png","MediaType":"table","MediaNameTranslated":"Tabella","UniqueId":"v1039197_it"}}];
     var resourcesIdList = [];
@@ -1920,14 +1920,14 @@ Current utc time : 2020-11-03T18:42:39
         });
      An image that eventually gets lazy loaded by JavaScript  An image that is shown if JavaScript is turned off  An image that eventually gets lazy loaded by JavaScript  An image that is shown if JavaScript is turned off  An image that eventually gets lazy loaded by JavaScript  An image that is shown if JavaScript is turned off  PLACEHOLDER - will be loaded using AJAX 
         var model = {
-            item: ko.mapping.fromJS({"ItemId":"c0524707-dea4-3098-ab75-ea3b5f06e106","Title":"Come eseguire l'esame motorio","Description":"","ImageUrl":"https://f1.media.brightcove.com/8/3850378299001/3850378299001_5522394771001_5522389131001-vs.jpg?pubId=3850378299001&videoId=5522389131001","ThumbnailUrl":"https://f1.media.brightcove.com/8/3850378299001/3850378299001_5522394771001_5522389131001-vs.jpg?pubId=3850378299001&videoId=5522389131001","MediaType":"video","MediaNameTranslated":"Video","UniqueId":"v27767407_it","VideoId":"5522389131001","PlayerId":"H1xmEWTatg_default","Credits":"Mihai Cosmin Sandulescu, MD.  Department of Neurology, Einstein Medical Center, Philadelphia, PA","IsRestricted":true}),
+            item: ko.mapping.fromJS({"ItemId":"66506bf6-0160-37c6-8c47-15863cd5d638","Title":"Come eseguire un esame psichiatrico","Description":"","ImageUrl":"https://f1.media.brightcove.com/8/3850378299001/3850378299001_5522395182001_5522384518001-vs.jpg?pubId=3850378299001&videoId=5522384518001","ThumbnailUrl":"https://f1.media.brightcove.com/8/3850378299001/3850378299001_5522395182001_5522384518001-vs.jpg?pubId=3850378299001&videoId=5522384518001","MediaType":"video","MediaNameTranslated":"Video","UniqueId":"v27767399_it","VideoId":"5522384518001","PlayerId":"H1xmEWTatg_default","Credits":"Gary Horowitz, DO. Department of Neurology, Einstein Medical Center, Philadelphia, PA","IsRestricted":true}),
             listName: 'video',
         };
         var panel = MManual.utils.getClosestDiv('.multimedia__link');
         ko.applyBindings(model, panel.get(0));
     
         var model = {
-            item: ko.mapping.fromJS({"ItemId":"c0524707-dea4-3098-ab75-ea3b5f06e106","Title":"Come eseguire l'esame motorio","Description":"","ImageUrl":"https://f1.media.brightcove.com/8/3850378299001/3850378299001_5522394771001_5522389131001-vs.jpg?pubId=3850378299001&videoId=5522389131001","ThumbnailUrl":"https://f1.media.brightcove.com/8/3850378299001/3850378299001_5522394771001_5522389131001-vs.jpg?pubId=3850378299001&videoId=5522389131001","MediaType":"video","MediaNameTranslated":"Video","UniqueId":"v27767407_it","VideoId":"5522389131001","PlayerId":"H1xmEWTatg_default","Credits":"Mihai Cosmin Sandulescu, MD.  Department of Neurology, Einstein Medical Center, Philadelphia, PA","IsRestricted":true}),
+            item: ko.mapping.fromJS({"ItemId":"66506bf6-0160-37c6-8c47-15863cd5d638","Title":"Come eseguire un esame psichiatrico","Description":"","ImageUrl":"https://f1.media.brightcove.com/8/3850378299001/3850378299001_5522395182001_5522384518001-vs.jpg?pubId=3850378299001&videoId=5522384518001","ThumbnailUrl":"https://f1.media.brightcove.com/8/3850378299001/3850378299001_5522395182001_5522384518001-vs.jpg?pubId=3850378299001&videoId=5522384518001","MediaType":"video","MediaNameTranslated":"Video","UniqueId":"v27767399_it","VideoId":"5522384518001","PlayerId":"H1xmEWTatg_default","Credits":"Gary Horowitz, DO. Department of Neurology, Einstein Medical Center, Philadelphia, PA","IsRestricted":true}),
             linkText: 'Visualizza video',
             cssClass: 'box__more',
             listName: 'video',
@@ -1936,14 +1936,14 @@ Current utc time : 2020-11-03T18:42:39
         ko.applyBindings(model, panel.get(0));
     
         var model = {
-            item: ko.mapping.fromJS({"ItemId":"fa9e5947-f9a4-44d2-bb5b-c20ef0e5ca29","Title":"Meningi","Description":"","ImageUrl":"/-/media/manual/professional/thumbnails/biodigital-meninges-pv-sized_it.jpg?thn=0&sc_lang=it","ThumbnailUrl":"/-/media/manual/professional/thumbnails/biodigital-meninges-pv-sized_it.jpg?thn=0&sc_lang=it","MediaType":"biodigital","MediaNameTranslated":"Modello 3D","UniqueId":"v39247023_it","IframeSrc":"https://human.biodigital.com/widget/?be=2aOo&background.colors=0,0,0,1,0,0,0,1&amp;initial.hand-hint=true&amp;ui-info=true&amp;ui-fullscreen=false&amp;ui-center=false&amp;ui-dissect=true&amp;ui-zoom=true&amp;ui-help=true&amp;ui-tools-display=primary&amp;uaid=3afKS"}),
+            item: ko.mapping.fromJS({"ItemId":"42c1ba44-3622-40f7-a87c-d608c54d6f7f","Title":"Vertebre e radici dei nervi spinali","Description":"","ImageUrl":"/-/media/manual/professional/thumbnails/biodigital-l1-vertebra-and-spinal-nerve-roots-pv-sized_it.jpg?thn=0&sc_lang=it","ThumbnailUrl":"/-/media/manual/professional/thumbnails/biodigital-l1-vertebra-and-spinal-nerve-roots-pv-sized_it.jpg?thn=0&sc_lang=it","MediaType":"biodigital","MediaNameTranslated":"Modello 3D","UniqueId":"v45089113_it","IframeSrc":"https://human.biodigital.com/widget/?be=353a&ui-tools=true&ui-dissect=true&ui-isolate=false&ui-xray=false&ui-cross-section=false&ui-info=true&ui-fullscreen=false&ui-zoom=true&ui-center=false&ui-share=true&ui-help=true&initial.hand-hint=true&uaid=4W8qY"}),
             listName: 'biodigital',
         };
         var panel = MManual.utils.getClosestDiv('.multimedia__link');
         ko.applyBindings(model, panel.get(0));
     
         var model = {
-            item: ko.mapping.fromJS({"ItemId":"fa9e5947-f9a4-44d2-bb5b-c20ef0e5ca29","Title":"Meningi","Description":"","ImageUrl":"/-/media/manual/professional/thumbnails/biodigital-meninges-pv-sized_it.jpg?thn=0&sc_lang=it","ThumbnailUrl":"/-/media/manual/professional/thumbnails/biodigital-meninges-pv-sized_it.jpg?thn=0&sc_lang=it","MediaType":"biodigital","MediaNameTranslated":"Modello 3D","UniqueId":"v39247023_it","IframeSrc":"https://human.biodigital.com/widget/?be=2aOo&background.colors=0,0,0,1,0,0,0,1&amp;initial.hand-hint=true&amp;ui-info=true&amp;ui-fullscreen=false&amp;ui-center=false&amp;ui-dissect=true&amp;ui-zoom=true&amp;ui-help=true&amp;ui-tools-display=primary&amp;uaid=3afKS"}),
+            item: ko.mapping.fromJS({"ItemId":"42c1ba44-3622-40f7-a87c-d608c54d6f7f","Title":"Vertebre e radici dei nervi spinali","Description":"","ImageUrl":"/-/media/manual/professional/thumbnails/biodigital-l1-vertebra-and-spinal-nerve-roots-pv-sized_it.jpg?thn=0&sc_lang=it","ThumbnailUrl":"/-/media/manual/professional/thumbnails/biodigital-l1-vertebra-and-spinal-nerve-roots-pv-sized_it.jpg?thn=0&sc_lang=it","MediaType":"biodigital","MediaNameTranslated":"Modello 3D","UniqueId":"v45089113_it","IframeSrc":"https://human.biodigital.com/widget/?be=353a&ui-tools=true&ui-dissect=true&ui-isolate=false&ui-xray=false&ui-cross-section=false&ui-info=true&ui-fullscreen=false&ui-zoom=true&ui-center=false&ui-share=true&ui-help=true&initial.hand-hint=true&uaid=4W8qY"}),
             linkText: 'Visualizza modello 3D',
             cssClass: 'box__more',
             listName: 'biodigital',
@@ -1951,7 +1951,7 @@ Current utc time : 2020-11-03T18:42:39
         var panel = MManual.utils.getClosestDiv('.multimedia__link');
         ko.applyBindings(model, panel.get(0));
      Diagnostic info: Data source for rendering is not set.  Diagnostic information 
-Current utc time : 2020-11-03T18:42:40
+Current utc time : 2020-11-04T09:06:26
  AddToAny BEGIN 
         a2a_config.prioritize = ["email","facebook","google_plus","linkedin","twitter"];
 
@@ -2025,6 +2025,6 @@ Current utc time : 2020-11-03T18:42:40
         //global value for translating the 'Read More' value
         var MMReadMore = "maggiori informazioni";
         var MMMaxTeaseCount = 250;
-    var rumMOKey='96da7817d5cf0eacd9541484e3bd6507';(function(){if(window.performance && window.performance.timing && window.performance.navigation) {var site24x7_rum_beacon=document.createElement('script');site24x7_rum_beacon.async=true;site24x7_rum_beacon.setAttribute('src','//static.site24x7rum.com/beacon/site24x7rum-min.js?appKey='+rumMOKey);document.getElementsByTagName('head')[0].appendChild(site24x7_rum_beacon);}})(window) Current instance name : ue-p-sc-cd02
+    var rumMOKey='96da7817d5cf0eacd9541484e3bd6507';(function(){if(window.performance && window.performance.timing && window.performance.navigation) {var site24x7_rum_beacon=document.createElement('script');site24x7_rum_beacon.async=true;site24x7_rum_beacon.setAttribute('src','//static.site24x7rum.com/beacon/site24x7rum-min.js?appKey='+rumMOKey);document.getElementsByTagName('head')[0].appendChild(site24x7_rum_beacon);}})(window) Current instance name : uw-p-sc-cd03
  Current application version : 2.9.0.0
  

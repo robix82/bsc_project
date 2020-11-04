@@ -218,7 +218,7 @@ public class IndexingController {
 				   FileReadException, 
 				   FileWriteException {
 		
-		IndexingResult result = indexingService.buildIndex(docCollection, true);
+		IndexingResult result = indexingService.buildIndex(docCollection, true, true);
 		
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}

@@ -38,21 +38,110 @@ public class IndexBuilder {
 	private UrlListStorage urlLists;
 	
 	private long minLength = 100;
+	
+	private DocCollection collection;
+	private boolean storeRawFiles;
+	private IndexingResult indexingResult;
+	private Path rawFilePath;
+	private int fileCount;
 
-	public IndexingResult buildIndex(DocCollection collection, boolean storeRawFiles) 
+	public IndexingResult buildIndex(DocCollection collection, 
+									 boolean storeRawFiles, 
+									 boolean storeExtracted)
+	
 			throws NoSuchFileException, FileReadException, FileWriteException {
 		
-		Path storagePath = null;
+		this.collection = collection;
+		this.storeRawFiles = storeRawFiles;
+		fileCount = 0; 
+		
+		if (storeRawFiles || storeExtracted) {
+			
+			initializeDirectories();
+		}		
+		
+		indexingResult = new IndexingResult();
+		indexingResult.setCollectionName(collection.getName());
+		indexingResult.setUrlListName(collection.getUrlListName());
+		
+		Instant start = Instant.now(); 
+		
+		List<String> urls = urlLists.getLines(collection.getUrlListName());
+		
+		mainLoop(urls);
+					
+		Instant end = Instant.now();
+		
+		indexingResult.setTimeElapsed(Duration.between(start, end).toSeconds());
+	
+		return indexingResult;
+	}
+	
+	private void mainLoop(List<String> urls) throws FileWriteException {
+		
+		for (String url : urls) {
+			
+			indexingResult.incProcessed();
+			
+			if (isPdf(url)) {
+				
+				processPdf(url);
+			}
+			else {
+				
+				processHtml(url);
+			}			
+		}
+	}
+	
+	private void processHtml(String url) throws FileWriteException {
+		
+		String data = downloadHtml(url);
+		
+		if (data.length() < minLength) {
+			
+			indexingResult.incSkipped();
+		}
+		
+		if (storeRawFiles) {
+			
+			String fName = "f_" + (++fileCount) + ".html";
+			Path fPath = rawFilePath.resolve(fName);
+			storage.store(data, fPath);
+		}
+	}
+	
+	private void processPdf(String url) {
+		
+		System.out.println("PFD PROCCESSING NOT IMPLEMENTED: SKIPPING");
+		indexingResult.incSkipped();
+	}
+	
+	private String downloadHtml(String url) {
+		
+		String data = "";
+		
+		try {
+			data = downloader.fetch(url);
+		}
+		catch (IOException e) {
+			System.out.println("DOWNLOAD ERROR: skipping " + url);
+		}
+		
+		return data;
+	}
+
+	private void initializeDirectories() throws FileWriteException {
 		
 		if (storeRawFiles) {		
 			
 			String dirName = collection.getName();
-			storagePath = Paths.get(storageDir).resolve(dirName);
+			rawFilePath = Paths.get(storageDir).resolve(dirName);
 			
-			if (! Files.exists(storagePath)) {
+			if (! Files.exists(rawFilePath)) {
 				
 				try {
-					Files.createDirectory(storagePath);
+					Files.createDirectory(rawFilePath);
 				} 
 				catch (IOException e) {
 
@@ -60,50 +149,16 @@ public class IndexBuilder {
 				}
 			}
 		}
-		
-		IndexingResult res = new IndexingResult();
-		res.setCollectionName(collection.getName());
-		res.setUrlListName(collection.getUrlListName());
-		
-		Instant start = Instant.now();
-		
-		List<String> urls = urlLists.getLines(collection.getUrlListName());
-
-		int count = 0;
-		
-		for (String url : urls) {
-			
-			res.incProcessed();
-			String data = "";
-			
-			try {
-				data = downloader.fetch(url);
-			}
-			catch (IOException e) {
-				res.incSkipped();
-				continue;
-			}
-			
-			if (data.length() < minLength) {				
-				continue;
-			}
-			
-			if (storeRawFiles) {
-				
-				String fName = "f_" + (++count);
-				Path fPath = storagePath.resolve(fName);
-				storage.store(data, fPath);
-			}
-		}
-			
-		Instant end = Instant.now();
-		
-		res.setTimeElapsed(Duration.between(start, end).toSeconds());
+	}
 	
-		return res;
+	private boolean isPdf(String url) {
+		
+		
+		String suffix = url.substring(url.length() -4, url.length());
+		
+		return suffix.equals(".pdf");
 	}
 }
-
 
 
 

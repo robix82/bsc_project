@@ -148,8 +148,8 @@ public class IndexingControllerUnitTest {
 		when(indexingService.updateDocCollection(newDocCollection)).thenThrow(NoSuchDocCollectionException.class);
 		doNothing().when(indexingService).removeDocCollection(existingDocCollection);
 		doThrow(NoSuchDocCollectionException.class).when(indexingService).removeDocCollection(newDocCollection);
-		when(indexingService.buildIndex(existingDocCollection, false)).thenReturn(new IndexingResult());
-		when(indexingService.buildIndex(newDocCollection, false)).thenThrow(NoSuchDocCollectionException.class);
+		when(indexingService.buildIndex(existingDocCollection, false, false)).thenReturn(new IndexingResult());
+		when(indexingService.buildIndex(newDocCollection, false, false)).thenThrow(NoSuchDocCollectionException.class);
 	}
 	  
 	@Test
