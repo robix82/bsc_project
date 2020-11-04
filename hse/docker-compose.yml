@@ -16,6 +16,8 @@ services:
     volumes:
       - hse-data-urlLists:/data/urlLists
       - hse-data-indices:/data/indices
+      - hse-data-rawDl:/data/rawDl
+      - hse-data-extractionResults:/data/extractionResults
 
   hse-mysql:
     image: mysql
@@ -37,7 +39,8 @@ volumes:
   hse-datavolume:
   hse-data-urlLists:
   hse-data-indices:
-
+  hse-data-rawDl:
+  hse-data-extractionResults:
 
 
 
