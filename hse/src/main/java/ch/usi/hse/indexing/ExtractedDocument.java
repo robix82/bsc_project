@@ -2,6 +2,7 @@ package ch.usi.hse.indexing;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.sax.BodyContentHandler;
@@ -33,11 +34,15 @@ public class ExtractedDocument {
 		}
 	}
 	
+	public String getFileType() {
+		return fileType;
+	}
+	
 	public Map<String, String> getMetaData() {
 		return metadata;
 	}
 	
-	public String getCContent() {
+	public String getContent() {
 		return content;
 	}
 	
@@ -45,6 +50,19 @@ public class ExtractedDocument {
 	public String toString() {
 		
 		StringBuilder sb = new StringBuilder();
+		
+		sb.append("file type: ").append(fileType).append("\n");
+		
+		for (Entry<String, String> e : metadata.entrySet()) {
+			
+			sb.append("\n")
+			  .append(e.getKey()).append(": ")
+			  .append(e.getValue());
+		}
+		
+		sb.append("\ncontent:\n")
+		  .append(content)
+		  .append("\n");
 		
 		return sb.toString();
 	}

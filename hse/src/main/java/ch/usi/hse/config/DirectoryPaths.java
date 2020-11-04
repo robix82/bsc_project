@@ -11,6 +11,7 @@ public class DirectoryPaths {
 	private String indices;
 	private String testFiles;
 	private String rawDl;
+	private String extractionResults;
 	
 	public String getUrlLists() {
 		return urlLists;
@@ -42,6 +43,14 @@ public class DirectoryPaths {
 	
 	public void setRawDl(String rawDl) {
 		this.rawDl = rawDl;
+	}
+	
+	public String getExtractionResults() {
+		return extractionResults;
+	}
+	
+	public void setExtractionResults(String extractionResults) {
+		this.extractionResults = extractionResults;
 	}
 }
 

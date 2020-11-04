@@ -1,5 +1,7 @@
 package ch.usi.hse.indexing;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -25,10 +27,16 @@ import ch.usi.hse.storage.UrlListStorage;
 public class IndexBuilder {
 	
 	@Value("${dir.rawDl}")
-	private String storageDir;
+	private String rawStorageDir;
+	
+	@Value("${dir.extractionResults}")
+	private String extractedStorageDir;
 	
 	@Autowired
 	private Downloader downloader;
+	
+	@Autowired
+	private TextExtractor textExtractor;
 	
 	@Autowired
 	@Qualifier("FileStorage")
@@ -39,10 +47,10 @@ public class IndexBuilder {
 	private UrlListStorage urlLists;
 	
 	private DocCollection collection;
-	private boolean storeRawFiles;
+	private boolean storeRawFiles, storeExtracted;
 	private IndexingResult indexingResult;
-	private Path rawFilePath;
-	private int htmlCount, pdfCount;
+	private Path rawFilePath, extractedFilePath;
+	private int fileCount;
 
 	public IndexingResult buildIndex(DocCollection collection, 
 									 boolean storeRawFiles, 
@@ -52,8 +60,8 @@ public class IndexBuilder {
 		
 		this.collection = collection;
 		this.storeRawFiles = storeRawFiles;
-		htmlCount = 0;
-		pdfCount = 0;
+		this.storeExtracted = storeExtracted;
+		fileCount = 0;
 		
 		if (storeRawFiles || storeExtracted) {
 			
@@ -83,81 +91,108 @@ public class IndexBuilder {
 			
 			indexingResult.incProcessed();
 			
+			if (storeRawFiles || storeExtracted) {
+				++fileCount;
+			}
+
+			ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+			
+			// DOWNLOAD
+			
+			try {
+				
+				InputStream inStream = downloader.fetch(url);
+				inStream.transferTo(outStream);
+			}
+			catch (IOException e) {
+				
+				System.out.println("DOWNLOAD ERROR: skipping " + url);
+				indexingResult.incSkipped();
+				continue;
+			}
+			
 			if (isPdf(url)) {
 				
-				processPdf(url);
+				processPdf(outStream, url);
 			}
 			else {
 				
-				processHtml(url);
+				processHtml(outStream, url);
 			}			
 		}
 	}
 	
-	private void processHtml(String url) throws FileWriteException {
-		
-		InputStream is;
-		
-		try {
-			is = downloader.fetch(url);
-		}
-		catch (IOException e) {
-			
-			System.out.println("HTML DOWNLOAD ERROR: skipping " + url);
-			indexingResult.incSkipped();
-			return;
-		}
+	private void processHtml(ByteArrayOutputStream os, String url) throws FileWriteException {
 		
 		if (storeRawFiles) {
 			
-			String fName = "f_" + (++htmlCount) + ".html";
+			String fName = "f_" + fileCount + ".html";
 			Path fPath = rawFilePath.resolve(fName);
-			storage.store(is, fPath);
+			storage.store(getInputStream(os), fPath);
 		}
+		
+		// TEXT EXTRACTION
+		
+		ExtractedDocument doc;
 		
 		try {
-			is.close();
+			doc = textExtractor.extractHtml(getInputStream(os));
 		}
-		catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	private void processPdf(String url) throws FileWriteException {
-		
-		InputStream is;
-		
-		try {
-			is = downloader.fetch(url);
-		}
-		catch (IOException e) {
+		catch (Exception e) {
 			
-			System.out.println("PDF DOWNLOAD ERROR: skipping " + url);
+			System.out.println("TEXT EXTRACTION ERROR: skipping " + url);
+			System.out.println(e.getMessage());
 			indexingResult.incSkipped();
 			return;
 		}
 		
-		if (storeRawFiles && is != null) {
+		if (storeExtracted) {
 			
-			String fName = "f_" + (++pdfCount) + ".pdf";
+			String fName = "f_" + fileCount + ".txt";
+			Path fPath = extractedFilePath.resolve(fName);
+			storage.store(doc.toString(), fPath);
+		}
+	}
+	
+	private void processPdf(ByteArrayOutputStream os, String url) throws FileWriteException {
+		
+		if (storeRawFiles) {
+			
+			String fName = "f_" + fileCount + ".pdf";
 			Path fPath = rawFilePath.resolve(fName);
-			storage.store(is, fPath);
+			storage.store(getInputStream(os), fPath);
 		}
 		
+		// TEXT EXTRACTION
+		
+		ExtractedDocument doc;
+				
 		try {
-			is.close();
+			doc = textExtractor.extractPdf(getInputStream(os));	
 		}
-		catch (IOException e) {
-			e.printStackTrace();
+		catch (Exception e) {
+					
+			System.out.println("TEXT EXTRACTION ERROR: skipping " + url);
+			System.out.println(e.getMessage());
+			indexingResult.incSkipped();
+			return;
+		}
+				
+		if (storeExtracted) {
+					
+			String fName = "f_" + fileCount + ".txt";
+			Path fPath = extractedFilePath.resolve(fName);
+			storage.store(doc.toString(), fPath);
 		}
 	}
 
 	private void initializeDirectories() throws FileWriteException {
 		
+		String dirName = collection.getName();
+		
 		if (storeRawFiles) {		
-			
-			String dirName = collection.getName();
-			rawFilePath = Paths.get(storageDir).resolve(dirName);
+						
+			rawFilePath = Paths.get(rawStorageDir).resolve(dirName);
 			
 			if (! Files.exists(rawFilePath)) {
 				
@@ -166,7 +201,23 @@ public class IndexBuilder {
 				} 
 				catch (IOException e) {
 
-					throw new FileWriteException(dirName);
+					throw new FileWriteException(rawStorageDir + dirName);
+				}
+			}
+		}
+		
+		if (storeExtracted) {
+			
+			extractedFilePath = Paths.get(extractedStorageDir).resolve(dirName);
+			
+			if (! Files.exists(extractedFilePath)) {
+				
+				try {
+					Files.createDirectory(extractedFilePath);
+				} 
+				catch (IOException e) {
+
+					throw new FileWriteException(extractedStorageDir + dirName);
 				}
 			}
 		}
@@ -178,6 +229,11 @@ public class IndexBuilder {
 		String suffix = url.substring(url.length() -4, url.length());
 		
 		return suffix.equals(".pdf");
+	}
+	
+	private ByteArrayInputStream getInputStream(ByteArrayOutputStream os) {
+		
+		return new ByteArrayInputStream(os.toByteArray());
 	}
 }
 

@@ -1,0 +1,657 @@
+file type: HTML
+
+p:domain_verify: c5d543139286d3d153a7696ac73bc177
+og:image: https://www.my-personaltrainer.it/2019/12/05/sonno-disturbi-orig.jpeg
+og:type: website
+theme-color: #ffffff
+og:title: Disturbi del Sonno
+description: I disturbi del sonno: quali sono le cause? Quali i sintomi. La cura, la terapia, i farmaci, la dieta, gli alimenti ed i rimedi naturali per curare e prevenire i disturbi del sonno
+language: it
+title: Disturbi del Sonno
+og:description: I disturbi del sonno: quali sono le cause? Quali i sintomi. La cura, la terapia, i farmaci, la dieta, gli alimenti ed i rimedi naturali per curare e prevenire i disturbi del sonno
+msapplication-TileColor: #ffffff
+X-UA-Compatible: IE=edge
+viewport: width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no
+dc:title: Disturbi del Sonno
+Content-Encoding: UTF-8
+robots: all
+og:url: https://www.my-personaltrainer.it/salute/disturbi-sonno.html
+Content-Language: it
+Content-Type: text/html; charset=UTF-8
+msapplication-TileImage: /img/icon/ms-icon-144x144.png
+content:
+
+	
+	
+
+	
+
+	
+	
+    
+        
+
+        
+            
+
+            
+
+        
+
+        
+            
+                                My-personaltrainer.it Salute e Benessere
+
+                                
+                    
+                        
+                        
+                            
+                                
+                                    
+                                
+                            
+                            
+                                
+                                    
+                                
+                            
+                        
+                        
+
+                    
+
+                    
+                        
+                            
+                                
+                            
+                        
+                    
+
+                
+
+            
+
+            
+                
+                    
+                        
+                            
+                        
+                    
+                
+
+            
+
+            
+
+        
+    
+
+
+
+
+    
+
+    
+        
+            	Home
+	Salute
+	Fitness
+	Dieta
+	Benessere
+	Bellezza
+	Video
+
+
+        
+        Il network
+
+        	My-personaltrainer.it Salute e Benessere
+	Farmaco e Cura - La salute spiegata in parole semplici
+	Valori Normali - Interpretazione degli esami del sangue e delle urine
+
+
+        Seguici su
+
+        
+
+    
+
+    
+
+
+
+
+
+	
+
+	
+
+	
+		
+		
+						
+										
+
+    
+        
+        	Disturbi del Sonno
+
+        		Psicologia
+	Disturbi del sonno
+	Sonno
+
+
+                        
+                                        
+    		        		Redazione MyPersonalTrainer
+    		
+                            
+                    Istituto Auxologico Italiano
+                    
+                
+            
+            
+
+        	        
+
+    
+
+				
+		
+		
+        
+    
+			
+
+			
+			
+				
+					
+
+		Ultima modifica 17.01.2020
+
+	
+	
+	
+			
+			
+				
+					
+				
+			
+		
+		
+			
+				
+					
+				
+			
+		
+		
+			
+				
+					
+				
+			
+		
+		
+			
+				
+					
+				
+			
+		
+	
+
+
+
+
+
+											
+
+					
+					
+									
+
+				
+				
+				
+					
+		
+				            Indice Sezione
+
+ 
+ Sonno: perché è importante?
+Insonnie
+Ipersonnie
+	Disturbi transitori sonno-veglia
+	Disturbi persistenti sonno-veglia
+	Le parassonie
+	Sonno e sicurezza stradale
+	Sindrome delle Apnee Ostruttive del Sonno (OSAS)
+	Apnea notturna: anche un problema di guida sicura
+	Sindrome delle Apnee Ostruttive del Sonno: implicazioni cardiovascolari
+	Sindrome delle gambe senza riposo
+	Integratori per dormire
+	Teanina
+	Farmaci ipnotico-sedativi
+	Tisana contro l'insonnia - Erbe medicinali utili contro l'insonnia
+ 
+
+    
+	
+
+			
+									
+				Il sonno e i suoi disturbi
+
+							            A cura del Dott. Stefano Casali
+
+
+                Quando si parla di disturbi del sonno, il più delle volte l'ascoltatore pensa immediatamente all'insonnia. A tutti, crediamo, è infatti successo di trascorrere, almeno occasionalmente, qualche notte senza riuscire a dormire. E sulla base di questa personale esperienza si tende spesso a far coincidere la definizione generica di "disturbo del sonno" con l'insonnia. Ciò in realtà non corrisponde del tutto alla realtà clinica.
+
+Sebbene, infatti, gli studi epidemiologici indichino che l'insonnia, in tutte le sue accezioni (cronica vs acuta, iniziale vs intermedia vs terminale), è il disturbo più frequente, esistono numerosi dati che confermano come siano altamente prevalenti nella popolazione generale anche altre patologie ascrivibili al sonno; ne è un esempio l'ipersonnia (spesso anche indicata come eccessiva sonnolenza), che in un certo senso rappresenta il disturbo opposto all'insonnia: mentre nell'insonnia si ha una riduzione del tempo totale di sonno nelle 24 ore, nell'ipersonnia si ha un aumento dello stesso con una spiccata propensione all'addormentamento anche in situazioni inappropriate. Questo sintomo è molto frequente nella popolazione anche se spesso sottovalutato e sottostimato; può essere legato a diversi disturbi primari o secondari del sonno e riveste un ruolo sociale molto importante in quanto può essere alla base, per esempio, di un incrementato rischio di incidenti sul lavoro o alla guida.
+
+Una delle patologie più frequentemente associate ad eccessiva sonnolenza diurna è la sindrome delle apnee ostruttive nel sonno o malattia dei grandi russatori, come veniva chiamata inizialmente (Lungaresi E., 2005; G. Coccagna., 2000)(Parati G, Lombardi C, Narkiewicz K. Sleep apnea: epidemiology,pathophysiology, and relation to cardiovascular risk. Am J Physiol Regul IntegrComp Physiol. 2007 Oct;293(4):R1671-83. Epub 2007 Jul 25. Review. PubMed PMID:17652356.). Il sintomo più tipico di questo disturbo è infatti il russamento che inizialmente costituisce più un fastidio per il compagno/a di letto che per il paziente stesso, ma che rappresenta un importante segnale d'allarme quando viene rilevato meritevole di un approfondimento clinico ed eventualmente strumentale. Le apnee ostruttive nel sonno infatti oltre ad essere legate allo sviluppo di sonnolenza diurna sono associate ad un icremento del rischio cardio e cerebrovascolare, ed i pazienti che ne soffrono sono più frequentemente esposti allo sviluppo di iprtensione arteriosa, scompenso cardiaco, ictus ed aritmie (Lombardi C, Tobaldini E, Montano N, Losurdo A, Parati G. Obstructive Sleep Apnea Syndrome (OSAS) and Cardiovascular System. Med Lav. 2017 Aug 28;108(4):276-282. doi: 10.23749/mdl.v108i4.6427. PubMed PMID: 28853425.)(Aiolfi M. et Al., 2001). 
+
+C'è dunque chi dorme poco e male, e chi dorme troppo, ma c'è anche chi dorme quando dovrebbe stare sveglio ed è ineluttabilmente sveglio quando dovrebbe dormire, in questo caso si parla genericamente di disturbi del ritmo circadiano. Inoltre, si può assistere anche alla comparsa, durante il sonno, di fenomeni atipici, spesso legati ad una dissociazione dei meccanismi che regolano le varie fasi del sonno; in questo caso si parla di parasonnie, tra cui il sonnambulismo è una delle più conosciute parasonnie del sonno NREM (così come il bruxismo e l'enuresi).
+
+Tra le parasonnie emergenti invece dal sonno REM la più conosciuta è il disturbo comportamentale del sonno REM (RBD) in cui il soggetto affetto agisce i sogni associando alle immagini oniriche un comportamento congruo.
+
+In alcuni casi, questi fenomeni motori insorgenti dal sonno possono essere anche legate a crisi epilettiche notturne verso le quali non sempre la diagnosi differenziale è agevole. (Sudhansu Chokroverty., 2000; G. Coccagna., 2000).
+
+Abbiamo così delineato le quattro categorie dei disturbi del Sonno che vengono prese in considerazione dalla classificazione proposta dalla American Accademy of Sleep Medicine (AASM):
+
+	disturbi dell'inizio e del mantenimento del Sonno o insonnie;
+	disturbi da eccessiva sonnolenza o ipersonnie;
+	disturbi del ritmo Sonno-veglia;
+	disturbi associati al Sonno, a stadi del Sonno o a risvegli parziali, complessivamente chiamati parasonnie.
+
+
+La classificazione AASM è quella comunemente usata da coloro che si occupano dei disturbi del Sonno (Coccagna G., Smirne S., 1993). Sebbene essa sia criticabile per taluni aspetti e abbia perciò suscitato non poche discussioni circa l'opportunità di rivedere alcuni punti, come d'altra parte succede a quasi tutte le classificazioni, presenta una generale chiarezza e semplicità di suddivisione dei disturbi.
+
+
+                
+    Successivo:
+    Insonnia: cos'è, sintomi e cause
+
+
+    
+	
+			    
+
+
+
+
+
+
+
+
+
+
+
+
+		
+				
+
+														
+						
+							
+							
+						
+						
+							
+								Istituto Auxologico Italiano
+		                    	
+							
+
+		                
+
+					
+
+				
+								
+
+
+													
+
+
+
+
+
+
+
+
+				
+				
+					
+						
+				
+
+				
+
+				
+
+	
+	
+	
+			
+			
+				
+					
+				
+			
+		
+		
+			
+				
+					
+				
+			
+		
+		
+			
+				
+					
+				
+			
+		
+		
+			
+				
+					
+				
+			
+		
+	
+
+
+
+
+
+				
+
+				
+
+
+
+
+
+
+
+
+			
+
+		
+	
+
+
+	
+    
+        
+
+
+
+
+
+
+
+
+
+
+
+                
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+
+                
+
+
+
+
+
+
+
+
+
+
+
+            
+
+
+
+
+	
+		
+
+
+
+	
+	
+		
+			Disturbi Persistenti del Ritmo Sonno-veglia
+		
+					Vedi altri articoli tag
+									Disturbi del sonno
+					 - 									Sonno
+												
+			
+		
+	
+
+	
+	
+		
+			Insonnia
+		
+					Vedi altri articoli tag
+									Insonnia
+					 - 									Disturbi del sonno
+					 - 									Sonno
+												
+			
+		
+	
+
+
+
+		
+			
+					
+
+	    	
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+    
+        Seguici su
+
+        	
+                
+                    
+                    	
+							
+						
+                    
+                    Facebook
+                
+            
+	
+                
+                    
+                    	
+							
+						
+                    
+                    YouTube
+                
+            
+	
+                
+                    
+                    	
+							
+						
+                    
+                    Instagram
+                
+            
+
+
+        
+            Le informazioni contenute in questo sito sono presentate a solo scopo informativo, in nessun caso possono costituire la formulazione di una diagnosi o la prescrizione di un trattamento, e non intendono e non devono in alcun modo sostituire il rapporto diretto medico-paziente o la visita specialistica. Si raccomanda di chiedere sempre il parere del proprio medico curante e/o di specialisti riguardo qualsiasi indicazione riportata. Se si hanno dubbi o quesiti sull'uso di un farmaco è necessario contattare il proprio medico. Leggi il Disclaimer»
+        
+
+        	My-personaltrainer.it Salute e Benessere
+	Farmaco e Cura - La salute spiegata in parole semplici
+	Valori Normali - Interpretazione degli esami del sangue e delle urine
+
+
+        
+            © 2020 Mondadori Media S.p.A. - via Bianca di Savoia 12 - 20122 Milano - P.IVA 08009080964 - riproduzione riservata
+        
+
+        	Chi siamo
+	Contatti
+	Privacy
+	Privacy Policy
+	Cookie Policy
+	Disclaimer e Note legali
+	Condizioni d'uso
+	Gruppo Mondadori
+
+
+        	Vai al Sito Mobile
+
+
+    
+
+
+
+	
+
+
+	
+	
+	
+
+	
+    
+    
+    
+
+
+
+	
+
+    
+
+	
+
+	
+    
+    
+
+	
+    
+    
+
+	
+
+
+
+
+
+		
+	
+
+
+
+	
+
+	
+	
+
+	
+
+
+
+
+
+	
+    
+    
+    
+        
+    
+
+    
+
+
+		
+    
+    
+    
+
+
+	
+	
+	
+
+
+
+
+
+
+	
+
+
+
+
+	
+	
+	
+
+	
+
