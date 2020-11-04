@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.StandardOpenOption;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -62,6 +63,27 @@ public class FileStorage {
 		try {
 			
 			Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
+		}
+		catch(IOException e) {
+			
+			throw new FileWriteException(filePath.toString());
+		}
+	}
+	
+	/**
+	 * Stores the the given String 
+	 * as textFile
+	 * 
+	 * @param content
+	 * @param filePath
+	 * @throws FileWriteException
+	 */
+	public void store(String content, Path filePath) throws FileWriteException {
+		
+		try {
+			
+			Files.writeString(filePath, content, StandardOpenOption.CREATE,
+												 StandardOpenOption.TRUNCATE_EXISTING);
 		}
 		catch(IOException e) {
 			
