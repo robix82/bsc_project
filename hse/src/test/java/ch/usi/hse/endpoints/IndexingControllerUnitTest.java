@@ -381,7 +381,7 @@ public class IndexingControllerUnitTest {
 		
 		assertEquals("NoSuchDocCollectionException", err.getErrorType());
 	}
-	
+	/*
 	@Test
 	public void testBuildIndex1() throws Exception {
 		
@@ -409,6 +409,7 @@ public class IndexingControllerUnitTest {
 		
 		assertEquals("NoSuchDocCollectionException", err.getErrorType());
 	}
+	*/
 	
 	///////////////////
 	

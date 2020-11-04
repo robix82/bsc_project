@@ -116,8 +116,8 @@ public class IndexingServiceTest {
 		when(collectionRepo.findById(existingDocCollection.getId())).thenReturn(existingDocCollection);
 		doNothing().when(collectionRepo).delete(existingDocCollection);
 		
-		when(indexBuilder.buildIndex(any(DocCollection.class), false, false)).thenReturn(new IndexingResult());
-	}
+		when(indexBuilder.buildIndex(any(DocCollection.class), eq(false), eq(false))).thenReturn(new IndexingResult());
+	} 
 	
 	// URL LISTS
 	 

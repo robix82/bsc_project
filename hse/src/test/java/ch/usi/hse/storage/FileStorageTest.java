@@ -13,6 +13,7 @@ import java.nio.file.Paths;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -31,6 +32,7 @@ public class FileStorageTest {
 	private String testDir;
 	
 	@Autowired
+	@Qualifier("FileStorage")
 	private FileStorage fileStorage;
 	
 	private Path testDirPath;
@@ -44,7 +46,7 @@ public class FileStorageTest {
 	public void setUp() throws IOException {
 		
 		testString = "some content";
-		testBytes = testString.getBytes();
+		testBytes = testString.getBytes(); 
 		testDirPath = Paths.get(testDir);
 		
 		newFileName = "newFile.txt";
