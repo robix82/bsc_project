@@ -4,10 +4,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,8 +27,25 @@ import ch.usi.hse.exceptions.NoSuchFileException;
 @Component("UrlListStorage")
 public class UrlListStorage extends FileStorage {
 
-	@Value("${dir.urlLists}")
-	private String storageDir;
+	private Path storagePath;
+	
+	@Autowired
+	public UrlListStorage(@Value("${dir.urlLists}") Path storagePath) 
+			throws FileWriteException {
+		
+		this.storagePath = storagePath;
+
+		if (! Files.exists(storagePath)) {
+			
+			try { 
+				Files.createDirectories(storagePath);
+			} 
+			catch (IOException e) {
+
+				throw new FileWriteException(storagePath.toString());
+			}
+		}
+	}
 	
 	/**
 	 * stores the given file
@@ -37,9 +54,8 @@ public class UrlListStorage extends FileStorage {
 	 * @throws FileWriteException
 	 */
 	public void store(MultipartFile file) throws FileWriteException {
-		
-		Path path = Paths.get(storageDir);
-		store(file, path);
+
+		store(file, storagePath);
 	}
 	
 	/**
@@ -51,9 +67,7 @@ public class UrlListStorage extends FileStorage {
 	 */
 	public void delete(String fileName) throws NoSuchFileException, FileDeleteException {
 		
-		Path path = Paths.get(storageDir);
-		Path filePath = path.resolve(fileName);
-		
+		Path filePath = storagePath.resolve(fileName);
 		delete(filePath);
 	}
 	
@@ -67,8 +81,7 @@ public class UrlListStorage extends FileStorage {
 	 */
 	public List<String> getLines(String fileName) throws NoSuchFileException, FileReadException {
 		
-		Path path = Paths.get(storageDir);
-		Path filePath = path.resolve(fileName);
+		Path filePath = storagePath.resolve(fileName);
 		
 		if (! Files.exists(filePath)) {
 			throw new NoSuchFileException(fileName);
@@ -90,17 +103,15 @@ public class UrlListStorage extends FileStorage {
 	 */
 	public List<String> savedFiles() throws FileReadException {
 		
-		Path path = Paths.get(storageDir);
-		
 		try {
 			
-			List<String> files = Files.list(path).map(f -> f.getFileName().toString())
-											     .collect(Collectors.toList());
+			List<String> files = Files.list(storagePath).map(f -> f.getFileName().toString())
+											     	   .collect(Collectors.toList());
 			
 			return files;
 		}
 		catch (IOException e) {
-			throw new FileReadException(storageDir);
+			throw new FileReadException(storagePath.toString());
 		}
 	}
 	
@@ -115,8 +126,7 @@ public class UrlListStorage extends FileStorage {
 	public InputStream getFileAsStream(String fileName) 
 			throws NoSuchFileException, FileReadException {
 		
-		Path path = Paths.get(storageDir);
-		Path filePath = path.resolve(fileName);
+		Path filePath = storagePath.resolve(fileName);
 		
 		return getInputStream(filePath);
 	}

@@ -42,7 +42,7 @@ import ch.usi.hse.services.IndexingService;
  * @author robert.jans@usi.ch
  *
  */
-@Controller
+@Controller 
 @CrossOrigin
 @RequestMapping("/indexing")
 public class IndexingController { 
@@ -89,7 +89,7 @@ public class IndexingController {
 	/**
 	 * remove a saved url list
 	 * 
-	 * @param fileName
+	 * @param fileName 
 	 * @return
 	 * @throws NoSuchFileException
 	 * @throws FileDeleteException
@@ -129,7 +129,7 @@ public class IndexingController {
 			throw new FileReadException(fileName);
 		}
 	}
-	 
+	
 	/**
 	 * Add a new DocCollection entry to the database
 	 * 
@@ -218,13 +218,13 @@ public class IndexingController {
 				   FileReadException, 
 				   FileWriteException {
 		
-		IndexingResult result = indexingService.buildIndex(docCollection, true, true);
+		IndexingResult result = indexingService.buildIndex(docCollection);
 		
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 }
 
-
+ 
 
 
  

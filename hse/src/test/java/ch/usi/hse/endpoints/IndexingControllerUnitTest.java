@@ -93,7 +93,7 @@ public class IndexingControllerUnitTest {
 			       MediaType.APPLICATION_JSON.getSubtype(), 
 			       Charset.forName("utf8"));
 		
-		// URL LISTS
+		// URL LISTS 
 		
 		urlListName1 = "urls1.txt";
 		urlListName2 = "urls2.txt";
@@ -119,7 +119,7 @@ public class IndexingControllerUnitTest {
 		DocCollection c2 = new DocCollection("c2", urlListName2);
 		DocCollection c3 = new DocCollection("c3", urlListName2);
 		c1.setId(1);
-		c2.setId(2);
+		c2.setId(2); 
 		
 		docCollections = List.of(c1, c2);
 		existingDocCollection = docCollections.get(0);
@@ -148,8 +148,8 @@ public class IndexingControllerUnitTest {
 		when(indexingService.updateDocCollection(newDocCollection)).thenThrow(NoSuchDocCollectionException.class);
 		doNothing().when(indexingService).removeDocCollection(existingDocCollection);
 		doThrow(NoSuchDocCollectionException.class).when(indexingService).removeDocCollection(newDocCollection);
-		when(indexingService.buildIndex(existingDocCollection, false, false)).thenReturn(new IndexingResult());
-		when(indexingService.buildIndex(newDocCollection, false, false)).thenThrow(NoSuchDocCollectionException.class);
+		when(indexingService.buildIndex(existingDocCollection)).thenReturn(new IndexingResult());
+		when(indexingService.buildIndex(newDocCollection)).thenThrow(NoSuchDocCollectionException.class);
 	}
 	  
 	@Test

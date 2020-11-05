@@ -49,7 +49,7 @@ public class FileStorage {
 			
 			throw new FileWriteException(file.getOriginalFilename());
 		}
-	}
+	} 
 	
 	/**
 	 * Stores the given InputStream

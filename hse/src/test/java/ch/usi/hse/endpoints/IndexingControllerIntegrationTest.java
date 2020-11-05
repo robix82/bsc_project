@@ -21,10 +21,11 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.List;
-import java.util.Arrays;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.tomcat.jni.Status;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,6 +40,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
@@ -52,10 +55,10 @@ import ch.usi.hse.exceptions.ApiError;
 public class IndexingControllerIntegrationTest {
 
 	@Value("${dir.urlLists}")
-	private String urlListsDir;
+	private Path urlListsPath;
 	
 	@Value("${dir.indices}")
-	private String indexDir;
+	private Path indexDirPath;
 	
 	@Autowired
 	private DocCollectionRepository collectionRepo;
@@ -65,13 +68,12 @@ public class IndexingControllerIntegrationTest {
 	@Autowired
 	private MockMvc mvc;
 	
-	private Path urlListsPath, indexDirPath;
-	
-	private List<String> urlListNames, urls1, urls2;
-	private String urlListName1, urlListName2, newUrlListName;
+	private List<String> urlListNames;
+	private String urlListName1, urlListName2, urlListName3;
 	private MockMultipartFile newUrlListFile;
+	private byte[] urlListData1, urlListData2, urlListData3;
 	
-	private List<DocCollection> docCollections;
+	private List<DocCollection> savedDocCollections;
 	private DocCollection newDocCollection;
 	
 	private ObjectMapper mapper;
@@ -82,6 +84,9 @@ public class IndexingControllerIntegrationTest {
 	@BeforeEach
 	public void setUp() throws IOException {
 		
+		//   Set up existing urlLists urlListName1 (urlListData1) and urlListName2 (urlListData2),
+		//   MockMultipartFile urlListName3 (urlListData3) for upload
+		
 		mapper = new ObjectMapper();
 		mapper.findAndRegisterModules();
 		writer = mapper.writer().withDefaultPrettyPrinter();
@@ -89,58 +94,89 @@ public class IndexingControllerIntegrationTest {
 			       MediaType.APPLICATION_JSON.getSubtype(), 
 			       Charset.forName("utf8"));
 		
-		urlListsPath = Paths.get(urlListsDir);
-		indexDirPath = Paths.get(indexDir);
-		
 		urlListName1 = "urls1.txt";
 		urlListName2 = "urls2.txt";
-		newUrlListName = "newUrls.txt";
-		urlListNames = Arrays.asList(urlListName1, urlListName2);
+		urlListName3 = "newUrls.txt";
+		urlListNames = List.of(urlListName1, urlListName2);
 		
-		urls1 = Arrays.asList("url1", "url2", "url3");
-		urls2 = Arrays.asList("url4", "url5", "url6");
+		List<String> urls1 = List.of("url1", "url2", "url3");
+		List<String> urls2 = List.of("url4", "url5", "url6");
+		List<String> urls3 = List.of("url7", "url8", "url9");
+				
+		StringBuilder sb1 = new StringBuilder();
+		
+		for (String s : urls1) {
+			sb1.append(s).append("\n");
+		}
+		
+		StringBuilder sb2 = new StringBuilder();
+		
+		for (String s : urls2) {
+			sb2.append(s).append("\n");
+		}
+		
+		StringBuilder sb3 = new StringBuilder();
+		
+		for (String s : urls3) {
+			sb3.append(s).append("\n");
+		}
+		
+		urlListData1 = sb1.toString().getBytes();
+		urlListData2 = sb2.toString().getBytes();
+		urlListData3 = sb3.toString().getBytes();
 		
 		newUrlListFile = new MockMultipartFile("file",
-											   newUrlListName,
+											   urlListName3,
 											   MediaType.TEXT_PLAIN_VALUE,
-											   "content".getBytes());
+											   urlListData3);
+		
+		// set up existing DocCollections c1 (indexed) and c2 (not indexed)
 		
 		DocCollection c1 = new DocCollection("c1", urlListName1);
 		DocCollection c2 = new DocCollection("c2", urlListName2);
 		c1.setId(1);
 		c2.setId(2);
-		c1.setIndexDir(indexDir + "c1");
-		c2.setIndexDir(indexDir + "c2");
+		c1.setIndexed(true);
+		c1.setIndexDir(indexDirPath.resolve("c1").toString());
+			
+		collectionRepo.deleteAll();
 		
-		docCollections = List.of(collectionRepo.save(c1),
-								 collectionRepo.save(c2));
-		
+		savedDocCollections = List.of(collectionRepo.save(c1),
+									  collectionRepo.save(c2));
+
 		newDocCollection = new DocCollection("c3", urlListName2);
-		newDocCollection.setIndexDir(indexDir + "c3");
+		newDocCollection.setIndexDir(indexDirPath.resolve("c3").toString());
+		
+		// write test directory contents
 		
 		clearTestFiles();
 		
-		PrintStream ps1 = new PrintStream(new FileOutputStream(urlListsDir + urlListName1));
-		
-		for (String s : urls1) {
-			ps1.println(s);
-		}
-		 
-		ps1.close();
-		
-		PrintStream ps2 = new PrintStream(new FileOutputStream(urlListsDir + urlListName2));
-		
-		for (String s : urls2) {
-			ps2.println(s);
+		if (! Files.exists(urlListsPath)) {
+			Files.createDirectories(urlListsPath);
 		}
 		
-		ps2.close();
+		if (! Files.exists(indexDirPath)) {
+			Files.createDirectories(indexDirPath);
+		}
+				
+		Path f1 = Files.createFile(urlListsPath.resolve(urlListName1));
+		Path f2 = Files.createFile(urlListsPath.resolve(urlListName2));
+				
+		Files.write(f1, urlListData1, StandardOpenOption.CREATE);	
+		Files.write(f2, urlListData2, StandardOpenOption.CREATE);
 	}
 	
 	@AfterEach
 	public void cleanup() throws IOException {
 		
 		clearTestFiles();
+	}
+	
+	@Test
+	public void setupTest() throws IOException {
+		
+		assertEquals(2, Files.list(urlListsPath).count());
+		assertEquals(2, collectionRepo.count());
 	}
 	 
 	@Test
@@ -149,7 +185,7 @@ public class IndexingControllerIntegrationTest {
 		mvc.perform(get(base + "/ui"))
 		   .andExpect(status().isOk())
 		   .andExpect(model().attribute("urlLists", Matchers.iterableWithSize(urlListNames.size())))
-		   .andExpect(model().attribute("docCollections", Matchers.iterableWithSize(docCollections.size())))
+		   .andExpect(model().attribute("docCollections", Matchers.iterableWithSize(savedDocCollections.size())))
 		   .andExpect(model().attribute("languages", is(Language.languages)))
 		   .andExpect(view().name("indexing"));
 	}
@@ -157,67 +193,69 @@ public class IndexingControllerIntegrationTest {
 	
 	// URL LISTS
 	
-	@Test
+	@Test 
 	public void testPostUrlList() throws Exception {
 		
-		String msg = "file " + newUrlListName + " uploaded";
-
+		String msg = "file " + urlListName3 + " uploaded";
+		
 		long countBefore = Files.list(urlListsPath).count();
+		assertFalse(Files.exists(urlListsPath.resolve(urlListName3)));
 		
 		MvcResult res = mvc.perform(multipart(base + "/urlLists").file(newUrlListFile))
-						   .andExpect(status().isCreated())
-						   .andReturn();
+				 	       .andExpect(status().isCreated())
+				 	       .andReturn();
 		
-		String resBody = resString(res);
+		assertEquals(msg, resString(res));
 		
-		assertEquals(msg, resBody);
-		
-		long countAfter = Files.list(urlListsPath).count();
-		
-		assertEquals(countBefore +1, countAfter);
+		assertEquals(countBefore +1, Files.list(urlListsPath).count());
+		assertTrue(Files.exists(urlListsPath.resolve(urlListName3)));
 	}
 	
 	@Test
 	public void testDeleteUrlList1() throws Exception {
 		
 		String msg = "file " + urlListName1 + " removed";
+		
 		String url = UriComponentsBuilder.fromUriString(base + "/urlLists")
-				 						 .queryParam("fileName", urlListName1)
-				 						 .build()
-				 						 .toUriString();
+				 					     .queryParam("fileName", urlListName1)
+				 					     .build()
+				 					     .toUriString();
+		
+		long countBefore = Files.list(urlListsPath).count();
+		assertTrue(Files.exists(urlListsPath.resolve(urlListName1)));
 		
 		MvcResult res = mvc.perform(delete(url))
 				 		   .andExpect(status().isOk())
 				 		   .andReturn();
 		
-		String resBody = resString(res);
-		
-		assertEquals(msg, resBody);
+		assertEquals(msg, resString(res));
+		assertEquals(countBefore -1, Files.list(urlListsPath).count());
+		assertFalse(Files.exists(urlListsPath.resolve(urlListName1)));
 	}
 	
 	@Test 
 	public void testDeleteUrlList2() throws Exception {
 		
 		String url = UriComponentsBuilder.fromUriString(base + "/urlLists")
-										 .queryParam("fileName", newUrlListName)
-										 .build()
-										 .toUriString();
+				 						 .queryParam("fileName", urlListName3)
+				 						 .build()
+				 						 .toUriString();
+		
+		long countBefore = Files.list(urlListsPath).count();
 		
 		MvcResult res = mvc.perform(delete(url))
 				 		   .andExpect(status().isNotFound())
 				 		   .andReturn();
 		
-		ApiError err = mapper.readValue(resString(res), ApiError.class);
+		ApiError err = getApiError(res);
 		
 		assertEquals("NoSuchFileException", err.getErrorType());
-		assertTrue(err.getErrorMessage().contains(newUrlListName));
+		assertTrue(err.getErrorMessage().contains(urlListName3));
+		assertEquals(countBefore, Files.list(urlListsPath).count());
 	}
 	
 	@Test
 	public void testDownloadUrlList1() throws Exception {
-		
-		File f = new File(urlListsDir + urlListName1);
-		byte[] expectedBytes = FileUtils.readFileToByteArray(f);
 		
 		String url = UriComponentsBuilder.fromUriString(base + "/urlLists/dl")
 				 						 .queryParam("fileName", urlListName1)
@@ -230,135 +268,151 @@ public class IndexingControllerIntegrationTest {
 		
 		byte[] resBody = res.getResponse().getContentAsByteArray();
 		
-		assertArrayEquals(expectedBytes, resBody);
+		assertArrayEquals(urlListData1, resBody);
 	}
 	
 	@Test
 	public void testDownloadUrlList2() throws Exception {
 		
 		String url = UriComponentsBuilder.fromUriString(base + "/urlLists/dl")
-										 .queryParam("fileName", newUrlListName)
-										 .build()
-										 .toUriString();
+				 						 .queryParam("fileName", urlListName3)
+				 						 .build()
+				 						 .toUriString();
 		
 		MvcResult res = mvc.perform(get(url))
 				 		   .andExpect(status().isNotFound())
 				 		   .andReturn();
 		
-		ApiError err = mapper.readValue(resString(res), ApiError.class);
+		ApiError err = getApiError(res);
 		
 		assertEquals("NoSuchFileException", err.getErrorType());
-		assertTrue(err.getErrorMessage().contains(newUrlListName));
+		assertTrue(err.getErrorMessage().contains(urlListName3));
 	}
 	
 	// DOC COLLECTIONS
 	
 	@Test
-	public void testAddDocCollection1() throws Exception {
+	public void testPostDocCollection1() throws Exception {
 		
-		String jsonString = writer.writeValueAsString(newDocCollection);
-		String dirName = indexDir + newDocCollection.getName();
+		String jsonString = getJson(newDocCollection);
 		
 		long countBefore = collectionRepo.count();
-		assertFalse(Files.exists(Paths.get(dirName)));
+		assertFalse(collectionRepo.existsByName(newDocCollection.getName()));
 		
 		MvcResult res = mvc.perform(post(base + "/docCollections").contentType(json).content(jsonString))
 				 		   .andExpect(status().isCreated())
 				 		   .andReturn();
 		
-		DocCollection resBody = mapper.readValue(resString(res), DocCollection.class);	
+		DocCollection resBody = mapper.readValue(resString(res), DocCollection.class);
 		assertEquals(newDocCollection.getName(), resBody.getName());
-		assertEquals(dirName, resBody.getIndexDir());
 		
-		long countAfter = collectionRepo.count();
-		assertEquals(countBefore +1, countAfter);
-		assertTrue(Files.exists(Paths.get(dirName)));
+		assertEquals(countBefore +1, collectionRepo.count());
+		assertTrue(collectionRepo.existsByName(newDocCollection.getName()));
 	}
 	
-	@Test // collection with existing id
-	public void testAddDocCollection2() throws Exception {
+	@Test // unsupported language
+	public void testPostDocCollection2() throws Exception {
 		
-		int existingId = docCollections.get(0).getId();
+		String badLanguage = "xy";
+		newDocCollection.setLanguage(badLanguage);
+		String jsonString = getJson(newDocCollection);
+		
+		long countBefore = collectionRepo.count();
+		
+		MvcResult res = mvc.perform(post(base + "/docCollections").contentType(json).content(jsonString))
+				 		   .andExpect(status().isUnprocessableEntity())
+				 		   .andReturn();
+
+		ApiError err = getApiError(res);
+		
+		assertEquals("LanguageNotSupportedException", err.getErrorType());
+		assertTrue(err.getErrorMessage().contains(badLanguage));
+		assertEquals(countBefore, collectionRepo.count());
+	}
+	
+	@Test // collection id already exists
+	public void testPostDocCollection3() throws Exception {
+		
+		int existingId = savedDocCollections.get(0).getId();
 		newDocCollection.setId(existingId);
-		String jsonString = writer.writeValueAsString(newDocCollection);
+		String jsonString = getJson(newDocCollection);
+		
+		long countBefore = collectionRepo.count();
 		
 		MvcResult res = mvc.perform(post(base + "/docCollections").contentType(json).content(jsonString))
 				 		   .andExpect(status().isUnprocessableEntity())
 				 		   .andReturn();
 		
-		ApiError err = mapper.readValue(resString(res), ApiError.class);
+		ApiError err = getApiError(res);
 		
 		assertEquals("DocCollectionExistsException", err.getErrorType());
 		assertTrue(err.getErrorMessage().contains(Integer.toString(existingId)));
+		assertEquals(countBefore, collectionRepo.count());
 	}
 	
-	@Test // collection with existing name
-	public void testAddDocCollection3() throws Exception {
+	@Test // collection name already exists
+	public void testPostDocCollection4() throws Exception {
 		
-		String existingName = docCollections.get(0).getName();
+		String existingName = savedDocCollections.get(0).getName();
 		newDocCollection.setName(existingName);
-		String jsonString = writer.writeValueAsString(newDocCollection);
+		String jsonString = getJson(newDocCollection);
+		
+		long countBefore = collectionRepo.count();
 		
 		MvcResult res = mvc.perform(post(base + "/docCollections").contentType(json).content(jsonString))
 				 		   .andExpect(status().isUnprocessableEntity())
 				 		   .andReturn();
 		
-		ApiError err = mapper.readValue(resString(res), ApiError.class);
+		ApiError err = getApiError(res);
 		
 		assertEquals("DocCollectionExistsException", err.getErrorType());
 		assertTrue(err.getErrorMessage().contains(existingName));
+		assertEquals(countBefore, collectionRepo.count());
 	}
 	
-	@Test // collection with non-existing urlListName
-	public void testAddDocCollection4() throws Exception {
+	@Test // collection with non-existing url list
+	public void testPostCollection5() throws Exception {
 		
-		newDocCollection.setUrlListName(newUrlListName);
-		String jsonString = writer.writeValueAsString(newDocCollection);
+		newDocCollection.setUrlListName(urlListName3);
+		String jsonString = getJson(newDocCollection);
+		
+		long countBefore = collectionRepo.count();
 		
 		MvcResult res = mvc.perform(post(base + "/docCollections").contentType(json).content(jsonString))
 				 		   .andExpect(status().isNotFound())
 				 		   .andReturn();
 		
-		ApiError err = mapper.readValue(resString(res), ApiError.class);
+		ApiError err = getApiError(res);
 		
 		assertEquals("NoSuchFileException", err.getErrorType());
-		assertTrue(err.getErrorMessage().contains(newUrlListName));
-	}
-	
-	@Test // collection with non-supported language
-	public void testAddDocCollection5() throws Exception {
-		
-		String badLanguage = "xy";
-		newDocCollection.setLanguage(badLanguage);
-		String jsonString = writer.writeValueAsString(newDocCollection);
-		
-		MvcResult res = mvc.perform(post(base + "/docCollections").contentType(json).content(jsonString))
-				 		   .andExpect(status().isUnprocessableEntity())
-				 		   .andReturn();
-		
-		ApiError err = mapper.readValue(resString(res), ApiError.class);
-		
-		assertEquals("LanguageNotSupportedException", err.getErrorType());
-		assertTrue(err.getErrorMessage().contains(badLanguage));
+		assertTrue(err.getErrorMessage().contains(urlListName3));
+		assertEquals(countBefore, collectionRepo.count());
 	}
 	
 	@Test
 	public void testUpdateDocCollection1() throws Exception {
 		
-		String newName = "newName";
-		DocCollection existingCollection = docCollections.get(0);
-		String oldDir = existingCollection.getIndexDir();
-		Files.createDirectory(Paths.get(oldDir));
-		String newDir = indexDir + newName;
+		DocCollection existingCollection = savedDocCollections.get(1);
 		
+		int id = existingCollection.getId();
+		String newName = "newName"; 
+		String newLanguage = "EN";
+		String newUrlList = urlListName1;
+		String newIndexDir = "newIndexDir";
 		existingCollection.setName(newName);
-		existingCollection.setLanguage("EN");
-		existingCollection.setUrlListName(urlListName2);
-		existingCollection.setIndexed(true); 
-		String jsonString = writer.writeValueAsString(existingCollection);
+		existingCollection.setLanguage(newLanguage);
+		existingCollection.setUrlListName(newUrlList);
+		existingCollection.setIndexDir(newIndexDir);
+		existingCollection.setIndexed(true);
 		
-		assertTrue(Files.exists(Paths.get(oldDir)));
-		assertFalse(Files.exists(Paths.get(newDir)));
+		String jsonString = getJson(existingCollection);
+		
+		DocCollection retrievedBefore = collectionRepo.findById(id);
+		assertNotEquals(newName, retrievedBefore.getName());
+		assertNotEquals(newLanguage, retrievedBefore.getLanguage());
+		assertNotEquals(newUrlList, retrievedBefore.getUrlListName());
+		assertNotEquals(newIndexDir, retrievedBefore.getIndexDir());
+		assertFalse(retrievedBefore.getIndexed());
 		
 		MvcResult res = mvc.perform(put(base + "/docCollections").contentType(json).content(jsonString))
 				 		   .andExpect(status().isOk())
@@ -366,207 +420,30 @@ public class IndexingControllerIntegrationTest {
 		
 		DocCollection resBody = mapper.readValue(resString(res), DocCollection.class);
 		assertEquals(existingCollection, resBody);
-
-		DocCollection foundAfter = collectionRepo.findById(existingCollection.getId());
-		assertEquals(newName, foundAfter.getName());
-		assertEquals(existingCollection.getLanguage(), foundAfter.getLanguage());
-		assertEquals(existingCollection.getUrlListName(), foundAfter.getUrlListName());
-		assertEquals(newDir, foundAfter.getIndexDir());
-		assertEquals(existingCollection.getIndexed(), foundAfter.getIndexed());
 		
-		assertFalse(Files.exists(Paths.get(oldDir)));
-		assertTrue(Files.exists(Paths.get(newDir)));
+		DocCollection retrievedAfter = collectionRepo.findById(id);
+		assertEquals(newName, retrievedAfter.getName());
+		assertEquals(newLanguage, retrievedAfter.getLanguage());
+		assertEquals(newUrlList, retrievedAfter.getUrlListName());
+		assertEquals(newIndexDir, retrievedAfter.getIndexDir());
+		assertTrue(retrievedAfter.getIndexed());
 	}
 	
-	@Test // update on non-existing id
-	public void testUpdateDocCollection2() throws Exception {
-		
-		int badId = 724321;
-		DocCollection existingCollection = docCollections.get(0);
-		existingCollection.setId(badId);
-		String jsonString = writer.writeValueAsString(existingCollection);
-		
-		MvcResult res = mvc.perform(put(base + "/docCollections").contentType(json).content(jsonString))
-				 		   .andExpect(status().isNotFound())
-				 		   .andReturn();
-		
-		ApiError err = mapper.readValue(resString(res), ApiError.class);
-		
-		assertEquals("NoSuchDocCollectionException", err.getErrorType());
-		assertTrue(err.getErrorMessage().contains(Integer.toString(badId)));
-	}
-	
-	@Test // update on non-existing url list
-	public void testUpdate3() throws Exception {
-		
-		DocCollection existingCollection = docCollections.get(0);
-		existingCollection.setUrlListName(newUrlListName);
-		String jsonString = writer.writeValueAsString(existingCollection);
-		
-		MvcResult res = mvc.perform(put(base + "/docCollections").contentType(json).content(jsonString))
-				  		   .andExpect(status().isNotFound())
-				  		   .andReturn();
-		
-		ApiError err = mapper.readValue(resString(res), ApiError.class);
-		
-		assertEquals("NoSuchFileException", err.getErrorType());
-		assertTrue(err.getErrorMessage().contains(newUrlListName));
-	}
-	
-	@Test // update on existing name
-	public void testUpdateDocCollection4() throws Exception {
-		
-		String existingName = docCollections.get(1).getName();
-		DocCollection existingCollection = docCollections.get(0);
-		existingCollection.setName(existingName);
-		String jsonString = writer.writeValueAsString(existingCollection);
-		
-		MvcResult res = mvc.perform(put(base + "/docCollections").contentType(json).content(jsonString))
-				 		   .andExpect(status().isUnprocessableEntity())
-				 		   .andReturn();
-		
-		ApiError err = mapper.readValue(resString(res), ApiError.class);
-		
-		assertEquals("DocCollectionExistsException", err.getErrorType());
-		assertTrue(err.getErrorMessage().contains(existingName));
-	}
-	
-	@Test // update on non-supported language
-	public void testUpdateDocCollection5() throws Exception {
-		
-		String badLanguage = "xy";
-		DocCollection existingCollection = docCollections.get(0);
-		existingCollection.setLanguage(badLanguage);
-		String jsonString = writer.writeValueAsString(existingCollection);
-		
-		MvcResult res = mvc.perform(put(base + "/docCollections").contentType(json).content(jsonString))
-				 		   .andExpect(status().isUnprocessableEntity())
-				 		   .andReturn();
-		
-		ApiError err = mapper.readValue(resString(res), ApiError.class);
-		
-		assertEquals("LanguageNotSupportedException", err.getErrorType());
-		assertTrue(err.getErrorMessage().contains(badLanguage));
-	}
-	
-	@Test
-	public void testDeleteDocCollection1() throws Exception {
-		
-		DocCollection existingCollection = docCollections.get(0);
-		String dir = existingCollection.getIndexDir();
-		Files.createDirectory(Paths.get(dir));
-		String jsonString = writer.writeValueAsString(existingCollection);
-		
-		long countBefore = collectionRepo.count();
-		assertTrue(Files.exists(Paths.get(dir)));
-		
-		assertTrue(collectionRepo.existsById(existingCollection.getId()));
-		
-		MvcResult res = mvc.perform(delete(base + "/docCollections").contentType(json).content(jsonString))
-				 		   .andExpect(status().isOk())
-				 		   .andReturn();
-		
-		DocCollection resBody = mapper.readValue(resString(res), DocCollection.class);
-		
-		assertEquals(existingCollection, resBody);
-		
-		assertEquals(countBefore -1, collectionRepo.count());
-		assertFalse(collectionRepo.existsById(existingCollection.getId()));
-		assertFalse(Files.exists(Paths.get(dir)));
-	}
-	
-	@Test
-	public void testDeleteDocCollection2() throws Exception {
-		
-		int badId = 724321;
-		newDocCollection.setId(badId);
-		String jsonString = writer.writeValueAsString(newDocCollection);
-		
-		MvcResult res = mvc.perform(delete(base + "/docCollections").contentType(json).content(jsonString))
-				 		   .andExpect(status().isNotFound())
-				 		   .andReturn();
-		
-		ApiError err = mapper.readValue(resString(res), ApiError.class);
-		
-		assertEquals("NoSuchDocCollectionException", err.getErrorType());
-		assertTrue(err.getErrorMessage().contains(Integer.toString(badId)));
-	}
-	/*
-	@Test
-	public void testBuildIndex1() throws Exception {
-		
-		DocCollection existingCollection = docCollections.get(0);
-		String jsonString = writer.writeValueAsString(existingCollection);
-		
-		MvcResult res = mvc.perform(post(base + "/buildIndex").contentType(json).content(jsonString))
-				 		   .andExpect(status().isOk())
-				 		   .andReturn();
-		
-		IndexingResult resBody = mapper.readValue(resString(res), IndexingResult.class);
-		
-		assertNotNull(resBody);
-	}
-	
-	@Test
-	public void testBuildIndex2() throws Exception {
-		
-		int badId = 87452189;
-		DocCollection existingCollection = docCollections.get(0);
-		existingCollection.setId(badId);
-		String jsonString = writer.writeValueAsString(existingCollection);
-		
-		MvcResult res = mvc.perform(post(base + "/buildIndex").contentType(json).content(jsonString))
-				 		   .andExpect(status().isNotFound())
-				 		   .andReturn();
-		
-		ApiError err = mapper.readValue(resString(res), ApiError.class);
-		
-		assertEquals("NoSuchDocCollectionException", err.getErrorType());
-		assertTrue(err.getErrorMessage().contains(Integer.toString(badId)));
-	}
-	
-	@Test
-	public void testBuildIndex3() throws Exception {
-		
-		DocCollection existingCollection = docCollections.get(0);
-		existingCollection.setUrlListName(newUrlListName);
-		String jsonString = writer.writeValueAsString(existingCollection);
-		
-		MvcResult res = mvc.perform(post(base + "/buildIndex").contentType(json).content(jsonString))
-				 		   .andExpect(status().isNotFound())
-				 		   .andReturn();
-		
-		ApiError err = mapper.readValue(resString(res), ApiError.class);
-		
-		assertEquals("NoSuchFileException", err.getErrorType());
-		assertTrue(err.getErrorMessage().contains(newUrlListName));
-	}
-	
-	@Test 
-	public void testBuildIndex4() throws Exception {
-		
-		String badLanguage = "xy";
-		DocCollection existingCollection = docCollections.get(0);
-		existingCollection.setLanguage(badLanguage);
-		String jsonString = writer.writeValueAsString(existingCollection);
-		
-		MvcResult res = mvc.perform(post(base + "/buildIndex").contentType(json).content(jsonString))
-				 		   .andExpect(status().isUnprocessableEntity())
-				 		   .andReturn();
-		
-		ApiError err = mapper.readValue(resString(res), ApiError.class);
-		
-		assertEquals("LanguageNotSupportedException", err.getErrorType());
-		assertTrue(err.getErrorMessage().contains(badLanguage));
-	}
-	
-	*/
-	
-		///////////////////
+	///////////////////
 	
 	private String resString(MvcResult res) throws UnsupportedEncodingException {
 	
 		return res.getResponse().getContentAsString();
+	}
+	
+	private ApiError getApiError(MvcResult res) throws Exception{
+		
+		return mapper.readValue(resString(res), ApiError.class);
+	}
+	
+	private String getJson(Object o) throws JsonProcessingException {
+		
+		return writer.writeValueAsString(o);
 	}
 	
 	private void clearTestFiles() throws IOException {

@@ -10,7 +10,6 @@ import java.nio.file.Paths;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -35,19 +34,22 @@ import ch.usi.hse.storage.UrlListStorage;
  *
  */
 @Service
-public class IndexingService {
+public class IndexingService { 
 
-	@Value("${dir.indices}")
-	private String indexDir;
-	
-	@Autowired
 	private UrlListStorage urlListStorage;
-	
-	@Autowired
 	private IndexBuilder indexBuilder;
+	private DocCollectionRepository collectionRepo;
 	
 	@Autowired
-	private DocCollectionRepository collectionRepo;
+	public IndexingService(UrlListStorage urlListStorage, 
+						   IndexBuilder indexBuilder,
+						   DocCollectionRepository collectionRepo) 
+			throws IOException {
+		
+		this.urlListStorage = urlListStorage;
+		this.indexBuilder = indexBuilder;
+		this.collectionRepo = collectionRepo;
+	}
 	
 	/** 
 	 * 
@@ -148,21 +150,6 @@ public class IndexingService {
 		if (collectionRepo.existsByName(name)) {
 			throw new DocCollectionExistsException(name);
 		}
-		
-		String dirName = indexDir + name;
-		Path dirPath = Paths.get(dirName);
-		
-		if (! Files.exists(dirPath)) {
-			
-			try {
-				Files.createDirectory(dirPath);
-			}
-			catch (IOException e) {
-				throw new FileWriteException(dirName);
-			}
-		}
-		
-		docCollection.setIndexDir(dirName);
 		 
 		DocCollection saved = collectionRepo.save(docCollection);
 		
@@ -213,41 +200,12 @@ public class IndexingService {
 		
 		String name = docCollection.getName();
 	
-		if (! name.equals(found.getName())) {
-			
-			System.out.println("ENTERING NAME UPDATE");
-			
-			if (collectionRepo.existsByName(name)) {
-				throw new DocCollectionExistsException(name);
-			}
-			
-			String oldDir = found.getIndexDir();
-			String newDir = indexDir + name;
-			Path oldPath = Paths.get(oldDir);
-			Path newPath = Paths.get(newDir);
-			
-			try {
-				if (Files.exists(oldPath)) {
-					Files.delete(oldPath); 
-				}
-			}
-			catch (IOException e) {
-				throw new FileDeleteException(oldDir);
-			}
-			
-			try {
-				if (! Files.exists(newPath)) {
-					Files.createDirectory(newPath);
-				}
-			}
-			catch (IOException e) {
-				throw new FileWriteException(newDir);
-			}
-			
-			found.setName(name);
-			found.setIndexDir(newDir);			
+		if (! name.equals(found.getName()) && collectionRepo.existsByName(name)) {
+			throw new DocCollectionExistsException(name);
 		}
 		
+		found.setName(name);
+		found.setIndexDir(docCollection.getIndexDir());
 		found.setLanguage(language);
 		found.setUrlListName(urlListName);
 		found.setIndexed(docCollection.getIndexed());
@@ -298,9 +256,7 @@ public class IndexingService {
 	 * @throws FileReadException 
 	 * @throws FileWriteException 
 	 */
-	public IndexingResult buildIndex(DocCollection docCollection, 
-									 boolean storeRawFiles, 
-									 boolean storeExtractionResult) 
+	public IndexingResult buildIndex(DocCollection docCollection) 
 	
 			throws NoSuchDocCollectionException, 
 				   LanguageNotSupportedException, 
@@ -326,9 +282,7 @@ public class IndexingService {
 			throw new LanguageNotSupportedException(language);
 		}
 		
-		IndexingResult res = indexBuilder.buildIndex(docCollection, 
-													 storeRawFiles, 
-													 storeExtractionResult);
+		IndexingResult res = indexBuilder.buildIndex(docCollection);
 		
 		docCollection.setIndexed(true);
 		collectionRepo.save(docCollection);

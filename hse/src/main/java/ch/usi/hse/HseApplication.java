@@ -9,14 +9,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  */
 @SpringBootApplication
 public class HseApplication {
-
+	
 	/**
 	 * Starts the application
 	 * 
 	 * @param args (unused)
 	 */
 	public static void main(String[] args) {
+			
 		SpringApplication.run(HseApplication.class, args);
 	}
-
 }

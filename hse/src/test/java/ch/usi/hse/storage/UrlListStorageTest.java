@@ -44,8 +44,7 @@ public class UrlListStorageTest {
 	
 	@BeforeEach
 	public void setUp() throws IOException {
-		
-		
+			
 		storagePath = Paths.get(storageDir);
 		
 		String name1 = "list1.txt";

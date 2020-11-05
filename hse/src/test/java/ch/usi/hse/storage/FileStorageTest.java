@@ -2,19 +2,19 @@ package ch.usi.hse.storage;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.ByteArrayInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
@@ -28,14 +28,13 @@ import ch.usi.hse.exceptions.NoSuchFileException;
 @SpringBootTest
 public class FileStorageTest {
 
-	@Value("${dir.testFiles}")
-	private String testDir;
+	@TempDir
+	Path testDir;
 	
 	@Autowired
 	@Qualifier("FileStorage")
 	private FileStorage fileStorage;
 	
-	private Path testDirPath;
 	private String newFileName;
 	private String existingFileName;
 	private MockMultipartFile testMpFile;
@@ -44,10 +43,9 @@ public class FileStorageTest {
 	
 	@BeforeEach
 	public void setUp() throws IOException {
-		
+		 
 		testString = "some content";
 		testBytes = testString.getBytes(); 
-		testDirPath = Paths.get(testDir);
 		
 		newFileName = "newFile.txt";
 		existingFileName = "existingFile.txt";
@@ -57,67 +55,102 @@ public class FileStorageTest {
 										   MediaType.TEXT_PLAIN_VALUE,
 										   testBytes);
 		
-		Files.list(testDirPath).forEach(f -> {
-			try {
-				Files.deleteIfExists(f);
-			} 
-			catch (IOException e) {
-				e.printStackTrace();
-			}
-		});
+		cleanFiles();
 		
-		PrintStream ps = new PrintStream(new FileOutputStream(testDir + existingFileName));
-		ps.print(testString);
-		ps.close();
+		Files.writeString(testDir.resolve(existingFileName), testString);
 	}
 	
-	@Test
-	public void setupTest() {
-		
-		assertNotNull(testDir);
-		assertNotNull(testDirPath);
-	}
-	
-	@Test
+	@Test // store MultipartFile on Path
 	public void testStore1() throws IOException, FileWriteException {
 		
-		assertEquals(1, Files.list(testDirPath).count());
-		
-		fileStorage.store(testMpFile, testDirPath);
-		
-		assertEquals(2, Files.list(testDirPath).count());
-		assertTrue(Files.exists(testDirPath.resolve(newFileName)));
-	}
-	
-	@Test
-	public void tetStore2() throws IOException, FileWriteException {
-		
-		assertEquals(1, Files.list(testDirPath).count());
+		assertEquals(1, Files.list(testDir).count());
+		Path fPath = testDir.resolve(newFileName);
 		
 		fileStorage.store(testMpFile, testDir);
 		
-		assertEquals(2, Files.list(testDirPath).count());
-		assertTrue(Files.exists(testDirPath.resolve(newFileName)));
+		// check file is created
+		assertEquals(2, Files.list(testDir).count());
+		assertTrue(Files.exists(fPath));
+		
+		// check content
+		byte[] res = Files.readAllBytes(fPath);
+		assertArrayEquals(testBytes, res);
+	}
+	
+	@Test // store MultipartFile on Path String
+	public void tetStore2() throws IOException, FileWriteException {
+		
+		assertEquals(1, Files.list(testDir).count());
+		Path fPath = testDir.resolve(newFileName);
+		
+		fileStorage.store(testMpFile, testDir.toString());
+		
+		// check file is created
+		assertEquals(2, Files.list(testDir).count());
+		assertTrue(Files.exists(fPath));
+		
+		// check content
+		byte[] res = Files.readAllBytes(fPath);
+		assertArrayEquals(testBytes, res);
+	}
+	
+	@Test // Store InputStream on Path
+	public void testStore3() throws IOException, FileWriteException {
+		
+		assertEquals(1, Files.list(testDir).count());
+		
+		byte[] data = "new content".getBytes();
+		InputStream is = new ByteArrayInputStream(data);
+		Path fPath = testDir.resolve(newFileName);
+	
+		fileStorage.store(is, fPath);
+		
+		//check file is created
+		assertEquals(2, Files.list(testDir).count());
+		assertTrue(Files.exists(fPath));
+		
+		// check content
+		byte[] res = Files.readAllBytes(fPath);
+		assertArrayEquals(data, res);
+	}
+	
+	@Test // Store String on path
+	public void testStrore4() throws IOException, FileWriteException {
+		
+		String testString = "some string";
+		Path fPath = testDir.resolve(newFileName);
+		
+		assertEquals(1, Files.list(testDir).count());
+		
+		fileStorage.store(testString,  fPath);
+		
+		//check file is created
+		assertEquals(2, Files.list(testDir).count());
+		assertTrue(Files.exists(fPath));
+				
+		// check content
+		byte[] res = Files.readAllBytes(fPath);
+		assertArrayEquals(testString.getBytes(), res);
 	}
 	
 	@Test
 	public void testDelete1() throws IOException, NoSuchFileException, FileDeleteException {
 		
-		assertEquals(1, Files.list(testDirPath).count());
+		assertEquals(1, Files.list(testDir).count());
 		
-		fileStorage.delete(testDirPath.resolve(existingFileName));
+		fileStorage.delete(testDir.resolve(existingFileName));
 		
-		assertEquals(0, Files.list(testDirPath).count());
+		assertEquals(0, Files.list(testDir).count());
 	}
 	
 	@Test
 	public void testDelete2() throws IOException, NoSuchFileException, FileDeleteException {
 		
-		assertEquals(1, Files.list(testDirPath).count());
+		assertEquals(1, Files.list(testDir).count());
 		
-		fileStorage.delete(testDir + existingFileName);
+		fileStorage.delete(testDir.resolve(existingFileName).toString());
 		
-		assertEquals(0, Files.list(testDirPath).count());
+		assertEquals(0, Files.list(testDir).count());
 	}
 	
 	@Test
@@ -125,11 +158,11 @@ public class FileStorageTest {
 		
 		boolean exc = false;
 		
-		assertEquals(1, Files.list(testDirPath).count());
+		assertEquals(1, Files.list(testDir).count());
 		
 		try {
 			
-			fileStorage.delete(testDirPath.resolve(newFileName));
+			fileStorage.delete(testDir.resolve(newFileName));
 		}
 		catch (NoSuchFileException e) {
 			
@@ -143,7 +176,7 @@ public class FileStorageTest {
 	@Test
 	public void testGetInputStream1() throws NoSuchFileException, FileReadException, IOException {
 		
-		InputStream is = fileStorage.getInputStream(testDirPath.resolve(existingFileName));
+		InputStream is = fileStorage.getInputStream(testDir.resolve(existingFileName));
 		
 		assertNotNull(is);
 		
@@ -158,7 +191,7 @@ public class FileStorageTest {
 	@Test
 	public void testGetInputStream2() throws NoSuchFileException, FileReadException, IOException {
 		
-		InputStream is = fileStorage.getInputStream(testDir + existingFileName);
+		InputStream is = fileStorage.getInputStream(testDir.resolve(existingFileName).toString());
 		
 		assertNotNull(is);
 		
@@ -175,7 +208,7 @@ public class FileStorageTest {
 		boolean exc = false;
 		
 		try {
-			fileStorage.getInputStream(testDirPath.resolve(newFileName));
+			fileStorage.getInputStream(testDir.resolve(newFileName));
 		}
 		catch (NoSuchFileException e) {
 			
@@ -185,8 +218,26 @@ public class FileStorageTest {
 		
 		assertTrue(exc);
 	}
+	
+	private void cleanFiles() throws IOException {
+		
+		Files.list(testDir).forEach(f -> {
+			try {
+				Files.deleteIfExists(f);
+			} 
+			catch (IOException e) {
+				e.printStackTrace();
+			}
+		});Files.list(testDir).forEach(f -> {
+			try {
+				Files.deleteIfExists(f);
+			} 
+			catch (IOException e) {
+				e.printStackTrace();
+			}
+		});
+	}
 }
-
 
 
 

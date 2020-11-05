@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
@@ -26,41 +25,53 @@ import ch.usi.hse.storage.UrlListStorage;
 @Component
 public class IndexBuilder {
 	
-	@Value("${dir.rawDl}")
-	private String rawStorageDir;
-	
-	@Value("${dir.extractionResults}")
-	private String extractedStorageDir;
-	
-	@Autowired
 	private Downloader downloader;
-	
-	@Autowired
 	private TextExtractor textExtractor;
-	
-	@Autowired
-	@Qualifier("FileStorage")
-	private FileStorage storage;
+	private FileStorage fileStorage;
 
 	@Autowired 
 	@Qualifier("UrlListStorage")
-	private UrlListStorage urlLists;
+	private UrlListStorage urlListStorage;
 	
 	private DocCollection collection;
 	private boolean storeRawFiles, storeExtracted;
 	private IndexingResult indexingResult;
 	private Path rawFilePath, extractedFilePath;
 	private int fileCount;
+	
+	@Autowired
+	public IndexBuilder(@Value("${dir.rawDl}") Path rawStoragePath,
+						@Value("${dir.extractionResults}") Path extractedStoragePath,
+						@Value("${indexing.storeRawFiles}") boolean storeRawFiles,
+						@Value("${indexing.storeExtractionResults}") boolean storeExtractionResults,
+						Downloader downloader,
+						TextExtractor extractor,
+						@Qualifier("FileStorage") FileStorage fileStorage,
+						@Qualifier("UrlListStorage") UrlListStorage urlListStorage) throws IOException {
+		
+		rawFilePath = rawStoragePath;
+		extractedFilePath = extractedStoragePath; 
+		this.storeRawFiles = storeRawFiles;
+		this.storeExtracted = storeExtractionResults;
+		this.downloader = downloader;
+		this.textExtractor = extractor;
+		this.fileStorage = fileStorage;
+		this.urlListStorage = urlListStorage;
+		
+		if (! Files.exists(rawStoragePath)) {
+			Files.createDirectories(rawStoragePath);
+		}
+		
+		if (! Files.exists(extractedStoragePath)) {
+			Files.createDirectories(extractedStoragePath);
+		}
+	}
 
-	public IndexingResult buildIndex(DocCollection collection, 
-									 boolean storeRawFiles, 
-									 boolean storeExtracted)
+	public IndexingResult buildIndex(DocCollection collection)
 	
 			throws NoSuchFileException, FileReadException, FileWriteException {
 		
 		this.collection = collection;
-		this.storeRawFiles = storeRawFiles;
-		this.storeExtracted = storeExtracted;
 		fileCount = 0;
 		
 		if (storeRawFiles || storeExtracted) {
@@ -74,7 +85,7 @@ public class IndexBuilder {
 		
 		Instant start = Instant.now(); 
 		
-		List<String> urls = urlLists.getLines(collection.getUrlListName());
+		List<String> urls = urlListStorage.getLines(collection.getUrlListName());
 		
 		mainLoop(urls);
 					
@@ -128,7 +139,7 @@ public class IndexBuilder {
 			
 			String fName = "f_" + fileCount + ".html";
 			Path fPath = rawFilePath.resolve(fName);
-			storage.store(getInputStream(os), fPath);
+			fileStorage.store(getInputStream(os), fPath);
 		}
 		
 		// TEXT EXTRACTION
@@ -150,7 +161,7 @@ public class IndexBuilder {
 			
 			String fName = "f_" + fileCount + ".txt";
 			Path fPath = extractedFilePath.resolve(fName);
-			storage.store(doc.toString(), fPath);
+			fileStorage.store(doc.toString(), fPath);
 		}
 	}
 	
@@ -160,7 +171,7 @@ public class IndexBuilder {
 			
 			String fName = "f_" + fileCount + ".pdf";
 			Path fPath = rawFilePath.resolve(fName);
-			storage.store(getInputStream(os), fPath);
+			fileStorage.store(getInputStream(os), fPath);
 		}
 		
 		// TEXT EXTRACTION
@@ -182,42 +193,40 @@ public class IndexBuilder {
 					
 			String fName = "f_" + fileCount + ".txt";
 			Path fPath = extractedFilePath.resolve(fName);
-			storage.store(doc.toString(), fPath);
+			fileStorage.store(doc.toString(), fPath);
 		}
 	}
 
 	private void initializeDirectories() throws FileWriteException {
 		
 		String dirName = collection.getName();
+		Path rawDirPath = rawFilePath.resolve(dirName);
+		Path extractedDirPath = extractedFilePath.resolve(dirName);
 		
 		if (storeRawFiles) {		
-						
-			rawFilePath = Paths.get(rawStorageDir).resolve(dirName);
-			
-			if (! Files.exists(rawFilePath)) {
+								
+			if (! Files.exists(rawDirPath)) {
 				
 				try {
-					Files.createDirectory(rawFilePath);
+					Files.createDirectories(rawDirPath);
 				} 
 				catch (IOException e) {
 
-					throw new FileWriteException(rawStorageDir + dirName);
+					throw new FileWriteException(rawDirPath.toString());
 				}
 			}
 		}
 		
 		if (storeExtracted) {
 			
-			extractedFilePath = Paths.get(extractedStorageDir).resolve(dirName);
-			
-			if (! Files.exists(extractedFilePath)) {
+			if (! Files.exists(extractedDirPath)) {
 				
 				try {
-					Files.createDirectory(extractedFilePath);
+					Files.createDirectories(extractedDirPath);
 				} 
 				catch (IOException e) {
 
-					throw new FileWriteException(extractedStorageDir + dirName);
+					throw new FileWriteException(extractedDirPath.toString());
 				}
 			}
 		}
