@@ -183,7 +183,7 @@ public class IndexingController {
 	}
 	
 	/**
-	 * removes the give DocCollection entry from the database
+	 * removes the given DocCollection entry from the database
 	 * 
 	 * @param docCollection
 	 * @return

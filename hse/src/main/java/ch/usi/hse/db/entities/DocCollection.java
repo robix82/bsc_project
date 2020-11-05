@@ -40,7 +40,7 @@ public class DocCollection {
 	private boolean indexed;
 	 
 	public DocCollection() {
-		
+		 
 		id = 0;
 		indexed = false;
 		language = Language.IT;

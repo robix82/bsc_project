@@ -51,7 +51,7 @@ public class IndexingService {
 		this.collectionRepo = collectionRepo;
 	}
 	
-	/** 
+	/**  
 	 * 
 	 * @return names of the saved url list files
 	 * @throws FileReadException
@@ -230,15 +230,20 @@ public class IndexingService {
 			throw new NoSuchDocCollectionException(id);
 		}
 		
-		Path dirPath = Paths.get(docCollection.getIndexDir());
+		String indexDir = docCollection.getIndexDir();
 		
-		if (Files.exists(dirPath)) {
+		if (indexDir != null && (! indexDir.isBlank()) && (! indexDir.isEmpty())) {
 			
-			try {
-				Files.delete(dirPath);
-			}
-			catch (IOException e) { 
-				throw new FileDeleteException(docCollection.getIndexDir());
+			Path dirPath = Paths.get(docCollection.getIndexDir());
+			
+			if (Files.exists(dirPath)) {
+				
+				try {
+					Files.delete(dirPath);
+				}
+				catch (IOException e) { 
+					throw new FileDeleteException(docCollection.getIndexDir());
+				}
 			}
 		}
 		
