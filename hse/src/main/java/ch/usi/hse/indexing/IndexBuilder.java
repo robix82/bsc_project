@@ -28,10 +28,8 @@ public class IndexBuilder {
 	
 	private Downloader downloader;
 	private TextExtractor textExtractor;
+	private Indexer indexer;
 	private FileStorage fileStorage;
-
-	@Autowired 
-	@Qualifier("UrlListStorage")
 	private UrlListStorage urlListStorage;
 	
 	private DocCollection collection;
@@ -39,15 +37,16 @@ public class IndexBuilder {
 	private IndexingResult indexingResult;
 	private Path rawFilesPath, extractionResultsPath, indexPath;
 	private int fileCount;
-	
+	 
 	@Autowired
 	public IndexBuilder(@Value("${dir.rawDl}") Path rawFilesPath,
 						@Value("${dir.extractionResults}") Path extractionResultsPath,
-						@Value("${dir.indices}") Path indexPath,
+						@Value("${dir.indices}") Path indexPath, 
 						@Value("${indexing.storeRawFiles}") boolean storeRawFiles,
 						@Value("${indexing.storeExtractionResults}") boolean storeExtractionResults,
 						Downloader downloader,
 						TextExtractor extractor,
+						Indexer indexer,
 						@Qualifier("FileStorage") FileStorage fileStorage,
 						@Qualifier("UrlListStorage") UrlListStorage urlListStorage) throws IOException {
 		
@@ -58,6 +57,7 @@ public class IndexBuilder {
 		this.storeExtracted = storeExtractionResults;
 		this.downloader = downloader;
 		this.textExtractor = extractor;
+		this.indexer = indexer;
 		this.fileStorage = fileStorage;
 		this.urlListStorage = urlListStorage;
 		
@@ -83,6 +83,14 @@ public class IndexBuilder {
 
 		initializeDirectories();	
 		
+		try {
+			indexer.setUp(Paths.get(collection.getIndexDir()), collection.getLanguage());
+		} 
+		catch (IOException e) {
+
+			throw new FileWriteException(collection.getIndexDir());
+		}
+		
 		indexingResult = new IndexingResult();
 		indexingResult.setCollectionName(collection.getName());
 		indexingResult.setUrlListName(collection.getUrlListName());
@@ -92,6 +100,16 @@ public class IndexBuilder {
 		List<String> urls = urlListStorage.getLines(collection.getUrlListName());
 		
 		mainLoop(urls);
+		
+		try {
+			indexer.tearDown();
+		} 
+		catch (IOException e) {
+			System.err.println("ERROR CLOSING INDEXER");
+			e.printStackTrace();
+		}
+		
+		collection.setIndexed(true);
 					
 		Instant end = Instant.now();
 		
@@ -130,18 +148,33 @@ public class IndexBuilder {
 				continue;
 			}
 			
+			ExtractedDocument doc = null;
+			
 			if (isPdf(url)) {
 				
-				processPdf(outStream, url);
+				doc = processPdf(outStream, url);
 			}
 			else {
 				
-				processHtml(outStream, url);
-			}			
+				doc = processHtml(outStream, url);
+			}	
+			
+			if (doc != null) {
+				
+				try {
+					
+					indexer.addDocument(doc); 
+					indexingResult.incIndexed();
+				} 
+				catch (IOException e) {
+
+					System.err.println("INDEXING ERROR: skipping " + url);
+				}
+			}
 		}
 	}
 	
-	private void processHtml(ByteArrayOutputStream os, String url) throws FileWriteException {
+	private ExtractedDocument processHtml(ByteArrayOutputStream os, String url) throws FileWriteException {
 		
 		if (storeRawFiles) {
 			
@@ -162,7 +195,7 @@ public class IndexBuilder {
 			System.err.println("TEXT EXTRACTION ERROR: skipping " + url);
 			System.err.println(e.getMessage());
 			indexingResult.incSkipped();
-			return;
+			return null;
 		}
 		
 		if (storeExtracted) {
@@ -171,9 +204,11 @@ public class IndexBuilder {
 			Path dir = Paths.get(collection.getExtractionResultsDir());
 			fileStorage.store(doc.toString(), dir.resolve(fName));
 		}
+		
+		return doc;
 	}
 	
-	private void processPdf(ByteArrayOutputStream os, String url) throws FileWriteException {
+	private ExtractedDocument processPdf(ByteArrayOutputStream os, String url) throws FileWriteException {
 		
 		if (storeRawFiles) {
 			
@@ -194,7 +229,7 @@ public class IndexBuilder {
 			System.err.println("TEXT EXTRACTION ERROR: skipping " + url);
 			System.err.println(e.getMessage());
 			indexingResult.incSkipped();
-			return;
+			return null;
 		}
 				
 		if (storeExtracted) {
@@ -203,6 +238,8 @@ public class IndexBuilder {
 			Path dir = Paths.get(collection.getExtractionResultsDir());
 			fileStorage.store(doc.toString(), dir.resolve(fName));
 		}
+		
+		return doc;
 	}
 
 	private void initializeDirectories() throws FileWriteException {

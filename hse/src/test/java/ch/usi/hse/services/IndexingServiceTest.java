@@ -422,7 +422,7 @@ public class IndexingServiceTest {
 		
 		DocCollection c = new DocCollection(existingDocCollectionName, existingUrlListName);
 		c.setId(existingDocCollection.getId());
-		
+		 
 		try {
 			service.updateDocCollection(c);
 		}
@@ -463,23 +463,6 @@ public class IndexingServiceTest {
 		catch (NoSuchDocCollectionException e) {
 			 
 			assertTrue(e.getMessage().contains(Integer.toString(newDocCollection.getId())));
-			exc = true;
-		}
-		
-		assertTrue(exc);
-	}
-	
-	@Test // non-existing index dir
-	public void testRemoveCollection3() throws NoSuchDocCollectionException, FileDeleteException {
-		
-		existingDocCollection.setIndexDir(nonExistingDirectory.toString());
-		
-		boolean exc = false;
-		
-		try {
-			service.removeDocCollection(existingDocCollection);
-		}
-		catch(NoSuchFileException e) {
 			exc = true;
 		}
 		
@@ -558,7 +541,7 @@ public class IndexingServiceTest {
 
 
 
-
+ 
 
 
 

@@ -27,7 +27,7 @@ public class Indexer {
 	private IndexWriter writer;
 	private int count;
 	
-	public Indexer(Path dir, String language) throws IOException {
+	public void setUp(Path dir, String language) throws IOException {
 		
 		directory = FSDirectory.open(dir);
 		
@@ -72,7 +72,7 @@ public class Indexer {
 		writer.addDocument(doc);
 	}
 	
-	public void close() throws IOException {
+	public void tearDown() throws IOException {
 		
 		writer.close();
 		directory.close();

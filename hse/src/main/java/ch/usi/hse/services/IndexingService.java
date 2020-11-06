@@ -42,7 +42,7 @@ public class IndexingService {
 	private IndexBuilder indexBuilder;
 	private DocCollectionRepository collectionRepo;
 	private boolean storeRawFiles, storeExtractionResults;
-	
+	 
 	@Autowired
 	public IndexingService(@Value("${indexing.storeRawFiles}") boolean storeRawFiles,
 						   @Value("${indexing.storeExtractionResults}") boolean storeExtractionResults,
@@ -244,16 +244,22 @@ public class IndexingService {
 		
 		if (docCollection.getIndexed()) {
 			
-			fileStorage.removeDirectory(Paths.get(docCollection.getIndexDir()));
-			
-			if (storeRawFiles) {
+			try {
+				fileStorage.removeDirectory(Paths.get(docCollection.getIndexDir()));
 				
-				fileStorage.removeDirectory(Paths.get(docCollection.getRawFilesDir()));
+				if (storeRawFiles) {
+					
+					
+					fileStorage.removeDirectory(Paths.get(docCollection.getRawFilesDir()));
+				}
+				
+				if (storeExtractionResults) {
+					
+					fileStorage.removeDirectory(Paths.get(docCollection.getExtractionResultsDir()));
+				}
 			}
-			
-			if (storeExtractionResults) {
-				
-				fileStorage.removeDirectory(Paths.get(docCollection.getExtractionResultsDir()));
+			catch (NoSuchFileException e) {
+				System.out.println("unable to delete non-existing file");
 			}
 		}
 		
@@ -298,14 +304,13 @@ public class IndexingService {
 		}
 		
 		IndexingResult res = indexBuilder.buildIndex(docCollection);
-		
-		docCollection.setIndexed(true);
+
 		collectionRepo.save(docCollection);
 		
 		return res;
 	}
 }
-
+ 
  
 
 

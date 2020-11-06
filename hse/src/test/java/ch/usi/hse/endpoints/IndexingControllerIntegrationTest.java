@@ -86,7 +86,7 @@ public class IndexingControllerIntegrationTest {
 	private ObjectWriter writer;
 	private MediaType json; 
 	
-	 
+	  
 	@BeforeEach
 	public void setUp() throws IOException {
 		
@@ -640,7 +640,7 @@ public class IndexingControllerIntegrationTest {
 }
 
  
- 
+  
 
 
 
