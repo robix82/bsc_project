@@ -6,7 +6,7 @@
 	<!--/*/ <th:block th:include="fragments/general.html :: general_head">
         	</th:block> /*/-->
            
-	<link rel="stylesheet" th:href="@{/css/experiments.css}" />
+	<link rel="stylesheet" th:href="@{/css/exp_eval.css}" />
 
 </head>
 
@@ -16,7 +16,7 @@
 
 <div class="main-container">
 
-	<h1 th:text="#{m_experiments}"></h1>
+	<h1 th:text="#{m_evaluate} + ' ' + #{m_experiment}"></h1>
 	
 	
 </div>
@@ -25,12 +25,8 @@
 <th:block th:include="fragments/general.html :: commonScripts"></th:block>
 <th:block th:include="fragments/modals.html :: modals"></th:block>
 
-<script th:src="@{/js/experiments.js}"></script>
+<script th:src="@{/js/exp_eval.js}"></script>
 
 </body>
 
 </html>
-
-
-
-

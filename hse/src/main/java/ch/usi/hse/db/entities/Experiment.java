@@ -1,5 +1,6 @@
 package ch.usi.hse.db.entities;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -43,6 +44,12 @@ public class Experiment {
 	
 	@Column(name="status")
 	private Status status;
+	
+	@Column(name="date_creaed")
+	private LocalDateTime dateCreated;
+	
+	@Column(name="date_conducted")
+	private LocalDateTime dateConducted; 
 	 
 	public Experiment() {
 		
@@ -83,6 +90,14 @@ public class Experiment {
 		return status;
 	}
 	
+	public LocalDateTime getDateCreated() {
+		return dateCreated;
+	}
+	
+	public LocalDateTime getDateConducted() {
+		return dateConducted;
+	}
+	
 	public void setId(int id) {
 		this.id = id;
 	}
@@ -106,6 +121,14 @@ public class Experiment {
 	
 	public void setStatus(Status status) {
 		this.status = status;
+	}
+	
+	public void setDateCreated(LocalDateTime dateCreated) {
+		this.dateCreated = dateCreated;
+	}
+	
+	public void setDateConducted(LocalDateTime dateConducted) {
+		this.dateConducted = dateConducted;
 	}
 	
 	public void addTestGroup(TestGroup group) {

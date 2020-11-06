@@ -2,6 +2,7 @@ package ch.usi.hse.db.entities;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,6 +16,7 @@ public class ExperimentTest {
 	private int testId;
 	private String testTitle;
 	private Set<TestGroup> testGroups;
+	private LocalDateTime d_created, d_conducted;
 	
 	@BeforeEach
 	public void setUp() {
@@ -30,6 +32,9 @@ public class ExperimentTest {
 		
 		testGroups.add(g1);
 		testGroups.add(g2);
+		
+		d_created = LocalDateTime.of(2020, 10, 1, 0, 0);
+		d_conducted = LocalDateTime.of(2020, 10, 2, 0, 0);
 	}  
 	
 	@Test
@@ -78,17 +83,24 @@ public class ExperimentTest {
 		
 		assertNotEquals(testId, e.getId());
 		assertNotEquals(testTitle, e.getTitle());
+		assertNotEquals(d_created, e.getDateCreated());
+		assertNotEquals(Status.READY, e.getStatus());
+		assertNotEquals(d_conducted, e.getDateConducted());
 		assertEquals(0, e.getTestGroups().size()); 
 		
 		e.setId(testId);
 		e.setTitle(testTitle);
 		e.setTestGroups(testGroups);
 		e.setStatus(Status.READY);
+		e.setDateCreated(d_created);
+		e.setDateConducted(d_conducted);
 		
 		assertEquals(testId, e.getId());
 		assertEquals(testTitle, e.getTitle());
 		assertIterableEquals(testGroups, e.getTestGroups());
 		assertEquals(Status.READY, e.getStatus());
+		assertEquals(d_created, e.getDateCreated());
+		assertEquals(d_conducted, e.getDateConducted());
 		
 		for (TestGroup g : e.getTestGroups()) {
 			

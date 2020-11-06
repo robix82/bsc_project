@@ -21,7 +21,23 @@ function setupLangSelect() {
 
 function updateLangSelect(lang) {
 	
-	window.location.replace('?lang=' + lang);
+	let url = window.location.href;
+	let langParam = "lang=" + lang;
+	
+	if (url.includes("lang=")) {
+		url = url.substr(0, url.length - 8);
+	}
+	
+	if (url.includes("?")) {
+		url += "&";
+	}
+	else {
+		url += "?";
+	}
+	
+	url += langParam;
+	
+	window.location.href = url;
 }
 
 // MODAL SHOW FUNCTIONS

@@ -28,6 +28,8 @@ var m_search = $("#m_search").text();
 var m_experiments = $("#m_experiments").text();
 var m_indexing = $("#m_indexing").text();
 var m_admin = $("#m_admin").text();
+var m_setUp = $("#m_setUp").text();
+
 var m_user = $("#m_user").text();
 var m_users = $("#m_users").text();
 var m_administrator = $("#m_administrator").text();
@@ -69,7 +71,8 @@ var m_doIndex = $("#m_doIndex").text();
 var m_timeElapsed = $("#m_timeElapsed").text();
 var m_processing = $("#m_processing").text();
 
-
+var m_run = $("#m_run").text(); 
+var m_evaluate = $("#m_evaluate").text(); 
 
 
 
