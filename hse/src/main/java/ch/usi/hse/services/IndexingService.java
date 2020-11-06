@@ -4,12 +4,12 @@ import ch.usi.hse.config.Language;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,6 +24,7 @@ import ch.usi.hse.exceptions.NoSuchDocCollectionException;
 import ch.usi.hse.exceptions.NoSuchFileException;
 import ch.usi.hse.indexing.IndexBuilder;
 import ch.usi.hse.indexing.IndexingResult;
+import ch.usi.hse.storage.FileStorage;
 import ch.usi.hse.storage.UrlListStorage;
 
 
@@ -36,16 +37,24 @@ import ch.usi.hse.storage.UrlListStorage;
 @Service
 public class IndexingService { 
 
+	private FileStorage fileStorage;
 	private UrlListStorage urlListStorage;
 	private IndexBuilder indexBuilder;
 	private DocCollectionRepository collectionRepo;
+	private boolean storeRawFiles, storeExtractionResults;
 	
 	@Autowired
-	public IndexingService(UrlListStorage urlListStorage, 
+	public IndexingService(@Value("${indexing.storeRawFiles}") boolean storeRawFiles,
+						   @Value("${indexing.storeExtractionResults}") boolean storeExtractionResults,
+						   @Qualifier("FileStorage") FileStorage fileStorage,
+						   @Qualifier("UrlListStorage") UrlListStorage urlListStorage, 
 						   IndexBuilder indexBuilder,
 						   DocCollectionRepository collectionRepo) 
 			throws IOException {
 		
+		this.storeRawFiles = storeRawFiles;
+		this.storeExtractionResults = storeExtractionResults;
+		this.fileStorage = fileStorage;
 		this.urlListStorage = urlListStorage;
 		this.indexBuilder = indexBuilder;
 		this.collectionRepo = collectionRepo;
@@ -209,6 +218,8 @@ public class IndexingService {
 		found.setLanguage(language);
 		found.setUrlListName(urlListName);
 		found.setIndexed(docCollection.getIndexed());
+		found.setRawFilesDir(docCollection.getRawFilesDir());
+		found.setExtractionResultsDir(docCollection.getExtractionResultsDir());
 		DocCollection updated = collectionRepo.save(found);
 		
 		return updated;
@@ -220,9 +231,10 @@ public class IndexingService {
 	 * @param docCollection
 	 * @throws NoSuchDocCollectionException
 	 * @throws FileDeleteException 
+	 * @throws NoSuchFileException 
 	 */
 	public void removeDocCollection(DocCollection docCollection) 
-			throws NoSuchDocCollectionException, FileDeleteException {
+			throws NoSuchDocCollectionException, FileDeleteException, NoSuchFileException {
 		
 		int id = docCollection.getId();
 		
@@ -230,20 +242,18 @@ public class IndexingService {
 			throw new NoSuchDocCollectionException(id);
 		}
 		
-		String indexDir = docCollection.getIndexDir();
-		
-		if (indexDir != null && (! indexDir.isBlank()) && (! indexDir.isEmpty())) {
+		if (docCollection.getIndexed()) {
 			
-			Path dirPath = Paths.get(docCollection.getIndexDir());
+			fileStorage.removeDirectory(Paths.get(docCollection.getIndexDir()));
 			
-			if (Files.exists(dirPath)) {
+			if (storeRawFiles) {
 				
-				try {
-					Files.delete(dirPath);
-				}
-				catch (IOException e) { 
-					throw new FileDeleteException(docCollection.getIndexDir());
-				}
+				fileStorage.removeDirectory(Paths.get(docCollection.getRawFilesDir()));
+			}
+			
+			if (storeExtractionResults) {
+				
+				fileStorage.removeDirectory(Paths.get(docCollection.getExtractionResultsDir()));
 			}
 		}
 		

@@ -109,7 +109,14 @@
 		<dependency>
 		    <groupId>org.apache.lucene</groupId>
 		    <artifactId>lucene-core</artifactId>
-		    <version>8.6.3</version>
+		    <version>8.7.0</version>
+		</dependency>
+		
+		<dependency>
+		
+	    <groupId>org.apache.lucene</groupId>
+		    <artifactId>lucene-analyzers-common</artifactId>
+		    <version>8.7.0</version>
 		</dependency>
 
 		<dependency>

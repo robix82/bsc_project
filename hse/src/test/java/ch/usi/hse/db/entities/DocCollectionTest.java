@@ -13,6 +13,8 @@ public class DocCollectionTest {
 	private String testLanguage = "EN";
 	private String testUrlList = "testUrlList";
 	private String testIndexDir = "testIndexDir";
+	private String testRawFilesDir = "testRawFilesDir";
+	private String testExtractionResultsDir = "testExtractionResultsDir";
 	
 	@Test
 	public void testConstructor1() {
@@ -46,6 +48,8 @@ public class DocCollectionTest {
 		assertNotEquals(testLanguage, c.getLanguage());
 		assertNotEquals(testUrlList, c.getUrlListName());
 		assertNotEquals(testIndexDir, c.getIndexDir());
+		assertNotEquals(testRawFilesDir, c.getRawFilesDir());
+		assertNotEquals(testExtractionResultsDir, c.getExtractionResultsDir());
 		assertFalse(c.getIndexed());
 		
 		c.setId(testId);
@@ -53,6 +57,8 @@ public class DocCollectionTest {
 		c.setLanguage(testLanguage);
 		c.setUrlListName(testUrlList);
 		c.setIndexDir(testIndexDir);
+		c.setRawFilesDir(testRawFilesDir);
+		c.setExtractionResultsDir(testExtractionResultsDir);
 		c.setIndexed(true);
 		
 		assertEquals(testId, c.getId());
@@ -60,6 +66,8 @@ public class DocCollectionTest {
 		assertEquals(testLanguage, c.getLanguage());
 		assertEquals(testUrlList, c.getUrlListName());
 		assertEquals(testIndexDir, c.getIndexDir());
+		assertEquals(testRawFilesDir, c.getRawFilesDir());
+		assertEquals(testExtractionResultsDir, c.getExtractionResultsDir());
 		assertTrue(c.getIndexed());
 	}
 	

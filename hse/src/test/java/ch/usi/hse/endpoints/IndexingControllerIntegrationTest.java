@@ -26,6 +26,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -43,6 +44,7 @@ import ch.usi.hse.config.Language;
 import ch.usi.hse.db.entities.DocCollection;
 import ch.usi.hse.db.repositories.DocCollectionRepository;
 import ch.usi.hse.exceptions.ApiError;
+import ch.usi.hse.storage.FileStorage;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -54,8 +56,18 @@ public class IndexingControllerIntegrationTest {
 	@Value("${dir.indices}")
 	private Path indexDirPath;
 	
+	@Value("${dir.rawDl}")
+	private Path rawDlPath;
+	
+	@Value("${dir.extractionResults}")
+	private Path extractionResultsPath;
+	
 	@Autowired
 	private DocCollectionRepository collectionRepo;
+	
+	@Autowired
+	@Qualifier("FileStorage")
+	private FileStorage fileStorage;
 	
 	private String base = "/indexing";
 	
@@ -132,6 +144,8 @@ public class IndexingControllerIntegrationTest {
 		c2.setId(2);
 		c1.setIndexed(true);
 		c1.setIndexDir(indexDirPath.resolve("c1").toString());
+		c1.setRawFilesDir(rawDlPath.resolve("c1").toString());
+		c1.setExtractionResultsDir(extractionResultsPath.resolve("c1").toString());
 			
 		collectionRepo.deleteAll();
 		
@@ -151,6 +165,14 @@ public class IndexingControllerIntegrationTest {
 		if (! Files.exists(indexDirPath)) {
 			Files.createDirectories(indexDirPath);
 		}
+		
+		if (! Files.exists(rawDlPath)) {
+			Files.createDirectories(rawDlPath);
+		}
+		
+		if (! Files.exists(extractionResultsPath)) {
+			Files.createDirectories(extractionResultsPath);
+		}
 				
 		Path f1 = Files.createFile(urlListsPath.resolve(urlListName1));
 		Path f2 = Files.createFile(urlListsPath.resolve(urlListName2));
@@ -158,7 +180,15 @@ public class IndexingControllerIntegrationTest {
 		Files.write(f1, urlListData1, StandardOpenOption.CREATE);	
 		Files.write(f2, urlListData2, StandardOpenOption.CREATE);
 		
-		Files.createDirectories(indexDirPath.resolve("c1"));
+		Path c1IndexDir = Files.createDirectories(Paths.get(c1.getIndexDir()));	
+		Path c1RawFilesDir = Files.createDirectories(Paths.get(c1.getRawFilesDir()));
+		Path c1ExtractionResultsDir = Files.createDirectories(Paths.get(c1.getExtractionResultsDir()));
+		
+		Files.createFile(c1IndexDir.resolve("c1.ind"));
+		Files.createFile(c1RawFilesDir.resolve("c1_1.html"));
+		Files.createFile(c1RawFilesDir.resolve("c1_2.html"));
+		Files.createFile(c1ExtractionResultsDir.resolve("c1_1.txt"));
+		Files.createFile(c1ExtractionResultsDir.resolve("c1_2.txt"));
 	}
 	
 	@AfterEach
@@ -170,8 +200,17 @@ public class IndexingControllerIntegrationTest {
 	@Test
 	public void setupTest() throws IOException {
 		
-		assertEquals(2, Files.list(urlListsPath).count());
 		assertEquals(2, collectionRepo.count());
+		assertEquals(2, Files.list(urlListsPath).count());
+		assertEquals(1, Files.list(indexDirPath).count());
+		assertEquals(1, Files.list(rawDlPath).count());
+		assertEquals(1, Files.list(extractionResultsPath).count());
+		
+		DocCollection c1 = savedDocCollections.get(0);
+		
+		assertEquals(1, Files.list(Paths.get(c1.getIndexDir())).count());
+		assertEquals(2, Files.list(Paths.get(c1.getRawFilesDir())).count());
+		assertEquals(2, Files.list(Paths.get(c1.getExtractionResultsDir())).count());
 	}
 	 
 	@Test
@@ -394,10 +433,14 @@ public class IndexingControllerIntegrationTest {
 		String newLanguage = "EN";
 		String newUrlList = urlListName1;
 		String newIndexDir = "newIndexDir";
+		String newRawFilesDir = "newRawFilesDir";
+		String newExtractionResultsDir = "newExtractionResultsDir";
 		existingCollection.setName(newName);
 		existingCollection.setLanguage(newLanguage);
 		existingCollection.setUrlListName(newUrlList);
 		existingCollection.setIndexDir(newIndexDir);
+		existingCollection.setRawFilesDir(newRawFilesDir);
+		existingCollection.setExtractionResultsDir(newExtractionResultsDir);
 		existingCollection.setIndexed(true);
 		
 		String jsonString = getJson(existingCollection);
@@ -407,6 +450,8 @@ public class IndexingControllerIntegrationTest {
 		assertNotEquals(newLanguage, retrievedBefore.getLanguage());
 		assertNotEquals(newUrlList, retrievedBefore.getUrlListName());
 		assertNotEquals(newIndexDir, retrievedBefore.getIndexDir());
+		assertNotEquals(newRawFilesDir, retrievedBefore.getRawFilesDir());
+		assertNotEquals(newExtractionResultsDir, retrievedBefore.getExtractionResultsDir());
 		assertFalse(retrievedBefore.getIndexed());
 		
 		MvcResult res = mvc.perform(put(base + "/docCollections").contentType(json).content(jsonString))
@@ -421,6 +466,8 @@ public class IndexingControllerIntegrationTest {
 		assertEquals(newLanguage, retrievedAfter.getLanguage());
 		assertEquals(newUrlList, retrievedAfter.getUrlListName());
 		assertEquals(newIndexDir, retrievedAfter.getIndexDir());
+		assertEquals(newRawFilesDir, retrievedAfter.getRawFilesDir());
+		assertEquals(newExtractionResultsDir, retrievedAfter.getExtractionResultsDir());
 		assertTrue(retrievedAfter.getIndexed());
 	}
 	
@@ -520,11 +567,15 @@ public class IndexingControllerIntegrationTest {
 		DocCollection existingCollection = savedDocCollections.get(0);
 		int id = existingCollection.getId();
 		Path indexDir = Paths.get(existingCollection.getIndexDir());
+		Path rawFilesDir = Paths.get(existingCollection.getRawFilesDir());
+		Path extractionResultsDir = Paths.get(existingCollection.getExtractionResultsDir());
 		String jsonString = getJson(existingCollection);
 		
 		long countBefore = collectionRepo.count();
 		assertTrue(collectionRepo.existsById(id));
 		assertTrue(Files.exists(indexDir));
+		assertTrue(Files.exists(rawFilesDir));
+		assertTrue(Files.exists(extractionResultsDir));
 		
 		MvcResult res = mvc.perform(delete(base + "/docCollections").contentType(json).content(jsonString))
 				 		   .andExpect(status().isOk())
@@ -536,6 +587,8 @@ public class IndexingControllerIntegrationTest {
 		assertEquals(countBefore -1, collectionRepo.count());
 		assertFalse(collectionRepo.existsById(id));
 		assertFalse(Files.exists(indexDir));
+		assertFalse(Files.exists(rawFilesDir));
+		assertFalse(Files.exists(extractionResultsDir));
 	}
 	
 	@Test // non-existing DocCollection
@@ -571,40 +624,17 @@ public class IndexingControllerIntegrationTest {
 		return writer.writeValueAsString(o);
 	}
 	
-	private void clearTestFiles() throws IOException {
-		
-		if (Files.exists(urlListsPath)) {
+	private void clearTestFiles()  {
+	
+		try {
 			
-			Files.list(urlListsPath).forEach(f -> {
-				try {
-					Files.deleteIfExists(f);
-				} 
-				catch (IOException e) {
-					e.printStackTrace();
-				}
-			});
+			fileStorage.clearDirectory(urlListsPath);
+			fileStorage.clearDirectory(indexDirPath);
+			fileStorage.clearDirectory(rawDlPath);
+			fileStorage.clearDirectory(extractionResultsPath);
 		}
-		
-		if (Files.exists(indexDirPath)) {
-		
-			Files.list(indexDirPath).forEach(f -> {
-				
-				try {
-					
-					Files.list(f).forEach(x -> { try {
-														Files.deleteIfExists(x);
-											  		} 
-											  		catch (IOException e) {
-											  			e.printStackTrace();
-											  		}
-											}); 
-					
-					Files.deleteIfExists(f);
-				} 
-				catch (IOException e) {
-					e.printStackTrace();
-				}
-			});
+		catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 }

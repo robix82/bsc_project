@@ -17,14 +17,16 @@ import org.apache.tika.sax.BodyContentHandler;
  */
 public class ExtractedDocument {
 
+	private String url;
 	private Map<String, String> metadata;
 	private String fileType;
 	private String content;
 	
-	public ExtractedDocument(Metadata meta, BodyContentHandler contentHandler, String fileType) {
+	public ExtractedDocument(String url, Metadata meta, BodyContentHandler contentHandler, String fileType) {
 		
+		this.url = url;
 		this.fileType = fileType;
-		content = contentHandler.toString();
+		content = contentHandler.toString(); 
 		
 		metadata = new HashMap<>();
 		
@@ -32,6 +34,10 @@ public class ExtractedDocument {
 			
 			metadata.put(name, meta.get(name));
 		}
+	}
+	
+	public String getUrl() {
+		return url;
 	}
 	
 	public String getFileType() {

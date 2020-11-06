@@ -187,6 +187,80 @@ public class FileStorage {
 		
 		return getInputStream(filePath);
 	}
+	
+	/**
+	 * removes all files and subDirectories from the given direcctory path
+	 * 
+	 * @param dir
+	 * @throws NoSuchFileException 
+	 * @throws FileDeleteException 
+	 */
+	public void clearDirectory(Path dir) throws NoSuchFileException, FileDeleteException {
+		
+		if (! Files.exists(dir)) {
+			throw new NoSuchFileException(dir.toString());
+		}
+		
+		try {
+			
+			Files.list(dir).forEach(f -> {
+				
+				try {
+					if (Files.isDirectory(f)) {
+						removeDirectory(f);
+					}
+					else {
+						Files.delete(f);
+					}
+				}
+				catch (NoSuchFileException | FileDeleteException | IOException e) {
+					e.printStackTrace();
+				}
+			});
+		} 
+		catch (IOException e) {
+
+			throw new FileDeleteException(dir.toString());
+		}
+	}
+	
+	/**
+	 * recursively removes the given directory and its contents
+	 * 
+	 * @param dir
+	 * @throws NoSuchFileException 
+	 * @throws FileDeleteException 
+	 */
+	public void removeDirectory(Path dir) throws NoSuchFileException, FileDeleteException {
+		
+		if (! Files.exists(dir)) {
+			throw new NoSuchFileException(dir.toString());
+		}
+		
+		try {
+			
+			Files.list(dir).forEach(f -> {
+				
+				try {
+					
+					if (Files.isDirectory(f)) {
+						removeDirectory(f);
+					} 
+					else {					
+						Files.delete(f);
+					}
+				}
+				catch (NoSuchFileException | FileDeleteException | IOException e) {
+					e.printStackTrace();
+				}
+			});
+			
+			Files.delete(dir);
+		}
+		catch (IOException e) {
+			throw new FileDeleteException(dir.toString());
+		}
+	}
 }
  
 

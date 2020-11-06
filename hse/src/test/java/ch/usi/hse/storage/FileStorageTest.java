@@ -3,10 +3,8 @@ package ch.usi.hse.storage;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.ByteArrayInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -219,6 +217,94 @@ public class FileStorageTest {
 		assertTrue(exc);
 	}
 	
+	@Test
+	public void testRemoveDirctory1() throws IOException, NoSuchFileException, FileDeleteException {
+		
+		Path d0 = testDir.resolve("d0");
+		Path d1 = d0.resolve("d1");
+		Path f1 = d0.resolve("f1");
+		Path f2 = d1.resolve("f2");
+		
+		Files.createDirectory(d0);
+		Files.createDirectory(d1);
+		Files.createFile(f1);
+		Files.createFile(f2);
+		
+		assertTrue(Files.exists(d0));
+		assertTrue(Files.exists(d1));
+		assertTrue(Files.exists(f1));
+		assertTrue(Files.exists(f2));
+		
+		fileStorage.removeDirectory(d0);
+		
+		assertFalse(Files.exists(d0));
+		assertFalse(Files.exists(d1));
+		assertFalse(Files.exists(f1));
+		assertFalse(Files.exists(f2));
+	}
+	
+	@Test
+	public void testRemoveDirectory2() throws FileDeleteException {
+		
+		Path noSuchDir = testDir.resolve("noSuchDir");
+		assertFalse(Files.exists(noSuchDir));
+		
+		boolean exc = false;
+		
+		try {
+			fileStorage.removeDirectory(noSuchDir);
+		}
+		catch (NoSuchFileException e) {
+			
+			assertTrue(e.getMessage().contains(noSuchDir.toString()));
+			exc = true;
+		}
+		
+		assertTrue(exc);
+	}
+	
+	@Test
+	public void testClearDirectory1() throws IOException, NoSuchFileException, FileDeleteException {
+		
+		Path d0 = testDir.resolve("d0");
+		Path d1 = d0.resolve("d1");
+		Path f1 = d0.resolve("f1");
+		Path f2 = d1.resolve("f2");
+		
+		Files.createDirectory(d0);
+		Files.createDirectory(d1);
+		Files.createFile(f1);
+		Files.createFile(f2);
+		
+		assertNotEquals(0, Files.list(d0).count());
+		
+		fileStorage.clearDirectory(d0);
+		
+		assertEquals(0, Files.list(d0).count());
+		
+		Files.delete(d0);
+	}
+	
+	@Test 
+	public void testClearDirectory2() throws FileDeleteException {
+		
+		Path noSuchDir = testDir.resolve("noSuchDir");
+		assertFalse(Files.exists(noSuchDir));
+		
+		boolean exc = false;
+		
+		try {
+			fileStorage.clearDirectory(noSuchDir);
+		}
+		catch (NoSuchFileException e) {
+			
+			assertTrue(e.getMessage().contains(noSuchDir.toString()));
+			exc = true;
+		}
+		
+		assertTrue(exc);
+	}
+	
 	private void cleanFiles() throws IOException {
 		
 		Files.list(testDir).forEach(f -> {
@@ -228,16 +314,22 @@ public class FileStorageTest {
 			catch (IOException e) {
 				e.printStackTrace();
 			}
-		});Files.list(testDir).forEach(f -> {
-			try {
-				Files.deleteIfExists(f);
-			} 
-			catch (IOException e) {
-				e.printStackTrace();
-			}
 		});
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

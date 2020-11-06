@@ -36,6 +36,12 @@ public class DocCollection {
 	@Column(name="index_dir")
 	private String indexDir;
 	
+	@Column(name="raw_files_dir")
+	private String rawFilesDir;
+	
+	@Column(name="extraction_results_dir")
+	private String extractionResultsDir;
+	
 	@Column(name="indexed")
 	private boolean indexed;
 	 
@@ -75,6 +81,14 @@ public class DocCollection {
 		return indexDir;
 	}
 	
+	public String getRawFilesDir() {
+		return rawFilesDir;
+	}
+	
+	public String getExtractionResultsDir() {
+		return extractionResultsDir;
+	}
+	
 	public boolean getIndexed() {
 		return indexed;
 	}
@@ -97,6 +111,14 @@ public class DocCollection {
 	
 	public void setIndexDir(String indexDir) {
 		this.indexDir = indexDir;
+	}
+	
+	public void setRawFilesDir(String rawFilesDir) {
+		this.rawFilesDir = rawFilesDir;
+	}
+	
+	public void setExtractionResultsDir(String extractionResultsDir) {
+		this.extractionResultsDir = extractionResultsDir;
 	}
 	
 	public void setIndexed(boolean indexed) {

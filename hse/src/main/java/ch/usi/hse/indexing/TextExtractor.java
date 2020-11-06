@@ -22,17 +22,17 @@ import org.springframework.stereotype.Component;
 @Component
 public class TextExtractor {
 
-	public ExtractedDocument extractHtml(InputStream is) throws Exception {
-		
-		return extract(is, new HtmlParser(), "HTML");
+	public ExtractedDocument extractHtml(InputStream is, String url) throws Exception {
+		 
+		return extract(is, new HtmlParser(), "HTML", url);
 	}
 	
-	public ExtractedDocument extractPdf(InputStream is) throws Exception {
+	public ExtractedDocument extractPdf(InputStream is, String url) throws Exception {
 		
-		return extract(is, new PDFParser(), "PDF");
+		return extract(is, new PDFParser(), "PDF", url);
 	}
 	
-	private ExtractedDocument extract(InputStream is, Parser parser, String fileType) 
+	private ExtractedDocument extract(InputStream is, Parser parser, String fileType, String url) 
 			throws Exception {
 		
 		BodyContentHandler handler = new BodyContentHandler();
@@ -41,7 +41,7 @@ public class TextExtractor {
 
 		parser.parse(is, handler, metadata, context);
 		
-		return new ExtractedDocument(metadata, handler, fileType);
+		return new ExtractedDocument(url, metadata, handler, fileType);
 	}
 }
 

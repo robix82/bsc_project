@@ -10,11 +10,15 @@ import java.util.List;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -31,13 +35,24 @@ import ch.usi.hse.exceptions.NoSuchDocCollectionException;
 import ch.usi.hse.exceptions.NoSuchFileException;
 import ch.usi.hse.indexing.IndexBuilder;
 import ch.usi.hse.indexing.IndexingResult;
+import ch.usi.hse.storage.FileStorage;
 import ch.usi.hse.storage.UrlListStorage;
 
 @SpringBootTest
 public class IndexingServiceTest {
 	
+	@Value("${indexing.storeRawFiles}")
+	private boolean storeRawFiles;
+	
+	@Value("${indexing.storeExtractionResults}")
+	private boolean storeExtractionResults;
+	
 	@MockBean
 	private UrlListStorage urlListStorage;
+	
+	@MockBean
+	@Qualifier("FileStorage")
+	private FileStorage fileStorage;
 	
 	@MockBean
 	private IndexBuilder indexBuilder;
@@ -56,9 +71,13 @@ public class IndexingServiceTest {
 	private List<DocCollection> savedDocCollections;
 	private DocCollection existingDocCollection, newDocCollection;
 	
+	private Path existingDirectory, nonExistingDirectory;
+	
 	@BeforeEach
 	public void setUp() throws Exception {
 
+		existingDirectory = Paths.get("validDir");
+		nonExistingDirectory = Paths.get("noSuchDir");
 		
 		fileList = Arrays.asList("urls1.txt", "urls2.txt", "urls3.txt");
 		savedBytes = "content".getBytes();  
@@ -85,8 +104,11 @@ public class IndexingServiceTest {
 		c1.setUrlListName(existingUrlListName);
 		c2.setUrlListName(existingUrlListName);
 		c3.setUrlListName(existingUrlListName);
-		c1.setIndexDir("dir/c1");
-		c2.setIndexDir("dir/c2");
+		c1.setIndexDir(existingDirectory.toString());
+		c1.setRawFilesDir(existingDirectory.toString());
+		c1.setExtractionResultsDir(existingDirectory.toString());
+		c1.setIndexed(true);
+		
 		
 		savedDocCollections = List.of(c1, c2);
 		existingDocCollection = c1; 
@@ -113,6 +135,9 @@ public class IndexingServiceTest {
 		doNothing().when(collectionRepo).delete(existingDocCollection);
 		
 		when(indexBuilder.buildIndex(any(DocCollection.class))).thenReturn(new IndexingResult());
+		
+		doNothing().when(fileStorage).removeDirectory(existingDirectory);
+		doThrow(NoSuchFileException.class).when(fileStorage).removeDirectory(nonExistingDirectory);
 	} 
 	
 	// URL LISTS
@@ -427,8 +452,8 @@ public class IndexingServiceTest {
 		assertTrue(noexc);
 	}
 	
-	@Test
-	public void testRemoveDocCollection2() throws FileDeleteException {
+	@Test // non-existing collection
+	public void testRemoveDocCollection2() throws FileDeleteException, NoSuchFileException {
 		
 		boolean exc = false;
 		
@@ -438,6 +463,23 @@ public class IndexingServiceTest {
 		catch (NoSuchDocCollectionException e) {
 			 
 			assertTrue(e.getMessage().contains(Integer.toString(newDocCollection.getId())));
+			exc = true;
+		}
+		
+		assertTrue(exc);
+	}
+	
+	@Test // non-existing index dir
+	public void testRemoveCollection3() throws NoSuchDocCollectionException, FileDeleteException {
+		
+		existingDocCollection.setIndexDir(nonExistingDirectory.toString());
+		
+		boolean exc = false;
+		
+		try {
+			service.removeDocCollection(existingDocCollection);
+		}
+		catch(NoSuchFileException e) {
 			exc = true;
 		}
 		

@@ -189,10 +189,13 @@ public class IndexingController {
 	 * @return
 	 * @throws NoSuchDocCollectionException
 	 * @throws FileDeleteException 
+	 * @throws NoSuchFileException 
 	 */
 	@DeleteMapping("/docCollections")
 	public ResponseEntity<DocCollection> deleteDocCollection(@RequestBody DocCollection docCollection) 
-			throws NoSuchDocCollectionException, FileDeleteException {
+			throws NoSuchDocCollectionException, 
+				   FileDeleteException, 
+				   NoSuchFileException {
 		
 		indexingService.removeDocCollection(docCollection);
 		
