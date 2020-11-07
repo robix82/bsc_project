@@ -22,7 +22,7 @@ public class Role {
 	private String role;
 	
 	public Role() {
-		 
+		  
 		id = 0;
 		role = "";
 	}

@@ -41,7 +41,7 @@ public class HseUserDetailsServiceTest {
 	public void setUp() throws NoSuchUserException {
 		
 		adminRoles = new HashSet<>();
-		adminRoles.add(new Role(1, "ADMIN"));
+		adminRoles.add(new Role(1, "ADMIN")); 
 		
 		adminAuthorities = new ArrayList<>();
 		adminAuthorities.add(new SimpleGrantedAuthority("ADMIN"));

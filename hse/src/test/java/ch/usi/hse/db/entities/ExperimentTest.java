@@ -15,22 +15,26 @@ public class ExperimentTest {
 
 	private int testId;
 	private String testTitle;
+	private Experimenter testExperimenter;
 	private Set<TestGroup> testGroups;
 	private LocalDateTime d_created, d_conducted;
 	
+	
 	@BeforeEach
-	public void setUp() {
+	public void setUp() { 
 		
 		testId = 23;
 		testTitle = "title";
 		testGroups = new HashSet<>();
+		testExperimenter = new Experimenter("e1", "pwd");
+		testExperimenter.setId(724);
 		
 		TestGroup g1 = new TestGroup("g1");
 		g1.setId(1);
 		TestGroup g2 = new TestGroup("g2");
 		g2.setId(2);
 		
-		testGroups.add(g1);
+		testGroups.add(g1); 
 		testGroups.add(g2);
 		
 		d_created = LocalDateTime.of(2020, 10, 1, 0, 0);
@@ -87,10 +91,12 @@ public class ExperimentTest {
 		assertNotEquals(Status.READY, e.getStatus());
 		assertNotEquals(d_conducted, e.getDateConducted());
 		assertEquals(0, e.getTestGroups().size()); 
+		assertNotEquals(testExperimenter, e.getExperimenter());
 		
 		e.setId(testId);
 		e.setTitle(testTitle);
 		e.setTestGroups(testGroups);
+		e.setExperimenter(testExperimenter);
 		e.setStatus(Status.READY);
 		e.setDateCreated(d_created);
 		e.setDateConducted(d_conducted);
@@ -108,6 +114,10 @@ public class ExperimentTest {
 			assertEquals(e.getId(), g.getExperimentId());
 			assertEquals(e.getTitle(), g.getExperimentTitle());
 		}
+		
+		assertEquals(testExperimenter, e.getExperimenter());
+		assertEquals(testExperimenter.getId(), e.getExperimenterId());
+		assertEquals(testExperimenter.getUserName(), e.getExperimenterName());
 	}
 	
 	@Test

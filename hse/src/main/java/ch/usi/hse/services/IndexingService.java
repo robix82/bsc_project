@@ -42,7 +42,7 @@ public class IndexingService {
 	private IndexBuilder indexBuilder;
 	private DocCollectionRepository collectionRepo;
 	private boolean storeRawFiles, storeExtractionResults;
-	 
+	  
 	@Autowired
 	public IndexingService(@Value("${indexing.storeRawFiles}") boolean storeRawFiles,
 						   @Value("${indexing.storeExtractionResults}") boolean storeExtractionResults,

@@ -22,8 +22,8 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
-	@ExceptionHandler(UserExistsException.class) 
-	public ResponseEntity<Object> handleUserExistsException(UserExistsException e) {
+	@ExceptionHandler(EntityExistsException.class) 
+	public ResponseEntity<Object> handleEntityExistsException(EntityExistsException e) {
 		
 		HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
 		
@@ -32,8 +32,8 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		return new ResponseEntity<>(err, status);
 	}
 	
-	@ExceptionHandler(NoSuchUserException.class)
-	public ResponseEntity<Object> handleNoSuchUserException(NoSuchUserException e)  {
+	@ExceptionHandler(NoSuchEntityException.class)
+	public ResponseEntity<Object> handleNoSuchEntityException(NoSuchEntityException e)  {
 		
 		HttpStatus status = HttpStatus.NOT_FOUND;
 		
@@ -86,26 +86,6 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	public ResponseEntity<Object> handleLanguageNotSupportedException(LanguageNotSupportedException e) {
 		
 		HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
-		
-		ApiError err = new ApiError(status, e);
-		
-		return new ResponseEntity<>(err, status);
-	}
-	
-	@ExceptionHandler(DocCollectionExistsException.class)
-	public ResponseEntity<Object> handleDocCollectionExistsException(DocCollectionExistsException e) {
-		
-		HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
-		
-		ApiError err = new ApiError(status, e);
-		
-		return new ResponseEntity<>(err, status);
-	}
-	
-	@ExceptionHandler(NoSuchDocCollectionException.class) 
-	public ResponseEntity<Object> handleNoSuchDocCollectionException(NoSuchDocCollectionException e) {
-		
-		HttpStatus status = HttpStatus.NOT_FOUND;
 		
 		ApiError err = new ApiError(status, e);
 		

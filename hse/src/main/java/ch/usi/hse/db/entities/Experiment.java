@@ -12,7 +12,11 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * db entity representing experiments
@@ -27,7 +31,7 @@ public class Experiment {
 		
 		NOT_READY,
 		READY,
-		RUNNING,
+		RUNNING, 
 		COMPLETE
 	} 
 	
@@ -41,6 +45,17 @@ public class Experiment {
 	
 	@OneToMany(mappedBy="experiment", fetch=FetchType.EAGER, orphanRemoval=true, cascade=CascadeType.ALL)
 	private Set<TestGroup> testGroups;
+	
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="experimenter_id")
+	@JsonIgnore
+	private Experimenter experimenter;
+	
+	@Column(name="_experimenter_id")
+	private int experimenterId;
+	
+	@Column(name="experimenter_name")
+	private String experimenterName;
 	
 	@Column(name="status")
 	private Status status;
@@ -86,6 +101,18 @@ public class Experiment {
 		return testGroups;
 	}
 	
+	public Experimenter getExperimenter() {
+		return experimenter;
+	}
+	
+	public int getExperimenterId() {
+		return experimenterId;
+	}
+	
+	public String getExperimenterName() {
+		return experimenterName;
+	}
+	
 	public Status getStatus() {
 		return status;
 	}
@@ -117,6 +144,30 @@ public class Experiment {
 		}
 		
 		this.testGroups = testGroups;
+	}
+	
+	public void setExperimenter(Experimenter experimenter) {
+		
+		this.experimenter = experimenter;
+		
+		if (experimenter != null) {
+			
+			experimenterId = experimenter.getId();
+			experimenterName = experimenter.getUserName();
+		}
+		else {
+			
+			experimenterId = 0;
+			experimenterName = null;
+		}
+	}
+	
+	public void setExperimenterId(int experimenterId) {
+		this.experimenterId = experimenterId;
+	}
+	
+	public void setExperimenterName(String experimenterName) {
+		this.experimenterName = experimenterName;
 	}
 	
 	public void setStatus(Status status) {

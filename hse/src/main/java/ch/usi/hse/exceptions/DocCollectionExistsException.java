@@ -1,6 +1,6 @@
 package ch.usi.hse.exceptions;
 
-public class DocCollectionExistsException extends Exception {
+public class DocCollectionExistsException extends EntityExistsException {
 
 	/**
 	 * default generated

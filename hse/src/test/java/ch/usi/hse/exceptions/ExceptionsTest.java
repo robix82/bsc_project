@@ -240,6 +240,101 @@ public class ExceptionsTest {
 		
 		assertTrue(exc);
 	}
+	
+	@Test
+	public void testExperimentExistsException1() {
+		
+		int id = 23;
+		String msg = "An experiment with id " + id + " already exists";
+		boolean exc = false;
+		
+		try {
+			throw new ExperimentExistsException(id);
+		}
+		catch (Exception e) {
+			
+			assertEquals(msg, e.getMessage());
+			exc = true;
+		}
+		
+		assertTrue(exc);
+	}
+	
+	@Test
+	public void testExperimentExistsException2() {
+		
+		String title = "name";
+		String msg = "An experiment with title " + title + " already exists";
+		boolean exc = false;
+		
+		try {
+			throw new ExperimentExistsException(title);
+		}
+		catch (Exception e) {
+			
+			assertEquals(msg, e.getMessage());
+			exc = true;
+		}
+		
+		assertTrue(exc);
+	}
+	
+	@Test
+	public void testNoSuchExperimentException() {
+		
+		int id = 23;
+		String msg = "No Experiment with id " + id + " found";
+		boolean exc = false;
+		
+		try {
+			throw new NoSuchExperimentException(id);
+		}
+		catch(Exception e) {
+			
+			assertEquals(msg, e.getMessage());
+			exc = true;
+		}
+		
+		assertTrue(exc);
+	}
+	
+	@Test
+	public void testTestGroupExistsException() {
+		
+		int id = 23;
+		String msg = "A TestGroup with id " + id + " already exists";
+		boolean exc = false;
+		
+		try {
+			throw new TestGroupExistsException(id);
+		}
+		catch (Exception e) {
+			
+			assertEquals(msg, e.getMessage());
+			exc = true;
+		}
+		
+		assertTrue(exc);
+	}
+	
+	@Test
+	public void testNoSuchTestGroupException() {
+		
+		int id = 23;
+		String msg = "No TestGroup with id " + id + " found";
+		boolean exc = false;
+		
+		try {
+			throw new NoSuchTestGroupException(id);
+		}
+		catch (Exception e) {
+		
+			assertEquals(msg, e.getMessage());
+			exc = true;
+		}
+		
+		assertTrue(exc);
+	}
 }
 
 

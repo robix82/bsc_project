@@ -33,7 +33,7 @@ public class TestGroup {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="group_id")
 	private Integer id;
-	
+	 
 	@Column(name="name")
 	private String name;
 	

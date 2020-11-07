@@ -11,9 +11,6 @@ import java.nio.file.Path;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 
@@ -22,15 +19,11 @@ import ch.usi.hse.exceptions.FileReadException;
 import ch.usi.hse.exceptions.FileWriteException;
 import ch.usi.hse.exceptions.NoSuchFileException;
 
-
-@SpringBootTest
 public class FileStorageTest {
 
 	@TempDir
 	Path testDir;
 	
-	@Autowired
-	@Qualifier("FileStorage")
 	private FileStorage fileStorage;
 	
 	private String newFileName;
@@ -39,11 +32,13 @@ public class FileStorageTest {
 	private String testString;
 	private byte[] testBytes;
 	
-	@BeforeEach
+	@BeforeEach 
 	public void setUp() throws IOException {
 		 
+		fileStorage = new FileStorage();
+		
 		testString = "some content";
-		testBytes = testString.getBytes(); 
+		testBytes = testString.getBytes();  
 		
 		newFileName = "newFile.txt";
 		existingFileName = "existingFile.txt";

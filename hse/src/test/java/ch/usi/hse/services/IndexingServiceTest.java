@@ -4,6 +4,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
 import static org.mockito.Mockito.*;
 
 import java.util.List;
@@ -16,11 +17,7 @@ import java.util.Arrays;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.mockito.Mock;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 
@@ -38,30 +35,21 @@ import ch.usi.hse.indexing.IndexingResult;
 import ch.usi.hse.storage.FileStorage;
 import ch.usi.hse.storage.UrlListStorage;
 
-@SpringBootTest
 public class IndexingServiceTest {
 	
-	@Value("${indexing.storeRawFiles}")
-	private boolean storeRawFiles;
-	
-	@Value("${indexing.storeExtractionResults}")
-	private boolean storeExtractionResults;
-	
-	@MockBean
+	@Mock
 	private UrlListStorage urlListStorage;
 	
-	@MockBean
-	@Qualifier("FileStorage")
+	@Mock
 	private FileStorage fileStorage;
 	
-	@MockBean
+	@Mock
 	private IndexBuilder indexBuilder;
 	
-	@MockBean
+	@Mock
 	private DocCollectionRepository collectionRepo;
-		
-	@Autowired
-	private IndexingService service;
+
+	private IndexingService indexingService;
 	
 	private List<String> fileList;
 	private String existingUrlListName, newUrlListName, badUrlListName, existingDocCollectionName;
@@ -75,6 +63,14 @@ public class IndexingServiceTest {
 	
 	@BeforeEach
 	public void setUp() throws Exception {
+		
+		initMocks(this);
+		
+		indexingService = new IndexingService(true, true,
+											  fileStorage,
+											  urlListStorage,
+											  indexBuilder,
+											  collectionRepo);
 
 		existingDirectory = Paths.get("validDir");
 		nonExistingDirectory = Paths.get("noSuchDir");
@@ -145,7 +141,7 @@ public class IndexingServiceTest {
 	@Test
 	public void testSavedUrlLists() throws FileReadException {
 		
-		List<String> res = service.savedUrlLists();
+		List<String> res = indexingService.savedUrlLists();
 		
 		assertIterableEquals(fileList, res);
 	}
@@ -156,7 +152,7 @@ public class IndexingServiceTest {
 		boolean noexc = false;
 		
 		try {
-			service.addUrlList(newFile);
+			indexingService.addUrlList(newFile);
 			noexc = true;
 		}
 		catch (Exception e) {
@@ -172,7 +168,7 @@ public class IndexingServiceTest {
 		boolean exc = false;
 		
 		try {
-			service.addUrlList(badFile);
+			indexingService.addUrlList(badFile);
 		}
 		catch (FileWriteException e) {
 			exc = true;
@@ -187,7 +183,7 @@ public class IndexingServiceTest {
 		boolean noexc = false;
 		
 		try {
-			service.removeUrlList(existingUrlListName);
+			indexingService.removeUrlList(existingUrlListName);
 			noexc = true;
 		}
 		catch (Exception e) {
@@ -203,7 +199,7 @@ public class IndexingServiceTest {
 		boolean exc = false;
 		
 		try {
-			service.removeUrlList(badUrlListName);
+			indexingService.removeUrlList(badUrlListName);
 		}
 		catch (FileDeleteException e) {
 			exc = true;
@@ -218,7 +214,7 @@ public class IndexingServiceTest {
 		boolean exc = false;
 		
 		try {
-			service.removeUrlList(newUrlListName);
+			indexingService.removeUrlList(newUrlListName);
 		}
 		catch (NoSuchFileException e) {
 			exc = true;
@@ -230,7 +226,7 @@ public class IndexingServiceTest {
 	@Test
 	public void testGetUrlListFile1() throws NoSuchFileException, FileReadException, IOException {
 		
-		InputStream is = service.getUrlListFile(existingUrlListName);
+		InputStream is = indexingService.getUrlListFile(existingUrlListName);
 		
 		assertNotNull(is);
 		
@@ -247,7 +243,7 @@ public class IndexingServiceTest {
 		boolean exc = false;
 		
 		try {
-			service.getUrlListFile(newUrlListName);
+			indexingService.getUrlListFile(newUrlListName);
 		}
 		catch (NoSuchFileException e) {
 			exc = true;
@@ -261,7 +257,7 @@ public class IndexingServiceTest {
 	@Test
 	public void testDocCollections() {
 		
-		List<DocCollection> res = service.docCollections();
+		List<DocCollection> res = indexingService.docCollections();
 		
 		assertIterableEquals(savedDocCollections, res);
 	}
@@ -269,7 +265,7 @@ public class IndexingServiceTest {
 	@Test
 	public void testAddDocCollection1() throws Exception {
 		
-		DocCollection saved = service.addDocCollection(newDocCollection);
+		DocCollection saved = indexingService.addDocCollection(newDocCollection);
 		
 		assertEquals(newDocCollection, saved);
 	} 
@@ -280,7 +276,7 @@ public class IndexingServiceTest {
 		boolean exc = false;
 		
 		try {
-			service.addDocCollection(existingDocCollection);
+			indexingService.addDocCollection(existingDocCollection);
 		}
 		catch (DocCollectionExistsException e) {
 			
@@ -299,7 +295,7 @@ public class IndexingServiceTest {
 		newDocCollection.setUrlListName(newUrlListName);
 		
 		try {
-			service.addDocCollection(newDocCollection);
+			indexingService.addDocCollection(newDocCollection);
 		}
 		catch (NoSuchFileException e) {
 			assertTrue(e.getMessage().contains(newUrlListName));
@@ -318,7 +314,7 @@ public class IndexingServiceTest {
 		newDocCollection.setLanguage(badLanguage);
 		
 		try {
-			service.addDocCollection(newDocCollection);
+			indexingService.addDocCollection(newDocCollection);
 		}
 		catch (LanguageNotSupportedException e) {
 			
@@ -336,7 +332,7 @@ public class IndexingServiceTest {
 		newDocCollection.setName(existingDocCollectionName);
 		
 		try {
-			service.addDocCollection(newDocCollection);
+			indexingService.addDocCollection(newDocCollection);
 		}
 		catch (DocCollectionExistsException e) {
 			
@@ -353,7 +349,7 @@ public class IndexingServiceTest {
 		String newName = "newCollection";
 		existingDocCollection.setName(newName);
 		
-		DocCollection updated = service.updateDocCollection(existingDocCollection);
+		DocCollection updated = indexingService.updateDocCollection(existingDocCollection);
 		
 		assertEquals(existingDocCollection, updated);
 	}
@@ -364,7 +360,7 @@ public class IndexingServiceTest {
 		boolean exc = false;
 		
 		try {
-			service.updateDocCollection(newDocCollection);
+			indexingService.updateDocCollection(newDocCollection);
 		}
 		catch (NoSuchDocCollectionException e) {
 			
@@ -383,7 +379,7 @@ public class IndexingServiceTest {
 		existingDocCollection.setUrlListName(newUrlListName);
 		
 		try {
-			service.updateDocCollection(existingDocCollection);
+			indexingService.updateDocCollection(existingDocCollection);
 		}
 		catch (NoSuchFileException e) {
 			
@@ -404,7 +400,7 @@ public class IndexingServiceTest {
 		existingDocCollection.setLanguage(badLanguage);
 		
 		try {
-			service.updateDocCollection(existingDocCollection);
+			indexingService.updateDocCollection(existingDocCollection);
 		}
 		catch (LanguageNotSupportedException e) {
 			
@@ -424,7 +420,7 @@ public class IndexingServiceTest {
 		c.setId(existingDocCollection.getId());
 		 
 		try {
-			service.updateDocCollection(c);
+			indexingService.updateDocCollection(c);
 		}
 		catch (DocCollectionExistsException e) {
 			
@@ -442,7 +438,7 @@ public class IndexingServiceTest {
 		
 		try {
 			
-			service.removeDocCollection(existingDocCollection);
+			indexingService.removeDocCollection(existingDocCollection);
 			noexc = true;
 		}
 		catch (Exception e) {
@@ -458,7 +454,7 @@ public class IndexingServiceTest {
 		boolean exc = false;
 		
 		try {
-			service.removeDocCollection(newDocCollection);
+			indexingService.removeDocCollection(newDocCollection);
 		}
 		catch (NoSuchDocCollectionException e) {
 			 
@@ -488,7 +484,7 @@ public class IndexingServiceTest {
 		boolean exc = false;
 		
 		try {
-				service.buildIndex(newDocCollection);
+				indexingService.buildIndex(newDocCollection);
 		}
 		catch (NoSuchDocCollectionException e) {
 			
@@ -507,7 +503,7 @@ public class IndexingServiceTest {
 		boolean exc = false;
 		
 		try {
-			service.buildIndex(existingDocCollection);
+			indexingService.buildIndex(existingDocCollection);
 		}
 		catch (NoSuchFileException e) {
 			
@@ -527,7 +523,7 @@ public class IndexingServiceTest {
 		boolean exc = false;
 		
 		try {
-			service.buildIndex(existingDocCollection);
+			indexingService.buildIndex(existingDocCollection);
 		}
 		catch (LanguageNotSupportedException e) {
 			

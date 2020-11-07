@@ -1,6 +1,6 @@
 package ch.usi.hse.exceptions;
 
-public class NoSuchDocCollectionException extends Exception {
+public class NoSuchDocCollectionException extends NoSuchEntityException {
 
 	/**
 	 * default generated

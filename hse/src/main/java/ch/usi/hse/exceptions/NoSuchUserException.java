@@ -7,7 +7,7 @@ package ch.usi.hse.exceptions;
  * @author robert.jans@usi.ch
  *
  */
-public class NoSuchUserException extends Exception {
+public class NoSuchUserException extends NoSuchEntityException {
 	
 	// default generated
 	private static final long serialVersionUID = 1L;

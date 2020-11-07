@@ -18,13 +18,13 @@ public class ApiExceptionHandlerTest {
 	}
 	
 	@Test
-	public void testHandleUserExists() {
+	public void testHandleEntityExistsException() {
 		 
 		UserExistsException ex = new UserExistsException(23);
 		HttpStatus expectedStatus = HttpStatus.UNPROCESSABLE_ENTITY;
 		ApiError expectedErr = new ApiError (expectedStatus, ex);
 		
-		ResponseEntity<Object> res = handler.handleUserExistsException(ex);
+		ResponseEntity<Object> res = handler.handleEntityExistsException(ex);
 		
 		HttpStatus actualStatus = res.getStatusCode(); 
 		ApiError actualErr = (ApiError) res.getBody(); 
@@ -36,13 +36,13 @@ public class ApiExceptionHandlerTest {
 	}
 	
 	@Test
-	public void testHandleNoSuchUser() {
+	public void testHandleNoSuchEntityExcception() {
 		
 		NoSuchUserException ex = new NoSuchUserException(23);
 		HttpStatus expectedStatus = HttpStatus.NOT_FOUND;
 		ApiError expectedErr = new ApiError (expectedStatus, ex);
 		
-		ResponseEntity<Object> res = handler.handleNoSuchUserException(ex);
+		ResponseEntity<Object> res = handler.handleNoSuchEntityException(ex);
 		
 		HttpStatus actualStatus = res.getStatusCode();
 		ApiError actualErr = (ApiError) res.getBody();
@@ -142,44 +142,7 @@ public class ApiExceptionHandlerTest {
 		assertEquals(expectedErr.getErrorType(), actualErr.getErrorType());
 		assertEquals(expectedErr.getErrorMessage(), actualErr.getErrorMessage());
 	}
-	
-	@Test
-	public void testHandleDocCollectionExistsException() {
-		
-		DocCollectionExistsException ex = new DocCollectionExistsException(23);
-		HttpStatus expectedStatus = HttpStatus.UNPROCESSABLE_ENTITY;
-		ApiError expectedErr = new ApiError(expectedStatus, ex);
-		
-		ResponseEntity<Object> res = handler.handleDocCollectionExistsException(ex);
-		
-		HttpStatus actualStatus = res.getStatusCode();
-		ApiError actualErr = (ApiError) res.getBody();
-		
-		assertEquals(expectedStatus, actualStatus);
-		assertEquals(expectedErr.getStatus(), actualErr.getStatus());
-		assertEquals(expectedErr.getErrorType(), actualErr.getErrorType());
-		assertEquals(expectedErr.getErrorMessage(), actualErr.getErrorMessage());
-	}
-	
-	@Test
-	public void testHandleNoSuchDocCollectionException() {
-		
-		NoSuchDocCollectionException ex = new NoSuchDocCollectionException(23);
-		HttpStatus expectedStatus = HttpStatus.NOT_FOUND;
-		ApiError expectedErr = new ApiError(expectedStatus, ex);
-		
-		ResponseEntity<Object> res = handler.handleNoSuchDocCollectionException(ex);
-		
-		HttpStatus actualStatus = res.getStatusCode();
-		ApiError actualErr = (ApiError) res.getBody();
-		
-		assertEquals(expectedStatus, actualStatus);
-		assertEquals(expectedErr.getStatus(), actualErr.getStatus());
-		assertEquals(expectedErr.getErrorType(), actualErr.getErrorType());
-		assertEquals(expectedErr.getErrorMessage(), actualErr.getErrorMessage());
-	}
 }
-
 
 
 

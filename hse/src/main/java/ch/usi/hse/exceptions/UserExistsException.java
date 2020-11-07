@@ -7,7 +7,7 @@ package ch.usi.hse.exceptions;
  * @author robert.jans@usi.ch
  *
  */
-public class UserExistsException extends Exception {
+public class UserExistsException extends EntityExistsException {
 
 	// default generated
 	private static final long serialVersionUID = 1L;
