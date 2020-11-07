@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import ch.usi.hse.db.entities.Experiment;
+
 public class ApiExceptionHandlerTest {
 
 	private ApiExceptionHandler handler;
@@ -34,9 +36,9 @@ public class ApiExceptionHandlerTest {
 		assertEquals(expectedErr.getErrorType(), actualErr.getErrorType());
 		assertEquals(expectedErr.getErrorMessage(), actualErr.getErrorMessage());
 	}
-	
+	 
 	@Test
-	public void testHandleNoSuchEntityExcception() {
+	public void testHandleNoSuchEntityException() {
 		
 		NoSuchUserException ex = new NoSuchUserException(23);
 		HttpStatus expectedStatus = HttpStatus.NOT_FOUND;
@@ -139,6 +141,25 @@ public class ApiExceptionHandlerTest {
 		
 		assertEquals(expectedStatus, actualStatus);
 		assertEquals(expectedErr.getStatus(), actualErr.getStatus());
+		assertEquals(expectedErr.getErrorType(), actualErr.getErrorType());
+		assertEquals(expectedErr.getErrorMessage(), actualErr.getErrorMessage());
+	}
+	
+	@Test
+	public void testHandleExperimentStatusException() {
+		
+		ExperimentStatusException ex = new ExperimentStatusException(Experiment.Status.READY, 
+																	 Experiment.Status.NOT_READY);
+		
+		HttpStatus expectedStatus = HttpStatus.UNPROCESSABLE_ENTITY;
+		ApiError expectedErr = new ApiError(expectedStatus, ex);
+		
+		ResponseEntity<Object> res = handler.handleExperimentStatusException(ex);
+		HttpStatus actualStatus = res.getStatusCode();
+		ApiError actualErr = (ApiError) res.getBody();
+	
+		assertEquals(expectedStatus, actualStatus);
+		assertEquals(expectedStatus, actualErr.getStatus());
 		assertEquals(expectedErr.getErrorType(), actualErr.getErrorType());
 		assertEquals(expectedErr.getErrorMessage(), actualErr.getErrorMessage());
 	}

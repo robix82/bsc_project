@@ -17,7 +17,7 @@ public class ExperimentTest {
 	private String testTitle;
 	private Experimenter testExperimenter;
 	private Set<TestGroup> testGroups;
-	private LocalDateTime d_created, d_conducted;
+	private LocalDateTime d_created, d_conducted, d_start, d_end;
 	
 	
 	@BeforeEach
@@ -33,12 +33,14 @@ public class ExperimentTest {
 		g1.setId(1);
 		TestGroup g2 = new TestGroup("g2");
 		g2.setId(2);
-		
+		 
 		testGroups.add(g1); 
 		testGroups.add(g2);
 		
 		d_created = LocalDateTime.of(2020, 10, 1, 0, 0);
 		d_conducted = LocalDateTime.of(2020, 10, 2, 0, 0);
+		d_start = LocalDateTime.of(2020, 10, 2, 11, 30);
+		d_end = LocalDateTime.of(2020, 10, 2, 11, 50);
 	}  
 	
 	@Test
@@ -90,6 +92,8 @@ public class ExperimentTest {
 		assertNotEquals(d_created, e.getDateCreated());
 		assertNotEquals(Status.READY, e.getStatus());
 		assertNotEquals(d_conducted, e.getDateConducted());
+		assertNotEquals(d_start, e.getStartTime());
+		assertNotEquals(d_end, e.getEndTime());
 		assertEquals(0, e.getTestGroups().size()); 
 		assertNotEquals(testExperimenter, e.getExperimenter());
 		
@@ -100,6 +104,8 @@ public class ExperimentTest {
 		e.setStatus(Status.READY);
 		e.setDateCreated(d_created);
 		e.setDateConducted(d_conducted);
+		e.setStartTime(d_start);
+		e.setEndTime(d_end);
 		
 		assertEquals(testId, e.getId());
 		assertEquals(testTitle, e.getTitle());
@@ -107,6 +113,8 @@ public class ExperimentTest {
 		assertEquals(Status.READY, e.getStatus());
 		assertEquals(d_created, e.getDateCreated());
 		assertEquals(d_conducted, e.getDateConducted());
+		assertEquals(d_start, e.getStartTime());
+		assertEquals(d_end, e.getEndTime());
 		
 		for (TestGroup g : e.getTestGroups()) {
 			

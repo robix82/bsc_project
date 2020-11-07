@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
+import ch.usi.hse.db.entities.Experiment;
+
 public class ExceptionsTest {
 
 	@Test
@@ -20,8 +22,8 @@ public class ExceptionsTest {
 		boolean exc2 = false;
 		boolean exc3 = false;
 		boolean exc4 = false;
-		
-		try { 
+		 
+		try {  
 			throw new NoSuchUserException(id); 
 		}
 		catch (Exception e) {
@@ -191,7 +193,7 @@ public class ExceptionsTest {
 	}
 	
 	@Test
-	public void testDocCollectionExxistsException() {
+	public void testDocCollectionExistsException() {
 		
 		int id = 23;
 		String name = "name";
@@ -335,6 +337,24 @@ public class ExceptionsTest {
 		
 		assertTrue(exc);
 	}
+	
+	@Test
+	public void testExperimentStatusException() {
+		
+		boolean exc = false;
+		String msg = "expecting READY but is NOT_READY";
+		
+		try {
+			throw new ExperimentStatusException(Experiment.Status.READY, Experiment.Status.NOT_READY);
+		}
+		catch (Exception e) {
+			
+			assertEquals(msg, e.getMessage());
+			exc = true;
+		}
+		
+		assertTrue(exc);
+ 	}
 }
 
 

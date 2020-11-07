@@ -57,14 +57,20 @@ public class Experiment {
 	@Column(name="experimenter_name")
 	private String experimenterName;
 	
-	@Column(name="status")
+	@Column(name="status") 
 	private Status status;
-	
+	 
 	@Column(name="date_creaed")
 	private LocalDateTime dateCreated; 
 	
 	@Column(name="date_conducted")
 	private LocalDateTime dateConducted; 
+	
+	@Column(name="t_start")
+	private LocalDateTime startTime;
+	
+	@Column(name="t_end")
+	private LocalDateTime endTime;
 	 
 	public Experiment() {
 		
@@ -125,6 +131,14 @@ public class Experiment {
 		return dateConducted;
 	}
 	
+	public LocalDateTime getStartTime() {
+		return startTime;
+	}
+	
+	public LocalDateTime getEndTime() {
+		return endTime;
+	}
+	
 	public void setId(int id) {
 		this.id = id;
 	}
@@ -180,6 +194,14 @@ public class Experiment {
 	
 	public void setDateConducted(LocalDateTime dateConducted) {
 		this.dateConducted = dateConducted;
+	}
+	
+	public void setStartTime(LocalDateTime startTime) {
+		this.startTime = startTime;
+	}
+	
+	public void setEndTime(LocalDateTime endTime) {
+		this.endTime = endTime;
 	}
 	
 	public void addTestGroup(TestGroup group) {

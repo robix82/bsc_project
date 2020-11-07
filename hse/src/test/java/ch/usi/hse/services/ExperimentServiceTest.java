@@ -17,7 +17,9 @@ import ch.usi.hse.db.repositories.ExperimentRepository;
 import ch.usi.hse.db.repositories.ExperimenterRepository;
 import ch.usi.hse.db.repositories.ParticipantRepository;
 import ch.usi.hse.db.repositories.TestGroupRepository;
+import ch.usi.hse.exceptions.ExperimentExistsException;
 import ch.usi.hse.exceptions.NoSuchExperimentException;
+import ch.usi.hse.exceptions.NoSuchTestGroupException;
 import ch.usi.hse.exceptions.NoSuchUserException;
 
 public class ExperimentServiceTest {
@@ -94,6 +96,8 @@ public class ExperimentServiceTest {
 		experimenter2.addExperiment(e3);
 		experimenter2.addExperiment(e4);
 		savedExperiments = List.of(e1, e2, e3, e4);
+		newExperiment = new Experiment("e5");
+		newExperiment.setId(5);
 		
 		when(experimentRepo.existsById(anyInt())).thenReturn(false);
 		when(experimentRepo.existsByTitle(anyString())).thenReturn(false);
@@ -188,7 +192,209 @@ public class ExperimentServiceTest {
 		assertTrue(exc);
 	}
 	
+	@Test
+	public void testAddExperiment1() throws ExperimentExistsException {
+		
+		Experiment saved = service.addExperiment(newExperiment);
+		
+		assertEquals(saved, newExperiment);
+	}
 	
+	@Test
+	public void tesstAddExperiment2() {
+		
+		boolean exc;
+		int existingId = savedExperiments.get(0).getId();
+		newExperiment.setId(existingId);
+		
+		try {
+			
+			service.addExperiment(newExperiment);
+			exc = false;
+		}
+		catch (ExperimentExistsException e) {
+			
+			assertTrue(e.getMessage().contains(Integer.toString(existingId)));
+			exc = true;
+		}
+		
+		assertTrue(exc);
+	}
+	
+	@Test
+	public void testAddExperiment3() {
+		
+		boolean exc;
+		String existingTitle= savedExperiments.get(0).getTitle();
+		newExperiment.setTitle(existingTitle);
+		
+		try {
+			
+			service.addExperiment(newExperiment);
+			exc = false;
+		}
+		catch (ExperimentExistsException e) {
+			
+			assertTrue(e.getMessage().contains(existingTitle));
+			exc = true;
+		}
+		
+		assertTrue(exc);
+	}
+	
+	@Test
+	public void testUpdateExperiment1() throws Exception {
+		
+		Experiment experiment = savedExperiments.get(0);
+		
+		String newTitle = "newTitle";
+		Experimenter newExperimenter = savedExperimenters.get(1);
+		experiment.setTitle(newTitle);
+		experiment.setExperimenter(newExperimenter);
+		
+		Experiment updated = service.updateExperiment(experiment);
+		
+		assertEquals(experiment, updated);
+	}
+	
+	@Test // non-existing experiment id
+	public void testUpdateExperiment2() throws Exception {
+		
+		int badId = 999999;
+		Experiment experiment = savedExperiments.get(0);
+		experiment.setId(badId);
+				
+		boolean exc;
+		
+		try {
+			service.updateExperiment(experiment);
+			exc = false;
+		}
+		catch (NoSuchExperimentException e) {
+			
+			assertTrue(e.getMessage().contains(Integer.toString(badId)));
+			exc = true;
+		}
+		
+		assertTrue(exc);
+	}
+	
+	@Test // new title already exists
+	public void testUpdateExperiment3() throws Exception {
+		
+		int id = savedExperiments.get(0).getId();
+		String usedTitle = savedExperiments.get(1).getTitle();
+		Experiment experiment = new Experiment(usedTitle);
+		experiment.setId(id);
+		
+		boolean exc;
+		
+		try {
+			service.updateExperiment(experiment);
+			exc = false;
+		}
+		catch (ExperimentExistsException e) {
+			
+			assertTrue(e.getMessage().contains(usedTitle));
+			exc = true;
+		}
+		
+		assertTrue(exc);
+	}
+	
+	@Test // non-existing experimenter id
+	public void testUpdateExperiment4() throws Exception {
+		
+		int badId = 999999;
+		int existingExperimentId = savedExperiments.get(0).getId();
+		String existingTitle = savedExperiments.get(0).getTitle();
+		Experiment experiment = new Experiment(existingTitle);
+		experiment.setId(existingExperimentId);
+		experiment.setExperimenterId(badId);
+		
+		boolean exc;
+		
+		try {
+			service.updateExperiment(experiment);
+			exc = false;
+		}
+		catch (NoSuchUserException e) {
+			
+			assertTrue(e.getMessage().contains("Experimenter"));
+			assertTrue(e.getMessage().contains(Integer.toString(badId)));
+			exc = true;
+		}
+		
+		assertTrue(exc);
+	}
+	
+	@Test // non-existing experimenter name
+	public void testUpdateExperiment5() throws Exception {
+		
+		int experimentId = savedExperiments.get(0).getId();
+		int experimenterId = savedExperimenters.get(1).getId();
+		String experimentTitle = savedExperiments.get(0).getTitle();
+		String badName = "badName";
+		Experiment experiment = new Experiment(experimentTitle);
+		experiment.setId(experimentId);
+		experiment.setExperimenterId(experimenterId);
+		experiment.setExperimenterName(badName);
+		
+		boolean exc;
+		
+		try {
+			service.updateExperiment(experiment);
+			exc = false;
+		}
+		catch (NoSuchUserException e) {
+			
+			assertTrue(e.getMessage().contains("Experimenter"));
+			assertTrue(e.getMessage().contains(badName));
+			exc = true;
+		}
+		
+		assertTrue(exc);
+	}
+	
+	// TODO: check indirect TestGroup update failure
+	
+	@Test
+	public void testDeleteExperiment1() {
+		
+		boolean exc;
+		
+		try {
+			service.deleteExperiment(savedExperiments.get(0));
+			exc = false;
+		}
+		catch (Exception e) {
+			exc = true;
+		}
+		
+		assertFalse(exc);
+	}
+	
+	@Test
+	public void testDeleteExperiment2() {
+		
+		int badId = 99999;
+		Experiment experiment = savedExperiments.get(0);
+		experiment.setId(badId);
+		
+		boolean exc;
+		
+		try {
+			service.deleteExperiment(experiment);
+			exc = false;
+		}
+		catch (NoSuchExperimentException e) {
+			
+			assertTrue(e.getMessage().contains(Integer.toString(badId)));
+			exc = true;
+		}
+		
+		assertTrue(exc);
+	}
 }
 
 

@@ -31,7 +31,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		
 		return new ResponseEntity<>(err, status);
 	}
-	
+	 
 	@ExceptionHandler(NoSuchEntityException.class)
 	public ResponseEntity<Object> handleNoSuchEntityException(NoSuchEntityException e)  {
 		
@@ -84,6 +84,16 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	
 	@ExceptionHandler(LanguageNotSupportedException.class)
 	public ResponseEntity<Object> handleLanguageNotSupportedException(LanguageNotSupportedException e) {
+		
+		HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
+		
+		ApiError err = new ApiError(status, e);
+		
+		return new ResponseEntity<>(err, status);
+	}
+	
+	@ExceptionHandler(ExperimentStatusException.class)
+	public ResponseEntity<Object> handleExperimentStatusException(ExperimentStatusException e) {
 		
 		HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
 		

@@ -2,7 +2,9 @@ package ch.usi.hse.services;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,7 +19,9 @@ import ch.usi.hse.db.repositories.ExperimenterRepository;
 import ch.usi.hse.db.repositories.ParticipantRepository;
 import ch.usi.hse.db.repositories.TestGroupRepository;
 import ch.usi.hse.exceptions.ExperimentExistsException;
+import ch.usi.hse.exceptions.ExperimentStatusException;
 import ch.usi.hse.exceptions.NoSuchExperimentException;
+import ch.usi.hse.exceptions.NoSuchTestGroupException;
 import ch.usi.hse.exceptions.NoSuchUserException;
 import ch.usi.hse.exceptions.UserExistsException;
 
@@ -25,7 +29,7 @@ import ch.usi.hse.exceptions.UserExistsException;
 public class ExperimentService {
 
 	private ExperimentRepository experimentRepo;
-//	private TestGroupRepository testGroupRepo;
+	private TestGroupRepository testGroupRepo;
 //	private ParticipantRepository participantRepo;
 //	private DocCollectionRepository collectionRepo;
 	private ExperimenterRepository experimenterRepo;
@@ -40,7 +44,7 @@ public class ExperimentService {
 							 UserService userService) {
 		
 		this.experimentRepo = experimentRepo;
-//		this.testGroupRepo = testGroupRepo;
+		this.testGroupRepo = testGroupRepo;
 //		this.participantRepo = participantRepo;
 //		this.collectionRepo = collectionRepo;
 		this.experimenterRepo = experimenterRepo;
@@ -101,7 +105,8 @@ public class ExperimentService {
 	public Experiment updateExperiment(Experiment experiment) 
 			throws NoSuchExperimentException, 
 				   ExperimentExistsException, 
-				   NoSuchUserException {
+				   NoSuchUserException, 
+				   NoSuchTestGroupException {
 		
 		int id = experiment.getId();
 		
@@ -135,16 +140,27 @@ public class ExperimentService {
 			found.setExperimenter(experimenter);
 		}
 		
+		Set<TestGroup> newTestGroups = new HashSet<>();
+		
+		for (TestGroup g : experiment.getTestGroups()) {
+			
+			newTestGroups.add(updateTestGroup(g));
+		}
+		
+		found.setTestGroups(newTestGroups);
+		
 		found.setTitle(title);
 		found.setStatus(experiment.getStatus());
 		found.setDateConducted(experiment.getDateConducted());
+		found.setStartTime(experiment.getStartTime());
+		found.setEndTime(experiment.getEndTime());
 		
 		Experiment updated = experimentRepo.save(found);
 		
 		return updated;
 	}
 	
-	public void removeExperiment(Experiment experiment) 
+	public void deleteExperiment(Experiment experiment) 
 			throws NoSuchExperimentException {
 		
 		if (! experimentRepo.existsById(experiment.getId())) {
@@ -153,6 +169,8 @@ public class ExperimentService {
 		
 		experimentRepo.delete(experiment);
 	}
+	
+	// TODO: unit tests from here
 	
 	// EXPERIMENT SETUP
 	
@@ -185,7 +203,105 @@ public class ExperimentService {
 		
 		return updated;
  	}
+	
+	public TestGroup updateTestGroup(TestGroup testGroup) 
+			throws NoSuchTestGroupException,
+				   NoSuchUserException {
+		
+		int groupId = testGroup.getId();
+		
+		if (! testGroupRepo.existsById(groupId)) {
+			throw new NoSuchTestGroupException(groupId);
+		}
+		
+		TestGroup found = testGroupRepo.findById(groupId);
+		
+		// TODO: update fields, check participants
+		
+		return found;
+	}
+	
+	// EXPERIMENT EXECUTION
+	
+	public Experiment startExperiment(Experiment experiment) 
+			throws NoSuchExperimentException, 
+				   ExperimentStatusException {
+		
+		int id = experiment.getId();
+		
+		if (! experimentRepo.existsById(id)) {
+			throw new NoSuchExperimentException(id);
+		}
+		
+		Experiment ex = experimentRepo.findById(id);
+		
+		Experiment.Status requiredStatus = Experiment.Status.READY;
+		
+		if (! ex.getStatus().equals(requiredStatus)) {
+			throw new ExperimentStatusException(requiredStatus, ex.getStatus());
+		}
+		
+		for (TestGroup g : ex.getTestGroups()) {
+			for (Participant p : g.getParticipants()) {
+				
+				p.setActive(true);
+			}
+		}
+		
+		ex.setStatus(Experiment.Status.RUNNING);
+		ex.setStartTime(LocalDateTime.now());	
+		
+		Experiment updated = experimentRepo.save(ex);
+		
+		return updated;
+	}
+	
+	public Experiment stopExperiment(Experiment experiment) 
+			throws NoSuchExperimentException, 
+				   ExperimentStatusException {
+		
+		int id = experiment.getId();
+		
+		if (! experimentRepo.existsById(id)) {
+			throw new NoSuchExperimentException(id);
+		}
+		
+		Experiment ex = experimentRepo.findById(id);
+		
+		Experiment.Status requiredStatus = Experiment.Status.RUNNING;
+		
+		if (! ex.getStatus().equals(requiredStatus)) {
+			throw new ExperimentStatusException(requiredStatus, ex.getStatus());
+		}
+		
+		for (TestGroup g : ex.getTestGroups()) {
+			for (Participant p : g.getParticipants()) {
+				
+				p.setActive(false);
+			}
+		}
+		
+		ex.setStatus(Experiment.Status.COMPLETE);
+		ex.setStartTime(LocalDateTime.now());	
+		
+		Experiment updated = experimentRepo.save(ex);
+		
+		return updated;
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
