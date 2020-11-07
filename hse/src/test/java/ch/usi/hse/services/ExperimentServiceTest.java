@@ -12,7 +12,7 @@ import ch.usi.hse.db.repositories.ExperimenterRepository;
 import ch.usi.hse.db.repositories.ParticipantRepository;
 import ch.usi.hse.db.repositories.TestGroupRepository;
 
-public class experimentServiceTest {
+public class ExperimentServiceTest {
 
 	@Mock
 	private ExperimentRepository experimentRepo;

@@ -25,7 +25,7 @@ public class NoSuchUserException extends NoSuchEntityException {
 	public NoSuchUserException(String role, int id) {
 		
 		super("No " + role + " with id " + id + " found");
-	}
+	} 
 	
 	public NoSuchUserException(String role, String userName) {
 		

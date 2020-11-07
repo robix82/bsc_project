@@ -3,6 +3,8 @@ package ch.usi.hse.db.repositories;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,6 +13,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import ch.usi.hse.db.entities.Experiment;
+import ch.usi.hse.db.entities.Experimenter;
 import ch.usi.hse.db.entities.Participant;
 import ch.usi.hse.db.entities.TestGroup;
 
@@ -28,9 +31,12 @@ public class ExperimentRepositoriesTest {
 	private ParticipantRepository participantRepo;
 	
 	@Autowired
+	public ExperimenterRepository experimenterRepo;
+	
+	@Autowired
 	private RoleRepository roleRepo;
 	
-	@BeforeEach
+	@BeforeEach 
 	public void setUp() {
 		 
 		experimentRepo.deleteAll();
@@ -170,6 +176,37 @@ public class ExperimentRepositoriesTest {
 		assertEquals(0, participantRepo.count());
 	}
 
+	@Test
+	public void testFindByExperimenter() {
+		
+		Experimenter experimenter1 = experimenterRepo.save(new Experimenter("experimenter1", "pwd"));
+		Experimenter experimenter2 = experimenterRepo.save(new Experimenter("experimenter2", "pwd"));
+		
+		Experiment e1 = experimentRepo.save(new Experiment("e1"));
+		Experiment e2 = experimentRepo.save(new Experiment("e1"));
+		Experiment e3 = experimentRepo.save(new Experiment("e1"));
+		Experiment e4 = experimentRepo.save(new Experiment("e1"));
+		
+		experimenter1.addExperiment(e1);
+		experimenter1.addExperiment(e2);
+		experimenterRepo.save(experimenter1);
+		
+		experimenter2.addExperiment(e3);
+		experimenter2.addExperiment(e4);
+		experimenterRepo.save(experimenter2);
+		
+		assertEquals(4, experimentRepo.count());
+		
+		List<Experiment> l1 = experimentRepo.findByExperimenter(experimenter1);
+		List<Experiment> l2 = experimentRepo.findByExperimenter(experimenter2);
+		
+		assertEquals(2, l1.size());
+		assertEquals(2, l2.size());
+		assertTrue(l1.contains(e1));
+		assertTrue(l1.contains(e2));
+		assertTrue(l2.contains(e3));
+		assertTrue(l2.contains(e4));
+	}
 }
 
 
