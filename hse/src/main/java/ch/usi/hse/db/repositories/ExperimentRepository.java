@@ -20,4 +20,5 @@ public interface ExperimentRepository extends CrudRepository<Experiment, Integer
 	public List<Experiment> findAll();
 	public Experiment findById(int id);
 	public List<Experiment> findByExperimenter(Experimenter experimenter);
+	public boolean existsByTitle(String title);
 }

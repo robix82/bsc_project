@@ -61,7 +61,7 @@ public class Experiment {
 	private Status status;
 	
 	@Column(name="date_creaed")
-	private LocalDateTime dateCreated;
+	private LocalDateTime dateCreated; 
 	
 	@Column(name="date_conducted")
 	private LocalDateTime dateConducted; 

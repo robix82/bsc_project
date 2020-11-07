@@ -43,7 +43,7 @@ public class IndexingService {
 	private DocCollectionRepository collectionRepo;
 	private boolean storeRawFiles, storeExtractionResults;
 	  
-	@Autowired
+	@Autowired 
 	public IndexingService(@Value("${indexing.storeRawFiles}") boolean storeRawFiles,
 						   @Value("${indexing.storeExtractionResults}") boolean storeExtractionResults,
 						   @Qualifier("FileStorage") FileStorage fileStorage,

@@ -40,7 +40,7 @@ public class HseUserDetailsService implements UserDetailsService {
 			
 			List<GrantedAuthority> authorities = new ArrayList<>();
 			
-			for (Role r : u.getRoles()) {
+			for (Role r : u.getRoles()) { 
 				authorities.add(new SimpleGrantedAuthority(r.getRole()));
 			}
 			

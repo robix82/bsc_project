@@ -55,7 +55,7 @@ public class TestGroup {
 	private int experimentId;
 	
 	@Column(name="experiment_title")
-	private String experimentTitle;
+	private String experimentTitle; 
 	
 	public TestGroup() {
 		
