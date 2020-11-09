@@ -110,15 +110,15 @@ public class IndexingServiceTest {
 		existingDocCollection = c1; 
 		newDocCollection = c3;
 		
-		when(urlListStorage.savedFiles()).thenReturn(fileList);
-		doNothing().when(urlListStorage).store(newFile);
-		doNothing().when(urlListStorage).delete(existingUrlListName);
-		doThrow(FileWriteException.class).when(urlListStorage).store(badFile);
-		doThrow(FileDeleteException.class).when(urlListStorage).delete(badUrlListName);
-		doThrow(NoSuchFileException.class).when(urlListStorage).delete(newUrlListName);
+		when(urlListStorage.listUrlFiles()).thenReturn(fileList);
+		doNothing().when(urlListStorage).storeUrlList(newFile);
+		doNothing().when(urlListStorage).deleteUrlList(existingUrlListName);
+		doThrow(FileWriteException.class).when(urlListStorage).storeUrlList(badFile);
+		doThrow(FileDeleteException.class).when(urlListStorage).deleteUrlList(badUrlListName);
+		doThrow(NoSuchFileException.class).when(urlListStorage).deleteUrlList(newUrlListName);
 		
-		when(urlListStorage.getFileAsStream(existingUrlListName)).thenReturn(new ByteArrayInputStream(savedBytes));
-		doThrow(NoSuchFileException.class).when(urlListStorage).getFileAsStream(newUrlListName);
+		when(urlListStorage.getUrlFileAsStream(existingUrlListName)).thenReturn(new ByteArrayInputStream(savedBytes));
+		doThrow(NoSuchFileException.class).when(urlListStorage).getUrlFileAsStream(newUrlListName);
 		
 		when(collectionRepo.findAll()).thenReturn(savedDocCollections);
 		when(collectionRepo.existsById(existingDocCollection.getId())).thenReturn(true);

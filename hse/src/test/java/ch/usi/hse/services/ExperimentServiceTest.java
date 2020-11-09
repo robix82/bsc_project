@@ -19,7 +19,6 @@ import ch.usi.hse.db.repositories.ParticipantRepository;
 import ch.usi.hse.db.repositories.TestGroupRepository;
 import ch.usi.hse.exceptions.ExperimentExistsException;
 import ch.usi.hse.exceptions.NoSuchExperimentException;
-import ch.usi.hse.exceptions.NoSuchTestGroupException;
 import ch.usi.hse.exceptions.NoSuchUserException;
 
 public class ExperimentServiceTest {
@@ -39,9 +38,6 @@ public class ExperimentServiceTest {
 	@Mock
 	private ExperimenterRepository experimenterRepo;
 	
-	@Mock
-	private UserService userService;
-	
 	private ExperimentService service;
 	
 	private List<Experiment> savedExperiments;
@@ -57,8 +53,7 @@ public class ExperimentServiceTest {
 										testGroupRepo,
 										participantRepo,
 										collectionRepo,
-										experimenterRepo,
-										userService);
+										experimenterRepo);
 		
 		// EXPERIMENTERS
 		
@@ -150,14 +145,6 @@ public class ExperimentServiceTest {
 		}
 		
 		assertTrue(exc);
-	}
-	
-	@Test
-	public void testAllExperimenters() {
-		
-		List<Experimenter> res = service.allExperimenters();
-		
-		assertIterableEquals(savedExperimenters, res);
 	}
 	
 	@Test
@@ -355,8 +342,6 @@ public class ExperimentServiceTest {
 		
 		assertTrue(exc);
 	}
-	
-	// TODO: check indirect TestGroup update failure
 	
 	@Test
 	public void testDeleteExperiment1() {

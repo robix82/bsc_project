@@ -109,7 +109,7 @@ public class UrlListStorageTest {
 		assertEquals(2, Files.list(storagePath).count());
 		assertFalse(Files.exists(storagePath.resolve(newName)));
 		
-		listStorage.store(file);
+		listStorage.storeUrlList(file);
 		
 		assertEquals(3, Files.list(storagePath).count());
 		assertTrue(Files.exists(storagePath.resolve(newName)));
@@ -123,7 +123,7 @@ public class UrlListStorageTest {
 		assertEquals(2, Files.list(storagePath).count());
 		assertTrue(Files.exists(storagePath.resolve(name)));
 		
-		listStorage.delete(name);
+		listStorage.deleteUrlList(name);
 		
 		assertEquals(1, Files.list(storagePath).count());
 		assertFalse(Files.exists(storagePath.resolve(name)));
@@ -137,7 +137,7 @@ public class UrlListStorageTest {
 		assertEquals(2, Files.list(storagePath).count());
 		
 		try {
-			listStorage.delete(newName);
+			listStorage.deleteUrlList(newName);
 		}
 		catch (NoSuchFileException e) {
 			
@@ -152,7 +152,7 @@ public class UrlListStorageTest {
 	@Test
 	public void testGetLines1() throws NoSuchFileException, FileReadException {
 		
-		List<String> res = listStorage.getLines(listNames.get(0));
+		List<String> res = listStorage.getUrlLines(listNames.get(0));
 
 		assertIterableEquals(savedList1, res);
 	}
@@ -163,7 +163,7 @@ public class UrlListStorageTest {
 		boolean exc = false;
 		
 		try {
-			listStorage.getLines(newName);
+			listStorage.getUrlLines(newName);
 		}
 		catch (NoSuchFileException e) {
 			
@@ -177,7 +177,7 @@ public class UrlListStorageTest {
 	@Test
 	public void testSavedFiles() throws FileReadException {
 		
-		List<String> fileNames = listStorage.savedFiles();
+		List<String> fileNames = listStorage.listUrlFiles();
 		
 		assertEquals(2, fileNames.size());
 		assertTrue(fileNames.contains(listNames.get(0)));
@@ -187,7 +187,7 @@ public class UrlListStorageTest {
 	@Test
 	public void testgGetFileAsStream1() throws NoSuchFileException, FileReadException, IOException {
 		
-		InputStream is = listStorage.getFileAsStream(listNames.get(0));
+		InputStream is = listStorage.getUrlFileAsStream(listNames.get(0));
 		
 		assertNotNull(is);
 		
@@ -204,7 +204,7 @@ public class UrlListStorageTest {
 		boolean exc = false;
 		
 		try {
-			listStorage.getFileAsStream(newName);
+			listStorage.getUrlFileAsStream(newName);
 		}
 		catch (NoSuchFileException e) {
 			

@@ -67,7 +67,7 @@ public class IndexingService {
 	 */
 	public List<String> savedUrlLists() throws FileReadException {
 		
-		return urlListStorage.savedFiles();
+		return urlListStorage.listUrlFiles();
 	} 
 	
 	/**
@@ -78,7 +78,7 @@ public class IndexingService {
 	 */
 	public void addUrlList(MultipartFile file) throws FileWriteException {
 		
-		urlListStorage.store(file);
+		urlListStorage.storeUrlList(file);
 	}
 	 
 	
@@ -92,7 +92,7 @@ public class IndexingService {
 	public void removeUrlList(String fileName) throws NoSuchFileException, 
 						 							  FileDeleteException {
 		
-		urlListStorage.delete(fileName);
+		urlListStorage.deleteUrlList(fileName);
 	}
 	
 	/**
@@ -105,7 +105,7 @@ public class IndexingService {
 	 */
 	public InputStream getUrlListFile(String fileName) throws NoSuchFileException, FileReadException {
 		
-		return urlListStorage.getFileAsStream(fileName);
+		return urlListStorage.getUrlFileAsStream(fileName);
 	}
 	
 	/**

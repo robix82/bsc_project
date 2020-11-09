@@ -130,22 +130,6 @@ public class FileStorage {
 		}
 	}
 	
-
-	/**
-	 * Deletes the given file
-	 * 
-	 * @param filePathString
-	 * @throws NoSuchFileException
-	 * @throws FileDeleteException
-	 */
-	public void delete(String filePathString) throws NoSuchFileException,
-											 FileDeleteException {
-		
-		Path filePath = Paths.get(filePathString);
-		
-		delete(filePath);
-	}
-	
 	/**
 	 * returns an InputStream for reading the given file
 	 * 
@@ -173,23 +157,7 @@ public class FileStorage {
 	}
 	
 	/**
-	 * returns an InputStream for reading the given file
-	 * 
-	 * @param filePathString
-	 * @return
-	 * @throws NoSuchFileException
-	 * @throws FileReadException
-	 */
-	public InputStream getInputStream(String filePathString) throws NoSuchFileException,
-															FileReadException {
-		
-		Path filePath = Paths.get(filePathString);
-		
-		return getInputStream(filePath);
-	}
-	
-	/**
-	 * removes all files and subDirectories from the given direcctory path
+	 * removes all files and subDirectories from the given directory path
 	 * 
 	 * @param dir
 	 * @throws NoSuchFileException 

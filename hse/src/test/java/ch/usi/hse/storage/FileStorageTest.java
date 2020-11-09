@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -48,9 +49,12 @@ public class FileStorageTest {
 										   MediaType.TEXT_PLAIN_VALUE,
 										   testBytes);
 		
-		cleanFiles();
-		
 		Files.writeString(testDir.resolve(existingFileName), testString);
+	}
+	
+	@AfterEach
+	public void cleanup() throws IOException {
+		cleanFiles();
 	}
 	
 	@Test // store MultipartFile on Path
@@ -137,16 +141,6 @@ public class FileStorageTest {
 	}
 	
 	@Test
-	public void testDelete2() throws IOException, NoSuchFileException, FileDeleteException {
-		
-		assertEquals(1, Files.list(testDir).count());
-		
-		fileStorage.delete(testDir.resolve(existingFileName).toString());
-		
-		assertEquals(0, Files.list(testDir).count());
-	}
-	
-	@Test
 	public void testDelete3() throws IOException, FileDeleteException {
 		
 		boolean exc = false;
@@ -182,21 +176,7 @@ public class FileStorageTest {
 	}
 	
 	@Test
-	public void testGetInputStream2() throws NoSuchFileException, FileReadException, IOException {
-		
-		InputStream is = fileStorage.getInputStream(testDir.resolve(existingFileName).toString());
-		
-		assertNotNull(is);
-		
-		byte[] bf = new byte[is.available()];
-		is.read(bf);
-		is.close();
-		
-		assertArrayEquals(testBytes, bf);		
-	}
-	
-	@Test
-	public void testGetInputStream3() throws FileReadException {
+	public void testGetInputStream2() throws FileReadException {
 		
 		boolean exc = false;
 		

@@ -97,7 +97,7 @@ public class IndexBuilder {
 		
 		Instant start = Instant.now(); 
 		
-		List<String> urls = urlListStorage.getLines(collection.getUrlListName());
+		List<String> urls = urlListStorage.getUrlLines(collection.getUrlListName());
 		
 		mainLoop(urls);
 		

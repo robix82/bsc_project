@@ -1,17 +1,13 @@
 package ch.usi.hse.services;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ch.usi.hse.db.entities.Experiment;
 import ch.usi.hse.db.entities.Experimenter;
-import ch.usi.hse.db.entities.Participant;
 import ch.usi.hse.db.entities.TestGroup;
 import ch.usi.hse.db.repositories.DocCollectionRepository;
 import ch.usi.hse.db.repositories.ExperimentRepository;
@@ -19,11 +15,10 @@ import ch.usi.hse.db.repositories.ExperimenterRepository;
 import ch.usi.hse.db.repositories.ParticipantRepository;
 import ch.usi.hse.db.repositories.TestGroupRepository;
 import ch.usi.hse.exceptions.ExperimentExistsException;
-import ch.usi.hse.exceptions.ExperimentStatusException;
 import ch.usi.hse.exceptions.NoSuchExperimentException;
 import ch.usi.hse.exceptions.NoSuchTestGroupException;
 import ch.usi.hse.exceptions.NoSuchUserException;
-import ch.usi.hse.exceptions.UserExistsException;
+
 
 @Service
 public class ExperimentService {
@@ -33,22 +28,19 @@ public class ExperimentService {
 //	private ParticipantRepository participantRepo;
 //	private DocCollectionRepository collectionRepo;
 	private ExperimenterRepository experimenterRepo;
-	private UserService userService;
 	
 	@Autowired
 	public ExperimentService(ExperimentRepository experimentRepo,
 							 TestGroupRepository testGroupRepo,
 							 ParticipantRepository participantRepo,
 							 DocCollectionRepository collectionRepo,
-							 ExperimenterRepository experimenterRepo,
-							 UserService userService) {
+							 ExperimenterRepository experimenterRepo) {
 		
 		this.experimentRepo = experimentRepo;
 		this.testGroupRepo = testGroupRepo;
 //		this.participantRepo = participantRepo;
 //		this.collectionRepo = collectionRepo;
 		this.experimenterRepo = experimenterRepo;
-		this.userService = userService;
 	}
 	
 	// GENERAL DB OPERATIONS
@@ -67,11 +59,6 @@ public class ExperimentService {
 		return experimentRepo.findById(id);
 	}
 	
-	public List<Experimenter> allExperimenters() {
-		
-		return experimenterRepo.findAll();
-	}
-	
 	public List<Experiment> findByExperimenter(Experimenter experimenter) throws NoSuchUserException {
 		
 		if (! experimenterRepo.existsById(experimenter.getId())) {
@@ -81,7 +68,7 @@ public class ExperimentService {
 		return experimentRepo.findByExperimenter(experimenter);
 	}
 	
-	public Experiment addExperiment(Experiment experiment) 
+	public Experiment addExperiment(Experiment experiment) // TODO: use config file instead
 			throws ExperimentExistsException {
 		
 		int id = experiment.getId();
@@ -140,15 +127,6 @@ public class ExperimentService {
 			found.setExperimenter(experimenter);
 		}
 		
-		Set<TestGroup> newTestGroups = new HashSet<>();
-		
-		for (TestGroup g : experiment.getTestGroups()) {
-			
-			newTestGroups.add(updateTestGroup(g));
-		}
-		
-		found.setTestGroups(newTestGroups);
-		
 		found.setTitle(title);
 		found.setStatus(experiment.getStatus());
 		found.setDateConducted(experiment.getDateConducted());
@@ -173,7 +151,7 @@ public class ExperimentService {
 	// TODO: unit tests from here
 	
 	// EXPERIMENT SETUP
-	
+	/*
 	public List<Participant> createParticipants(List<Participant> participants) 
 			throws UserExistsException {
 		
@@ -187,22 +165,7 @@ public class ExperimentService {
 		
 		return saved;
 	}
-	
-	public Experiment addTestGroup(int experimentId, TestGroup testGroup) 
-			throws NoSuchExperimentException {
-		
-		if (! experimentRepo.existsById(experimentId)) {
-			throw new NoSuchExperimentException(experimentId);
-		}
-		
-		Experiment experiment = experimentRepo.findById(experimentId);
-		
-		experiment.addTestGroup(testGroup);
-		
-		Experiment updated = experimentRepo.save(experiment);
-		
-		return updated;
- 	}
+	*/
 	
 	public TestGroup updateTestGroup(TestGroup testGroup) 
 			throws NoSuchTestGroupException,
@@ -222,7 +185,7 @@ public class ExperimentService {
 	}
 	
 	// EXPERIMENT EXECUTION
-	
+	/*
 	public Experiment startExperiment(Experiment experiment) 
 			throws NoSuchExperimentException, 
 				   ExperimentStatusException {
@@ -288,6 +251,7 @@ public class ExperimentService {
 		
 		return updated;
 	}
+	*/
 }
 
 

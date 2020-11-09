@@ -18,6 +18,7 @@ services:
       - hse-data-indices:/data/indices
       - hse-data-rawDl:/data/rawDl
       - hse-data-extractionResults:/data/extractionResults
+      - hse-data-experimentConfig:/data/experimentConfig
 
   hse-mysql:
     image: mysql
@@ -41,6 +42,7 @@ volumes:
   hse-data-indices:
   hse-data-rawDl:
   hse-data-extractionResults:
+  hse-data-experimentConfig:
 
 
 

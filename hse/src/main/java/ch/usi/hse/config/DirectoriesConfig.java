@@ -14,6 +14,7 @@ public class DirectoriesConfig {
 	private Path testFiles;
 	private Path rawDl;
 	private Path extractionResults;
+	private Path experimentConfig;
 	
 	public Path getUrlLists() {
 		return urlLists;
@@ -53,6 +54,14 @@ public class DirectoriesConfig {
 	
 	public void setExtractionResults(Path extractionResults) {
 		this.extractionResults = extractionResults;
+	}
+	
+	public Path getExperimentConfig() {
+		return experimentConfig;
+	}
+	
+	public void setExperimentConfig(Path experimentConfig) {
+		this.experimentConfig = experimentConfig;
 	}
 }
 
