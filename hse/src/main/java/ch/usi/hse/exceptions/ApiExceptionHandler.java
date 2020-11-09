@@ -101,6 +101,16 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		
 		return new ResponseEntity<>(err, status);
 	}
+	
+	@ExceptionHandler(ConfigParseException.class)
+	public ResponseEntity<Object> handleConfigParseException(ConfigParseException e) {
+		
+		HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
+		
+		ApiError err = new ApiError(status, e);
+		
+		return new ResponseEntity<>(err, status);
+	}
 }
 
 

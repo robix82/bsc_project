@@ -163,6 +163,24 @@ public class ApiExceptionHandlerTest {
 		assertEquals(expectedErr.getErrorType(), actualErr.getErrorType());
 		assertEquals(expectedErr.getErrorMessage(), actualErr.getErrorMessage());
 	}
+	
+	@Test
+	public void testHandleConfigParseException() {
+		
+		ConfigParseException ex = new ConfigParseException("fName", "line");
+		
+		HttpStatus expectedStatus = HttpStatus.UNPROCESSABLE_ENTITY;
+		ApiError expectedErr = new ApiError(expectedStatus, ex);
+		
+		ResponseEntity<Object> res = handler.handleConfigParseException(ex);
+		HttpStatus actualStatus = res.getStatusCode();
+		ApiError actualErr = (ApiError) res.getBody();
+		
+		assertEquals(expectedStatus, actualStatus);
+		assertEquals(expectedStatus, actualErr.getStatus());
+		assertEquals(expectedErr.getErrorType(), actualErr.getErrorType());
+		assertEquals(expectedErr.getErrorMessage(), actualErr.getErrorMessage());
+	}
 }
 
 

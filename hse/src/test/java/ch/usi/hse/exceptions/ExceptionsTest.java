@@ -355,6 +355,26 @@ public class ExceptionsTest {
 		
 		assertTrue(exc);
  	}
+	
+	@Test
+	public void testConfigPArseException() {
+		
+		boolean exc = false;
+		String fName = "fName";
+		String line = "line";
+		String msg = "Error parsing " + fName + ": " + line;
+		
+		try {
+			throw new ConfigParseException(fName, line);
+		}
+		catch (Exception e) {
+			
+			assertEquals(msg, e.getMessage());
+			exc = true;
+		}
+		
+		assertTrue(exc);
+	}
 }
 
 

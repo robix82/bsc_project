@@ -15,38 +15,38 @@ import org.junit.jupiter.api.io.TempDir;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 
-import ch.usi.hse.exceptions.FileWriteException;
-import ch.usi.hse.exceptions.NoSuchFileException;
+import ch.usi.hse.exceptions.*;
 
-public class UrlListStorageTest {
+public class ExperimentConfigStorageTest {
 
 	@TempDir
 	Path storageDir;
-
-	private UrlListStorage uls;
+	
+	private ExperimentConfigStorage cnfs;
 	
 	private String existingFileName, newFileName;
-	private List<String> existingUrls, newUrls;
+	private List<String> existingConfigLines, newConfigLines;
 	private Path existingFile;
 	private MockMultipartFile newMpFile;
 	private byte[] existingFileBytes, newFileBytes;
 	
 	@BeforeEach
-	public void setUp() throws FileWriteException, IOException {
+	public void setUp() throws IOException, FileWriteException {
 		
-		uls = new UrlListStorage(storageDir);
+		cnfs = new ExperimentConfigStorage(storageDir);
 		
-		newFileName = "newFile";
 		existingFileName = "existingFile";
+		newFileName = "newFile";
 		
-		existingUrls = List.of("url1", "url2", "url3");
-		newUrls = List.of("url4", "url5", "url6");
+		existingConfigLines = List.of("line1", "line2", "line3");
+		newConfigLines = List.of("line4", "line5", "line6");
 		
 		StringBuilder sb1 = new StringBuilder();
 		
-		for (String s : existingUrls) {
+		for (String s : existingConfigLines) {
 			
 			sb1.append("   \n")   // blank line to be ignored
+			   .append("# comment\n") // comment to be ignored
 			   .append(s).append("\n");
 		}
 		
@@ -57,18 +57,19 @@ public class UrlListStorageTest {
 		
 		StringBuilder sb2 = new StringBuilder();
 		
-		for (String s : newUrls) {
+		for (String s : newConfigLines) {
 			
 			sb2.append("   \n")   // blank line to be ignored
+			   .append("# comment\n") // comment to be ignored
 			   .append(s).append("\n");
 		}
 		
 		newFileBytes = sb2.toString().getBytes();
 		
-		newMpFile = new MockMultipartFile("urlFile",
-										  newFileName,
-										  MediaType.TEXT_PLAIN_VALUE,
-										  newFileBytes);
+		newMpFile = new MockMultipartFile("configFile",
+								          newFileName,
+								          MediaType.TEXT_PLAIN_VALUE,
+								          newFileBytes);
 	}
 	
 	@AfterEach
@@ -78,7 +79,7 @@ public class UrlListStorageTest {
 	}
 	
 	@Test
-	public void testSetup() throws IOException {
+	public void testSetUp() throws IOException {
 		
 		assertEquals(1, Files.list(storageDir).count());
 		assertTrue(Files.exists(existingFile));
@@ -86,12 +87,12 @@ public class UrlListStorageTest {
 	}
 	
 	@Test
-	public void testStoreUrlList() throws Exception {
+	public void testStoreConfigFile() throws Exception {
 		
 		long count = Files.list(storageDir).count();
 		assertFalse(Files.exists(storageDir.resolve(newFileName)));
 		
-		uls.storeUrlList(newMpFile);
+		cnfs.storeConfigFile(newMpFile);
 		
 		assertEquals(count +1, Files.list(storageDir).count());
 		assertTrue(Files.exists(storageDir.resolve(newFileName)));
@@ -99,25 +100,25 @@ public class UrlListStorageTest {
 	}
 	
 	@Test
-	public void testDeleteUrlList1() throws Exception {
+	public void testDeleteConfigFile1() throws Exception {
 		
 		long count = Files.list(storageDir).count();
 		assertTrue(Files.exists(existingFile));
 		
-		uls.deleteUrlList(existingFileName);
+		cnfs.deleteConfigFile(existingFileName);
 		
 		assertEquals(count -1, Files.list(storageDir).count());
 		assertFalse(Files.exists(existingFile));
 	}
 	
 	@Test
-	public void testDeleteUrlList2() throws Exception {
+	public void testDeleteConfigFile2() throws Exception {
 		
 		boolean exc;
 		
 		try {
 			
-			uls.deleteUrlList(newFileName);
+			cnfs.deleteConfigFile(newFileName);
 			exc = false;
 		}
 		catch (NoSuchFileException e) {
@@ -130,21 +131,21 @@ public class UrlListStorageTest {
 	}
 	
 	@Test
-	public void testGetUrlLines1() throws Exception {
+	public void testGetConfigLines1() throws Exception {
 		
-		List<String> lines = uls.getUrlLines(existingFileName);
+		List<String> lines = cnfs.getConfigLines(existingFileName);
 		
-		assertIterableEquals(existingUrls, lines);
+		assertIterableEquals(existingConfigLines, lines);
 	}
 	
 	@Test
-	public void testGetUrlLines2() throws Exception {
+	public void testGetConfigLines2() throws Exception {
 		
 		boolean exc;
 		
 		try {
 			
-			uls.getUrlLines(newFileName);
+			cnfs.getConfigLines(newFileName);
 			exc = false;
 		}
 		catch (NoSuchFileException e) {
@@ -157,18 +158,9 @@ public class UrlListStorageTest {
 	}
 	
 	@Test
-	public void testListUrlFiles() throws Exception {
+	public void testGetConfigFileAsStream1() throws Exception {
 		
-		List<String> files = uls.listUrlFiles();
-		
-		assertEquals(1, files.size());
-		assertTrue(files.contains(existingFileName));
-	}
-	
-	@Test
-	public void testGetUrlFileAsStream1() throws Exception {
-		
-		InputStream is = uls.getUrlFileAsStream(existingFileName);
+		InputStream is = cnfs.getConfigFileAsStream(existingFileName);
 		
 		assertNotNull(is);
 		byte[] content = new byte[is.available()];
@@ -177,13 +169,13 @@ public class UrlListStorageTest {
 	}
 	
 	@Test
-	public void testGetUrlFileAsStream2() throws Exception {
+	public void testGetConfigFileAsStream2() throws Exception {
 		
 		boolean exc;
 		
 		try {
 			
-			uls.getUrlFileAsStream(newFileName);
+			cnfs.getConfigFileAsStream(newFileName);
 			exc = false;
 		}
 		catch (NoSuchFileException e) {
@@ -194,6 +186,7 @@ public class UrlListStorageTest {
 		
 		assertTrue(exc);
 	}
+	
 	
 	///////////////////////
 	
@@ -209,6 +202,10 @@ public class UrlListStorageTest {
 		});
 	}
 }
+
+
+
+
 
 
 

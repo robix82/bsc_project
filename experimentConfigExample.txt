@@ -3,13 +3,10 @@
 
 # lines starting with '#' are ignored
 
-# this line sets the title for the experiment. The title must NOT contain white spaces
 
-title: testExperiment_1
-
-# a test group is defined by setting its name
+# a test group is defined by setting its name; the group name must NOT contain white spaces
 # the following lines, up to the next test group definition or the end of the file 
-# define the participants (username + space + password). Usernames must be unique
+# define the participants (username + space + password). Usernames must be unique.
 
 group: testGroup1
 

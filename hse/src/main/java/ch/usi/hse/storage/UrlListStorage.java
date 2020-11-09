@@ -78,7 +78,8 @@ public class UrlListStorage extends TextFileStorage {
 	 * @throws NoSuchFileException
 	 * @throws FileReadException
 	 */
-	public List<String> getUrlLines(String fileName) throws NoSuchFileException, FileReadException {
+	public List<String> getUrlLines(String fileName) 
+			throws NoSuchFileException, FileReadException {
 		
 		List<String> urlLines = new ArrayList<>();
 		

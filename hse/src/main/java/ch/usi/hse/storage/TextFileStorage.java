@@ -24,7 +24,8 @@ public class TextFileStorage extends FileStorage {
 	 * @param file
 	 * @throws FileWriteException
 	 */
-	public void storeTextFile(MultipartFile file, Path directory) throws FileWriteException {
+	public void storeTextFile(MultipartFile file, Path directory) 
+			throws FileWriteException {
 
 		store(file, directory);
 	}
@@ -36,7 +37,8 @@ public class TextFileStorage extends FileStorage {
 	 * @throws NoSuchFileException
 	 * @throws FileDeleteException
 	 */
-	public void deleteTextFile(String fileName, Path directory) throws NoSuchFileException, FileDeleteException {
+	public void deleteTextFile(String fileName, Path directory) 
+			throws FileDeleteException, NoSuchFileException {
 		
 		Path filePath = directory.resolve(fileName);
 		delete(filePath);
@@ -50,7 +52,8 @@ public class TextFileStorage extends FileStorage {
 	 * @throws NoSuchFileException
 	 * @throws FileReadException
 	 */
-	public List<String> getTextLines(String fileName, Path directory) throws NoSuchFileException, FileReadException {
+	public List<String> getTextLines(String fileName, Path directory) 
+			throws NoSuchFileException, FileReadException {
 		
 		Path filePath = directory.resolve(fileName);
 		

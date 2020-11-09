@@ -44,7 +44,7 @@ public class FileStorageTest {
 		newFileName = "newFile.txt";
 		existingFileName = "existingFile.txt";
 
-		testMpFile = new MockMultipartFile(newFileName,
+		testMpFile = new MockMultipartFile("file",
 										   newFileName,
 										   MediaType.TEXT_PLAIN_VALUE,
 										   testBytes);

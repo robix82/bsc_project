@@ -65,13 +65,15 @@ public class ExperimentConfigStorage extends TextFileStorage {
 	 * @throws NoSuchFileException
 	 * @throws FileDeleteException
 	 */
-	public void deleteConfigFile(String fileName) throws NoSuchFileException, FileDeleteException {
+	public void deleteConfigFile(String fileName) 
+			throws NoSuchFileException, FileDeleteException {
 		
 		Path filePath = storagePath.resolve(fileName);
 		delete(filePath);
 	}
 	
-	public List<String> getConfigLines(String fileName) throws NoSuchFileException, FileReadException {
+	public List<String> getConfigLines(String fileName) 
+			throws NoSuchFileException, FileReadException {
 		
 		List<String> configLines = new ArrayList<>();
 		
