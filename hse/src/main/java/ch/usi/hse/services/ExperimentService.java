@@ -92,7 +92,7 @@ public class ExperimentService {
 	}
 	
 	public Experiment addExperiment(Experiment experiment)
-			throws ExperimentExistsException {
+			throws ExperimentExistsException, NoSuchUserException {
 		
 		int id = experiment.getId();
 		String title = experiment.getTitle();
@@ -103,6 +103,17 @@ public class ExperimentService {
 		
 		if (experimentRepo.existsByTitle(title)) {
 			throw new ExperimentExistsException(title);
+		}
+		
+		int experimenterId = experiment.getExperimenterId();
+		
+		if (experimenterId != 0) {
+			
+			if (! experimenterRepo.existsById(experimenterId)) {
+				throw new NoSuchUserException("Experimenter", experimenterId);
+			}
+			
+			experiment.setExperimenter(experimenterRepo.findById(experimenterId));
 		}
 		
 		experiment.setDateCreated(LocalDateTime.now());
@@ -167,6 +178,8 @@ public class ExperimentService {
 		found.setStartTime(experiment.getStartTime());
 		found.setEndTime(experiment.getEndTime());
 		
+		checkReadyStatus(found);
+		
 		Experiment updated = experimentRepo.save(found);
 		
 		return updated;
@@ -194,7 +207,13 @@ public class ExperimentService {
 			throw new NoSuchExperimentException(experiment.getId());
 		}
 		
-		return experimentConfigurer.configureTestGroups(experiment, configFileName);
+		Experiment configured = experimentConfigurer.configureTestGroups(experiment, configFileName);
+		
+		checkReadyStatus(configured);
+		
+		Experiment saved = experimentRepo.save(configured); 
+		
+		return saved;
 	}
 	
 	public List<DocCollection> getDocCollections() {
@@ -345,6 +364,24 @@ public class ExperimentService {
 		TestGroup updated = testGroupRepo.save(found);
 		
 		return updated;
+	}
+	
+	private void checkReadyStatus(Experiment e) {
+		
+		if (e.getTestGroups().isEmpty()) {
+			
+			e.setStatus(Experiment.Status.NOT_READY);
+			return;
+		}
+		
+		for (TestGroup g : e.getTestGroups()) {
+			
+			if (g.getParticipants().isEmpty() || g.getDocCollections().isEmpty()) {
+				
+				e.setStatus(Experiment.Status.NOT_READY);
+				return;
+			}
+		}
 	}
 }
 

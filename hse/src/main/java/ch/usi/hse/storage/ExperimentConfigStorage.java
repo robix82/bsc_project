@@ -30,7 +30,7 @@ public class ExperimentConfigStorage extends TextFileStorage {
 	private Path storagePath;
 	
 	@Autowired
-	public ExperimentConfigStorage(@Value("${dir.experimentConfig") Path storagePath) 
+	public ExperimentConfigStorage(@Value("${dir.experimentConfig}") Path storagePath) 
 			throws FileWriteException {
 		
 		this.storagePath = storagePath;

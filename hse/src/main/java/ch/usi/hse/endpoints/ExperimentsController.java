@@ -48,7 +48,7 @@ public class ExperimentsController {
 	@Autowired
 	private UserService userService;
 	
-	// UI CCONTROLLERS
+	// UI CONTROLLERS
 	
 	/**
 	 * Serves the main experiments UI
@@ -134,10 +134,11 @@ public class ExperimentsController {
 	 * @param experiment
 	 * @return saved experiment
 	 * @throws ExperimentExistsException
+	 * @throws NoSuchUserException 
 	 */
 	@PostMapping("/")
 	public ResponseEntity<Experiment> postExperiment(@RequestBody Experiment experiment) 
-			throws ExperimentExistsException {
+			throws ExperimentExistsException, NoSuchUserException {
 		
 		Experiment saved = experimentService.addExperiment(experiment);
 		
@@ -250,6 +251,17 @@ public class ExperimentsController {
 		}
 	}
 	
+	/**
+	 * configure an Experiments TestGroups using the given configuration file
+	 * 
+	 * @param configFileName
+	 * @param experiment
+	 * @return
+	 * @throws NoSuchExperimentException
+	 * @throws NoSuchFileException
+	 * @throws FileReadException
+	 * @throws ConfigParseException
+	 */
 	@PostMapping("/testGroups")
 	public ResponseEntity<Experiment> configureExperiment(@RequestParam String configFileName,
 														  @RequestBody Experiment experiment) 

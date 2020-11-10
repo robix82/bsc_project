@@ -190,7 +190,7 @@ public class ExperimentServiceTest {
 	}
 	
 	@Test
-	public void testAddExperiment1() throws ExperimentExistsException {
+	public void testAddExperiment1() throws ExperimentExistsException, NoSuchUserException {
 		
 		Experiment saved = service.addExperiment(newExperiment);
 		
@@ -198,7 +198,7 @@ public class ExperimentServiceTest {
 	}
 	
 	@Test
-	public void tesstAddExperiment2() {
+	public void tesstAddExperiment2() throws NoSuchUserException {
 		
 		boolean exc;
 		int existingId = savedExperiments.get(0).getId();
@@ -219,7 +219,7 @@ public class ExperimentServiceTest {
 	}
 	
 	@Test
-	public void testAddExperiment3() {
+	public void testAddExperiment3() throws NoSuchUserException {
 		
 		boolean exc;
 		String existingTitle= savedExperiments.get(0).getTitle();
