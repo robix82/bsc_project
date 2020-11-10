@@ -1,7 +1,8 @@
 package ch.usi.hse.experiments;
 
-import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -10,25 +11,43 @@ import org.springframework.stereotype.Component;
 import ch.usi.hse.db.entities.Experiment;
 import ch.usi.hse.db.entities.Participant;
 import ch.usi.hse.db.entities.TestGroup;
+import ch.usi.hse.db.repositories.ExperimentRepository;
+import ch.usi.hse.db.repositories.ParticipantRepository;
+import ch.usi.hse.db.repositories.TestGroupRepository;
 import ch.usi.hse.exceptions.ConfigParseException;
 import ch.usi.hse.exceptions.FileReadException;
 import ch.usi.hse.exceptions.NoSuchFileException;
 import ch.usi.hse.storage.ExperimentConfigStorage;
 
+/**
+ * File based TestGgroup and Participant configuration
+ * 
+ * @author robert.jans@usi.ch
+ *
+ */
 @Component
 public class ExperimentConfigurer {
 
 	private ExperimentConfigStorage configStorage;
+	private ParticipantRepository participantRepo;
+	private TestGroupRepository testGroupRepo;
+	private ExperimentRepository experimentRepo;
 	
 	private String fileName;
 	private List<String> configLines;
 	
 	@Autowired
 	public ExperimentConfigurer(@Qualifier("ExperimentConfigStorage")
-								ExperimentConfigStorage configStorage) {
+								ExperimentConfigStorage configStorage,
+								ParticipantRepository participantRepo,
+								TestGroupRepository testGroupRepo,
+								ExperimentRepository experimentRepo) {
 		
 		
 		this.configStorage = configStorage;
+		this.participantRepo = participantRepo;
+		this.testGroupRepo = testGroupRepo;
+		this.experimentRepo = experimentRepo;
 	}
 
 	public Experiment configureTestGroups(Experiment experiment, String configFileName) 
@@ -38,6 +57,8 @@ public class ExperimentConfigurer {
 		
 		fileName = configFileName;
 		configLines = configStorage.getConfigLines(fileName);
+		Set<String> groupNames = new HashSet<>();
+		Set<String> userNames = new HashSet<>();
 
 		experiment.clearTestGroups();
 		
@@ -47,24 +68,26 @@ public class ExperimentConfigurer {
 		while (idx < end) {
 			
 			String[] words = getWords(idx++);		
-			System.out.println("outer loop reading " + Arrays.toString(words));
 			
 			if (words.length != 2 || ! words[0].equals("group:")) {
-				System.out.println("Error on group def");
-				throwParseException(idx);
+				throwParseException(idx -1);
 			}
 			
-			System.out.println("idx " + idx + ": adding group " + words[1]);
-			TestGroup g = new TestGroup(words[1]);
+			String groupName = words[1];
+			
+			if (groupNames.contains(groupName)) {
+				throwParseException(idx -1);
+			}
+			
+			groupNames.add(groupName);
+			TestGroup g = testGroupRepo.save(new TestGroup(groupName));
 			
 			while (idx < end) {
 				
 				words = getWords(idx++);
-				System.out.println("inner loop reading " + Arrays.toString(words));
 				
 				if (words.length != 2) {
-					System.out.println("Error on participant def");
-					throwParseException(idx);
+					throwParseException(idx -1);
 				}
 				
 				if (words[0].equals("group:")) {
@@ -72,14 +95,22 @@ public class ExperimentConfigurer {
 					break;
 				}
 				
-				System.out.println("idx " + idx + ": adding participant " + words[0] + " " + words[1]);
-				g.addParticipant(new Participant(words[0], words[1]));
+				String userName = words[0];
+				
+				if (userNames.contains(userName)) {
+					throwParseException(idx -1);
+				}
+				
+				userNames.add(userName);
+				Participant p = participantRepo.save(new Participant(userName, words[1]));
+				g.addParticipant(p);
 			}
 			
-			System.out.println("Adding to Experiment: " + g.getName());
+			testGroupRepo.save(g);
 			experiment.addTestGroup(g);
 		}
 		
+		experimentRepo.save(experiment);
 		
 		return experiment; 
 	}

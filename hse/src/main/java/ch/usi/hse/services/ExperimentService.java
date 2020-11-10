@@ -1,23 +1,39 @@
 package ch.usi.hse.services;
 
+import java.io.InputStream;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import ch.usi.hse.db.entities.DocCollection;
 import ch.usi.hse.db.entities.Experiment;
 import ch.usi.hse.db.entities.Experimenter;
+import ch.usi.hse.db.entities.Participant;
 import ch.usi.hse.db.entities.TestGroup;
 import ch.usi.hse.db.repositories.DocCollectionRepository;
 import ch.usi.hse.db.repositories.ExperimentRepository;
 import ch.usi.hse.db.repositories.ExperimenterRepository;
 import ch.usi.hse.db.repositories.ParticipantRepository;
 import ch.usi.hse.db.repositories.TestGroupRepository;
+import ch.usi.hse.exceptions.ConfigParseException;
 import ch.usi.hse.exceptions.ExperimentExistsException;
+import ch.usi.hse.exceptions.FileDeleteException;
+import ch.usi.hse.exceptions.FileReadException;
+import ch.usi.hse.exceptions.FileWriteException;
+import ch.usi.hse.exceptions.NoSuchDocCollectionException;
 import ch.usi.hse.exceptions.NoSuchExperimentException;
+import ch.usi.hse.exceptions.NoSuchFileException;
 import ch.usi.hse.exceptions.NoSuchTestGroupException;
 import ch.usi.hse.exceptions.NoSuchUserException;
+import ch.usi.hse.exceptions.UserExistsException;
+import ch.usi.hse.experiments.ExperimentConfigurer;
+import ch.usi.hse.storage.ExperimentConfigStorage;
 
 
 @Service
@@ -25,22 +41,29 @@ public class ExperimentService {
 
 	private ExperimentRepository experimentRepo;
 	private TestGroupRepository testGroupRepo;
-//	private ParticipantRepository participantRepo;
-//	private DocCollectionRepository collectionRepo;
+	private ParticipantRepository participantRepo;
+	private DocCollectionRepository collectionRepo;
 	private ExperimenterRepository experimenterRepo;
+	ExperimentConfigurer experimentConfigurer;
+	ExperimentConfigStorage experimentConfigStorage;
 	
 	@Autowired
 	public ExperimentService(ExperimentRepository experimentRepo,
 							 TestGroupRepository testGroupRepo,
 							 ParticipantRepository participantRepo,
 							 DocCollectionRepository collectionRepo,
-							 ExperimenterRepository experimenterRepo) {
+							 ExperimenterRepository experimenterRepo,
+							 ExperimentConfigurer experimentConfigurer,
+							 @Qualifier("ExperimentConfigStorage")
+							 ExperimentConfigStorage experimentConfigStorage) {
 		
 		this.experimentRepo = experimentRepo;
 		this.testGroupRepo = testGroupRepo;
-//		this.participantRepo = participantRepo;
-//		this.collectionRepo = collectionRepo;
+		this.participantRepo = participantRepo;
+		this.collectionRepo = collectionRepo;
 		this.experimenterRepo = experimenterRepo;
+		this.experimentConfigurer = experimentConfigurer;
+		this.experimentConfigStorage = experimentConfigStorage;
 	}
 	
 	// GENERAL DB OPERATIONS
@@ -68,7 +91,7 @@ public class ExperimentService {
 		return experimentRepo.findByExperimenter(experimenter);
 	}
 	
-	public Experiment addExperiment(Experiment experiment) // TODO: use config file instead
+	public Experiment addExperiment(Experiment experiment)
 			throws ExperimentExistsException {
 		
 		int id = experiment.getId();
@@ -93,7 +116,9 @@ public class ExperimentService {
 			throws NoSuchExperimentException, 
 				   ExperimentExistsException, 
 				   NoSuchUserException, 
-				   NoSuchTestGroupException {
+				   NoSuchTestGroupException, 
+				   UserExistsException, 
+				   NoSuchDocCollectionException {
 		
 		int id = experiment.getId();
 		
@@ -127,6 +152,15 @@ public class ExperimentService {
 			found.setExperimenter(experimenter);
 		}
 		
+		Set<TestGroup> updatedGroups = new HashSet<>();
+		
+		for (TestGroup g : experiment.getTestGroups()) {
+			
+			updatedGroups.add(updateTestGroup(g, experiment));
+		}
+		
+		found.setTestGroups(updatedGroups);
+		
 		found.setTitle(title);
 		found.setStatus(experiment.getStatus());
 		found.setDateConducted(experiment.getDateConducted());
@@ -148,42 +182,49 @@ public class ExperimentService {
 		experimentRepo.delete(experiment);
 	}
 	
-	// TODO: unit tests from here
+	// EXPERIMENT CONFIGURATION
 	
-	// EXPERIMENT SETUP
-	/*
-	public List<Participant> createParticipants(List<Participant> participants) 
-			throws UserExistsException {
+	public Experiment configureTestGroups(Experiment experiment, String configFileName) 
+			throws NoSuchFileException, 
+				   FileReadException, 
+				   ConfigParseException, 
+				   NoSuchExperimentException {
 		
-		List<Participant> saved = new ArrayList<>();
-		
-		for (Participant p : participants) {
-			
-			p.setActive(false);
-			saved.add(userService.addParticipant(p));
+		if (! experimentRepo.existsById(experiment.getId())) {
+			throw new NoSuchExperimentException(experiment.getId());
 		}
 		
-		return saved;
-	}
-	*/
-	
-	public TestGroup updateTestGroup(TestGroup testGroup) 
-			throws NoSuchTestGroupException,
-				   NoSuchUserException {
-		
-		int groupId = testGroup.getId();
-		
-		if (! testGroupRepo.existsById(groupId)) {
-			throw new NoSuchTestGroupException(groupId);
-		}
-		
-		TestGroup found = testGroupRepo.findById(groupId);
-		
-		// TODO: update fields, check participants
-		
-		return found;
+		return experimentConfigurer.configureTestGroups(experiment, configFileName);
 	}
 	
+	public List<DocCollection> getDocCollections() {
+		
+		return collectionRepo.findAll();
+	}
+	
+	public List<String> savedConfigFiles() throws FileReadException {
+		
+		return experimentConfigStorage.listConfigFiles();
+	}
+	
+	public void addConfigFile(MultipartFile file) throws FileWriteException {
+		
+		experimentConfigStorage.storeConfigFile(file);
+	}
+	
+	public void removeConfigFile(String fileName) 
+			throws NoSuchFileException, FileDeleteException {
+		
+		experimentConfigStorage.deleteConfigFile(fileName);
+	}
+	
+	public InputStream getConfigFile(String fileName) 
+			throws NoSuchFileException, FileReadException {
+		
+		return experimentConfigStorage.getConfigFileAsStream(fileName);
+	}
+	
+
 	// EXPERIMENT EXECUTION
 	/*
 	public Experiment startExperiment(Experiment experiment) 
@@ -252,6 +293,59 @@ public class ExperimentService {
 		return updated;
 	}
 	*/
+	
+	private TestGroup updateTestGroup(TestGroup testGroup, Experiment experiment) 
+			throws NoSuchTestGroupException,
+				   NoSuchUserException, 
+				   UserExistsException, 
+				   NoSuchDocCollectionException {
+		
+		int groupId = testGroup.getId();
+		
+		if (! testGroupRepo.existsById(groupId)) {
+			throw new NoSuchTestGroupException(groupId);
+		}
+		
+		TestGroup found = testGroupRepo.findById(groupId);
+		
+		Set<Participant> newParticipants = testGroup.getParticipants();
+		
+		for (Participant p : newParticipants) {
+			
+			int id = p.getId();
+			
+			if (! participantRepo.existsById(id)) {
+				throw new NoSuchUserException("Participant", id);
+			}
+			
+			Participant foundParticipant = participantRepo.findById(id);
+			
+			String name = p.getUserName();
+			
+			if (! foundParticipant.getUserName().equals(name) && participantRepo.existsByUserName(name)) {
+				throw new UserExistsException(name);
+			}
+			
+			found.setName(name);
+		}
+		
+		Set<DocCollection> newDocCollections = testGroup.getDocCollections();
+		
+		for (DocCollection c : newDocCollections) {
+			
+			if (! collectionRepo.existsById(c.getId())) {
+				throw new NoSuchDocCollectionException(c.getId());
+			}
+		}
+		
+		found.setParticipants(newParticipants);
+		found.setDocCollections(newDocCollections);
+		found.setExperiment(experiment);
+		
+		TestGroup updated = testGroupRepo.save(found);
+		
+		return updated;
+	}
 }
 
 

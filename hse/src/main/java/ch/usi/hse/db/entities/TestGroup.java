@@ -212,13 +212,13 @@ public class TestGroup {
 		
 		TestGroup g = (TestGroup) o;
 		
-		return g.id.equals(id);
+		return g.id.equals(id) && g.getName().equals(name);
 	}
 	 
 	@Override
 	public int hashCode() {
 		
-		return Objects.hash(id);
+		return Objects.hash(id, name);
 	}
 }
 

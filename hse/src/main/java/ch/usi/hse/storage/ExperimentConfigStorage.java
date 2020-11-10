@@ -90,6 +90,11 @@ public class ExperimentConfigStorage extends TextFileStorage {
 		return configLines;
 	}
 	
+	public List<String> listConfigFiles() throws FileReadException {
+		
+		return listTextFiles(storagePath);
+	}
+	
 	public InputStream getConfigFileAsStream(String fileName) 
 			throws NoSuchFileException, FileReadException {
 		

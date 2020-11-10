@@ -227,7 +227,7 @@ public class TestGroupTest {
 		
 		TestGroup g1 = new TestGroup(1, "name1", testParticipants, testExperiment);
 		TestGroup g2 = new TestGroup(1, "name1", testParticipants, testExperiment);
-		TestGroup g3 = new TestGroup(2, "name1", testParticipants, testExperiment); 
+		TestGroup g3 = new TestGroup(2, "name2", testParticipants, testExperiment); 
 		
 		assertTrue(g1.equals(g1));
 		assertTrue(g1.equals(g2));

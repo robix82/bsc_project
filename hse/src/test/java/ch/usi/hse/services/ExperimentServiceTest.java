@@ -20,6 +20,8 @@ import ch.usi.hse.db.repositories.TestGroupRepository;
 import ch.usi.hse.exceptions.ExperimentExistsException;
 import ch.usi.hse.exceptions.NoSuchExperimentException;
 import ch.usi.hse.exceptions.NoSuchUserException;
+import ch.usi.hse.experiments.ExperimentConfigurer;
+import ch.usi.hse.storage.ExperimentConfigStorage;
 
 public class ExperimentServiceTest {
 
@@ -38,6 +40,12 @@ public class ExperimentServiceTest {
 	@Mock
 	private ExperimenterRepository experimenterRepo;
 	
+	@Mock
+	private ExperimentConfigurer experimentConfigurer;
+	
+	@Mock
+	private ExperimentConfigStorage experimentConfigStorage;
+	
 	private ExperimentService service;
 	
 	private List<Experiment> savedExperiments;
@@ -53,7 +61,9 @@ public class ExperimentServiceTest {
 										testGroupRepo,
 										participantRepo,
 										collectionRepo,
-										experimenterRepo);
+										experimenterRepo,
+										experimentConfigurer,
+										experimentConfigStorage);
 		
 		// EXPERIMENTERS
 		
