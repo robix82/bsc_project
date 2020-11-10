@@ -174,6 +174,7 @@ public class ExperimentService {
 		
 		found.setTitle(title);
 		found.setStatus(experiment.getStatus());
+		found.setDateCreated(experiment.getDateCreated());
 		found.setDateConducted(experiment.getDateConducted());
 		found.setStartTime(experiment.getStartTime());
 		found.setEndTime(experiment.getEndTime());

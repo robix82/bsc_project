@@ -37,7 +37,7 @@ public class TestGroup {
 	@Column(name="name")
 	private String name;
 	
-	@OneToMany(mappedBy="testGroup", fetch=FetchType.EAGER, orphanRemoval=true, 
+	@OneToMany(mappedBy="testGroup", fetch=FetchType.EAGER, 
 			cascade=CascadeType.ALL)
 	private Set<Participant> participants;
 	
@@ -46,7 +46,7 @@ public class TestGroup {
 	@JsonIgnore
 	private Experiment experiment;
 	
-	@ManyToMany
+	@ManyToMany(fetch=FetchType.EAGER)
 	@JoinTable(name="test_group_doc_collection", joinColumns=@JoinColumn(name="test_group_id"), 
 	   		   inverseJoinColumns=@JoinColumn(name="doc_collection_id"))
 	public Set<DocCollection> docCollections;

@@ -43,10 +43,10 @@ public class Experiment {
 	@Column(name="title")
 	private String title;
 	
-	@OneToMany(mappedBy="experiment", fetch=FetchType.EAGER, orphanRemoval=true, cascade=CascadeType.ALL)
+	@OneToMany(mappedBy="experiment", fetch=FetchType.EAGER, cascade=CascadeType.ALL)
 	private Set<TestGroup> testGroups;
 	
-	@ManyToOne(fetch=FetchType.LAZY)
+	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="experimenter_id")
 	@JsonIgnore
 	private Experimenter experimenter;

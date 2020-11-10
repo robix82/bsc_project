@@ -9,7 +9,10 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.AfterEach;
@@ -401,6 +404,84 @@ public class ExperimentsControllerIntegrationTest {
 		assertTrue(err.getErrorMessage().contains(existingTitle));
 	}
 	
+	@Test // experiment with non-existing experimenter id
+	public void testPostExperiment4() throws Exception {
+		
+		int badId = 999999;
+		Experiment experiment = new Experiment("test");
+		experiment.setExperimenterId(badId);
+		String jsonString = writer.writeValueAsString(experiment);
+		
+		MvcResult res = mvc.perform(post(base + "/").contentType(json).content(jsonString))
+				 		   .andExpect(status().isNotFound())
+				 		   .andReturn();
+		
+		ApiError err = getError(res);
+		
+		assertEquals("NoSuchUserException", err.getErrorType());
+		assertTrue(err.getErrorMessage().contains("Experimenter"));
+		assertTrue(err.getErrorMessage().contains(Integer.toString(badId)));
+	}
+	
+	@Test
+	public void testUpdateExperiment1() throws Exception {
+		
+		String newTitle = "newTitle";
+		Experimenter newExperimenter = savedExperimenters.get(1);
+		Set<TestGroup> newTestGroups = new HashSet<>(savedTestGroups);
+		Experiment.Status newStatus = Experiment.Status.COMPLETE;
+		LocalDateTime newDateCreated = LocalDateTime.of(2020, 10, 9, 0, 0);
+		LocalDateTime newDateConducted = LocalDateTime.of(2020, 10, 10, 0, 0);
+		LocalDateTime newStartTime = LocalDateTime.of(2020, 10, 10, 1, 0);
+		LocalDateTime newEndTime = LocalDateTime.of(2020, 10, 10, 2, 0);
+		
+		Experiment experiment = savedExperiments.get(0);
+		
+		assertNotEquals(newTitle, experiment.getTitle());
+		assertNotEquals(newExperimenter, experiment.getExperimenter());
+		assertNotEquals(newExperimenter.getId(), experiment.getExperimenterId());
+		assertNotEquals(newExperimenter.getUserName(), experiment.getExperimenterName());
+		assertNotEquals(newTestGroups.size(), experiment.getTestGroups().size());
+		assertNotEquals(newStatus, experiment.getStatus());
+		assertNotEquals(newDateCreated, experiment.getDateCreated());
+		assertNotEquals(newDateConducted, experiment.getDateConducted());
+		assertNotEquals(newStartTime, experiment.getStartTime());
+		assertNotEquals(newEndTime, experiment.getEndTime());
+		
+		experiment.setTitle(newTitle);
+		experiment.setExperimenter(newExperimenter);
+		experiment.setExperimenterId(newExperimenter.getId());
+		experiment.setExperimenterName(newExperimenter.getUserName());
+		experiment.setTestGroups(newTestGroups);
+		experiment.setStatus(newStatus);
+		experiment.setDateCreated(newDateCreated);
+		experiment.setDateConducted(newDateConducted);
+		experiment.setStartTime(newStartTime);
+		experiment.setEndTime(newEndTime);
+		
+		String jsonString = writer.writeValueAsString(experiment);
+		
+		MvcResult res = mvc.perform(put(base + "/").contentType(json).content(jsonString))
+				 		   .andExpect(status().isOk())
+				 		   .andReturn();
+		
+		Experiment resBody = mapper.readValue(resString(res), Experiment.class);
+		
+		assertEquals(experiment, resBody);
+		
+		Experiment found = experimentRepo.findById(experiment.getId());
+		
+		assertEquals(newTitle, found.getTitle());
+		assertEquals(newExperimenter, found.getExperimenter());
+		assertEquals(newExperimenter.getId(), found.getExperimenterId());
+		assertEquals(newExperimenter.getUserName(), found.getExperimenterName());
+		assertEquals(newTestGroups.size(), found.getTestGroups().size());
+		assertEquals(newStatus, found.getStatus());
+		assertEquals(newDateCreated, found.getDateCreated());
+		assertEquals(newDateConducted, found.getDateConducted());
+		assertEquals(newStartTime, found.getStartTime());
+		assertEquals(newEndTime, found.getEndTime());
+	}
 	
 	
 	
