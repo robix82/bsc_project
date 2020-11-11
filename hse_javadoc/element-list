@@ -1,0 +1,11 @@
+ch.usi.hse
+ch.usi.hse.config
+ch.usi.hse.db.entities
+ch.usi.hse.db.repositories
+ch.usi.hse.endpoints
+ch.usi.hse.exceptions
+ch.usi.hse.experiments
+ch.usi.hse.indexing
+ch.usi.hse.retrieval
+ch.usi.hse.services
+ch.usi.hse.storage
