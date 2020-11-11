@@ -38,7 +38,7 @@ public class TestGroup {
 	private String name;
 	
 	@OneToMany(mappedBy="testGroup", fetch=FetchType.EAGER, 
-			cascade=CascadeType.ALL)
+			 orphanRemoval=true, cascade=CascadeType.ALL)
 	private Set<Participant> participants;
 	
 	@ManyToOne(fetch=FetchType.LAZY)

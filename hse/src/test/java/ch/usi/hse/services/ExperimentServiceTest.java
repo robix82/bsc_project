@@ -370,7 +370,7 @@ public class ExperimentServiceTest {
 	}
 	
 	@Test
-	public void testDeleteExperiment2() {
+	public void testDeleteExperiment2() throws NoSuchUserException {
 		
 		int badId = 99999;
 		Experiment experiment = savedExperiments.get(0);

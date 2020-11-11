@@ -43,7 +43,7 @@ public class Experiment {
 	@Column(name="title")
 	private String title;
 	
-	@OneToMany(mappedBy="experiment", fetch=FetchType.EAGER, cascade=CascadeType.ALL)
+	@OneToMany(mappedBy="experiment", fetch=FetchType.EAGER, orphanRemoval=true, cascade=CascadeType.ALL)
 	private Set<TestGroup> testGroups;
 	
 	@ManyToOne(fetch=FetchType.EAGER)

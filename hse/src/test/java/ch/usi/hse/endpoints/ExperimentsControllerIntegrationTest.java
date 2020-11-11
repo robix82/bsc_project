@@ -10,6 +10,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -87,8 +88,8 @@ public class ExperimentsControllerIntegrationTest {
 	
 	private List<Experiment> savedExperiments;
 	private List<Experimenter> savedExperimenters;
+	private List<TestGroup> savedTestGroups; // belonging to savedExperiments.get(0)
 	private List<DocCollection> savedDocCollections;
-	private List<TestGroup> savedTestGroups;
 	
 	private String validConfigName, badConfigName, newConfigName;
 	private byte[] validConfigData, newConfigData, badConfigData;
@@ -108,6 +109,8 @@ public class ExperimentsControllerIntegrationTest {
 			Files.createDirectories(configFilesPath);
 		}
 		
+		clearRepositories();
+		
 		
 		// EXPERIMENTS AND EXPERIMENTERS
 		
@@ -118,6 +121,22 @@ public class ExperimentsControllerIntegrationTest {
 		Experiment ex2 = experimentRepo.save(new Experiment("ex2"));
 		Experiment ex3 = experimentRepo.save(new Experiment("ex3"));
 		Experiment ex4 = experimentRepo.save(new Experiment("ex4"));
+		
+		TestGroup g1 = testGroupRepo.save(new TestGroup("g1"));
+		TestGroup g2 = testGroupRepo.save(new TestGroup("g2"));
+		
+		Participant p1 = new Participant("p1", "pwd");
+		Participant p2 = new Participant("p2", "pwd");
+		Participant p3 = new Participant("p3", "pwd");
+		Participant p4 = new Participant("p4", "pwd");
+		
+		g1.addParticipant(p1);
+		g1.addParticipant(p2);
+		g2.addParticipant(p3);
+		g2.addParticipant(p4);
+		
+		ex1.addTestGroup(g1);
+		ex1.addTestGroup(g2);
 		
 		e1.addExperiment(ex1);
 		e1.addExperiment(ex2);
@@ -177,29 +196,7 @@ public class ExperimentsControllerIntegrationTest {
 												MediaType.TEXT_PLAIN_VALUE,
 												newConfigData);
 		
-		// TEST GROUPS
 		
-		Participant p1 = participantRepo.save(new Participant("name1", "pwd"));
-		Participant p2 = participantRepo.save(new Participant("name2", "pwd"));
-		Participant p3 = participantRepo.save(new Participant("name3", "pwd"));
-		Participant p4 = participantRepo.save(new Participant("name4", "pwd"));
-		
-		TestGroup g1 = testGroupRepo.save(new TestGroup("g1"));
-		TestGroup g2 = testGroupRepo.save(new TestGroup("g2"));
-		
-		g1.addParticipant(p1);
-		g1.addParticipant(p2);
-		g1.addDocCollection(c1);
-		g2.addDocCollection(c2);
-		g2.addParticipant(p3);
-		g2.addParticipant(p4);
-		g1.addDocCollection(c1);
-		g2.addDocCollection(c2);
-		
-		testGroupRepo.save(g1);
-		testGroupRepo.save(g2);
-		
-		savedTestGroups = testGroupRepo.findAll();
 	}
 	
 	@AfterEach
@@ -215,8 +212,9 @@ public class ExperimentsControllerIntegrationTest {
 		assertEquals(2, savedExperimenters.size());
 		assertEquals(4, savedExperiments.size());
 		assertEquals(2, savedDocCollections.size());
+		assertEquals(2, testGroupRepo.count());
+		assertEquals(4, participantRepo.count());
 		assertEquals(2, Files.list(configFilesPath).count());
-		assertEquals(2, savedTestGroups.size());
 	}
 	
 	// UI 
@@ -422,13 +420,12 @@ public class ExperimentsControllerIntegrationTest {
 		assertTrue(err.getErrorMessage().contains("Experimenter"));
 		assertTrue(err.getErrorMessage().contains(Integer.toString(badId)));
 	}
-	
+
 	@Test
 	public void testUpdateExperiment1() throws Exception {
 		
 		String newTitle = "newTitle";
 		Experimenter newExperimenter = savedExperimenters.get(1);
-		Set<TestGroup> newTestGroups = new HashSet<>(savedTestGroups);
 		Experiment.Status newStatus = Experiment.Status.COMPLETE;
 		LocalDateTime newDateCreated = LocalDateTime.of(2020, 10, 9, 0, 0);
 		LocalDateTime newDateConducted = LocalDateTime.of(2020, 10, 10, 0, 0);
@@ -441,7 +438,6 @@ public class ExperimentsControllerIntegrationTest {
 		assertNotEquals(newExperimenter, experiment.getExperimenter());
 		assertNotEquals(newExperimenter.getId(), experiment.getExperimenterId());
 		assertNotEquals(newExperimenter.getUserName(), experiment.getExperimenterName());
-		assertNotEquals(newTestGroups.size(), experiment.getTestGroups().size());
 		assertNotEquals(newStatus, experiment.getStatus());
 		assertNotEquals(newDateCreated, experiment.getDateCreated());
 		assertNotEquals(newDateConducted, experiment.getDateConducted());
@@ -450,9 +446,6 @@ public class ExperimentsControllerIntegrationTest {
 		
 		experiment.setTitle(newTitle);
 		experiment.setExperimenter(newExperimenter);
-		experiment.setExperimenterId(newExperimenter.getId());
-		experiment.setExperimenterName(newExperimenter.getUserName());
-		experiment.setTestGroups(newTestGroups);
 		experiment.setStatus(newStatus);
 		experiment.setDateCreated(newDateCreated);
 		experiment.setDateConducted(newDateConducted);
@@ -475,16 +468,111 @@ public class ExperimentsControllerIntegrationTest {
 		assertEquals(newExperimenter, found.getExperimenter());
 		assertEquals(newExperimenter.getId(), found.getExperimenterId());
 		assertEquals(newExperimenter.getUserName(), found.getExperimenterName());
-		assertEquals(newTestGroups.size(), found.getTestGroups().size());
 		assertEquals(newStatus, found.getStatus());
 		assertEquals(newDateCreated, found.getDateCreated());
 		assertEquals(newDateConducted, found.getDateConducted());
 		assertEquals(newStartTime, found.getStartTime());
 		assertEquals(newEndTime, found.getEndTime());
 	}
+
+	@Test // non-existing Experiment id
+	public void testUpdateExperiment2() throws Exception {
+		
+		int badId = 999999;
+		Experiment experiment = savedExperiments.get(0);
+		experiment.setId(badId);
+		String jsonString = writer.writeValueAsString(experiment);
+		
+		MvcResult res = mvc.perform(put(base + "/").contentType(json).content(jsonString))
+				 		   .andExpect(status().isNotFound())
+				 		   .andReturn();
+		
+		ApiError err = getError(res);
+		
+		assertEquals("NoSuchExperimentException", err.getErrorType());
+		assertTrue(err.getErrorMessage().contains(Integer.toString(badId)));
+	}
 	
+	@Test // existing title
+	public void testUpdateExperiment3() throws Exception {
+		
+		String existingTitle = savedExperiments.get(1).getTitle();
+		Experiment experiment = savedExperiments.get(0);
+		experiment.setTitle(existingTitle);
+		String jsonString = writer.writeValueAsString(experiment);
+		
+		MvcResult res = mvc.perform(put(base + "/").contentType(json).content(jsonString))
+				 		   .andExpect(status().isUnprocessableEntity())
+				 		   .andReturn();
+		
+		ApiError err = getError(res);
+		
+		assertEquals("ExperimentExistsException", err.getErrorType());
+		assertTrue(err.getErrorMessage().contains(existingTitle));
+	}
 	
+	@Test // non-existing experimenter id
+	public void testUpdateExperiment4() throws Exception {
+		
+		int badId = 999999;
+		Experiment experiment = savedExperiments.get(0);
+		experiment.setExperimenterId(badId);
+		String jsonString = writer.writeValueAsString(experiment);
+		
+		MvcResult res = mvc.perform(put(base + "/").contentType(json).content(jsonString))
+				 		   .andExpect(status().isNotFound())
+				 		   .andReturn();
+		
+		ApiError err = getError(res);
+		
+		assertEquals("NoSuchUserException", err.getErrorType());
+		assertTrue(err.getErrorMessage().contains("Experimenter"));
+		assertTrue(err.getErrorMessage().contains(Integer.toString(badId)));
+	}
 	
+	@Test // non-existing experimenter name
+	public void testUpdateExperiment5() throws Exception {
+		
+		String badName = "badName";
+		Experiment experiment = savedExperiments.get(0);
+		experiment.setExperimenterId(savedExperimenters.get(1).getId());
+		experiment.setExperimenterName(badName);
+		String jsonString = writer.writeValueAsString(experiment);
+		
+		MvcResult res = mvc.perform(put(base + "/").contentType(json).content(jsonString))
+				 		   .andExpect(status().isNotFound())
+				 		   .andReturn();
+		
+		ApiError err = getError(res);
+		
+		assertEquals("NoSuchUserException", err.getErrorType());
+		assertTrue(err.getErrorMessage().contains("Experimenter"));
+		assertTrue(err.getErrorMessage().contains(badName));
+	}
+	
+	@Test
+	public void testDeleteExperiment1() throws Exception {
+		
+		Experiment experiment = savedExperiments.get(0);
+		String jsonString = writer.writeValueAsString(experiment);
+		
+		assertTrue(experimentRepo.existsById(experiment.getId()));
+		assertEquals(4, experimentRepo.count());
+		assertEquals(2, testGroupRepo.count());
+		assertEquals(4, participantRepo.count());
+		
+		MvcResult res = mvc.perform(delete(base + "/").contentType(json).content(jsonString))
+				 		   .andExpect(status().isOk())
+				 		   .andReturn();
+		
+		Experiment resBody = mapper.readValue(resString(res), Experiment.class);
+		
+		assertEquals(experiment, resBody);
+		assertFalse(experimentRepo.existsById(experiment.getId()));
+		assertEquals(3, experimentRepo.count());
+		assertEquals(0, testGroupRepo.count());
+		assertEquals(0, participantRepo.count());
+	}
 	
 	
 	///////////////////////////////////////
@@ -511,11 +599,11 @@ public class ExperimentsControllerIntegrationTest {
 	}
 	
 	private void clearRepositories() {
-		
-		experimentRepo.deleteAll();	
+				
 		experimenterRepo.deleteAll();
-		participantRepo.deleteAll();
+		experimentRepo.deleteAll();	
 		testGroupRepo.deleteAll();
+		participantRepo.deleteAll();
 		collectionRepo.deleteAll();
 	}
 }

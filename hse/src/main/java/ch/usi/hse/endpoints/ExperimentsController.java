@@ -161,10 +161,7 @@ public class ExperimentsController {
 	public ResponseEntity<Experiment> updateExperiment(@RequestBody Experiment experiment) 
 			throws NoSuchExperimentException, 
 				   ExperimentExistsException, 
-				   NoSuchUserException, 
-				   NoSuchTestGroupException, 
-				   UserExistsException, 
-				   NoSuchDocCollectionException {
+				   NoSuchUserException {
 		
 		Experiment updated = experimentService.updateExperiment(experiment);
 		
@@ -177,14 +174,41 @@ public class ExperimentsController {
 	 * @param experiment
 	 * @return deleted experiment
 	 * @throws NoSuchExperimentException
+	 * @throws NoSuchUserException 
 	 */
 	@DeleteMapping("/")
 	public ResponseEntity<Experiment> deleteExperiment(@RequestBody Experiment experiment) 
-			throws NoSuchExperimentException {
+			throws NoSuchExperimentException, NoSuchUserException {
 		
 		experimentService.deleteExperiment(experiment);
 		
 		return new ResponseEntity<>(experiment, HttpStatus.OK);
+	}
+	
+	// REST API FOR TEST GROUP CONFIGURATION
+	
+	/**
+	 * configure an Experiments TestGroups using the given configuration file
+	 * 
+	 * @param configFileName
+	 * @param experiment
+	 * @return
+	 * @throws NoSuchExperimentException
+	 * @throws NoSuchFileException
+	 * @throws FileReadException
+	 * @throws ConfigParseException
+	 */
+	@PostMapping("/testGroups")
+	public ResponseEntity<Experiment> configureExperiment(@RequestParam String configFileName,
+														  @RequestBody Experiment experiment) 
+		throws NoSuchExperimentException, 
+			   NoSuchFileException, 
+			   FileReadException, 
+			   ConfigParseException {
+		
+		Experiment configured = experimentService.configureTestGroups(experiment, configFileName);
+		
+		return new ResponseEntity<>(configured, HttpStatus.OK);
 	}
 	
 	// REST API FOR CONFIGURATION FILE MANAGEMENT
@@ -251,29 +275,7 @@ public class ExperimentsController {
 		}
 	}
 	
-	/**
-	 * configure an Experiments TestGroups using the given configuration file
-	 * 
-	 * @param configFileName
-	 * @param experiment
-	 * @return
-	 * @throws NoSuchExperimentException
-	 * @throws NoSuchFileException
-	 * @throws FileReadException
-	 * @throws ConfigParseException
-	 */
-	@PostMapping("/testGroups")
-	public ResponseEntity<Experiment> configureExperiment(@RequestParam String configFileName,
-														  @RequestBody Experiment experiment) 
-		throws NoSuchExperimentException, 
-			   NoSuchFileException, 
-			   FileReadException, 
-			   ConfigParseException {
-		
-		Experiment configured = experimentService.configureTestGroups(experiment, configFileName);
-		
-		return new ResponseEntity<>(configured, HttpStatus.OK);
-	}
+	
 }
 
 
