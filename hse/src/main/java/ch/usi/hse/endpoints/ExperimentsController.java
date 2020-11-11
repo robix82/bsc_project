@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import ch.usi.hse.db.entities.Experiment;
+import ch.usi.hse.db.entities.TestGroup;
 import ch.usi.hse.exceptions.ConfigParseException;
 import ch.usi.hse.exceptions.ExperimentExistsException;
 import ch.usi.hse.exceptions.FileDeleteException;
@@ -147,6 +148,8 @@ public class ExperimentsController {
 	
 	/**
 	 * update an existing experiment
+	 * warning: TestGroups are to be updated using the 
+	 * specific API ("/experiments/testGroups")
 	 * 
 	 * @param experiment
 	 * @return updated experiment
@@ -170,6 +173,8 @@ public class ExperimentsController {
 	
 	/**
 	 * deletes the given experiment from the database
+	 * warning: all associated TestGroups and their Participants
+	 * are deleted as well
 	 * 
 	 * @param experiment
 	 * @return deleted experiment
@@ -188,6 +193,63 @@ public class ExperimentsController {
 	// REST API FOR TEST GROUP CONFIGURATION
 	
 	/**
+	 * add a new TestGroup to the Experiment
+	 * specified in the TestGroups experimentId field
+	 * 
+	 * @param testGroup
+	 * @return
+	 * @throws NoSuchExperimentException
+	 */
+	@PostMapping("/testGroups")
+	public ResponseEntity<TestGroup> postTestGroup(@RequestBody TestGroup testGroup) 
+			throws NoSuchExperimentException {
+		
+		TestGroup saved = experimentService.addTestGroup(testGroup);
+		
+		return new ResponseEntity<>(saved, HttpStatus.CREATED);
+	}
+	
+	/**
+	 * update an existing given testGroup
+	 * 
+	 * @param testGroup
+	 * @return
+	 * @throws NoSuchTestGroupException 
+	 * @throws NoSuchExperimentException 
+	 * @throws NoSuchDocCollectionException 
+	 * @throws UserExistsException 
+	 */
+	@PutMapping("/testGroups")
+	public ResponseEntity<TestGroup> updateTestGroup(@RequestBody TestGroup testGroup) 
+			throws NoSuchTestGroupException, 
+				   NoSuchExperimentException, 
+				   NoSuchDocCollectionException, 
+				   UserExistsException {
+		
+		TestGroup updated = experimentService.updateTestGroup(testGroup);
+		
+		return new ResponseEntity<>(updated, HttpStatus.OK);
+	}
+	
+	/**
+	 * delete an existing TestGroup
+	 * warning: all associated Participants will be deleted as well
+	 * 
+	 * @param testGroup
+	 * @return
+	 * @throws NoSuchExperimentException
+	 * @throws NoSuchTestGroupException
+	 */
+	@DeleteMapping("/testGroups")
+	public ResponseEntity<TestGroup> deleteTestGroup(@RequestBody TestGroup testGroup) 
+			throws NoSuchExperimentException, NoSuchTestGroupException {
+		
+		experimentService.deleteTestGroup(testGroup);
+		
+		return new ResponseEntity<>(testGroup, HttpStatus.OK);
+	}
+	
+	/**
 	 * configure an Experiments TestGroups using the given configuration file
 	 * 
 	 * @param configFileName
@@ -198,7 +260,7 @@ public class ExperimentsController {
 	 * @throws FileReadException
 	 * @throws ConfigParseException
 	 */
-	@PostMapping("/testGroups")
+	@PostMapping("/testGroups/config")
 	public ResponseEntity<Experiment> configureExperiment(@RequestParam String configFileName,
 														  @RequestBody Experiment experiment) 
 		throws NoSuchExperimentException, 
@@ -220,7 +282,7 @@ public class ExperimentsController {
 	 * @return success message
 	 * @throws FileWriteException
 	 */
-	@PostMapping("/config")
+	@PostMapping("/testGroups/config/ul")
 	public ResponseEntity<String> uploadConfigFile(@RequestParam(name="file") MultipartFile file) 
 			throws FileWriteException {
 		
@@ -239,7 +301,7 @@ public class ExperimentsController {
 	 * @throws NoSuchFileException
 	 * @throws FileDeleteException
 	 */
-	@DeleteMapping("/config")
+	@DeleteMapping("/testGroups/config")
 	public ResponseEntity<String> deleteConfigFile(@RequestParam String fileName) 
 		throws NoSuchFileException, FileDeleteException {
 		
@@ -258,7 +320,7 @@ public class ExperimentsController {
 	 * @throws NoSuchFileException
 	 * @throws FileReadException
 	 */
-	@GetMapping("/config/dl")
+	@GetMapping("/testGroups/config/dl")
 	public void downloadConfigFile(HttpServletResponse response, @RequestParam String fileName) 
 			throws NoSuchFileException, FileReadException {
 		 

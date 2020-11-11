@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ch.usi.hse.db.entities.DocCollection;
 import ch.usi.hse.db.entities.Experiment;
 import ch.usi.hse.db.entities.Experimenter;
+import ch.usi.hse.db.entities.Participant;
 import ch.usi.hse.db.entities.TestGroup;
 import ch.usi.hse.db.repositories.DocCollectionRepository;
 import ch.usi.hse.db.repositories.ExperimentRepository;
@@ -23,8 +24,10 @@ import ch.usi.hse.exceptions.ExperimentExistsException;
 import ch.usi.hse.exceptions.FileDeleteException;
 import ch.usi.hse.exceptions.FileReadException;
 import ch.usi.hse.exceptions.FileWriteException;
+import ch.usi.hse.exceptions.NoSuchDocCollectionException;
 import ch.usi.hse.exceptions.NoSuchExperimentException;
 import ch.usi.hse.exceptions.NoSuchFileException;
+import ch.usi.hse.exceptions.NoSuchTestGroupException;
 import ch.usi.hse.exceptions.NoSuchUserException;
 import ch.usi.hse.exceptions.UserExistsException;
 import ch.usi.hse.experiments.ExperimentConfigurer;
@@ -243,6 +246,125 @@ public class ExperimentService {
 	// TEST GROUP CONFIGURATION
 	
 	/**
+	 * add a new TestGroup to the Experiment
+	 * specified in the TestGroups experimentId field
+	 * 
+	 * @param testGroup
+	 * @return
+	 * @throws NoSuchExperimentException 
+	 */
+	public TestGroup addTestGroup(TestGroup testGroup) throws NoSuchExperimentException {
+		
+		int experimentId = testGroup.getExperimentId();
+		
+		if (! experimentRepo.existsById(experimentId)) {
+			throw new NoSuchExperimentException(experimentId);
+		}
+		
+		Experiment experiment = experimentRepo.findById(experimentId);
+		experiment.addTestGroup(testGroup);
+		experimentRepo.save(experiment);
+		
+		return testGroup;
+	}
+	
+	/**
+	 * update an existing TestGroup
+	 * 
+	 * @param testGroup
+	 * @return
+	 * @throws NoSuchTestGroupException 
+	 * @throws NoSuchExperimentException 
+	 * @throws NoSuchDocCollectionException 
+	 * @throws UserExistsException 
+	 */
+	public TestGroup updateTestGroup(TestGroup testGroup) throws NoSuchTestGroupException, NoSuchExperimentException, NoSuchDocCollectionException, UserExistsException {
+		
+		int groupId = testGroup.getId();
+		
+		if (! testGroupRepo.existsById(groupId)) {
+			throw new NoSuchTestGroupException(groupId);
+		}
+		
+		int experimentId = testGroup.getExperimentId();
+		
+		if (! experimentRepo.existsById(experimentId)) {
+			throw new NoSuchExperimentException(experimentId);
+		}
+		
+		for (DocCollection c : testGroup.getDocCollections()) {		
+			if (! collectionRepo.existsById(c.getId())) {
+				throw new NoSuchDocCollectionException(c.getId());
+			}
+		}
+		
+		for (Participant p : testGroup.getParticipants()) {	
+			
+			if (! participantRepo.existsById(p.getId())) {
+			
+				if (participantRepo.existsByUserName(p.getUserName())) {
+					throw new UserExistsException(p.getUserName());
+				}			
+			}
+			else {
+				
+				Participant existing = participantRepo.findById(p.getId());
+				
+				if (! p.getUserName().equals(existing.getUserName()) &&
+					participantRepo.existsByUserName(p.getUserName())) {
+					
+					throw new UserExistsException(p.getUserName());
+				}
+			}
+		}
+		
+		TestGroup found = testGroupRepo.findById(testGroup.getId());
+		found.setName(testGroup.getName());
+		found.setDocCollections(testGroup.getDocCollections());
+
+		found.clearParticipants();		
+		testGroupRepo.save(found);
+		
+		for (Participant p : testGroup.getParticipants()) {
+			
+			found.addParticipant(p);
+		}
+		
+		TestGroup updated = testGroupRepo.save(found);
+		
+		return updated;
+	}
+	
+	
+	/**
+	 * delete an existing TestGroup
+	 * warning: all related Participants will be deleted as well
+	 * 
+	 * @param testGroup
+	 * @throws NoSuchExperimentException 
+	 * @throws NoSuchTestGroupException 
+	 */
+	public void deleteTestGroup(TestGroup testGroup) throws NoSuchExperimentException, NoSuchTestGroupException {
+		
+		int groupId = testGroup.getId();
+		int experimentId = testGroup.getExperimentId();
+		
+		if (! testGroupRepo.existsById(groupId)) {
+			throw new NoSuchTestGroupException(groupId);
+		}
+		
+		if (! experimentRepo.existsById(experimentId)) {
+			throw new NoSuchExperimentException(experimentId);
+		}
+		
+		Experiment experiment = experimentRepo.findById(experimentId);
+		
+		experiment.removeTestGroup(testGroup);
+		
+		experimentRepo.save(experiment);
+	}
+	
+	/**
 	 * Set the Experiment's TestGroups based on the given configuration file
 	 * 
 	 * @param experiment
@@ -265,48 +387,18 @@ public class ExperimentService {
 		
 		Experiment configured = experimentConfigurer.configureTestGroups(experiment, configFileName);
 		
-		checkReadyStatus(configured);
+		if (configured.getStatus().equals(Experiment.Status.READY) ||
+			configured.getStatus().equals(Experiment.Status.NOT_READY)) {
+			
+			checkReadyStatus(configured);
+		}
 		
 		Experiment saved = experimentRepo.save(configured); 
 		
 		return saved;
 	}
 	
-	/**
-	 * add a new TestGroup to the Experiment
-	 * specified in the TestGroups experimentId field
-	 * 
-	 * @param testGroup
-	 * @return
-	 */
-	public TestGroup addTestGroup(TestGroup testGroup) {
-		
-		// TODO
-		return null;
-	}
 	
-	/**
-	 * update an existing TestGroup
-	 * 
-	 * @param testGroup
-	 * @return
-	 */
-	public TestGroup updateTestGroup(TestGroup testGroup) {
-		
-		// TODO
-		return null;
-	}
-	
-	
-	/**
-	 * delete an existing TestGroup
-	 * 
-	 * @param testGroup
-	 */
-	public void deleteTestGroup(TestGroup testGroup) {
-		
-		// TODO
-	}
 	
 	/**
 	 * returns all available DocCollections
@@ -320,22 +412,49 @@ public class ExperimentService {
 	
 	// CONFIG FILE MANAGEMENT
 	
+	/**
+	 * returns the names of all ailable configuration files
+	 * 
+	 * @return
+	 * @throws FileReadException
+	 */
 	public List<String> savedConfigFiles() throws FileReadException {
 		
 		return experimentConfigStorage.listConfigFiles();
 	}
 	
+	/**
+	 * add (upload) a new configuration file
+	 * 
+	 * @param file
+	 * @throws FileWriteException
+	 */
 	public void addConfigFile(MultipartFile file) throws FileWriteException {
 		
 		experimentConfigStorage.storeConfigFile(file);
 	}
 	
+	/**
+	 * remove a configuration file
+	 * 
+	 * @param fileName
+	 * @throws NoSuchFileException
+	 * @throws FileDeleteException
+	 */
 	public void removeConfigFile(String fileName) 
 			throws NoSuchFileException, FileDeleteException {
 		
 		experimentConfigStorage.deleteConfigFile(fileName);
 	}
 	
+	/**
+	 * get a configuration file as InputStram (for download)
+	 * 
+	 * @param fileName
+	 * @return
+	 * @throws NoSuchFileException
+	 * @throws FileReadException
+	 */
 	public InputStream getConfigFile(String fileName) 
 			throws NoSuchFileException, FileReadException {
 		

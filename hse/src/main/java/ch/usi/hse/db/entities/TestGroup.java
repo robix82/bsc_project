@@ -41,7 +41,7 @@ public class TestGroup {
 			 orphanRemoval=true, cascade=CascadeType.ALL)
 	private Set<Participant> participants;
 	
-	@ManyToOne(fetch=FetchType.LAZY)
+	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="exp_id")
 	@JsonIgnore
 	private Experiment experiment;

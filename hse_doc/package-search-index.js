@@ -1,1 +1,0 @@
-packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"ch.usi.hse.config"},{"l":"ch.usi.hse.dummie_data"}]

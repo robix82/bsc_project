@@ -109,9 +109,6 @@ public class ExperimentsControllerIntegrationTest {
 			Files.createDirectories(configFilesPath);
 		}
 		
-		clearRepositories();
-		
-		
 		// EXPERIMENTS AND EXPERIMENTERS
 		
 		Experimenter e1 = experimenterRepo.save(new Experimenter("e1", "pwd"));
@@ -148,6 +145,7 @@ public class ExperimentsControllerIntegrationTest {
 		
 		savedExperimenters = experimenterRepo.findAll();
 		savedExperiments = experimentRepo.findAll();
+		savedTestGroups = testGroupRepo.findAll();
 		
 		// DOC COLLECTIONS
 		
@@ -573,6 +571,506 @@ public class ExperimentsControllerIntegrationTest {
 		assertEquals(0, testGroupRepo.count());
 		assertEquals(0, participantRepo.count());
 	}
+	
+	@Test // non-existing Experiment
+	public void testDeleteExperiment2() throws Exception {
+		
+		int badId = 999999;
+		Experiment experiment = savedExperiments.get(0);
+		experiment.setId(badId);
+		String jsonString = writer.writeValueAsString(experiment);
+		
+		MvcResult res = mvc.perform(delete(base + "/").contentType(json).content(jsonString))
+				 		   .andExpect(status().isNotFound())
+				 		   .andReturn();
+		
+		ApiError err = getError(res);
+		
+		assertEquals("NoSuchExperimentException", err.getErrorType());
+		assertTrue(err.getErrorMessage().contains(Integer.toString(badId)));
+	}
+	
+	@Test // non-existing Experimenter
+	public void testDeleteExperiment3() throws Exception {
+		
+		int badId = 999999;
+		Experiment experiment = savedExperiments.get(0);
+		experiment.setExperimenterId(badId);
+		String jsonString = writer.writeValueAsString(experiment);
+		
+		MvcResult res = mvc.perform(delete(base + "/").contentType(json).content(jsonString))
+				 		   .andExpect(status().isNotFound())
+				 		   .andReturn();
+		
+		ApiError err = getError(res);
+		
+		assertEquals("NoSuchUserException", err.getErrorType());
+		assertTrue(err.getErrorMessage().contains("Experimenter"));
+		assertTrue(err.getErrorMessage().contains(Integer.toString(badId)));
+	}
+	
+	@Test
+	public void testPostTestGroup1() throws Exception {
+		
+		TestGroup newTestGroup = new TestGroup("newTestGroup");
+		newTestGroup.addParticipant(new Participant("np1", "pwd"));
+		newTestGroup.addParticipant(new Participant("np2", "pwd"));
+		
+		Experiment experiment = savedExperiments.get(0);
+		newTestGroup.setExperimentId(experiment.getId());
+		
+		String jsonString = writer.writeValueAsString(newTestGroup);
+		
+		assertEquals(2, testGroupRepo.count());
+		assertEquals(2, experiment.getTestGroups().size());
+		assertEquals(4, participantRepo.count());
+		
+		MvcResult res = mvc.perform(post(base + "/testGroups").contentType(json).content(jsonString))
+				 	       .andExpect(status().isCreated())
+				 	       .andReturn();
+		
+		TestGroup resBody = mapper.readValue(resString(res), TestGroup.class);
+		assertEquals(newTestGroup.getName(), resBody.getName());
+		
+		assertEquals(experiment.getId(), resBody.getExperimentId());
+		assertEquals(experiment.getTitle(), resBody.getExperimentTitle());
+		assertEquals(3, testGroupRepo.count());
+		assertEquals(3, experimentRepo.findById(experiment.getId()).getTestGroups().size());
+		assertEquals(6, participantRepo.count());
+	}
+	
+	@Test // non-existing Experiment id
+	public void testAddTestGroup2() throws Exception {
+		
+		int badId = 999999;
+		TestGroup newTestGroup = new TestGroup("newTestGroup");
+		newTestGroup.addParticipant(new Participant("np1", "pwd"));
+		newTestGroup.addParticipant(new Participant("np2", "pwd"));
+		newTestGroup.setExperimentId(badId);
+		String jsonString = writer.writeValueAsString(newTestGroup);
+		
+		MvcResult res = mvc.perform(post(base + "/testGroups").contentType(json).content(jsonString))
+				 		   .andExpect(status().isNotFound())
+				 		   .andReturn();
+		
+		ApiError err = getError(res);
+		
+		assertEquals("NoSuchExperimentException", err.getErrorType());
+		assertTrue(err.getErrorMessage().contains(Integer.toString(badId)));
+	}
+	
+	@Test // update name
+	public void testUpdateTestGroup1() throws Exception {
+		
+		TestGroup testGroup = savedTestGroups.get(0);
+		
+		String newName = "newName";
+		
+		assertNotEquals(newName, testGroup.getName());
+				
+		testGroup.setName(newName);
+		
+		String jsonString = writer.writeValueAsString(testGroup);
+		
+		MvcResult res = mvc.perform(put(base + "/testGroups").contentType(json).content(jsonString))
+				 		   .andExpect(status().isOk())
+				 		   .andReturn();
+		
+		TestGroup resBody = mapper.readValue(resString(res), TestGroup.class);
+		
+		assertEquals(testGroup, resBody);
+		assertEquals(newName, resBody.getName());
+		assertEquals(newName, testGroupRepo.findById(testGroup.getId()).getName());
+	}
+	
+	@Test // add existing DocCollections
+	public void testUpdateTestGroup2() throws Exception {
+		
+		TestGroup testGroup = savedTestGroups.get(0);
+		int groupId = testGroup.getId();
+			
+		testGroup.setDocCollections(new HashSet<>(savedDocCollections));
+		String jsonString = writer.writeValueAsString(testGroup);
+		
+		assertEquals(0, testGroupRepo.findById(groupId).getDocCollections().size());
+		
+		MvcResult res = mvc.perform(put(base + "/testGroups").contentType(json).content(jsonString))
+				 		   .andExpect(status().isOk())
+				 		   .andReturn();
+		
+		TestGroup resBody = mapper.readValue(resString(res), TestGroup.class);
+		assertEquals(testGroup, resBody);
+		assertEquals(2, testGroupRepo.findById(groupId).getDocCollections().size());
+	}
+	
+	@Test // add non-existing DocCollection
+	public void testUpdateTestGroup3() throws Exception {
+		
+		DocCollection newDc = new DocCollection("newDc", "someList");
+		TestGroup testGroup = savedTestGroups.get(0);
+		testGroup.addDocCollection(newDc);
+		String jsonString = writer.writeValueAsString(testGroup);
+		
+		MvcResult res = mvc.perform(put(base + "/testGroups").contentType(json).content(jsonString))
+				 		   .andExpect(status().isNotFound())
+				 		   .andReturn();
+		
+		ApiError err = getError(res);
+		
+		assertEquals("NoSuchDocCollectionException", err.getErrorType());
+		assertTrue(err.getErrorMessage().contains(Integer.toString(newDc.getId())));
+	}
+	
+	@Test // add new Participant
+	public void testUpdateTestGroup4() throws Exception {
+		
+		Participant newParticipant = new Participant("newParticipant", "pwd");
+		TestGroup testGroup = savedTestGroups.get(0);
+		int groupId = testGroup.getId();
+		testGroup.addParticipant(newParticipant);
+		String jsonString = writer.writeValueAsString(testGroup);
+		
+		assertEquals(4, participantRepo.count());
+		assertFalse(testGroupRepo.findById(groupId).getParticipants().contains(newParticipant));
+		
+		MvcResult res = mvc.perform(put(base + "/testGroups").contentType(json).content(jsonString))
+				 		   .andExpect(status().isOk())
+				 		   .andReturn();
+		
+		TestGroup resBody = mapper.readValue(resString(res), TestGroup.class);
+		assertEquals(testGroup, resBody);
+		
+		assertEquals(5, participantRepo.count());
+		assertTrue(testGroupRepo.findById(groupId).getParticipants().contains(newParticipant));
+	}
+	
+	@Test // add Participant with existing name
+	public void testUpdateTestGroup5() throws Exception {
+		
+		String existingName = participantRepo.findAll().get(2).getUserName();
+		TestGroup testGroup = savedTestGroups.get(0);
+		testGroup.addParticipant(new Participant(existingName, "pwd"));
+		String jsonString = writer.writeValueAsString(testGroup);
+		
+		MvcResult res = mvc.perform(put(base + "/testGroups").contentType(json).content(jsonString))
+				 		   .andExpect(status().isUnprocessableEntity())
+				 		   .andReturn();
+		
+		ApiError err = getError(res);
+		
+		assertEquals("UserExistsException", err.getErrorType());
+		assertTrue(err.getErrorMessage().contains(existingName));
+	}
+	
+	@Test // remove participant
+	public void testUpdateTestGroup6() throws Exception {
+		
+		TestGroup testGroup = savedTestGroups.get(0);
+		Participant p = (Participant) testGroup.getParticipants().toArray()[0];
+		testGroup.removeParticipant(p);
+		String jsonString = writer.writeValueAsString(testGroup);
+		
+		assertEquals(4, participantRepo.count());
+		assertTrue(participantRepo.existsById(p.getId()));
+		
+		MvcResult res = mvc.perform(put(base + "/testGroups").contentType(json).content(jsonString))
+				 		   .andExpect(status().isOk())
+				 		   .andReturn();
+		
+		TestGroup resBody = mapper.readValue(resString(res), TestGroup.class);
+		assertEquals(testGroup, resBody);
+		
+		assertEquals(3, participantRepo.count());
+		assertFalse(participantRepo.existsById(p.getId()));
+	}
+	
+	@Test // set non-existing experiment
+	public void testUpdateTestGroup7() throws Exception {
+		
+		Experiment newExp = new Experiment("newExp");
+		TestGroup testGroup = savedTestGroups.get(0);
+		testGroup.setExperiment(newExp);
+		String jsonString = writer.writeValueAsString(testGroup);
+		
+		MvcResult res = mvc.perform(put(base + "/testGroups").contentType(json).content(jsonString))
+				 	       .andExpect(status().isNotFound())
+				 	       .andReturn();
+		
+		ApiError err = getError(res);
+		
+		assertEquals("NoSuchExperimentException", err.getErrorType());
+		assertTrue(err.getErrorMessage().contains(Integer.toString(newExp.getId())));
+	}
+	
+	@Test // update non-existing TestGroup
+	public void testUpdateTextGroup8() throws Exception {
+		
+		int badId = 999999;
+		TestGroup testGroup = savedTestGroups.get(0);
+		testGroup.setId(badId);
+		String jsonString = writer.writeValueAsString(testGroup);
+		
+		MvcResult res = mvc.perform(put(base + "/testGroups").contentType(json).content(jsonString))
+				 		   .andExpect(status().isNotFound())
+				 		   .andReturn();
+		
+		ApiError err = getError(res);
+		
+		assertEquals("NoSuchTestGroupException", err.getErrorType());
+		assertTrue(err.getErrorMessage().contains(Integer.toString(badId)));
+	}
+	
+	@Test
+	public void testDeleteTestGroup1() throws Exception {
+		
+		TestGroup testGroup = savedTestGroups.get(0);
+		int experimentId = testGroup.getExperimentId();
+		String jsonString = writer.writeValueAsString(testGroup);
+		
+		assertEquals(2, testGroupRepo.count());
+		assertTrue(testGroupRepo.existsById(testGroup.getId()));
+		assertEquals(2, experimentRepo.findById(experimentId).getTestGroups().size());
+		assertEquals(4, participantRepo.count());
+		
+		MvcResult res = mvc.perform(delete(base + "/testGroups").contentType(json).content(jsonString))
+				 		   .andExpect(status().isOk())
+				 		   .andReturn();
+		
+		TestGroup resBody = mapper.readValue(resString(res), TestGroup.class);
+		assertEquals(testGroup, resBody);
+		
+		assertEquals(1, testGroupRepo.count());
+		assertFalse(testGroupRepo.existsById(testGroup.getId()));
+		assertEquals(1, experimentRepo.findById(experimentId).getTestGroups().size());
+		assertEquals(2, participantRepo.count());
+	}
+	
+	@Test // non-existing TestGroup
+	public void testDeleteTestGroup2() throws Exception {
+		
+		int badId = 999999;
+		TestGroup testGroup = savedTestGroups.get(0);
+		testGroup.setId(badId);
+		String jsonString = writer.writeValueAsString(testGroup);
+		
+		MvcResult res = mvc.perform(delete(base + "/testGroups").contentType(json).content(jsonString))
+				 		   .andExpect(status().isNotFound())
+				 		   .andReturn();
+		
+		ApiError err = getError(res);
+		
+		assertEquals("NoSuchTestGroupException", err.getErrorType());
+		assertTrue(err.getErrorMessage().contains(Integer.toString(badId)));
+	}
+	
+	@Test // non-existing experiment
+	public void testDeleteTestGroup3() throws Exception {
+		
+		int badId = 999999;
+		TestGroup testGroup = savedTestGroups.get(0);
+		testGroup.setExperimentId(badId);
+		String jsonString = writer.writeValueAsString(testGroup);
+		
+		MvcResult res = mvc.perform(delete(base + "/testGroups").contentType(json).content(jsonString))
+				 		   .andExpect(status().isNotFound())
+				 		   .andReturn();
+		
+		ApiError err = getError(res);
+		
+		assertEquals("NoSuchExperimentException", err.getErrorType());
+		assertTrue(err.getErrorMessage().contains(Integer.toString(badId)));
+	}
+
+	@Test // creating new TestGroups
+	public void testConfigureTestGroups() throws Exception {
+		
+		Experiment experiment = savedExperiments.get(1);
+		int experimentId = experiment.getId();
+		assertEquals(0, experiment.getTestGroups().size());
+		String jsonString = writer.writeValueAsString(experiment);
+		
+		assertEquals(0, experimentRepo.findById(experimentId).getTestGroups().size());
+		assertEquals(2, testGroupRepo.count());
+		assertEquals(4, participantRepo.count());
+		
+		String url = UriComponentsBuilder.fromUriString(base + "/testGroups/config")
+				 						 .queryParam("configFileName", validConfigName)
+				 						 .build()
+				 						 .toUriString();
+		
+		MvcResult res = mvc.perform(post(url).contentType(json).content(jsonString))
+				 		   .andExpect(status().isOk())
+				 		   .andReturn();
+		
+		Experiment resBody = mapper.readValue(resString(res), Experiment.class);
+		assertEquals(experiment, resBody);
+		
+		assertEquals(2, experimentRepo.findById(experimentId).getTestGroups().size());
+		assertEquals(4, testGroupRepo.count());
+		assertEquals(9, participantRepo.count());
+	}
+
+	@Test // non-existing experiment
+	public void testConfigureTestGroups2() throws Exception {
+		
+		int badId = 999999;
+		Experiment experiment = savedExperiments.get(1);
+		experiment.setId(badId);
+		String jsonString = writer.writeValueAsString(experiment);
+		
+		String url = UriComponentsBuilder.fromUriString(base + "/testGroups/config")
+										 .queryParam("configFileName", validConfigName)
+										 .build()
+										 .toUriString();
+		
+		MvcResult res = mvc.perform(post(url).contentType(json).content(jsonString))
+				 		   .andExpect(status().isNotFound())
+				 		   .andReturn();
+		
+		ApiError err = getError(res);
+		
+		assertEquals("NoSuchExperimentException", err.getErrorType());
+		assertTrue(err.getErrorMessage().contains(Integer.toString(badId)));
+	}
+
+	@Test // non-existing config file
+	public void testConfigureTestGroups3() throws Exception {
+		
+		Experiment experiment = savedExperiments.get(1);
+		String jsonString = writer.writeValueAsString(experiment);
+		
+		String url = UriComponentsBuilder.fromUriString(base + "/testGroups/config")
+										 .queryParam("configFileName", newConfigName)
+										 .build()
+										 .toUriString();
+		
+		MvcResult res = mvc.perform(post(url).contentType(json).content(jsonString))
+				 		   .andExpect(status().isNotFound())
+				 		   .andReturn();
+		
+		ApiError err = getError(res);
+		
+		assertEquals("NoSuchFileException", err.getErrorType());
+		assertTrue(err.getErrorMessage().contains(newConfigName));
+	}
+	
+	@Test // config file with errors
+	public void testConfigureTestGroups4() throws Exception {
+		
+		Experiment experiment = savedExperiments.get(1);
+		String jsonString = writer.writeValueAsString(experiment);
+		
+		String url = UriComponentsBuilder.fromUriString(base + "/testGroups/config")
+										 .queryParam("configFileName", badConfigName)
+										 .build()
+										 .toUriString();
+		
+		MvcResult res = mvc.perform(post(url).contentType(json).content(jsonString))
+				 		   .andExpect(status().isUnprocessableEntity())
+				 		   .andReturn();
+		
+		ApiError err = getError(res);
+		
+		assertEquals("ConfigParseException", err.getErrorType());
+		assertTrue(err.getErrorMessage().contains("participant2"));
+	}
+
+	@Test
+	public void testUploadConfigFile() throws Exception {
+	
+		assertEquals(2, Files.list(configFilesPath).count());
+		assertFalse(Files.exists(configFilesPath.resolve(newConfigName)));
+		
+		String expectedMsg = "file " + newConfigName + " uploaded";
+		
+		MvcResult res = mvc.perform(multipart(base + "/testGroups/config/ul").file(newConfigMpFile))
+				 		   .andExpect(status().isCreated())
+				 		   .andReturn();
+		
+		assertEquals(expectedMsg, resString(res));
+		
+		assertEquals(3, Files.list(configFilesPath).count());
+		assertTrue(Files.exists(configFilesPath.resolve(newConfigName)));
+		assertArrayEquals(newConfigData, Files.readAllBytes(configFilesPath.resolve(newConfigName))); 
+	}
+
+	@Test
+	public void testDeleteConfigFile1() throws Exception {
+		
+		String url = UriComponentsBuilder.fromUriString(base + "/testGroups/config")
+				 						 .queryParam("fileName", validConfigName)
+				 						 .build()
+				 						 .toUriString();
+		
+		String expectedMsg = "file " + validConfigName + " deleted";
+		
+		assertEquals(2, Files.list(configFilesPath).count());
+		assertTrue(Files.exists(configFilesPath.resolve(validConfigName)));
+		
+		MvcResult res = mvc.perform(delete(url))
+				 		   .andExpect(status().isOk())
+				 		   .andReturn();
+		
+		assertEquals(expectedMsg, resString(res));
+		
+		assertEquals(1, Files.list(configFilesPath).count());
+		assertFalse(Files.exists(configFilesPath.resolve(validConfigName)));
+	}
+	
+	@Test
+	public void testDeleteConfigFile2() throws Exception {
+		
+		String url = UriComponentsBuilder.fromUriString(base + "/testGroups/config")
+										 .queryParam("fileName", newConfigName)
+										 .build()
+										 .toUriString();
+		
+		MvcResult res = mvc.perform(delete(url))
+				 		   .andExpect(status().isNotFound())
+				 		   .andReturn();
+		
+		ApiError err = getError(res);
+		
+		assertEquals("NoSuchFileException", err.getErrorType());
+		assertTrue(err.getErrorMessage().contains(newConfigName));
+	}
+	
+	@Test
+	public void testDownloadConfigFile1() throws Exception {
+		
+		String url = UriComponentsBuilder.fromUriString(base + "/testGroups/config/dl")
+										 .queryParam("fileName", validConfigName)
+										 .build()
+										 .toUriString();
+		
+		MvcResult res = mvc.perform(get(url))
+				 		   .andExpect(status().isOk())
+				 		   .andReturn();
+		
+		assertArrayEquals(validConfigData, res.getResponse().getContentAsByteArray());
+	}
+
+	@Test
+	public void testDownloadConfigFile2() throws Exception {
+		
+		String url = UriComponentsBuilder.fromUriString(base + "/testGroups/config/dl")
+										 .queryParam("fileName", newConfigName)
+										 .build()
+										 .toUriString();
+		
+		MvcResult res = mvc.perform(get(url))
+				 		   .andExpect(status().isNotFound())
+				 		   .andReturn();
+		
+		ApiError err = getError(res);
+		
+		assertEquals("NoSuchFileException", err.getErrorType());
+		assertTrue(err.getErrorMessage().contains(newConfigName));
+	}
+	
+	
+	
+	
 	
 	
 	///////////////////////////////////////
