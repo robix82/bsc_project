@@ -6,7 +6,7 @@ $(document).ready(function() {
 	
 	experiments.forEach((experiment) => {
 		
-		enableButtons(experiment);
+		setupButtons(experiment);
 		
 		let tdId = "exp_creationDate_" + experiment.id;
 		let dateString = new Date(experiment.dateCreated).toLocaleDateString();
@@ -17,9 +17,38 @@ $(document).ready(function() {
 
 
 
-function enableButtons(experiment) {
+function setupButtons(experiment) {
 	
+	let expId = experiment.id;
+	let expStatus = experiment.status;
+	let configBtnId = "#exp_configBtn_" + expId;
+	let runBtnId = "#exp_runBtn_" + expId;
+	let evalBtnId = "#exp_evalBtn_" + expId;
 	
+	$(runBtnId).prop("disabled", true);
+	$(evalBtnId).prop("disabled", true);
+	
+	$(configBtnId).on("click", () => {
+		location.href= "/experiments/setup/ui?expId=" + expId;
+	});
+	
+	if (expStatus == "READY" || expStatus == "COMPLETE") {
+		
+		$(runBtnId).prop("disabled", false);
+		
+		$(runBtnId).on("click", () => {
+			location.href= "/experiments/run/ui?expId=" + expId;
+		});
+	}
+	
+	if (expStatus == "COMPLETE") {
+		
+		$(evalBtnId).prop("disabled", false);
+	
+		$(evalBtnId).on("click", () => {
+			location.href= "/experiments/eval/ui?expId=" + expId;
+		});
+	}
 }
 
 function getExperimenter(id) {

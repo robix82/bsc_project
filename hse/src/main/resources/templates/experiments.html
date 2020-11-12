@@ -17,14 +17,15 @@
 <div class="main-container">
 
 	<h1 th:text="#{m_experiments}"></h1>
-				
-	<div id="experiments-lists">
-								
-		<table class="table table-striped">
+	
+	<div id="inner-container">	
+			
+	  <div id="experiments-lists">
+					
+		<table class="table table-hover">
 			
 			<tr th:each="experiment : ${experiments}"  class="list-row table-light">
-							
-				<td th:text="${experiment.id}"></td>
+						
 				<td th:text="${experiment.title}"></td>
 				<td th:text="${experiment.experimenterName}"></td>
 				<td th:id="'exp_creationDate_' + ${experiment.id}"></td>
@@ -32,32 +33,26 @@
 				<td class="table-space"></td>
 							
 				<td>
-					<button class="btn btn-sm btn-light">
-					<a class="page-link" th:href="@{/experiments/setup/ui?expId=} + ${experiment.id}">
-					<span th:text="#{m_configure}"></span>
-					</a>
-					</button>
+					<button th:id="'exp_configBtn_' + ${experiment.id}"
+							class="btn btn-sm btn-light" 
+							th:text="#{m_configure}">
+					</button>										
 				</td>
 				
 				<td>
-
-	
-								<button class="btn btn-sm btn-light">
-								<a class="page-link" th:href="@{/experiments/run/ui?expId=} + ${experiment.id}">
-								<span th:text="#{m_run}"></span>
-								</a>
-								</button>
-							</td>
-
-	
+					<button th:id="'exp_runBtn_' + ${experiment.id}"
+							class="btn btn-sm btn-light" 
+							th:text="#{m_run}">
+					</button>										
+				</td>
 				
 				<td>
-					<button class="btn btn-sm btn-light">
-					<a class="page-link" th:href="@{/experiments/eval/ui?expId=} + ${experiment.id}">
-					<span th:text="#{m_evaluate}"></span>
-					</a>
-					</button>
+					<button th:id="'exp_evalBtn_' + ${experiment.id}"
+							class="btn btn-sm btn-light" 
+							th:text="#{m_evaluate}">
+					</button>										
 				</td>
+
 						
 				<td>
 					<button class="btn btn-sm btn-light"
@@ -78,7 +73,8 @@
 					
 		</div>
 	
-	</div>
+	  </div>
+    </div>
 </div>
 
 <!-- pass variables to js -->

@@ -1,19 +1,24 @@
 
-#experiments-list {
+#inner-container {
 	
-	width: 100%;
+	display: flex;
+	flex-flow: column nowrap;
+	align-items: center;
+	width: 90%;
+	margin-top: 3rem;
+}
+
+#experiments-lists {
+	
+	min-width: 80%;
 	margin-bottom: 1em;
 }
 
 .table-space { 
-	width: 100%;
+	width: 4em;
 }
 
-.page-link {
-	color: black;
-}
-
-.lists-row button {
+.list-row button {
 
 	margin-left: 0;	
 	margin-right: 0;
