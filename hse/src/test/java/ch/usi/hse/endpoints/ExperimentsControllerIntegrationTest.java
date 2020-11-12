@@ -10,10 +10,8 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.AfterEach;
@@ -45,7 +43,6 @@ import ch.usi.hse.db.repositories.ParticipantRepository;
 import ch.usi.hse.db.repositories.TestGroupRepository;
 import ch.usi.hse.exceptions.ApiError;
 import ch.usi.hse.exceptions.FileReadException;
-import ch.usi.hse.services.ExperimentService;
 import ch.usi.hse.storage.FileStorage;
 
 @SpringBootTest
@@ -76,9 +73,6 @@ public class ExperimentsControllerIntegrationTest {
 	
 	@Autowired
 	private TestGroupRepository testGroupRepo;
-	
-//	@Autowired
-//	private ExperimentService expService;
 	
 	private String base = "/experiments";
 	
@@ -149,8 +143,8 @@ public class ExperimentsControllerIntegrationTest {
 		
 		// DOC COLLECTIONS
 		
-		DocCollection c1 = collectionRepo.save(new DocCollection("dc1", "urlList1"));
-		DocCollection c2 = collectionRepo.save(new DocCollection("dc2", "urlList2"));
+		collectionRepo.save(new DocCollection("dc1", "urlList1"));
+		collectionRepo.save(new DocCollection("dc2", "urlList2"));
 		savedDocCollections = collectionRepo.findAll();
 		
 		// CONFIG FILES

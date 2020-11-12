@@ -122,6 +122,15 @@ function handleApiError(errJson) {
 		
 		showErrorModal(m_error, m_collectionNotFound);
 	}
+	else if (errType == "ExperimentExistsException") {
+		
+		showErrorModal(m_error, m_experimentExists);
+	}
+	else if (errType == "NoSuchExperimentException") {
+		
+		showErrorModal(m_error, m_experimentNotFound);
+	}
+	
 	else {
 
 		console.log(err);

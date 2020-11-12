@@ -71,10 +71,14 @@ var m_doIndex = $("#m_doIndex").text();
 var m_timeElapsed = $("#m_timeElapsed").text();
 var m_processing = $("#m_processing").text();
 
+var m_configure = $("#m_configure").text(); 
 var m_run = $("#m_run").text(); 
 var m_evaluate = $("#m_evaluate").text(); 
 
-
+var m_title = $("#m_title").text(); 
+var m_missingTitle = $("#m_missingTitle").text(); 
+var m_experimentExists = $("#m_experimentExists").text(); 
+var m_experimentNotFound = $("#m_experimentNotFound").text(); 
 
 
 
