@@ -1,8 +1,8 @@
 
 $(document).ready(function() {
 	
-	console.log(experiments);
-	console.log(experimenters);
+//	console.log(experiments);
+//	console.log(experimenters);
 	
 	experiments.forEach((experiment) => {
 		

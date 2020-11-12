@@ -114,7 +114,7 @@ function showUrlListDeleteModal(fileName) {
 	});
 }
 
-function showCollectionDeleteModal(collection) {
+function showCollectionDeleteModal(collection) { 
 	
 	showConfirmDeleteModal(collection.name, () => { 
 		deleteCollection(collection); 

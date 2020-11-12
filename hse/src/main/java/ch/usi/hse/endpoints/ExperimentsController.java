@@ -327,7 +327,7 @@ public class ExperimentsController {
 		InputStream is = experimentService.getConfigFile(fileName);
 		
 		response.setContentType(MediaType.TEXT_PLAIN);
-		response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
+	//	response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
 		
 		try {
 			FileCopyUtils.copy(is, response.getOutputStream());

@@ -18,8 +18,79 @@
 
 	<h1 th:text="#{m_setUp} + ' ' + ${experiment.title}"></h1>
 	
+	<div id="inner-container">
+	
+		<div class="tab-container">
+		
+			<div class="tab-header">
+				<h2 th:text="#{m_availableConfigFiles}"></h3>			
+			</div>
+			
+			<table id="configFileList" class="table table-hover">
+			
+				<tr th:each="file : ${configFiles}">
+				
+					<td th:text="${file}"></td>
+					
+					<td class="table-space"></td>
+				
+					<td>
+						<button class="btn btn-sm btn-light">
+							<a class="dl-link" 
+							   th:href="@{/experiments/testGroups/config/dl?fileName=} + ${file}" 
+							   target="blank">
+							<span class="glyphicon glyphicon-search"></span>
+							</a>
+							</button>
+					</td>
+						
+					<td>
+						<button class="btn btn-sm btn-light"
+								th:onclick="showConfigFileDeleteModal([[${file}]])">
+						<span class="glyphicon glyphicon-trash"></span>
+						</button>
+					</td>
+				
+				</tr>
+			
+			</table>
+			
+			<div class="input-group">
+				
+				<span class="input-group-btn">			
+					<span class="btn btn-primary btn-file">		
+						<span class="glyphicon glyphicon-plus"></span>		
+					    <input id="configFileInput"
+							   data-url="/upload" 
+							   accept="text/plain" 
+							   type="file">
+					</span>	
+				</span>
+					
+			</div>
+		
+		</div>
+		
+		<div class="tab-container">
+		
+			<div class="tab-header">
+				<h2 th:text="#{m_experimentDetails}"></h3>			
+			</div>
+		
+		</div>
+	
+	</div>
 	
 </div>
+
+<!-- pass variables to js -->
+<script th:inline="javascript">
+	/*<![CDATA[*/
+	var experiment = /*[[${experiment}]]*/ "default";
+	var docCollections = /*[[${docCollections}]]*/ "default";
+	var configFiles = /*[[${configFiles}]]*/ "default";
+	/*]]>*/
+</script>
 
 <th:block th:include="fragments/messages.html :: messages"></th:block>
 <th:block th:include="fragments/general.html :: commonScripts"></th:block>

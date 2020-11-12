@@ -80,6 +80,9 @@ var m_missingTitle = $("#m_missingTitle").text();
 var m_experimentExists = $("#m_experimentExists").text(); 
 var m_experimentNotFound = $("#m_experimentNotFound").text(); 
 
+var m_availableConfigFiles = $("#m_availableConfigFiles").text(); 
+var m_experimentDetails = $("#m_experimentDetails").text(); 
+
 
 
 
