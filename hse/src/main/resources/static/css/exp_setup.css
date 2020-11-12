@@ -1,4 +1,24 @@
 
+h2 {
+	
+	font-size: 20pt;
+}
+
+h3 {
+	
+	font-size: 18pt;
+}
+
+h4 {
+	
+	font-size: 16pt;
+}
+
+h5 {
+	
+	font-size: 14pt;
+}
+
 #inner-container {
 	
 	display: flex;
@@ -6,24 +26,67 @@
 	align-items: flex-start;
 	width: 90%;
 	margin-top: 3rem;
+	margin-bottom: 10rem;
 }
 
 .tab-container {
 	 
-	min-width: 30%;
+	min-width: 60%;
 	display: flex;
 	flex-flow: column wrap;
 	align-items: flex-start;
 	margin-top:3rem;
 } 
 
-h2 {
+.tab-header {
 	
-	font-size: 20pt;
+	width: 100%;
+	display: flex;
+	flex-flow: row nowrap;
+	align-content: space-between;
+}
+
+.tab-header h2 {
+	
+	margin-right: auto;
 }
 
 .dl-link {
 	color: black;
+}
+
+#testGroupsList {
+	
+	display: flex;
+	flex-flow: row wrap;
+}
+
+.test-group-div {
+	
+	display: flex;
+	flex-flow: column nowrap;
+	min-width: 25%;
+	margin-left: 2em;
+	margin-top: 1em;
+	padding: 1em;
+	background-color: #eeeeee;
+	
+}
+
+.test-group-sub-header {
+	
+	display: flex;
+	flex-flow: row wrap;
+}
+
+.test-group-sub-header h5 {
+	
+	margin-right: 2em;
+}
+
+.test-group-sub-header button {
+	
+	margin-left: auto;
 }
 
 
@@ -39,9 +102,9 @@ h2 {
   top: 0;
   right: 0;
   min-width: 100%;
-  min-height: 100%;
-  font-size: 999px;
-  text-align: right;
+  min-height: 100%; 
+  font-size: 999px;  
+  text-align: left; 
   filter: alpha(opacity=0);
   opacity: 0;
   cursor: inherit;

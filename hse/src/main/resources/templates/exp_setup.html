@@ -23,7 +23,8 @@
 		<div class="tab-container">
 		
 			<div class="tab-header">
-				<h2 th:text="#{m_availableConfigFiles}"></h3>			
+				<h2 th:text="#{m_availableConfigFiles}"></h2>	
+						
 			</div>
 			
 			<table id="configFileList" class="table table-hover">
@@ -67,14 +68,75 @@
 					</span>	
 				</span>
 					
-			</div>
+				</div>
 		
 		</div>
 		
 		<div class="tab-container">
 		
 			<div class="tab-header">
-				<h2 th:text="#{m_experimentDetails}"></h3>			
+				<h2 th:text="#{m_experimentDetails}"></h2>	
+				<button class="btn btn-primary" 
+						th:text="#{m_configureFromFile}"	
+						onclick="showFileConfigModal()">
+				</button>	
+			</div>
+			
+			<h3 th:text="#{m_testGroups}"></h3>
+			
+			<div id="testGroupsList">
+				
+				<div th:each="testGroup : ${experiment.testGroups}" class="test-group-div">
+				
+					<div class="test-group-header">
+						<h4 th:text="${testGroup.name}"></h4>
+					</div>
+					 
+					<div class="test-group-sub-header">
+						<h5 th:text="#{m_docCollections}"></h5>
+					
+						<button class="btn btn-sm btn-secondary" 
+								th:onclick="showDocCollectionSelectModal([[${testGroup}]])">
+						<span class="glyphicon glyphicon-plus"></span>
+						</button>
+					</div>
+					
+					<table class="table table-hover doc-collections-table">
+					
+						<tr th:each="collection : ${testGroup.docCollections}">
+						
+							<td th:text="${collection.name}"></td>
+							
+							<td th:text="${collection.language}"></td>
+						
+						</tr>
+					
+					</table>
+					
+					<div class="test-group-sub-header">
+						<h5 th:text="#{m_participants}"></h5>
+										
+						<button class="btn btn-sm btn-secondary" 
+								th:onclick="showParticipantInputModal([[${testGroup}]])">
+						<span class="glyphicon glyphicon-plus"></span>						
+					</div>
+					
+					<table class="table table-hover participants-table">
+					
+						<tr th:each="participant : ${testGroup.participants}">
+						
+							<td th:text="${participant.userName}"></td>
+						
+						</tr>
+					
+					</table>
+					
+
+					
+
+				
+				</div>
+			
 			</div>
 		
 		</div>

@@ -40,6 +40,7 @@ var m_participant = $("#m_participant").text();
 var m_participants = $("#m_participants").text();
 
 var m_testGroup = $("#m_testGroup").text();
+var m_testGroups = $("#m_testGroups").text();
 var m_experiment = $("#m_experiment").text();
 
 var m_upload = $("#m_upload").text();
@@ -82,7 +83,8 @@ var m_experimentNotFound = $("#m_experimentNotFound").text();
 
 var m_availableConfigFiles = $("#m_availableConfigFiles").text(); 
 var m_experimentDetails = $("#m_experimentDetails").text(); 
-
+var m_configureFromFile = $("#m_configureFromFile").text(); 
+var m_invalidConfigFile = $("#m_invalidConfigFile").text();
 
 
 

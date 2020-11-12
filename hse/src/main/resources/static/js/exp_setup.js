@@ -58,3 +58,58 @@ function showConfigFileDeleteModal(fileName) {
 		);
 	});
 }
+
+function showFileConfigModal() {
+	
+	let file = $("#configFileSelect").val();
+	
+	$("#configureBtn").on("click", () => {
+		
+		submitFileConfig(file);
+	});
+	
+	$("#applyConfigFileModal").modal("show");
+}
+
+function submitFileConfig(file) {
+	
+	console.log("submitting file config " + file);
+	
+	let url = "/experiments/testGroups/config?configFileName=" + file;
+	
+	$.ajax(url,
+		{
+			type: "POST",
+			dataType: "json",
+			contentType: 'application/json; charset=utf-8',
+			data: JSON.stringify(experiment),
+			success: () => {
+
+				location.reload();
+			},
+			error: (err) => { 
+
+				handleHttpError(err);
+			}
+		}
+	);
+}
+
+function showDocCollectionSelectModal(testGroup) {
+	
+	console.log("showDocCollectionSelectModal(" + testGroup.name + ")");
+}
+
+function showParticipantInputModal(testGroup) {
+	
+	console.log("showParticipantInputModal(" + testGroup.name + ")");
+}
+
+
+
+
+
+
+
+
+

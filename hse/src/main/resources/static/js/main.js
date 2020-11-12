@@ -130,6 +130,10 @@ function handleApiError(errJson) {
 		
 		showErrorModal(m_error, m_experimentNotFound);
 	}
+	else if (errType == "ConfigParseExeption") {
+		
+		showErrorModal(m_error, m_invalidConfigFile + ": " + errJson.errorMessage);
+	}
 	
 	else {
 

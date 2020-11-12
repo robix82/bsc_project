@@ -461,7 +461,52 @@
 	
 </div>
 
+<div class="modal fade" id="applyConfigFileModal">
+		
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content">
+		
+			<div class="modal-header text-center">
+				<h4 class="modal-title w-100" th:text="#{m_configureFromFile}"></h4>
+		   	</div>
+		
+			<div class="modal-body">
+			
+				<div class="form-group">
+                	<label class="control-label" th:text="#{m_file}"></label>
+                        <div th:if="${configFiles != null}">
+                            <select id="configFileSelect" class="form-control input-lg">
 
+								<option th:each="file : ${configFiles}" 
+										th:value="${file}"
+										th:text="${file}">
+								</option>
+
+                            </select>
+                        </div>
+             	</div>
+			
+			</div>
+		
+			<div class="modal-footer">
+			
+				<button class="btn btn-light" 
+						data-dismiss="modal" 
+						th:text="#{m_close}">
+				</button>
+				
+				<button id="configureBtn" 
+						class="btn btn-primary" 
+						data-dismiss="modal" 
+						th:text="#{m_ok}">
+				</button>
+				
+			</div>
+		
+		</div>
+	</div>
+	
+</div>
 
 </th:block>
 
