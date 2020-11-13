@@ -120,7 +120,7 @@ function submitExperiment(experiment, method) {
 			data: JSON.stringify(experiment),
 			success: () => {
 
-				showInfoModal("", succMsg, () => { location.reload(); });
+				location.reload();
 			},
 			error: (err) => { 
 
@@ -143,7 +143,7 @@ function deleteExperiment(experiment) {
 			data: JSON.stringify(experiment),
 			success: () => {
 
-				showInfoModal("", succMsg, () => { location.reload(); });
+				location.reload();
 			},
 			error: (err) => { 
 

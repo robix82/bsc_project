@@ -137,15 +137,16 @@ public class ExperimentService {
 			if (! experimenterRepo.existsById(experimenterId)) {
 				throw new NoSuchUserException("Experimenter", experimenterId);
 			}
-			
-			experiment.setExperimenter(experimenterRepo.findById(experimenterId));
 		}
 		
 		experiment.setDateCreated(LocalDateTime.now());
 		checkReadyStatus(experiment);
-		
 		Experiment saved = experimentRepo.save(experiment);
 		
+		Experimenter experimenter = experimenterRepo.findById(experimenterId);
+		experimenter.addExperiment(saved);
+		experimenterRepo.save(experimenter);
+			
 		return saved;
 	}
 	
@@ -223,7 +224,9 @@ public class ExperimentService {
 	public void deleteExperiment(Experiment experiment) 
 			throws NoSuchExperimentException, NoSuchUserException {
 		
-		if (! experimentRepo.existsById(experiment.getId())) {
+		int experimentId = experiment.getId();
+		
+		if (! experimentRepo.existsById(experimentId)) {
 			throw new NoSuchExperimentException(experiment.getId());
 		}
 		
@@ -233,10 +236,10 @@ public class ExperimentService {
 			throw new NoSuchUserException("Experimenter", experimenterId);
 		}
 		
+		Experiment found = experimentRepo.findById(experimentId);
+		
 		Experimenter experimenter = experimenterRepo.findById(experimenterId);
-		
-		experimenter.removeExperiment(experiment);
-		
+		experimenter.removeExperiment(found);	
 		experimenterRepo.save(experimenter);
 	}
 	
@@ -532,11 +535,13 @@ public class ExperimentService {
 	
 	private void checkReadyStatus(Experiment e) {
 		
-		if (e.getStatus().equals(Experiment.Status.READY)) {
+		if (e.getStatus().equals(Experiment.Status.READY) ||
+			e.getStatus().equals(Experiment.Status.NOT_READY)) {
 			
 			if (e.getTestGroups().isEmpty()) {
 				
 				e.setStatus(Experiment.Status.NOT_READY);
+				return;
 			}
 	
 			for (TestGroup g : e.getTestGroups()) {
@@ -544,20 +549,11 @@ public class ExperimentService {
 				if (g.getParticipants().isEmpty() || g.getDocCollections().isEmpty()) {
 					
 					e.setStatus(Experiment.Status.NOT_READY);
+					return;
 				}
 			}
-		}
-		else if (e.getStatus().equals(Experiment.Status.NOT_READY)) {
 			
 			e.setStatus(Experiment.Status.READY);
-			
-			for (TestGroup g : e.getTestGroups()) {
-				
-				if (g.getParticipants().isEmpty() || g.getDocCollections().isEmpty()) {
-					
-					e.setStatus(Experiment.Status.NOT_READY);
-				}
-			}
 		}
 	}
 }
