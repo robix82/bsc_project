@@ -142,6 +142,7 @@ public class ExperimentService {
 		}
 		
 		experiment.setDateCreated(LocalDateTime.now());
+		checkReadyStatus(experiment);
 		
 		Experiment saved = experimentRepo.save(experiment);
 		
@@ -204,13 +205,9 @@ public class ExperimentService {
 		found.setDateConducted(experiment.getDateConducted());
 		found.setStartTime(experiment.getStartTime());
 		found.setEndTime(experiment.getEndTime());
-		
-		if (found.getStatus().equals(Experiment.Status.READY) ||
-			found.getStatus().equals(Experiment.Status.NOT_READY)) {
-			
-			checkReadyStatus(found);
-		}
-		
+
+		checkReadyStatus(found);
+	
 		Experiment updated = experimentRepo.save(found);
 		
 		return updated;
@@ -263,6 +260,7 @@ public class ExperimentService {
 		
 		Experiment experiment = experimentRepo.findById(experimentId);
 		experiment.addTestGroup(testGroup);
+		checkReadyStatus(experiment);
 		experimentRepo.save(experiment);
 		
 		return testGroup;
@@ -332,6 +330,10 @@ public class ExperimentService {
 		
 		TestGroup updated = testGroupRepo.save(found);
 		
+		Experiment experiment = experimentRepo.findById(experimentId);
+		checkReadyStatus(experiment);
+		experimentRepo.save(experiment);
+		
 		return updated;
 	}
 	
@@ -360,6 +362,7 @@ public class ExperimentService {
 		Experiment experiment = experimentRepo.findById(experimentId);
 		
 		experiment.removeTestGroup(testGroup);
+		checkReadyStatus(experiment);
 		
 		experimentRepo.save(experiment);
 	}
@@ -386,12 +389,8 @@ public class ExperimentService {
 		}
 		
 		Experiment configured = experimentConfigurer.configureTestGroups(experiment, configFileName);
-		
-		if (configured.getStatus().equals(Experiment.Status.READY) ||
-			configured.getStatus().equals(Experiment.Status.NOT_READY)) {
 			
-			checkReadyStatus(configured);
-		}
+		checkReadyStatus(configured);
 		
 		Experiment saved = experimentRepo.save(configured); 
 		
@@ -533,18 +532,31 @@ public class ExperimentService {
 	
 	private void checkReadyStatus(Experiment e) {
 		
-		if (e.getTestGroups().isEmpty()) {
+		if (e.getStatus().equals(Experiment.Status.READY)) {
 			
-			e.setStatus(Experiment.Status.NOT_READY);
-			return;
-		}
-		
-		for (TestGroup g : e.getTestGroups()) {
-			
-			if (g.getParticipants().isEmpty() || g.getDocCollections().isEmpty()) {
+			if (e.getTestGroups().isEmpty()) {
 				
 				e.setStatus(Experiment.Status.NOT_READY);
-				return;
+			}
+	
+			for (TestGroup g : e.getTestGroups()) {
+				
+				if (g.getParticipants().isEmpty() || g.getDocCollections().isEmpty()) {
+					
+					e.setStatus(Experiment.Status.NOT_READY);
+				}
+			}
+		}
+		else if (e.getStatus().equals(Experiment.Status.NOT_READY)) {
+			
+			e.setStatus(Experiment.Status.READY);
+			
+			for (TestGroup g : e.getTestGroups()) {
+				
+				if (g.getParticipants().isEmpty() || g.getDocCollections().isEmpty()) {
+					
+					e.setStatus(Experiment.Status.NOT_READY);
+				}
 			}
 		}
 	}

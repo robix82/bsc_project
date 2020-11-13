@@ -108,61 +108,6 @@ function showExperimenterInputModal(experimenter) {
 	$("#experimenterInputModal").modal("show"); 
 }
 
-function showParticipantInputModal(participant) { 
-	
-	let method = "POST"; 
-	
-	if (participant != null) {
-		
-		method = "PUT";
-		$("#participantUserNameInput").val(participant.userName);
-		$("#participantExperimentInput").val(participant.experimentTitle);
-		$("#participantGroupInput").val(participant.testGroupName);
-	}
-	
-	$("#submitParticipantBtn").on("click", () => {
-		
-		let uName = $("#participantUserNameInput").val().trim();
-		let pwd = $("#participantPasswordInput").val().trim();
-		
-		if (uName == "") { 
-			
-			showErrorModal(m_error, m_missingUserName);
-			return;
-		}
-		
-		if (participant == null && pwd == "") {
-			
-			showErrorModal(m_error, m_missingPassword);
-			return;
-		}
-
-		if (! participant) {
-			
-			participant = {
-				userName: uName,
-				password: pwd,
-				testGroupName: $("#participantGroupInput").val().trim(),
-				experimentTitle: $("#participantExperimentInput").val().trim()
-			}
-		}
-		else {
-			
-			participant.userName = uName;
-			participant.testGroupName = $("#participantGroupInput").val().trim(),
-			participant.experimentTitle = $("#participantExperimentInput").val().trim()
-			
-			if (pwd != "") {
-				participant.password = pwd;
-			}
-		}
-			
-		submitUser(participant, "participants", method);
-	});
-	 
-	$("#participantInputModal").modal("show"); 
-}
-
 function showAdminDeleteModal(admin) {
 	
 	showConfirmDeleteModal(admin.userName, () => { deleteUser(admin, "administrators"); });
@@ -172,13 +117,6 @@ function showExperimenterDeleteModal(experimenter) {
 	
 	showConfirmDeleteModal(experimenter.userName, () => { deleteUser(experimenter, "experimenters"); });
 }  
-
-function showParticipantDeleteModal(participant) {
-	
-	showConfirmDeleteModal(participant.userName, () => { 
-		deleteUser(participant, "participants"); 
-	});
-} 
 
 function submitUser(user, category, method) { 
 	

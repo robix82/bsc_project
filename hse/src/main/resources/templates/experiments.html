@@ -34,28 +34,28 @@
 							
 				<td>
 					<button th:id="'exp_configBtn_' + ${experiment.id}"
-							class="btn btn-sm btn-light" 
+							class="btn btn-sm btn-primary" 
 							th:text="#{m_configure}">
 					</button>										
 				</td>
 				
 				<td>
 					<button th:id="'exp_runBtn_' + ${experiment.id}"
-							class="btn btn-sm btn-light" 
+							class="btn btn-sm btn-primary" 
 							th:text="#{m_run}">
 					</button>										
 				</td>
 				
 				<td>
 					<button th:id="'exp_evalBtn_' + ${experiment.id}"
-							class="btn btn-sm btn-light" 
+							class="btn btn-sm btn-primary" 
 							th:text="#{m_evaluate}">
 					</button>										
 				</td>
 
 						
 				<td>
-					<button class="btn btn-sm btn-light"
+					<button class="btn btn-sm btn-primary"
 							th:onclick="showExperimentDeleteModal([[${experiment}]])">
 					  <span class="glyphicon glyphicon-trash"></span>
 					</button>

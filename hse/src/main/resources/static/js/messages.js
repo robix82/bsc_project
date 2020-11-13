@@ -18,8 +18,10 @@ var m_deleted_f = $("#m_deleted_f").text();
 var m_created = $("#m_created").text(); 
 
 var m_userName = $("#m_userName").text();
+var m_name = $("#m_name").text();
 var m_password = $("#m_password").text();
 var m_missingUserName = $("#m_missingUserName").text();
+var m_missingName = $("#m_missingName").text();
 var m_missingPassword = $("#m_missingPassword").text();
 var m_userExists = $("#m_userExists").text();
 var m_userNotFound = $("#m_userNotFound").text();
@@ -86,8 +88,8 @@ var m_experimentDetails = $("#m_experimentDetails").text();
 var m_configureFromFile = $("#m_configureFromFile").text(); 
 var m_invalidConfigFile = $("#m_invalidConfigFile").text();
 
-
-
+var m_addTestGroup = $("#m_addTestGroup").text();
+var m_chooseDocCollection = $("#m_chooseDocCollection").text();
 
 
 

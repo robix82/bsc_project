@@ -123,8 +123,6 @@ function showCollectionDeleteModal(collection) {
 
 function deleteCollection(collection) {
 	
-	let succMsg = m_collection + " " + collection.name + " " + m_deleted_f + ".";
-	
 	$.ajax("/indexing/docCollections",
 		{
 			type: "DELETE",
@@ -132,8 +130,7 @@ function deleteCollection(collection) {
 			contentType: 'application/json; charset=utf-8',
 			data: JSON.stringify(collection),
 			success: () => {
-
-				showInfoModal("", succMsg, () => { location.reload(); });
+				location.reload();
 			},
 			error: (err) => { 
 

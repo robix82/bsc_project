@@ -25,6 +25,19 @@
 			<div class="tab-header">
 				<h2 th:text="#{m_availableConfigFiles}"></h2>	
 						
+				<div class="input-group">
+				
+					<span class="input-group-btn">			
+						<span class="btn btn-primary btn-file">		
+							<span class="glyphicon glyphicon-plus"></span>		
+						    <input id="configFileInput"
+								   data-url="/upload" 
+								   accept="text/plain" 
+								   type="file">
+						</span>	
+					</span>
+					
+				</div>
 			</div>
 			
 			<table id="configFileList" class="table table-hover">
@@ -55,20 +68,6 @@
 				</tr>
 			
 			</table>
-			
-			<div class="input-group">
-				
-				<span class="input-group-btn">			
-					<span class="btn btn-primary btn-file">		
-						<span class="glyphicon glyphicon-plus"></span>		
-					    <input id="configFileInput"
-							   data-url="/upload" 
-							   accept="text/plain" 
-							   type="file">
-					</span>	
-				</span>
-					
-				</div>
 		
 		</div>
 		
@@ -82,7 +81,13 @@
 				</button>	
 			</div>
 			
-			<h3 th:text="#{m_testGroups}"></h3>
+			<div id="test-groups-header">
+				<h3 th:text="#{m_testGroups}"></h3>
+				<button class="btn btn-primary" 
+						th:text="#{m_addTestGroup}"
+						th:onclick="showTestGroupInputModal()">
+				</button>
+			</div>
 			
 			<div id="testGroupsList">
 				
@@ -90,6 +95,11 @@
 				
 					<div class="test-group-header">
 						<h4 th:text="${testGroup.name}"></h4>
+						
+						<button class="btn btn-sm btn-danger" 
+								th:onclick="showTestGroupDeleteModal([[${testGroup}]])">
+						<span class="glyphicon glyphicon-trash"></span>
+						</button>
 					</div>
 					 
 					<div class="test-group-sub-header">
@@ -105,9 +115,16 @@
 					
 						<tr th:each="collection : ${testGroup.docCollections}">
 						
-							<td th:text="${collection.name}"></td>
-							
+							<td th:text="${collection.name}"></td>						
 							<td th:text="${collection.language}"></td>
+							<td class="table-space">
+							
+							<td>
+								<button class="btn btn-sm btn-light" 
+										th:onclick="removeDocCollection([[${testGroup}]], [[${collection.id}]])">
+										<span class="glyphicon glyphicon-remove"></span>	
+								</button>
+							</td>
 						
 						</tr>
 					
@@ -126,6 +143,14 @@
 						<tr th:each="participant : ${testGroup.participants}">
 						
 							<td th:text="${participant.userName}"></td>
+							<td class="table-space">
+							
+							<td>
+								<button class="btn btn-sm btn-light" 
+										th:onclick="showParticipantDeleteModal([[${testGroup}]], [[${participant}]])">
+										<span class="glyphicon glyphicon-remove"></span>	
+								</button>
+							</td>
 						
 						</tr>
 					

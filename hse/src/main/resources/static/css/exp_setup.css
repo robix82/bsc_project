@@ -24,14 +24,14 @@ h5 {
 	display: flex;
 	flex-flow: column nowrap;
 	align-items: flex-start;
-	width: 90%;
+/*	width: 90%; */
 	margin-top: 3rem;
 	margin-bottom: 10rem;
 }
 
 .tab-container {
 	 
-	min-width: 60%;
+	width:100%; 
 	display: flex;
 	flex-flow: column wrap;
 	align-items: flex-start;
@@ -44,15 +44,29 @@ h5 {
 	display: flex;
 	flex-flow: row nowrap;
 	align-content: space-between;
+	margin-bottom: 2em;
 }
 
 .tab-header h2 {
 	
 	margin-right: auto;
+	padding-right: 2em; 
 }
 
 .dl-link {
 	color: black;
+}
+
+#test-groups-header {
+	
+	display: flex;
+	flex-flow: row nowrap;
+	width: 100%;
+}
+
+#test-groups-header h3 {
+	
+	margin-right: auto;
 }
 
 #testGroupsList {
@@ -73,6 +87,19 @@ h5 {
 	
 }
 
+.test-group-header {
+	
+	display: flex;
+	flex-flow: row nowrap;
+	width: 100%;
+	margin-bottom: 1em;
+}
+
+.test-group-header h4 {
+	
+	margin-right: auto;
+}
+
 .test-group-sub-header {
 	
 	display: flex;
@@ -89,8 +116,23 @@ h5 {
 	margin-left: auto;
 }
 
+.doc-collections-table td {
+	
+	padding-right: 0;
+}
+
+.participants-table td {
+	
+	padding-right: 0;
+}
 
 /* FILE INPUT */
+
+.input-group {
+	
+	max-width: 2.5em;
+	margin-right: 0;
+}
 
 .btn-file {
   position: relative;

@@ -215,69 +215,6 @@
 	
 </div>
 
-<div class="modal fade" id="participantInputModal">
-		
-	<div class="modal-dialog">
-		<div class="modal-content">
-		
-			<div class="modal-header text-center">
-				<h4 class="modal-title w-100" th:text="#{m_add} + ' ' + #{m_participant}"></h4>
-		   	</div>
-		
-			<div class="modal-body">
-			
-			
-				<div class="form-group">
-                	<label class="control-label" th:text="#{m_userName}"></label>
-                        <div>
-                            <input id="participantUserNameInput" type="text" class="form-control input-lg">
-                        </div>
-             	</div>
-			
-				<div class="form-group">
-                	<label class="control-label" th:text="#{m_password}"></label>
-                        <div>
-                            <input id="participantPasswordInput" type="password" class="form-control input-lg">
-                        </div>
-             	</div>
-			
-				<div class="form-group">
-                	<label class="control-label" th:text="#{m_experiment}"></label>
-                        <div>
-                            <input id="participantExperimentInput" type="text" class="form-control input-lg">
-                        </div>
-             	</div>
-
-				<div class="form-group">
-                	<label class="control-label" th:text="#{m_testGroup}"></label>
-                        <div>
-                            <input id="participantGroupInput" type="text" class="form-control input-lg">
-                        </div>
-             	</div>
-			
-			
-			</div>
-		
-			<div class="modal-footer">
-			
-				<button class="btn btn-light" 
-						data-dismiss="modal" 
-						th:text="#{m_close}">
-				</button>
-				
-				<button id="submitParticipantBtn" 
-						class="btn btn-primary" 
-						data-dismiss="modal" 
-						th:text="#{m_ok}">
-				</button>
-				
-			</div>
-		
-		</div>
-	</div>
-	
-</div>
-
 <!-- INDEXING -->
 
 <div class="modal fade" id="docCollectionInputModal">
@@ -496,6 +433,142 @@
 				</button>
 				
 				<button id="configureBtn" 
+						class="btn btn-primary" 
+						data-dismiss="modal" 
+						th:text="#{m_ok}">
+				</button>
+				
+			</div>
+		
+		</div>
+	</div>
+	
+</div>
+
+<div class="modal fade" id="selectDocCollectionModal">
+		
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content">
+		
+			<div class="modal-header text-center">
+				<h4 class="modal-title w-100" th:text="#{m_configureFromFile}"></h4>
+		   	</div>
+		
+			<div class="modal-body">
+			
+				<div class="form-group">
+                	<label class="control-label" th:text="#{m_chooseDocCollection}"></label>
+                        <div th:if="${docCollections != null}">
+                            <select id="docCollectionSelect" class="form-control input-lg">
+
+								<option th:each="collection : ${docCollections}" 
+										th:value="${collection.id}"
+										th:text="${collection.name} + '  ' + ${collection.language}">
+								</option>
+
+                            </select>
+                        </div>
+             	</div>
+			
+			</div>
+		
+			<div class="modal-footer">
+			
+				<button class="btn btn-light" 
+						data-dismiss="modal" 
+						th:text="#{m_close}">
+				</button>
+				
+				<button id="selctCollectionBtn" 
+						class="btn btn-primary" 
+						data-dismiss="modal" 
+						th:text="#{m_ok}">
+				</button>
+				
+			</div>
+		
+		</div>
+	</div>
+	
+</div>
+
+<div class="modal fade" id="participantInputModal">
+		
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content">
+		
+			<div class="modal-header text-center">
+				<h4 class="modal-title w-100" th:text="#{m_add} + ' ' + #{m_participant}"></h4>
+		   	</div>
+		
+			<div class="modal-body">
+			
+			
+				<div class="form-group">
+                	<label class="control-label" th:text="#{m_userName}"></label>
+                        <div>
+                            <input id="participantUserNameInput" type="text" class="form-control input-lg">
+                        </div>
+             	</div>
+			
+				<div class="form-group">
+                	<label class="control-label" th:text="#{m_password}"></label>
+                        <div>
+                            <input id="participantPasswordInput" type="password" class="form-control input-lg">
+                        </div>
+             	</div>
+			
+			</div>
+		
+			<div class="modal-footer">
+			
+				<button class="btn btn-light" 
+						data-dismiss="modal" 
+						th:text="#{m_close}">
+				</button>
+				
+				<button id="submitParticipantBtn" 
+						class="btn btn-primary" 
+						data-dismiss="modal" 
+						th:text="#{m_ok}">
+				</button>
+				
+			</div>
+		
+		</div>
+	</div>
+	
+</div>
+
+<div class="modal fade" id="testGroupInputModal">
+		
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content">
+		
+			<div class="modal-header text-center">
+				<h4 class="modal-title w-100" th:text="#{m_add} + ' ' + #{m_testGroup}"></h4>
+		   	</div>
+		
+			<div class="modal-body">
+			
+			
+				<div class="form-group">
+                	<label class="control-label" th:text="#{m_name}"></label>
+                        <div>
+                            <input id="testGroupNameInput" type="text" class="form-control input-lg">
+                        </div>
+             	</div>
+			
+			</div>
+		
+			<div class="modal-footer">
+			
+				<button class="btn btn-light" 
+						data-dismiss="modal" 
+						th:text="#{m_close}">
+				</button>
+				
+				<button id="submitTestGroupBtn" 
 						class="btn btn-primary" 
 						data-dismiss="modal" 
 						th:text="#{m_ok}">

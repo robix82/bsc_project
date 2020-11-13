@@ -107,50 +107,6 @@
 				  </table>
 			
 			</div>
-			
-			<div class="user-tab">
-			
-				<div class="tab-header">
-				<h3 th:text="#{m_participants}"></h3>
-				<button class="btn btn-primary" th:onclick="showParticipantInputModal()">
-				<span class="glyphicon glyphicon-plus"></span>
-				</button>
-				</div>
-				
-				<table class="table">
-							
-				    <tbody>
-
-				      <tr th:each="participant: ${participants}">
-
-				        <td th:text="${participant.id}" ></td>
-				        <td th:text="${participant.userName}"></td>
-						<td th:text="${participant.experimentTitle}"></td>
-						<td th:text="${participant.testGroupName}"></td>
-
-						<td class="table-space"></td>
-
-				        <td>
-							<button class="btn btn-sm btn-light"
-									th:onclick="showParticipantInputModal([[${participant}]])">
-							<span class="glyphicon glyphicon-pencil"></span>
-							</button>
-						</td>
-						
-						<td>
-							<button class="btn btn-sm btn-light"
-									th:onclick="showParticipantDeleteModal([[${participant}]])">
-							<span class="glyphicon glyphicon-remove"></span>
-							</button>
-						</td>
-						
-				      </tr>
-
-				    </tbody>
-
-				  </table>
-			
-			</div>
 		
 		</div>
 	
