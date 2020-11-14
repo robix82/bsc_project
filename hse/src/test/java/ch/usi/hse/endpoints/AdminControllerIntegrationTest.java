@@ -102,9 +102,9 @@ public class AdminControllerIntegrationTest {
 		adminRoles = new HashSet<>();
 		experimenterRoles = new HashSet<>();
 		participantRoles = new HashSet<>();
-		adminRoles.add(roleRepo.findByRole("ADMIN"));
-		experimenterRoles.add(roleRepo.findByRole("EXPERIMENTER"));
-		participantRoles.add(roleRepo.findByRole("PARTICIPANT"));
+		adminRoles.add(roleRepo.save(new Role(1, "ADMIN")));
+		experimenterRoles.add(roleRepo.save(new Role(2, "EXPERIMENTER")));
+		participantRoles.add(roleRepo.save(new Role(3, "PARTICIPANT")));
 		
 		List<Administrator> _administrators = new ArrayList<>();
 		List<Experimenter> _experimenters = new ArrayList<>();

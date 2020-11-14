@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import ch.usi.hse.db.entities.Administrator;
@@ -44,11 +45,11 @@ public class UserRepositoriesTest {
 	public void setUp() {
 		
 		adminRoles = new HashSet<>(); 
-		adminRoles.add(roleRepo.findByRole("ADMIN"));
+		adminRoles.add(roleRepo.save(new Role(1, "ADMIN")));
 		experimenterRoles = new HashSet<>();
-		experimenterRoles.add(roleRepo.findByRole("EXPERIMENTER"));
+		experimenterRoles.add(roleRepo.save(new Role(2, "EXPERIMENTER")));
 		participantRoles = new HashSet<>();
-		participantRoles.add(roleRepo.findByRole("PARTICICPANT"));
+		participantRoles.add(roleRepo.save(new Role(3, "PARTICICPANT")));
 		
 		admin = new Administrator("admin", "pwd");
 		experimenter = new Experimenter("experimenter", "pwd");

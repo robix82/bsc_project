@@ -532,10 +532,12 @@ public class UserService {
 				g.removeParticipant(p);
 				testGroupRepository.save(g);
 				return;
-			}
+			}		
 		}
 		
+		
 		User u = userRepository.findById(id);
+		
 		userRepository.delete(u);
 	}
 	

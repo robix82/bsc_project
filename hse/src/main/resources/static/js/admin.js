@@ -120,19 +120,6 @@ function showExperimenterDeleteModal(experimenter) {
 
 function submitUser(user, category, method) { 
 	
-	let msg = "";
-	
-	if (category == "administrators") {
-		msg = m_administrator;
-	}
-	else if (category == "experimenters") {
-		msg = m_experimenter;
-	}
-	else if (category == "participants") {
-		msg = m_participant;
-	}
-	
-	let succMsg = msg + " " + user.userName + " " + m_saved + ".";
 	let url = "/admin/" + category;
 	
 	$.ajax(url,
@@ -143,7 +130,7 @@ function submitUser(user, category, method) {
 			data: JSON.stringify(user),
 			success: () => {
 
-				showInfoModal("", succMsg, () => { location.reload(); });
+				location.reload();
 			},
 			error: (err) => { 
 
@@ -154,20 +141,7 @@ function submitUser(user, category, method) {
 }
 
 function deleteUser(user, category) {
-	
-	let msg = "";
-	
-	if (category == "administrators") {
-		msg = m_administrator;
-	}
-	else if (category == "experimenters") {
-		msg = m_experimenter;
-	}
-	else if (category == "participants") {
-		msg = m_participant;
-	}
-	
-	let succMsg = msg + " " + user.userName + " " + m_deleted + ".";
+
 	let url = "/admin/" + category;
 	
 	$.ajax(url,
@@ -178,7 +152,7 @@ function deleteUser(user, category) {
 			data: JSON.stringify(user),
 			success: () => {
 
-				showInfoModal("", succMsg, () => { location.reload(); });
+				location.reload();
 			},
 			error: (err) => { 
 
