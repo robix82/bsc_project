@@ -143,9 +143,16 @@ public class ExperimentsControllerIntegrationTest {
 		
 		// DOC COLLECTIONS
 		
-		collectionRepo.save(new DocCollection("dc1", "urlList1"));
-		collectionRepo.save(new DocCollection("dc2", "urlList2"));
-		savedDocCollections = collectionRepo.findAll();
+		DocCollection c1 = new DocCollection("dc1", "urlList1");
+		DocCollection c2 = new DocCollection("dc1", "urlList1");
+		DocCollection c3 = new DocCollection("dc1", "urlList1");
+		c1.setIndexed(true);
+		c2.setIndexed(true);
+		collectionRepo.save(c1);
+		collectionRepo.save(c2);
+		collectionRepo.save(c3);
+		
+		savedDocCollections = collectionRepo.findByIndexed(true);
 		
 		// CONFIG FILES
 		

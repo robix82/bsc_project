@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
+import ch.usi.hse.db.entities.DocCollection;
 import ch.usi.hse.db.entities.Experiment;
 import ch.usi.hse.db.entities.Experimenter;
 import ch.usi.hse.db.repositories.DocCollectionRepository;
@@ -51,6 +52,7 @@ public class ExperimentServiceTest {
 	private List<Experiment> savedExperiments;
 	private List<Experimenter> savedExperimenters;
 	private Experiment newExperiment;
+	private List<DocCollection> savedDocCollections;
 	
 	@BeforeEach
 	public void setUp() {
@@ -119,6 +121,13 @@ public class ExperimentServiceTest {
 		when(experimentRepo.findByExperimenter(experimenter1)).thenReturn(List.of(e1, e2));
 		when(experimentRepo.findByExperimenter(experimenter2)).thenReturn(List.of(e3, e4));
 		when(experimentRepo.save(newExperiment)).thenReturn(newExperiment);
+		
+		// DocCollections
+		
+		DocCollection c1 = new DocCollection("c1", "l1");
+		DocCollection c2 = new DocCollection("c2", "l2");
+		savedDocCollections = List.of(c1, c2);
+		when(collectionRepo.findByIndexed(true)).thenReturn(savedDocCollections);
 	}
 	
 	@Test
@@ -192,13 +201,14 @@ public class ExperimentServiceTest {
 	@Test
 	public void testAddExperiment1() throws ExperimentExistsException, NoSuchUserException {
 		
+		newExperiment.setExperimenter(savedExperimenters.get(0));
 		Experiment saved = service.addExperiment(newExperiment);
 		
 		assertEquals(saved, newExperiment);
 	}
 	
 	@Test
-	public void tesstAddExperiment2() throws NoSuchUserException {
+	public void testAddExperiment2() throws NoSuchUserException {
 		
 		boolean exc;
 		int existingId = savedExperiments.get(0).getId();
@@ -389,6 +399,14 @@ public class ExperimentServiceTest {
 		}
 		
 		assertTrue(exc);
+	}
+	
+	@Test
+	public void testGetIndexedDocColletions() {
+		
+		List<DocCollection> collections = service.getIndexedDocCollections();
+		
+		assertIterableEquals(savedDocCollections, collections);
 	}
 }
 

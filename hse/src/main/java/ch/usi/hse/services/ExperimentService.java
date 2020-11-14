@@ -407,9 +407,9 @@ public class ExperimentService {
 	 * 
 	 * @return
 	 */
-	public List<DocCollection> getDocCollections() {
+	public List<DocCollection> getIndexedDocCollections() {
 		
-		return collectionRepo.findAll();
+		return collectionRepo.findByIndexed(true);
 	}
 	
 	// CONFIG FILE MANAGEMENT

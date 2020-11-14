@@ -84,7 +84,7 @@ public class ExperimentsController {
 		ModelAndView mav = new ModelAndView();
 		mav.setViewName("exp_setup");
 		mav.addObject("experiment", experimentService.findExperiment(expId));
-		mav.addObject("docCollections", experimentService.getDocCollections());
+		mav.addObject("docCollections", experimentService.getIndexedDocCollections());
 		mav.addObject("configFiles", experimentService.savedConfigFiles());
 		
 		return mav;

@@ -13,8 +13,6 @@ function submitUrlFile() {
 	
 	if ($("#urlListFileInput")[0].files.length > 0) {
 		
-		let succMsg = m_file + " " + $("#urlListFileInput").val().split("\\").pop() + " " + m_saved;
-		
 		formData.append("file", $("#urlListFileInput")[0].files[0]);
 		
 		$.ajax("/indexing/urlLists",
@@ -24,7 +22,7 @@ function submitUrlFile() {
 			    processData: false, 
 			    contentType: false,  
 			    success : () => {
-					showInfoModal("", succMsg, () => { location.reload(); });
+					location.reload(); 
 			    },
 				error: (err) => {
 					handleHttpError(err);	
@@ -67,8 +65,6 @@ function showDocCollectionInputModal(collection) {
 		collection.urlListName = urlListName;
 		collection.language = language;
 		
-		let succMsg = m_collection + " " + name + " " + m_saved_f
-		
 		$.ajax("/indexing/docCollections",
 			{
 				type: method,
@@ -77,7 +73,7 @@ function showDocCollectionInputModal(collection) {
 				data: JSON.stringify(collection),
 				success: () => {
 	
-					showInfoModal("", succMsg, () => { location.reload(); });
+					location.reload(); 
 				},
 				error: (err) => {  
 	
@@ -96,14 +92,13 @@ function showUrlListDeleteModal(fileName) {
 	showConfirmDeleteModal(fileName, () => { 
 		
 		let url = "/indexing/urlLists?fileName=" + fileName;
-		let succMsg = m_file + " " + fileName + " " + m_deleted;
 		
 		$.ajax(url,
 				{
 					type: "DELETE",
 					success: () => {
 		
-						showInfoModal("", succMsg, () => { location.reload(); });
+						location.reload();
 					},
 					error: (err) => { 
 		
