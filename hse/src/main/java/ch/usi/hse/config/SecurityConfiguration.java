@@ -21,6 +21,7 @@ import ch.usi.hse.services.HseUserDetailsService;
  */
 @Configuration
 @EnableWebSecurity
+
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Autowired
@@ -41,17 +42,23 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				   		"/bootstrap/**", "/css/**", "/js/**");
 	}
 	
-	@Override
+	@Override 
+
 	public void configure(HttpSecurity http) throws Exception {
 		
 		http.csrf().disable()
 			.authorizeRequests()
+
+			
+
 			
 			/*
 			// unrestricted access during development
+			.antMatchers("/").permitAll() 
 			.antMatchers("/experiments/**").permitAll()
 			.antMatchers("/indexing/**").permitAll()
 			.antMatchers("/admin/**").permitAll();
+
 			*/
 
 			.antMatchers("/experiments/**").hasAnyAuthority("EXPERIMENTER", "ADMIN")
@@ -63,16 +70,17 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 			.and().logout()
 			.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
 			.logoutSuccessUrl("/login");
+
 		//	.and().exceptionHandling();
-		//	.accessDeniedPage("/accessDenied");
-			
-		//	.loginPage("/login").failureUrl("/login?error=true")
-			
+		//	.accessDeniedPage("/accessDenied");			
 		//	.usernameParameter("user_name")
 		//	.passwordParameter("password")
+	//		.loginPage("/login").failureUrl("/login?error=true")
+	//		.usernameParameter("user_name")
+	//		.passwordParameter("password")
 
 
-		
+
 	}
 	
 	@Bean

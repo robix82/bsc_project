@@ -11,3 +11,4 @@ WHERE NOT EXISTS (SELECT * FROM administrator);
 INSERT IGNORE INTO administrator (user_id) VALUES (888888888);
 
 INSERT IGNORE INTO user_role (user_id, role_id) VALUES(888888888, 1);
+
