@@ -593,25 +593,6 @@ public class ExperimentsControllerIntegrationTest {
 		assertTrue(err.getErrorMessage().contains(Integer.toString(badId)));
 	}
 	
-	@Test // non-existing Experimenter
-	public void testDeleteExperiment3() throws Exception {
-		
-		int badId = 999999;
-		Experiment experiment = savedExperiments.get(0);
-		experiment.setExperimenterId(badId);
-		String jsonString = writer.writeValueAsString(experiment);
-		
-		MvcResult res = mvc.perform(delete(base + "/").contentType(json).content(jsonString))
-				 		   .andExpect(status().isNotFound())
-				 		   .andReturn();
-		
-		ApiError err = getError(res);
-		
-		assertEquals("NoSuchUserException", err.getErrorType());
-		assertTrue(err.getErrorMessage().contains("Experimenter"));
-		assertTrue(err.getErrorMessage().contains(Integer.toString(badId)));
-	}
-	
 	@Test
 	public void testPostTestGroup1() throws Exception {
 		

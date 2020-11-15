@@ -19,7 +19,14 @@ running `mvn clean install`
 from the `hse` directory creates a local build intended to be used during development. Running this build requires a local MySql instance running on port 3306 and containing a database named `hse_db`.
 The development version runs on tcp port 8080.
 
-running
+running 
   `mvn -Pprod clean install` creates the final docker image.
 
+### Default login
 
+In order to use the application it is required to log in.
+When no administrator is configured (e.g. when the ssystem is newly installed) a defult user with the following credentials
+is available:
+
+**user name:** admin
+**password:** admin

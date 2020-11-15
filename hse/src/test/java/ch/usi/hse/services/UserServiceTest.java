@@ -21,6 +21,7 @@ import ch.usi.hse.db.entities.Participant;
 import ch.usi.hse.db.entities.Role;
 import ch.usi.hse.db.entities.User;
 import ch.usi.hse.db.repositories.AdministratorRepository;
+import ch.usi.hse.db.repositories.ExperimentRepository;
 import ch.usi.hse.db.repositories.ExperimenterRepository;
 import ch.usi.hse.db.repositories.ParticipantRepository;
 import ch.usi.hse.db.repositories.RoleRepository;
@@ -45,6 +46,9 @@ public class UserServiceTest {
 	
 	@Mock
 	private TestGroupRepository testGroupRepository;
+	
+	@Mock
+	private ExperimentRepository experimentRepository;
 	
 	@Mock
 	private RoleRepository roleRepository;
@@ -98,6 +102,7 @@ public class UserServiceTest {
 									   experimenterRepository,
 									   participantRepository,
 									   testGroupRepository,
+									   experimentRepository,
 									   roleRepository,
 									   bCryptPasswordEncoder );
 								
@@ -812,31 +817,6 @@ public class UserServiceTest {
 		
 		try {
 			testService.removeUser(administrators.get(0).getId() + 999);
-			exc = false;
-		}
-		catch (NoSuchUserException e) {
-			exc = true;
-		}
-		
-		assertTrue(noexc);
-		assertTrue(exc);
-	}
-	
-	@Test
-	public void testRemoveUser2() {
-		
-		boolean noexc, exc;
-		
-		try {
-			testService.removeUser(administrators.get(0).getUserName());
-			noexc = true;
-		}
-		catch (Exception e) {
-			noexc = false;
-		}
-		
-		try {
-			testService.removeUser("xxx");
 			exc = false;
 		}
 		catch (NoSuchUserException e) {

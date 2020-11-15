@@ -253,7 +253,9 @@
 				<div class="form-group">
                 	<label class="control-label" th:text="#{m_language}"></label>
                         <div th:if="${languages != null}">
-                            <select id="collectionLanguageSelect" type="text" class="form-control input-lg">
+                            <select id="collectionLanguageSelect" 
+									type="text" 
+									class="form-control input-lg">
 
 								<option th:each="language : ${languages}" 
 										th:value="${language}"

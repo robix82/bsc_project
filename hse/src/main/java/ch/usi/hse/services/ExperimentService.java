@@ -222,7 +222,7 @@ public class ExperimentService {
 	 * @throws NoSuchExperimentException
 	 */
 	public void deleteExperiment(Experiment experiment) 
-			throws NoSuchExperimentException, NoSuchUserException {
+			throws NoSuchExperimentException {
 		
 		int experimentId = experiment.getId();
 		
@@ -231,16 +231,17 @@ public class ExperimentService {
 		}
 		
 		int experimenterId = experiment.getExperimenterId();
-		
-		if (! experimenterRepo.existsById(experimenterId)) {
-			throw new NoSuchUserException("Experimenter", experimenterId);
-		}
-		
 		Experiment found = experimentRepo.findById(experimentId);
 		
-		Experimenter experimenter = experimenterRepo.findById(experimenterId);
-		experimenter.removeExperiment(found);	
-		experimenterRepo.save(experimenter);
+		if (experimenterRepo.existsById(experimenterId)) {
+					
+			Experimenter experimenter = experimenterRepo.findById(experimenterId);
+			experimenter.removeExperiment(found);	
+			experimenterRepo.save(experimenter);
+		}
+		else {
+			experimentRepo.delete(found);
+		}
 	}
 	
 	// TEST GROUP CONFIGURATION

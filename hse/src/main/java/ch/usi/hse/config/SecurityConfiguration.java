@@ -61,15 +61,17 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 			.authenticated().and().csrf().disable().formLogin()
 			.defaultSuccessUrl("/", true)
 			.and().logout()
-			.logoutRequestMatcher(new AntPathRequestMatcher("/logout"));
+			.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+			.logoutSuccessUrl("/login");
+		//	.and().exceptionHandling();
+		//	.accessDeniedPage("/accessDenied");
 			
 		//	.loginPage("/login").failureUrl("/login?error=true")
 			
 		//	.usernameParameter("user_name")
 		//	.passwordParameter("password")
-			
-		//	.logoutSuccessUrl("/logoutDone").and().exceptionHandling()
-		//	.accessDeniedPage("/accessDenied");
+
+
 		
 	}
 	

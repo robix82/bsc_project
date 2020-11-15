@@ -9,12 +9,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import ch.usi.hse.db.entities.Administrator;
+import ch.usi.hse.db.entities.Experiment;
 import ch.usi.hse.db.entities.Experimenter;
 import ch.usi.hse.db.entities.Participant;
 import ch.usi.hse.db.entities.Role;
 import ch.usi.hse.db.entities.TestGroup;
 import ch.usi.hse.db.entities.User;
 import ch.usi.hse.db.repositories.AdministratorRepository;
+import ch.usi.hse.db.repositories.ExperimentRepository;
 import ch.usi.hse.db.repositories.ExperimenterRepository;
 import ch.usi.hse.db.repositories.ParticipantRepository;
 import ch.usi.hse.db.repositories.RoleRepository;
@@ -37,7 +39,7 @@ public class UserService {
 	private ExperimenterRepository experimenterRepository;
 	private ParticipantRepository participantRepository;
 	private TestGroupRepository testGroupRepository;
-	
+	private ExperimentRepository experimentRepository;
 	private RoleRepository roleRepository;
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
 	 
@@ -47,6 +49,7 @@ public class UserService {
 					   ExperimenterRepository experimenterRepository,
 					   ParticipantRepository participantRepository,
 					   TestGroupRepository testGroupRepository,
+					   ExperimentRepository experimentRepository,
 					   RoleRepository roleRepository,
 					   BCryptPasswordEncoder bCryptPasswordEncoder) {
 		
@@ -55,6 +58,7 @@ public class UserService {
 		this.experimenterRepository = experimenterRepository;
 		this.participantRepository = participantRepository;
 		this.testGroupRepository = testGroupRepository;
+		this.experimentRepository = experimentRepository;
 		this.roleRepository = roleRepository;
 		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
 	}
@@ -522,52 +526,23 @@ public class UserService {
 			throw new NoSuchUserException(id);
 		}
 		
-		if (participantRepository.existsById(id)) {
+		if (administratorRepository.existsById(id)) {
 			
-			Participant p = participantRepository.findById(id);
-			TestGroup g = p.getTestGroup();
-			
-			if (g != null) {
- 
-				g.removeParticipant(p);
-				testGroupRepository.save(g);
-				return;
-			}		
+			removeAdministrator(administratorRepository.findById(id));
 		}
-		
-		
-		User u = userRepository.findById(id);
-		
-		userRepository.delete(u);
-	}
-	
-	/**
-	 * removes the user with the given user name
-	 * 
-	 * @param userName
-	 * @throws NoSuchUserException
-	 */
-	public void removeUser(String userName) throws NoSuchUserException {
-		
-		if (! userRepository.existsByUserName(userName)) {
-			throw new NoSuchUserException(userName);
+		else if (experimenterRepository.existsById(id)) {
+			
+			removeExperimenter(experimenterRepository.findById(id));
 		}
-		
-		if (participantRepository.existsByUserName(userName)) {
+		else if (participantRepository.existsById(id)) {
 			
-			Participant p = participantRepository.findByUserName(userName);
-			TestGroup g = p.getTestGroup();
-			
-			if (g != null) {
- 
-				g.removeParticipant(p);
-				testGroupRepository.save(g);
-				return;
-			}
+			removeParticipant(participantRepository.findById(id));
 		}
-			
-		User u = userRepository.findByUserName(userName);
-		userRepository.delete(u);
+		else {
+		
+			User u = userRepository.findById(id);
+			userRepository.delete(u);
+		}
 	}
 	
 	public void clearExperimenters() {
@@ -583,6 +558,36 @@ public class UserService {
 		}
 		
 		participantRepository.deleteAll();
+	}
+	
+	private void removeAdministrator(Administrator a) {
+		
+		administratorRepository.delete(a);
+	}
+
+	private void removeExperimenter(Experimenter e) {
+		
+		for (Experiment exp : e.getExperiments()) {
+			
+			experimentRepository.delete(experimentRepository.findById(exp.getId()));
+		}
+		
+		experimenterRepository.delete(e);
+	}
+	
+	private void removeParticipant(Participant p) {
+		
+		TestGroup g = p.getTestGroup();
+		
+		if (g != null) {
+
+			g.removeParticipant(p);
+			testGroupRepository.save(g);
+		}
+		else {
+			
+			participantRepository.delete(p);
+		}
 	}
 }
 
