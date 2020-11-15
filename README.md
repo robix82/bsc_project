@@ -28,6 +28,5 @@ In order to use the application it is required to log in.
 When no administrator is configured (e.g. when the ssystem is newly installed) a defult user with the following credentials
 is available:
 
-**user name:** admin
-
+**user name:** admin  
 **password:** admin
