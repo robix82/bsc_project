@@ -6,6 +6,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 import java.util.List;
 
+import java.time.LocalDateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -13,12 +14,15 @@ import org.mockito.Mock;
 import ch.usi.hse.db.entities.DocCollection;
 import ch.usi.hse.db.entities.Experiment;
 import ch.usi.hse.db.entities.Experimenter;
+import ch.usi.hse.db.entities.Participant;
+import ch.usi.hse.db.entities.TestGroup;
 import ch.usi.hse.db.repositories.DocCollectionRepository;
 import ch.usi.hse.db.repositories.ExperimentRepository;
 import ch.usi.hse.db.repositories.ExperimenterRepository;
 import ch.usi.hse.db.repositories.ParticipantRepository;
 import ch.usi.hse.db.repositories.TestGroupRepository;
 import ch.usi.hse.exceptions.ExperimentExistsException;
+import ch.usi.hse.exceptions.ExperimentStatusException;
 import ch.usi.hse.exceptions.NoSuchExperimentException;
 import ch.usi.hse.exceptions.NoSuchUserException;
 import ch.usi.hse.experiments.ExperimentConfigurer;
@@ -53,6 +57,8 @@ public class ExperimentServiceTest {
 	private List<Experimenter> savedExperimenters;
 	private Experiment newExperiment;
 	private List<DocCollection> savedDocCollections;
+	private List<TestGroup> savedTestGroups;
+	private List<Participant> savedParticipants;
 	
 	@BeforeEach
 	public void setUp() {
@@ -66,6 +72,13 @@ public class ExperimentServiceTest {
 										experimenterRepo,
 										experimentConfigurer,
 										experimentConfigStorage);
+		
+		// DocCollections
+		
+		DocCollection c1 = new DocCollection("c1", "l1");
+		DocCollection c2 = new DocCollection("c2", "l2");
+		savedDocCollections = List.of(c1, c2);
+		when(collectionRepo.findByIndexed(true)).thenReturn(savedDocCollections);
 		
 		// EXPERIMENTERS
 		
@@ -90,6 +103,26 @@ public class ExperimentServiceTest {
 		
 		// EXPERIMENTS
 		
+		TestGroup g1 = new TestGroup("g1");
+		TestGroup g2 = new TestGroup("g2");
+		g1.setId(1);
+		g2.setId(2);
+		
+		Participant p1 = new Participant("p1", "pwd");
+		Participant p2 = new Participant("p2", "pwd");
+		Participant p3 = new Participant("p3", "pwd");
+		Participant p4 = new Participant("p4", "pwd");
+		p1.setId(1);
+		p2.setId(2);
+		p3.setId(3);
+		p4.setId(4);
+		g1.addParticipant(p1);
+		g1.addParticipant(p2);
+		g2.addParticipant(p3);
+		g2.addParticipant(p4);
+		g1.addDocCollection(c1);
+		g2.addDocCollection(c1);
+		
 		Experiment e1 = new Experiment("e1");
 		Experiment e2 = new Experiment("e2");
 		Experiment e3 = new Experiment("e3");
@@ -98,11 +131,16 @@ public class ExperimentServiceTest {
 		e2.setId(2);
 		e3.setId(3);
 		e4.setId(4);
+		e1.addTestGroup(g1);
+		e1.addTestGroup(g2);
+		e1.setStatus(Experiment.Status.READY);
 		experimenter1.addExperiment(e1);
 		experimenter1.addExperiment(e2);
 		experimenter2.addExperiment(e3);
 		experimenter2.addExperiment(e4);
 		savedExperiments = List.of(e1, e2, e3, e4);
+		savedTestGroups = List.of(g1, g2);
+		savedParticipants = List.of(p1,p2, p3, p4);
 		newExperiment = new Experiment("e5");
 		newExperiment.setId(5);
 		
@@ -122,12 +160,7 @@ public class ExperimentServiceTest {
 		when(experimentRepo.findByExperimenter(experimenter2)).thenReturn(List.of(e3, e4));
 		when(experimentRepo.save(newExperiment)).thenReturn(newExperiment);
 		
-		// DocCollections
 		
-		DocCollection c1 = new DocCollection("c1", "l1");
-		DocCollection c2 = new DocCollection("c2", "l2");
-		savedDocCollections = List.of(c1, c2);
-		when(collectionRepo.findByIndexed(true)).thenReturn(savedDocCollections);
 	}
 	
 	@Test
@@ -364,6 +397,34 @@ public class ExperimentServiceTest {
 	}
 	
 	@Test
+	public void testExperimentStatusUpdate() throws Exception {
+		
+		Experiment ex = savedExperiments.get(0);
+		ex.clearTestGroups();
+		
+		service.updateExperiment(ex);		
+		assertEquals(Experiment.Status.NOT_READY, ex.getStatus());
+		
+		TestGroup g = savedTestGroups.get(0);
+		g.clearDocCollections();
+		g.clearParticipants();
+		ex.addTestGroup(g);
+		
+		service.updateExperiment(ex);		
+		assertEquals(Experiment.Status.NOT_READY, ex.getStatus());
+		
+		g.addParticipant(savedParticipants.get(0));
+		
+		service.updateExperiment(ex);		
+		assertEquals(Experiment.Status.NOT_READY, ex.getStatus());
+		
+		g.addDocCollection(savedDocCollections.get(0));
+		
+		service.updateExperiment(ex);		
+		assertEquals(Experiment.Status.READY, ex.getStatus());
+	}
+	
+	@Test
 	public void testDeleteExperiment1() {
 		
 		boolean exc;
@@ -402,11 +463,155 @@ public class ExperimentServiceTest {
 	}
 	
 	@Test
+	public void testStartExperiment1() throws Exception {
+		
+		Experiment ex = savedExperiments.get(0);
+		
+		
+		assertEquals(Experiment.Status.READY, ex.getStatus());
+		assertFalse(ex.getTestGroups().isEmpty());	
+		
+		for (TestGroup g : ex.getTestGroups()) {
+			for (Participant p : g.getParticipants()) {
+				
+				assertFalse(p.getActive());
+			}
+		}
+		
+		LocalDateTime now = LocalDateTime.now();
+		assertFalse(timeApproxEquals(now, ex.getStartTime()));
+		assertFalse(timeApproxEquals(now, ex.getDateConducted()));
+		
+		service.startExperiment(ex);
+		
+		assertEquals(Experiment.Status.RUNNING, ex.getStatus());
+		assertTrue(timeApproxEquals(now, ex.getStartTime()));
+		assertTrue(timeApproxEquals(now, ex.getDateConducted()));
+		
+		for (TestGroup g : ex.getTestGroups()) {
+			for (Participant p : g.getParticipants()) {
+				
+				assertTrue(p.getActive());
+			}
+		}		
+	}
+	
+	@Test
+	public void testStartExperiment2() throws Exception {
+		
+		Experiment ex = savedExperiments.get(0);
+		ex.setStatus(Experiment.Status.NOT_READY);
+		
+		boolean exc;
+		
+		try {
+			
+			service.startExperiment(ex);
+			exc = false;
+		}
+		catch (ExperimentStatusException e) {
+			
+			assertTrue(e.getMessage().contains(ex.getStatus().toString()));
+			assertTrue(e.getMessage().contains(Experiment.Status.READY.toString()));
+			exc = true;
+		}
+		
+		assertTrue(exc);
+	}
+	
+	@Test
+	public void testStartExperiment3() throws Exception {
+		
+		int badId = 999999;
+		Experiment ex = savedExperiments.get(0);
+		ex.setId(badId);
+		
+		boolean exc = false;
+		
+		try {
+			service.startExperiment(ex);
+			exc = false;
+		}
+		catch (NoSuchExperimentException e) {
+			
+			assertTrue(e.getMessage().contains(Integer.toString(badId)));
+			exc = true;
+		}
+		
+		assertTrue(exc);
+	}
+	
+	@Test
+	public void testStopExperiment1() throws Exception {
+		
+		Experiment ex = savedExperiments.get(0);
+		assertEquals(Experiment.Status.READY, ex.getStatus());
+		long dt = 2000; // ms
+		LocalDateTime start = LocalDateTime.now();
+		
+		service.startExperiment(ex);
+		
+		assertEquals(Experiment.Status.RUNNING, ex.getStatus());
+		assertTrue(timeApproxEquals(start, ex.getStartTime()));
+		Thread.sleep(dt);
+		
+		service.stopExperiment(ex);
+		
+		LocalDateTime end = LocalDateTime.now();
+		
+		assertEquals(Experiment.Status.COMPLETE, ex.getStatus());
+		assertTrue(timeApproxEquals(end, ex.getEndTime()));
+		assertEquals(dt, ex.getDuration().toMillis());
+	}
+	
+	@Test
+	public void testStopExperiment2() throws Exception {
+		
+		Experiment ex = savedExperiments.get(0);
+		Experiment.Status exStatus = ex.getStatus();
+		assertNotEquals(Experiment.Status.RUNNING, exStatus);
+		
+		boolean exc;
+		
+		try {
+			
+			service.stopExperiment(ex);
+			exc = false;
+		}
+		catch (ExperimentStatusException e) {
+		
+			assertTrue(e.getMessage().contains(exStatus.toString()));
+			assertTrue(e.getMessage().contains(Experiment.Status.RUNNING.toString()));
+			exc = true;
+		}
+		
+		assertTrue(exc);
+	}
+	
+	@Test
 	public void testGetIndexedDocColletions() {
 		
 		List<DocCollection> collections = service.getIndexedDocCollections();
 		
 		assertIterableEquals(savedDocCollections, collections);
+	}
+	
+	private boolean timeApproxEquals(LocalDateTime t1, LocalDateTime t2) {
+		
+		if (t1 == null && t2 == null) {
+			return true;
+		}
+		
+		if (t1 == null || t2 == null) {
+			return false;
+		}
+		
+		return t1.getYear() == t2.getYear() &&
+			   t1.getMonth() == t2.getMonth() &&
+			   t1.getDayOfMonth() == t2.getDayOfMonth() &&
+			   t1.getHour() == t2.getHour() &&
+			   t1.getMinute() == t2.getMinute() &&
+			   t1.getSecond() == t2.getSecond();
 	}
 }
 

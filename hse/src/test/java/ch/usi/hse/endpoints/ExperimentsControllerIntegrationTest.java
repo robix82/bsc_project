@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 
+import org.apache.tomcat.jni.Status;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -85,7 +86,7 @@ public class ExperimentsControllerIntegrationTest {
 	private List<Experiment> savedExperiments;
 	private List<Experimenter> savedExperimenters;
 	private List<TestGroup> savedTestGroups; // belonging to savedExperiments.get(0)
-	private List<DocCollection> savedDocCollections;
+	private List<DocCollection> indexedDocCollections;
 	
 	private String validConfigName, badConfigName, newConfigName;
 	private byte[] validConfigData, newConfigData, badConfigData;
@@ -104,6 +105,20 @@ public class ExperimentsControllerIntegrationTest {
 		if (! Files.exists(configFilesPath)) {
 			Files.createDirectories(configFilesPath);
 		}
+		
+		// DOC COLLECTIONS
+		
+		DocCollection c1 = collectionRepo.save(new DocCollection("dc1", "urlList1"));
+		DocCollection c2 = collectionRepo.save(new DocCollection("dc1", "urlList1"));
+		DocCollection c3 = collectionRepo.save(new DocCollection("dc1", "urlList1"));
+		c1.setIndexed(true);
+		c2.setIndexed(true);
+		c3.setIndexed(false);	
+		collectionRepo.save(c1);
+		collectionRepo.save(c2);
+		collectionRepo.save(c3);
+		
+		indexedDocCollections = collectionRepo.findByIndexed(true);
 		
 		// EXPERIMENTS AND EXPERIMENTERS
 		
@@ -127,9 +142,12 @@ public class ExperimentsControllerIntegrationTest {
 		g1.addParticipant(p2);
 		g2.addParticipant(p3);
 		g2.addParticipant(p4);
+		g1.addDocCollection(c1);
+		g2.addDocCollection(c1);
 		
 		ex1.addTestGroup(g1);
 		ex1.addTestGroup(g2);
+		ex1.setStatus(Experiment.Status.READY);
 		
 		e1.addExperiment(ex1);
 		e1.addExperiment(ex2);
@@ -142,19 +160,6 @@ public class ExperimentsControllerIntegrationTest {
 		savedExperimenters = experimenterRepo.findAll();
 		savedExperiments = experimentRepo.findAll();
 		savedTestGroups = testGroupRepo.findAll();
-		
-		// DOC COLLECTIONS
-		
-		DocCollection c1 = new DocCollection("dc1", "urlList1");
-		DocCollection c2 = new DocCollection("dc1", "urlList1");
-		DocCollection c3 = new DocCollection("dc1", "urlList1");
-		c1.setIndexed(true);
-		c2.setIndexed(true);
-		collectionRepo.save(c1);
-		collectionRepo.save(c2);
-		collectionRepo.save(c3);
-		
-		savedDocCollections = collectionRepo.findByIndexed(true);
 		
 		// CONFIG FILES
 		
@@ -212,7 +217,7 @@ public class ExperimentsControllerIntegrationTest {
 		
 		assertEquals(2, savedExperimenters.size());
 		assertEquals(4, savedExperiments.size());
-		assertEquals(2, savedDocCollections.size());
+		assertEquals(2, indexedDocCollections.size());
 		assertEquals(2, testGroupRepo.count());
 		assertEquals(4, participantRepo.count());
 		assertEquals(2, Files.list(configFilesPath).count());
@@ -671,9 +676,11 @@ public class ExperimentsControllerIntegrationTest {
 	public void testUpdateTestGroup2() throws Exception {
 		
 		TestGroup testGroup = savedTestGroups.get(0);
+		testGroup.clearDocCollections();
+		testGroupRepo.save(testGroup); 
 		int groupId = testGroup.getId();
 			
-		testGroup.setDocCollections(new HashSet<>(savedDocCollections));
+		testGroup.setDocCollections(new HashSet<>(indexedDocCollections));
 		String jsonString = writer.writeValueAsString(testGroup);
 		
 		assertEquals(0, testGroupRepo.findById(groupId).getDocCollections().size());
@@ -1052,9 +1059,189 @@ public class ExperimentsControllerIntegrationTest {
 		assertTrue(err.getErrorMessage().contains(newConfigName));
 	}
 	
+	@Test
+	public void testStartExperiment1() throws Exception {
+		
+		// setup
+		
+		Experiment ex = savedExperiments.get(0);
+		LocalDateTime now = LocalDateTime.now();
+		
+		assertFalse(ex.getTestGroups().isEmpty());
+		assertEquals(Experiment.Status.READY, ex.getStatus());
+		assertFalse(timeApproxEquals(now, ex.getStartTime()));
+		
+		for (TestGroup g : ex.getTestGroups()) {
+			
+			assertFalse(g.getParticipants().isEmpty());
+			
+			for (Participant p : g.getParticipants()) {
+				
+				assertFalse(p.getActive());
+			}
+		}
+		
+		// perform request
+		
+		String jsonString = writer.writeValueAsString(ex);
+		
+		MvcResult res = mvc.perform(post(base+ "/start").contentType(json).content(jsonString))
+				 		   .andExpect(status().isOk())
+				 		   .andReturn();
+		
+		Experiment resBody = mapper.readValue(resString(res), Experiment.class);
+		
+		// check response body
+		
+		assertEquals(Experiment.Status.RUNNING, resBody.getStatus());
+		assertTrue(timeApproxEquals(now, resBody.getStartTime()));
+		
+		for (TestGroup g : resBody.getTestGroups()) {		
+			for (Participant p : g.getParticipants()) {			
+				assertTrue(p.getActive());
+			}
+		}
+		
+		// check saved entity
+		
+		Experiment found = experimentRepo.findById(ex.getId());
+		
+		assertEquals(Experiment.Status.RUNNING, found.getStatus());
+		assertTrue(timeApproxEquals(now, found.getStartTime()));
+				
+		for (TestGroup g : found.getTestGroups()) {		
+			for (Participant p : g.getParticipants()) {			
+				assertTrue(p.getActive());
+			}
+		}
+	}
+
 	
+	@Test
+	public void testStartExperiment2() throws Exception {
+		
+		Experiment ex = savedExperiments.get(0);
+		ex.setStatus(Experiment.Status.NOT_READY);
+		experimentRepo.save(ex);
+		
+		String jsonString = writer.writeValueAsString(ex);
+		
+		MvcResult res = mvc.perform(post(base + "/start").contentType(json).content(jsonString))
+				 		   .andExpect(status().isUnprocessableEntity())
+				 		   .andReturn();
+		
+		ApiError err = getError(res);
+		
+		assertEquals("ExperimentStatusException", err.getErrorType());
+		assertTrue(err.getErrorMessage().contains(Experiment.Status.NOT_READY.toString()));
+		assertTrue(err.getErrorMessage().contains(Experiment.Status.READY.toString()));
+	}
 	
+	@Test
+	public void testStartExperiment3() throws Exception {
+		
+		int badId = 999999;
+		Experiment ex = savedExperiments.get(0);
+		ex.setId(badId);
+		String jsonString = writer.writeValueAsString(ex);
+		
+		MvcResult res = mvc.perform(post(base + "/start").contentType(json).content(jsonString))
+				 		   .andExpect(status().isNotFound())
+				 		   .andReturn();
+		
+		ApiError err = getError(res);
+		
+		assertEquals("NoSuchExperimentException", err.getErrorType());
+		assertTrue(err.getErrorMessage().contains(Integer.toString(badId)));
+	}
 	
+	@Test
+	public void testStopExperiment1() throws Exception {
+		
+		Experiment ex = savedExperiments.get(0);
+		LocalDateTime t0 = LocalDateTime.now();
+		long dt = 2000; // ms
+		
+		// start experiment
+		
+		String jsonString = writer.writeValueAsString(ex);
+		
+		MvcResult res1 = mvc.perform(post(base + "/start").contentType(json).content(jsonString))
+							.andExpect(status().isOk())
+							.andReturn();
+		
+		Experiment started = mapper.readValue(resString(res1), Experiment.class);
+		
+		assertEquals(Experiment.Status.RUNNING, started.getStatus());
+		assertTrue(timeApproxEquals(t0, started.getStartTime()));
+		
+		for (TestGroup g : started.getTestGroups()) {
+			for (Participant p : g.getParticipants()) {
+				assertTrue(p.getActive());
+			}
+		}
+		
+		Thread.sleep(dt);
+		
+		LocalDateTime t1 = LocalDateTime.now();
+		
+		// stop experiment
+		
+		jsonString = writer.writeValueAsString(started);
+		
+		MvcResult res2 = mvc.perform(post(base + "/stop").contentType(json).content(jsonString))
+				  		    .andExpect(status().isOk())
+				  		    .andReturn();
+		
+		Experiment stopped = mapper.readValue(resString(res2), Experiment.class);
+		
+		assertEquals(Experiment.Status.COMPLETE, stopped.getStatus());
+		assertTrue(timeApproxEquals(t1, stopped.getEndTime()));
+		assertTrue(Math.abs(dt - stopped.getDuration().toMillis()) < 100);
+		
+		for (TestGroup g : stopped.getTestGroups()) {
+			for (Participant p : g.getParticipants()) {
+				assertFalse(p.getActive());
+			}
+		}
+	}
+	
+	@Test
+	public void testStopExperiment2() throws Exception {
+		
+		Experiment ex = savedExperiments.get(0);
+		Experiment.Status exStatus = ex.getStatus();
+		assertNotEquals(Experiment.Status.RUNNING, exStatus);
+		String jsonString = writer.writeValueAsString(ex);
+		
+		MvcResult res = mvc.perform(post(base + "/stop").contentType(json).content(jsonString))
+				 		   .andExpect(status().isUnprocessableEntity())
+				 		   .andReturn();
+		
+		ApiError err = getError(res);
+		
+		assertEquals("ExperimentStatusException", err.getErrorType());
+		assertTrue(err.getErrorMessage().contains(Experiment.Status.RUNNING.toString()));
+		assertTrue(err.getErrorMessage().contains(exStatus.toString()));
+	}
+	
+	@Test
+	public void testStopExperiment3() throws Exception {
+		
+		int badId = 999999;
+		Experiment ex = savedExperiments.get(0);
+		ex.setId(badId);
+		String jsonString = writer.writeValueAsString(ex);
+		
+		MvcResult res = mvc.perform(post(base + "/stop").contentType(json).content(jsonString))
+				 		   .andExpect(status().isNotFound())
+				 		   .andReturn();
+		
+		ApiError err = getError(res);
+		
+		assertEquals("NoSuchExperimentException", err.getErrorType());
+		assertTrue(err.getErrorMessage().contains(Integer.toString(badId)));
+	}
 	
 	
 	///////////////////////////////////////
@@ -1087,6 +1274,24 @@ public class ExperimentsControllerIntegrationTest {
 		testGroupRepo.deleteAll();
 		participantRepo.deleteAll();
 		collectionRepo.deleteAll();
+	}
+	
+	private boolean timeApproxEquals(LocalDateTime t1, LocalDateTime t2) {
+		
+		if (t1 == null && t2 == null) {
+			return true;
+		}
+		
+		if (t1 == null || t2 == null) {
+			return false;
+		}
+		
+		return t1.getYear() == t2.getYear() &&
+			   t1.getMonth() == t2.getMonth() &&
+			   t1.getDayOfMonth() == t2.getDayOfMonth() &&
+			   t1.getHour() == t2.getHour() &&
+			   t1.getMinute() == t2.getMinute() &&
+			   t1.getSecond() == t2.getSecond();
 	}
 }
 

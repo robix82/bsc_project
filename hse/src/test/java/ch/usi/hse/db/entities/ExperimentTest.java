@@ -2,6 +2,7 @@ package ch.usi.hse.db.entities;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -126,6 +127,24 @@ public class ExperimentTest {
 		assertEquals(testExperimenter, e.getExperimenter());
 		assertEquals(testExperimenter.getId(), e.getExperimenterId());
 		assertEquals(testExperimenter.getUserName(), e.getExperimenterName());
+	}
+	
+	@Test
+	public void testDurationSetting() {
+		
+		LocalDateTime t0 = LocalDateTime.of(2020, 11, 15, 13, 0);
+		LocalDateTime t1 = LocalDateTime.of(2020, 11, 15, 13, 20);
+		
+		Experiment ex = new Experiment("ex");
+		
+		ex.setStartTime(t0);
+		
+		assertNull(ex.getDuration());
+		
+		ex.setEndTime(t1);
+		
+		assertEquals(Duration.between(t0, t1), ex.getDuration());
+		assertEquals(20 * 60, ex.getDuration().getSeconds());
 	}
 	
 	@Test

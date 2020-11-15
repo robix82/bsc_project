@@ -48,11 +48,14 @@ public class Participant extends User {
 		super(id, userName, password, roles);
 		
 		setTestGroup(testGroup);
+		setActive(false);
 	}
 	
 	public Participant(String userName, String password) {
 		
 		super(userName, password);
+		
+		setActive(false);
 	} 
 	
 	public TestGroup getTestGroup() {

@@ -21,6 +21,7 @@ import ch.usi.hse.db.repositories.ParticipantRepository;
 import ch.usi.hse.db.repositories.TestGroupRepository;
 import ch.usi.hse.exceptions.ConfigParseException;
 import ch.usi.hse.exceptions.ExperimentExistsException;
+import ch.usi.hse.exceptions.ExperimentStatusException;
 import ch.usi.hse.exceptions.FileDeleteException;
 import ch.usi.hse.exceptions.FileReadException;
 import ch.usi.hse.exceptions.FileWriteException;
@@ -466,7 +467,18 @@ public class ExperimentService {
 	
 
 	// EXPERIMENT EXECUTION
-	/*
+
+	/**
+	 * Starts an experiment execution.
+	 * Effects: 
+	 *    - the related participants are enabled to log in
+	 *    - The Experiments DateConducted and StartTime fields are set to current time
+	 * 
+	 * @param experiment
+	 * @return
+	 * @throws NoSuchExperimentException
+	 * @throws ExperimentStatusException
+	 */
 	public Experiment startExperiment(Experiment experiment) 
 			throws NoSuchExperimentException, 
 				   ExperimentStatusException {
@@ -494,12 +506,26 @@ public class ExperimentService {
 		
 		ex.setStatus(Experiment.Status.RUNNING);
 		ex.setStartTime(LocalDateTime.now());	
+		ex.setDateConducted(LocalDateTime.now());
 		
 		Experiment updated = experimentRepo.save(ex);
 		
 		return updated;
 	}
 	
+	
+	/**
+	 * Stops an experiment execution.
+	 * Effects: 
+	 *    - the related participants are disabled from login
+	 *    - The Experiments EndTime field is set to current time
+	 *    - The Experiments Duration field is set to the difference between startTime and EndTime
+	 * 
+	 * @param experiment
+	 * @return
+	 * @throws NoSuchExperimentException
+	 * @throws ExperimentStatusException
+	 */
 	public Experiment stopExperiment(Experiment experiment) 
 			throws NoSuchExperimentException, 
 				   ExperimentStatusException {
@@ -526,13 +552,13 @@ public class ExperimentService {
 		}
 		
 		ex.setStatus(Experiment.Status.COMPLETE);
-		ex.setStartTime(LocalDateTime.now());	
+		ex.setEndTime(LocalDateTime.now());	
 		
 		Experiment updated = experimentRepo.save(ex);
 		
 		return updated;
 	}
-	*/
+
 	
 	private void checkReadyStatus(Experiment e) {
 		

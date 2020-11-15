@@ -1,5 +1,6 @@
 package ch.usi.hse.db.entities;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Objects;
@@ -71,12 +72,18 @@ public class Experiment {
 	
 	@Column(name="t_end")
 	private LocalDateTime endTime;
+	
+	@Column(name="duration")
+	private Duration duration;
 	 
 	public Experiment() {
 		
 		id = 0; 
 		testGroups = new HashSet<>();
 		status = Status.NOT_READY;
+		startTime = LocalDateTime.of(2000, 1, 1, 0, 0);
+		endTime = LocalDateTime.of(2000, 1, 1, 0, 0);
+		duration = Duration.ofMillis(0);
 	} 
 	
 	public Experiment(int id, String title, Set<TestGroup> testGroups) {
@@ -85,6 +92,9 @@ public class Experiment {
 		this.title = title;
 		setTestGroups(testGroups);
 		status = Status.NOT_READY;
+		startTime = LocalDateTime.of(2000, 1, 1, 0, 0);
+		endTime = LocalDateTime.of(2000, 1, 1, 0, 0);
+		duration = Duration.ofMillis(0);
 	}
 	
 	public Experiment(String title) {
@@ -93,6 +103,9 @@ public class Experiment {
 		testGroups = new HashSet<>();
 		this.title = title;
 		status = Status.NOT_READY;
+		startTime = LocalDateTime.of(2000, 1, 1, 0, 0);
+		endTime = LocalDateTime.of(2000, 1, 1, 0, 0);
+		duration = Duration.ofMillis(0);
 	}
 	
 	public int getId() {
@@ -137,6 +150,10 @@ public class Experiment {
 	
 	public LocalDateTime getEndTime() {
 		return endTime;
+	}
+	
+	public Duration getDuration() {
+		return duration;
 	}
 	
 	public void setId(int id) {
@@ -201,7 +218,17 @@ public class Experiment {
 	}
 	
 	public void setEndTime(LocalDateTime endTime) {
+		
 		this.endTime = endTime;
+		
+		if (startTime != null) {
+			
+			duration = Duration.between(startTime, endTime);
+		}
+	}
+	
+	public void setDuration(Duration duration) {
+		this.duration = duration;
 	}
 	
 	public void addTestGroup(TestGroup group) {

@@ -20,6 +20,7 @@ import ch.usi.hse.db.entities.Experiment;
 import ch.usi.hse.db.entities.TestGroup;
 import ch.usi.hse.exceptions.ConfigParseException;
 import ch.usi.hse.exceptions.ExperimentExistsException;
+import ch.usi.hse.exceptions.ExperimentStatusException;
 import ch.usi.hse.exceptions.FileDeleteException;
 import ch.usi.hse.exceptions.FileReadException;
 import ch.usi.hse.exceptions.FileWriteException;
@@ -337,7 +338,41 @@ public class ExperimentsController {
 		}
 	}
 	
+	/**
+	 * Start the given experiment's execution.
+	 * The experiment's status must be 'READY'
+	 * 
+	 * @param experiment
+	 * @return The experiment with updated fields
+	 * @throws NoSuchExperimentException
+	 * @throws ExperimentStatusException
+	 */
+	@PostMapping("/start")
+	public ResponseEntity<Experiment> startExperiment(@RequestBody Experiment experiment) 
+			throws NoSuchExperimentException, ExperimentStatusException {
+		
+		Experiment started = experimentService.startExperiment(experiment);
+		
+		return new ResponseEntity<>(started, HttpStatus.OK);
+	}
 	
+	/**
+	 * Stops the given experiment's execution.
+	 * The experiment's status must be 'RUNNING'
+	 * 
+	 * @param experiment
+	 * @return The experiment with updated fields
+	 * @throws NoSuchExperimentException
+	 * @throws ExperimentStatusException
+	 */
+	@PostMapping("/stop")
+	public ResponseEntity<Experiment> stopExperiment(@RequestBody Experiment experiment) 
+			throws NoSuchExperimentException, ExperimentStatusException {
+		
+		Experiment stopped = experimentService.stopExperiment(experiment);
+		
+		return new ResponseEntity<>(stopped, HttpStatus.OK);
+	}
 }
 
 
