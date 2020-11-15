@@ -29,4 +29,5 @@ When no administrator is configured (e.g. when the ssystem is newly installed) a
 is available:
 
 **user name:** admin
+
 **password:** admin
