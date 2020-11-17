@@ -191,6 +191,23 @@ public class ExperimentsController {
 		return new ResponseEntity<>(experiment, HttpStatus.OK);
 	}
 	
+	/**
+	 * returns the saved Experiment instancce corresponding to the given id
+	 * (to be used for polling data during experiment execution)
+	 * 
+	 * @param id
+	 * @return
+	 * @throws NoSuchExperimentException
+	 */
+	@GetMapping("/")
+	public ResponseEntity<Experiment> getExperiment(@RequestParam(required=true) int id) 
+			throws NoSuchExperimentException {
+		
+		Experiment found = experimentService.findExperiment(id);
+		
+		return new ResponseEntity<>(found, HttpStatus.OK);
+	}
+	
 	// REST API FOR TEST GROUP CONFIGURATION
 	
 	/**
@@ -372,6 +389,24 @@ public class ExperimentsController {
 		Experiment stopped = experimentService.stopExperiment(experiment);
 		
 		return new ResponseEntity<>(stopped, HttpStatus.OK);
+	}
+	
+	/**
+	 * Reset a completed experiment
+	 * effect: all collected data is deleted and the Experiment status is set to READY
+	 * 
+	 * @param experiment
+	 * @return
+	 * @throws NoSuchExperimentException
+	 * @throws ExperimentStatusException
+	 */
+	@PostMapping("/reset")
+	public ResponseEntity<Experiment> resetExperiment(@RequestBody Experiment experiment) 
+			throws NoSuchExperimentException, ExperimentStatusException {
+		
+		Experiment updated = experimentService.resetExperiment(experiment);
+		
+		return new ResponseEntity<>(updated, HttpStatus.OK);
 	}
 }
 

@@ -559,6 +559,30 @@ public class ExperimentService {
 		return updated;
 	}
 
+	public Experiment resetExperiment(Experiment experiment) 
+			throws NoSuchExperimentException, ExperimentStatusException {
+		
+		int id = experiment.getId();
+		
+		if (! experimentRepo.existsById(id)) {
+			throw new NoSuchExperimentException(id);
+		}
+		
+		Experiment ex = experimentRepo.findById(id);
+		
+		Experiment.Status requiredStatus = Experiment.Status.COMPLETE;
+		
+		if (! ex.getStatus().equals(requiredStatus)) {
+			throw new ExperimentStatusException(requiredStatus, ex.getStatus());
+		}	
+		
+		ex.setStatus(Experiment.Status.READY);
+		// TODO: clear collected data
+		
+		Experiment updated = experimentRepo.save(ex);
+		
+		return updated;
+	}
 	
 	private void checkReadyStatus(Experiment e) {
 		

@@ -598,6 +598,46 @@ public class ExperimentsControllerIntegrationTest {
 	}
 	
 	@Test
+	public void testGetExperiment1() throws Exception {
+		
+		Experiment ex = savedExperiments.get(0);
+		int existingId = ex.getId();
+		
+		String url = UriComponentsBuilder.fromUriString(base + "/")
+				 						 .queryParam("id", existingId)
+				 						 .build()
+				 						 .toUriString();
+		
+		MvcResult res = mvc.perform(get(url))
+				 		   .andExpect(status().isOk())
+				 		   .andReturn();
+		
+		Experiment resBody = mapper.readValue(resString(res), Experiment.class);
+		
+		assertEquals(ex, resBody);
+	}
+	
+	@Test
+	public void testGetExperiment2() throws Exception {
+		
+		int badId = 999999;
+		
+		String url = UriComponentsBuilder.fromUriString(base + "/")
+				 .queryParam("id", badId)
+				 .build()
+				 .toUriString();
+
+		MvcResult res = mvc.perform(get(url))
+						   .andExpect(status().isNotFound())
+						   .andReturn();
+		
+		ApiError err = getError(res);
+		
+		assertEquals("NoSuchExperimentException", err.getErrorType());
+		assertTrue(err.getErrorMessage().contains(Integer.toString(badId)));
+	}
+	
+	@Test
 	public void testPostTestGroup1() throws Exception {
 		
 		TestGroup newTestGroup = new TestGroup("newTestGroup");
@@ -1235,6 +1275,63 @@ public class ExperimentsControllerIntegrationTest {
 		MvcResult res = mvc.perform(post(base + "/stop").contentType(json).content(jsonString))
 				 		   .andExpect(status().isNotFound())
 				 		   .andReturn();
+		
+		ApiError err = getError(res);
+		
+		assertEquals("NoSuchExperimentException", err.getErrorType());
+		assertTrue(err.getErrorMessage().contains(Integer.toString(badId)));
+	}
+	
+	@Test
+	public void testResetExperiment1() throws Exception {
+		
+		Experiment ex = savedExperiments.get(0);
+		ex.setStatus(Experiment.Status.COMPLETE);
+		experimentRepo.save(ex);
+		String jsonString = writer.writeValueAsString(ex);
+		
+		MvcResult res = mvc.perform(post(base + "/reset").contentType(json).content(jsonString))
+				 		   .andExpect(status().isOk())
+				 		   .andReturn();
+		
+		Experiment resBody = mapper.readValue(resString(res), Experiment.class);
+		
+		assertEquals(Experiment.Status.READY, resBody.getStatus());
+		
+		Experiment found = experimentRepo.findById(ex.getId());
+		assertEquals(Experiment.Status.READY, found.getStatus());
+	}
+	
+	@Test
+	public void testResetExperiment2() throws Exception {
+		
+		Experiment ex = savedExperiments.get(0);
+		ex.setStatus(Experiment.Status.READY);
+		experimentRepo.save(ex);
+		String jsonString = writer.writeValueAsString(ex);
+		
+		MvcResult res = mvc.perform(post(base + "/reset").contentType(json).content(jsonString))
+				 		   .andExpect(status().isUnprocessableEntity())
+				 		   .andReturn();
+		
+		ApiError err = getError(res);
+		
+		assertEquals("ExperimentStatusException", err.getErrorType());
+		assertTrue(err.getErrorMessage().contains(Experiment.Status.COMPLETE.toString()));
+		assertTrue(err.getErrorMessage().contains(Experiment.Status.READY.toString()));
+	}
+	
+	@Test
+	public void testResetExperiment3() throws Exception {
+		
+		int badId = 999999;
+		Experiment ex = savedExperiments.get(0);
+		ex.setId(badId);
+		String jsonString = writer.writeValueAsString(ex);
+		
+		MvcResult res = mvc.perform(post(base + "/reset").contentType(json).content(jsonString))
+						   .andExpect(status().isNotFound())
+						   .andReturn();
 		
 		ApiError err = getError(res);
 		

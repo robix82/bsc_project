@@ -164,6 +164,14 @@ public class ExperimentServiceTest {
 	}
 	
 	@Test
+	public void testGetIndexedDocColletions() {
+		
+		List<DocCollection> collections = service.getIndexedDocCollections();
+		
+		assertIterableEquals(savedDocCollections, collections);
+	}
+	
+	@Test
 	public void testAllExperiments() {
 		
 		List<Experiment> res = service.allExperiments();
@@ -589,12 +597,63 @@ public class ExperimentServiceTest {
 	}
 	
 	@Test
-	public void testGetIndexedDocColletions() {
+	public void testResetExperiment1() throws Exception {
 		
-		List<DocCollection> collections = service.getIndexedDocCollections();
+		Experiment ex = savedExperiments.get(0);
+		ex.setStatus(Experiment.Status.COMPLETE);
 		
-		assertIterableEquals(savedDocCollections, collections);
+		service.resetExperiment(ex);
+		
+		assertEquals(Experiment.Status.READY, ex.getStatus());
 	}
+	
+	@Test
+	public void testResetExperiment2() throws Exception {
+		
+		Experiment ex = savedExperiments.get(0);
+		ex.setStatus(Experiment.Status.READY);
+		
+		boolean exc;
+		
+		try {
+			
+			service.resetExperiment(ex);
+			exc = false;
+		}
+		catch(ExperimentStatusException e) {
+			
+			assertTrue(e.getMessage().contains(Experiment.Status.COMPLETE.toString()));
+			assertTrue(e.getMessage().contains(Experiment.Status.READY.toString()));
+			exc = true;
+		}
+		
+		assertTrue(exc);
+	}
+	
+	@Test
+	public void testResetExperiment3() throws Exception {
+		
+		int badId = 999999;
+		Experiment ex = savedExperiments.get(0);
+		ex.setId(badId);
+		
+		boolean exc;
+		
+		try {
+			
+			service.resetExperiment(ex);
+			exc = false;
+		}
+		catch (NoSuchExperimentException e) {
+			
+			assertTrue(e.getMessage().contains(Integer.toString(badId)));
+			exc = true;
+		}
+		
+		assertTrue(exc);
+	}
+	
+	/////////////////////
 	
 	private boolean timeApproxEquals(LocalDateTime t1, LocalDateTime t2) {
 		
