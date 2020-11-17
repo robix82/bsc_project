@@ -24,7 +24,7 @@ import ch.usi.hse.services.SearchService;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@WithMockUser(authorities="ADMIN")
+@WithMockUser(authorities={"PARTICIPANT"})
 public class SearchControllerUnitTest {
 
 	@Autowired

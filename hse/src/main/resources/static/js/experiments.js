@@ -131,8 +131,6 @@ function submitExperiment(experiment, method) {
 }
 
 function deleteExperiment(experiment) {
-	
-	let succMsg = m_experiment + " " + experiment.title + " " + m_deleted + ".";
 
 	
 	$.ajax("/experiments/",

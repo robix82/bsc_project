@@ -139,7 +139,7 @@ public class ExperimentTest {
 		
 		ex.setStartTime(t0);
 		
-		assertNull(ex.getDuration());
+		assertEquals(Duration.ofSeconds(0), ex.getDuration());
 		
 		ex.setEndTime(t1);
 		

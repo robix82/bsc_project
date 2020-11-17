@@ -7,35 +7,90 @@ $(document).ready(function() {
 	
 	console.log(experiment);
 	
-	$("#startStopBtn").on("click", () => {
-		startExperiment();
-	});
+	t = 0;
+	$("#timer-display").text(tString(t));
 	
-	$("#evalBtn").hide();
+	if (experiment.status == "READY") {
+		
+		$("#startStopBtn").on("click", () => {
+			startExperiment();
+		});
+		
+		$("#status-display").text(m_experimentReady);
+		
+		$("#evalBtn").hide();
+	}
+	else if (experiment.status == "COMPLETE") {
+		
+		$("#startStopBtn").text(m_reset);
+		
+		$("#startStopBtn").on("click", () => {
+			resetExperiment();
+		});
+		
+		$("#status-display").text(m_experimentComplete);
+		
+		$("#evalBtn").show();
+	}
+	else {
+		
+		showErrorModal(m_error, m_experimentNotReady, () => {
+			location.href = "/experiments/setup/ui?expId=" + experiment.id;
+		});
+	}	
 });
 
 function startExperiment() {
 	
-	$("#startStopBtn").off("click").on("click", () => {
-		stopExperiment();
+	submitExperiment("start", (res) => {
+	
+		experiment = res;
+		timerId = setInterval(onTimeStep, 1000);
+		
+		$("#startStopBtn").text(m_stop);
+		$("#status-display").text(m_experimentRunning)	
+				
+		$("#startStopBtn").off("click").on("click", () => {
+			stopExperiment();
+		});
 	});
-	
-	$("#startStopBtn").text(m_stop);
-	
-	$("#status-display").text(m_experimentRunning);
-	
-	timerId = setInterval(onTimeStep, 1000);
 }
 
-function stopExperiment() {
+function stopExperiment() { 
 
-	clearInterval(timerId);
+	submitExperiment("stop", (res) => {
+		
+		experiment= res;
+		clearInterval(timerId);
 	
-	$("#startStopBtn").prop("disabled", true);
-	
-	$("#status-display").text(m_experimentComplete);
-	
-	$("#evalBtn").show();
+		$("#startStopBtn").text(m_reset);
+		
+		$("#startStopBtn").off("click").on("click", () => {
+			showWarningModal(m_experimentResetWarning, resetExperiment);
+		});
+		
+		$("#status-display").text(m_experimentComplete);	
+		$("#evalBtn").show();
+	});	
+}
+
+function resetExperiment() {
+
+	submitExperiment("reset", (res) => {
+		
+		experiment = res;
+		t = 0;
+		$("#timer-display").text(tString(t));
+		
+		$("#startStopBtn").text(m_start);	
+		
+		$("#startStopBtn").off("click").on("click", () => {
+				startExperiment();
+		});
+		
+		$("#status-display").text(m_experimentReady);	
+		$("#evalBtn").hide();
+	});
 }
 
 function onTimeStep() {
@@ -48,34 +103,26 @@ function gotoEval() {
 	location.href= "/experiments/eval/ui?expId=" + experiment.id;
 }
 
-function tString(sec) { 
+function submitExperiment(action, onSuccess) {
 	
-	let h = parseInt(sec / 3600);
-	sec = sec % 3600;
-	let m = parseInt(sec / 60);
-	sec = sec % 60;
+	let url = "/experiments/" + action;
 	
-	let tStr = "";
-	
-	if (h < 10) {
-		tStr += "0";
-	} 
-	
-	tStr += h + ":";
-	
-	if (m < 10) {
-		tStr += "0";
-	}
-	
-	tStr += m + ":";
-	
-	if (sec < 10) {
-		tStr += "0"; 
-	}
-	
-	tStr += parseInt(sec);
-	
-	return tStr;
+	$.ajax(url,
+		{
+			type: "POST",
+			dataType: "json",
+			contentType: 'application/json; charset=utf-8',
+			data: JSON.stringify(experiment),
+			success: (res) => {
+
+				onSuccess(res);
+			},
+			error: (err) => { 
+
+				handleHttpError(err);
+			}
+		}
+	);
 }
 
 

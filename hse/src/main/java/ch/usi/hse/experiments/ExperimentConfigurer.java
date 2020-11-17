@@ -6,6 +6,7 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import ch.usi.hse.db.entities.Experiment;
@@ -32,6 +33,7 @@ public class ExperimentConfigurer {
 	private ParticipantRepository participantRepo;
 	private TestGroupRepository testGroupRepo;
 	private ExperimentRepository experimentRepo;
+	private BCryptPasswordEncoder bCryptPasswordEncoder;
 	
 	private String fileName;
 	private List<String> configLines;
@@ -41,13 +43,15 @@ public class ExperimentConfigurer {
 								ExperimentConfigStorage configStorage,
 								ParticipantRepository participantRepo,
 								TestGroupRepository testGroupRepo,
-								ExperimentRepository experimentRepo) {
+								ExperimentRepository experimentRepo,
+								BCryptPasswordEncoder bCryptPasswordEncoder) {
 		
 		
 		this.configStorage = configStorage;
 		this.participantRepo = participantRepo;
 		this.testGroupRepo = testGroupRepo;
 		this.experimentRepo = experimentRepo;
+		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
 	}
 
 	public Experiment configureTestGroups(Experiment experiment, String configFileName) 
@@ -102,7 +106,8 @@ public class ExperimentConfigurer {
 				}
 				
 				userNames.add(userName);
-				Participant p = participantRepo.save(new Participant(userName, words[1]));
+				String pwd = bCryptPasswordEncoder.encode(words[1]);
+				Participant p = participantRepo.save(new Participant(userName, pwd));
 				g.addParticipant(p);
 			}
 			

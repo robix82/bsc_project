@@ -53,7 +53,40 @@
 			</div>
 		
 			<div class="modal-footer">
-				<button class="btn btn-primary" data-dismiss="modal">Ok</button>
+				<button id="errorOkBtn" class="btn btn-primary" data-dismiss="modal">Ok</button>
+			</div>
+		
+		</div>
+	</div>
+	
+</div>
+
+<div class="modal fade" id="warningModal">
+		
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content">
+		
+			<div class="modal-header text-center">
+				<h4 class="modal-title w-100" th:text="#{m_warning}"></h4>
+		   	</div>
+		
+			<div class="modal-body  text-center">
+		   		<div id="warningText"></div>
+			</div>
+		
+			<div class="modal-footer">
+			
+				<button class="btn btn-primary" 
+						data-dismiss="modal"
+						th:text="#{m_cancel}">
+				</button>
+			
+				<button id="warningConfirmBtn" 
+						class="btn btn-primary" 
+						data-dismiss="modal"
+						th:text="#{m_confirm}">
+				</button>
+				
 			</div>
 		
 		</div>
@@ -67,7 +100,7 @@
 		<div class="modal-content">
 		
 			<div class="modal-header text-center">
-				<h4 class="modal-title w-100" th:test="#{m_warning}"></h4>
+				<h4 class="modal-title w-100" th:text="#{m_warning}"></h4>
 		   	</div>
 		
 			<div class="modal-body  text-center">
@@ -259,7 +292,8 @@
 
 								<option th:each="language : ${languages}" 
 										th:value="${language}"
-										th:text="${language}">
+										th:text="${language}"
+										th:selected="${language=='IT'}">>
 								</option>
 
                             </select>

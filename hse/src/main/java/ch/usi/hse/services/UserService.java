@@ -298,6 +298,7 @@ public class UserService {
 		
 		Set<Role> roles = new HashSet<>();
 		roles.add(roleRepository.findByRole("ADMIN"));
+		roles.add(roleRepository.findByRole("EXPERIMENTER"));
 		
 		String pwd = bCryptPasswordEncoder.encode(administrator.getPassword());
 		

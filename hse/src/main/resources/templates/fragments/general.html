@@ -20,17 +20,13 @@
 
 	<nav th:fragment="navbar" class="navbar navbar-light  fixed-top">
 
-	  	<div id="internal-links">
+	  	<div sec:authorize="hasAuthority('EXPERIMENTER')" id="internal-links">
 
-			<a class="internal-link" th:href="@{/}" th:text="#{m_search}"></a>
+			<a  class="internal-link" th:href="@{/}" th:text="#{m_search}"></a>
 			
-			<security:authorize access="hasAnyRole('ADMIN', 'EXPERIMENTER')">
 			<a class="internal-link" th:href="@{/experiments/ui}" th:text="#{m_experiments}"></a>
-			</security:authorize>
 
-			<security:authorize access="hasAnyRole('ADMIN', 'EXPERIMENTER')">
-			<a  class="internal-link" th:href="@{/indexing/ui}" th:text="#{m_indexing}"></a>
-			</security:authorize>
+			<a class="internal-link" th:href="@{/indexing/ui}" th:text="#{m_indexing}"></a>
 			
 			<a sec:authorize="hasAuthority('ADMIN')" class="internal-link" th:href="@{/admin/ui}" th:text="#{m_admin}"></a>
 			

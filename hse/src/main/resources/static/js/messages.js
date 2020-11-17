@@ -6,6 +6,9 @@ var m_close = $("#m_close").text();
 var m_ok = $("#m_ok").text();
 var m_yes = $("#m_yes").text();
 var m_no = $("#m_no").text();
+var m_confirm = $("#m_confirm").text();
+var m_cancel = $("#m_cancel").text();
+
 
 var m_delete = $("#m_delete").text();
 var m_error = $("#m_error").text(); 
@@ -93,9 +96,13 @@ var m_chooseDocCollection = $("#m_chooseDocCollection").text();
 
 var m_start = $("#m_start").text();
 var m_stop = $("#m_stop").text();
+var m_reset = $("#m_reset").text();
 var m_experimentReady = $("#m_experimentReady").text();
 var m_experimentRunning = $("#m_experimentRunning").text();
 var m_experimentComplete = $("#m_experimentComplete").text();
+var m_experimentNotReady = $("#m_experimentNotReady").text();
+var m_experimentResetWarning = $("#m_experimentResetWarning").text();
+
 
 
 

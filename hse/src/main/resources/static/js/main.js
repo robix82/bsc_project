@@ -40,6 +40,38 @@ function updateLangSelect(lang) {
 	window.location.href = url;
 }
 
+// UTILITIES
+
+function tString(sec) { 
+	
+	let h = parseInt(sec / 3600);
+	sec = sec % 3600;
+	let m = parseInt(sec / 60);
+	sec = sec % 60;
+	
+	let tStr = "";
+	
+	if (h < 10) {
+		tStr += "0";
+	} 
+	
+	tStr += h + ":";
+	
+	if (m < 10) {
+		tStr += "0";
+	}
+	
+	tStr += m + ":";
+	
+	if (sec < 10) {
+		tStr += "0"; 
+	}
+	
+	tStr += parseInt(sec);
+	
+	return tStr;
+}
+
 // MODAL SHOW FUNCTIONS
 
 function showInfoModal(header, text, onOk) {
@@ -50,15 +82,31 @@ function showInfoModal(header, text, onOk) {
 	
 	if (onOk) {
 		
-		$("#infoOkBtn").on("click", onOk);
+		$("#infoOkBtn").off("click").on("click", onOk);
 	}
 }
 
-function showErrorModal(header, text) {
+function showErrorModal(header, text, next) {
 	
 	$("#errorHeader").text(header);
 	$("#errorText").text(text);
 	$("#errorModal").modal("show");
+	
+	if (next) {
+		
+		$("#errorOkBtn").off("click").on("click", () => {
+			next();
+		}) 
+	}
+}
+
+function showWarningModal(text, onConfirm) {
+	
+	$("#warningText").text(text);
+	
+	$("#warningText").off("click").on("click", () => {
+		onConfirm();
+	})
 }
 
 function showConfirmDeleteModal(obj, onYes) { 
@@ -66,7 +114,7 @@ function showConfirmDeleteModal(obj, onYes) {
 	console.log("show confirm delete " + obj);
 	
 	$("#deleteWarningText").text(m_delete + " " + obj + "?");
-	$("#deleteYesBtn").on("click", onYes);
+	$("#deleteYesBtn").off("click").on("click", onYes);
 	
 	$("#confirmDeleteModal").modal("show");
 }

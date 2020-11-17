@@ -11,6 +11,7 @@ import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import ch.usi.hse.db.entities.Experiment;
 import ch.usi.hse.db.entities.Participant;
@@ -37,6 +38,9 @@ public class ExperimentConfigurerTest {
 	@Mock 
 	private ExperimentRepository experimentRepo;
 	
+	@Mock
+	private BCryptPasswordEncoder bCryptPasswordEncoder;
+	
 	private ExperimentConfigurer configurer;
 	
 	private String existingFileName, nonExistingFileName;	
@@ -49,7 +53,11 @@ public class ExperimentConfigurerTest {
 		
 		initMocks(this);
 		
-		configurer = new ExperimentConfigurer(configStorage, participantRepo, testGroupRepo, experimentRepo);
+		configurer = new ExperimentConfigurer(configStorage, 
+											  participantRepo, 
+											  testGroupRepo, 
+											  experimentRepo, 
+											  bCryptPasswordEncoder);
 		
 		existingFileName = "existing.txt";
 		nonExistingFileName = "nonExisting.txt";

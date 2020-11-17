@@ -49,7 +49,7 @@ import ch.usi.hse.storage.FileStorage;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@WithMockUser(authorities="ADMIN")
+@WithMockUser(authorities={"ADMIN", "EXPERIMENTER"})
 public class IndexingControllerIntegrationTest {
 
 	@Value("${dir.urlLists}")

@@ -48,7 +48,7 @@ import ch.usi.hse.services.UserService;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@WithMockUser(authorities="ADMIN")
+@WithMockUser(authorities={"ADMIN", "EXPERIMENTER"})
 public class AdminControllerIntegrationTest {
 
 	@Autowired
@@ -103,6 +103,7 @@ public class AdminControllerIntegrationTest {
 		experimenterRoles = new HashSet<>();
 		participantRoles = new HashSet<>();
 		adminRoles.add(roleRepo.save(new Role(1, "ADMIN")));
+		adminRoles.add(roleRepo.save(new Role(2, "EXPERIMENTER")));
 		experimenterRoles.add(roleRepo.save(new Role(2, "EXPERIMENTER")));
 		participantRoles.add(roleRepo.save(new Role(3, "PARTICIPANT")));
 		
