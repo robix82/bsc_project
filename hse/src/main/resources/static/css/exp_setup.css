@@ -24,7 +24,6 @@ h5 {
 	display: flex;
 	flex-flow: column nowrap;
 	align-items: flex-start;
-/*	width: 90%; */
 	margin-top: 3rem;
 	margin-bottom: 10rem;
 }

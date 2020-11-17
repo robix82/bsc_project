@@ -1,0 +1,29 @@
+
+#inner-container {
+	
+	display: flex;
+	flex-flow: column nowrap;
+	align-items: flex-start;
+	margin-top: 3rem;
+	margin-bottom: 10rem;
+}
+
+#main-control {
+	
+	display: flex;
+	flex-flow: column nowrap;
+	align-items: center;
+	width: 100%;
+}
+
+#timer-display {
+	
+	font-size: 20pt;
+	margin: 1em;
+}
+
+#status-display {
+	
+	font-size: 18pt;
+	margin-bottom: 1em;
+}

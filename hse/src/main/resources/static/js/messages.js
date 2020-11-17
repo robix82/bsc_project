@@ -91,6 +91,12 @@ var m_invalidConfigFile = $("#m_invalidConfigFile").text();
 var m_addTestGroup = $("#m_addTestGroup").text();
 var m_chooseDocCollection = $("#m_chooseDocCollection").text();
 
+var m_start = $("#m_start").text();
+var m_stop = $("#m_stop").text();
+var m_experimentReady = $("#m_experimentReady").text();
+var m_experimentRunning = $("#m_experimentRunning").text();
+var m_experimentComplete = $("#m_experimentComplete").text();
+
 
 
 

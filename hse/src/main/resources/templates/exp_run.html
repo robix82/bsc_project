@@ -18,8 +18,37 @@
 
 	<h1 th:text="#{m_run} + ' ' + ${experiment.title}"></h1>
 	
+	<div id="inner-container">
+	
+		<div id="main-control">
+		
+			<button id="startStopBtn" class="btn btn-lg btn-primary" th:text="#{m_start}"></button>
+			
+			
+			<span id="timer-display">00:00:00</span>
+			
+			<span id="status-display" th:text="#{m_experimentReady}"></span>
+			
+			<button id="evalBtn" 
+					class="btn btn-lg btn-primary" 
+					th:text="#{m_evaluate}"
+					th:onclick="gotoEval()">
+			</button>
+					
+			<span>text after</span>	
+		
+		</div>
+	
+	</div>
 	
 </div>
+
+<!-- pass variables to js -->
+<script th:inline="javascript">
+	/*<![CDATA[*/
+	var experiment = /*[[${experiment}]]*/ "default";
+	/*]]>*/
+</script>
 
 <th:block th:include="fragments/messages.html :: messages"></th:block>
 <th:block th:include="fragments/general.html :: commonScripts"></th:block>
