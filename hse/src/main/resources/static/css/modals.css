@@ -27,6 +27,26 @@
 	margin-right: auto;
 }
 
+/* WARNING MODAL */
+
+#warningModal .modal-header { 
+	
+	background-color: #f56e00;
+}
+
+#warningCancelBtn {
+	
+	margin-left: auto;
+}
+
+#warningConfirmBtn {
+	
+	margin-right: auto;
+}
+
+/* INFO MODAL */
+
+
 #infoModal button {
 	
 	width: 6rem;

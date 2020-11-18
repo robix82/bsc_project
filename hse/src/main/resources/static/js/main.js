@@ -104,9 +104,12 @@ function showWarningModal(text, onConfirm) {
 	
 	$("#warningText").text(text);
 	
-	$("#warningText").off("click").on("click", () => {
+	$("#warningConfirmBtn").off("click").on("click", () => {
 		onConfirm();
-	})
+		$("#warningConfirmBtn").off("click");
+	});
+	
+	$("#warningModal").modal("show");
 }
 
 function showConfirmDeleteModal(obj, onYes) { 

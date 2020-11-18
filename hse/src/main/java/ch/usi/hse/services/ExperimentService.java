@@ -142,11 +142,10 @@ public class ExperimentService {
 		
 		experiment.setDateCreated(LocalDateTime.now());
 		checkReadyStatus(experiment);
-		Experiment saved = experimentRepo.save(experiment);
-		
+			
 		Experimenter experimenter = experimenterRepo.findById(experimenterId);
-		experimenter.addExperiment(saved);
-		experimenterRepo.save(experimenter);
+		experiment.setExperimenter(experimenter);
+		Experiment saved = experimentRepo.save(experiment);
 			
 		return saved;
 	}
@@ -240,9 +239,8 @@ public class ExperimentService {
 			experimenter.removeExperiment(found);	
 			experimenterRepo.save(experimenter);
 		}
-		else {
-			experimentRepo.delete(found);
-		}
+
+		experimentRepo.delete(found);
 	}
 	
 	// TEST GROUP CONFIGURATION

@@ -570,7 +570,8 @@ public class UserService {
 		
 		for (Experiment exp : e.getExperiments()) {
 			
-			experimentRepository.delete(experimentRepository.findById(exp.getId()));
+			Experiment found = experimentRepository.findById(exp.getId());
+			experimentRepository.delete(found);
 		}
 		
 		experimenterRepository.delete(e);
