@@ -14,7 +14,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import ch.usi.hse.db.entities.Role;
-import ch.usi.hse.db.entities.User;
+import ch.usi.hse.db.entities.HseUser;
 import ch.usi.hse.exceptions.NoSuchUserException;
 
 /**
@@ -36,7 +36,7 @@ public class HseUserDetailsService implements UserDetailsService {
 		
 		try {
 			
-			User u = userService.findUser(userName);
+			HseUser u = userService.findUser(userName);
 			
 			List<GrantedAuthority> authorities = new ArrayList<>();
 			

@@ -15,7 +15,7 @@ import javax.persistence.OneToMany;
  *
  */
 @Entity(name="experimenter")
-public class Experimenter extends User {
+public class Experimenter extends HseUser {
 
 	@OneToMany(mappedBy="experimenter", fetch=FetchType.EAGER, orphanRemoval=true, cascade=CascadeType.ALL)
 	private Set<Experiment> experiments;

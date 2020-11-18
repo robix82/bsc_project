@@ -16,7 +16,7 @@ import ch.usi.hse.db.entities.Administrator;
 import ch.usi.hse.db.entities.Experimenter;
 import ch.usi.hse.db.entities.Participant;
 import ch.usi.hse.db.entities.Role;
-import ch.usi.hse.db.entities.User;
+import ch.usi.hse.db.entities.HseUser;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
@@ -38,7 +38,7 @@ public class UserRepositoriesTest {
 	private ParticipantRepository participantRepo;
 
 	private Set<Role> adminRoles, experimenterRoles, participantRoles;
-	private User admin, experimenter, participant1, participant2;
+	private HseUser admin, experimenter, participant1, participant2;
 	
 	@BeforeEach
 	public void setUp() {

@@ -48,7 +48,8 @@ public class IndexBuilder {
 						TextExtractor extractor,
 						Indexer indexer,
 						@Qualifier("FileStorage") FileStorage fileStorage,
-						@Qualifier("UrlListStorage") UrlListStorage urlListStorage) throws IOException {
+						@Qualifier("UrlListStorage") UrlListStorage urlListStorage) 
+			throws IOException {
 		
 		this.rawFilesPath = rawFilesPath;
 		this.extractionResultsPath = extractionResultsPath; 

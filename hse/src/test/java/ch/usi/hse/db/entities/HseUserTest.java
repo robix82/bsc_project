@@ -8,9 +8,9 @@ import java.util.Set;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-public class UserTest {
+public class HseUserTest {
 
-	private class TestUser extends User {
+	private class TestUser extends HseUser {
 		
 		public TestUser() {
 			super();
@@ -44,7 +44,7 @@ public class UserTest {
 	@Test
 	public void testConstructor1() {
 		
-		User u = new TestUser();
+		HseUser u = new TestUser();
 		
 		assertEquals(0, u.getId());
 		assertEquals("", u.getUserName());
@@ -57,7 +57,7 @@ public class UserTest {
 	@Test
 	public void testConstructor2() {
 		
-		User u = new TestUser(testId, testName, testPwd, testRoles);
+		HseUser u = new TestUser(testId, testName, testPwd, testRoles);
 		
 		assertEquals(testId, u.getId());
 		assertEquals(testName, u.getUserName());
@@ -69,7 +69,7 @@ public class UserTest {
 	@Test
 	public void testConstructor3() {
 		
-		User u = new TestUser(testName, testPwd);
+		HseUser u = new TestUser(testName, testPwd);
 		assertEquals(testName, u.getUserName());
 		assertEquals(testPwd, u.getPassword());
 		assertTrue(u.getActive());
@@ -78,7 +78,7 @@ public class UserTest {
 	@Test
 	public void testSetters() {
 		
-		User u = new TestUser();
+		HseUser u = new TestUser();
 		
 		assertNotEquals(testId, u.getId());
 		assertNotEquals(testName, u.getUserName());
@@ -101,7 +101,7 @@ public class UserTest {
 	@Test
 	public void testAddRole() {
 		
-		User u = new TestUser();
+		HseUser u = new TestUser();
 		u.setRoles(testRoles);
 		
 		Role newRole = new Role(23, "NEW_ROLE");
@@ -116,7 +116,7 @@ public class UserTest {
 	@Test
 	public void testRemoveRole() {
 		
-		User u = new TestUser();
+		HseUser u = new TestUser();
 		u.setRoles(testRoles);
 		
 		Role r = (Role) testRoles.toArray()[0];
@@ -131,9 +131,9 @@ public class UserTest {
 	@Test
 	public void testEqualsAndHashCode() {
 		
-		User u1 = new TestUser(1, "name1", "pwd", testRoles); 
-		User u2 = new TestUser(2, "name1", "pwd", testRoles);
-		User u3 = new TestUser(3, "name2", "pwd", testRoles);
+		HseUser u1 = new TestUser(1, "name1", "pwd", testRoles); 
+		HseUser u2 = new TestUser(2, "name1", "pwd", testRoles);
+		HseUser u3 = new TestUser(3, "name2", "pwd", testRoles);
 		
 		assertTrue(u1.equals(u1));
 		assertTrue(u1.equals(u2));

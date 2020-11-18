@@ -24,6 +24,7 @@ import ch.usi.hse.exceptions.NoSuchDocCollectionException;
 import ch.usi.hse.exceptions.NoSuchFileException;
 import ch.usi.hse.indexing.IndexBuilder;
 import ch.usi.hse.indexing.IndexingResult;
+import ch.usi.hse.retrieval.SearchAssembler;
 import ch.usi.hse.storage.FileStorage;
 import ch.usi.hse.storage.UrlListStorage;
 
@@ -42,6 +43,7 @@ public class IndexingService {
 	private IndexBuilder indexBuilder;
 	private DocCollectionRepository collectionRepo;
 	private boolean storeRawFiles, storeExtractionResults;
+	private SearchAssembler searchAssembler;
 	  
 	@Autowired 
 	public IndexingService(@Value("${indexing.storeRawFiles}") boolean storeRawFiles,
@@ -49,7 +51,8 @@ public class IndexingService {
 						   @Qualifier("FileStorage") FileStorage fileStorage,
 						   @Qualifier("UrlListStorage") UrlListStorage urlListStorage, 
 						   IndexBuilder indexBuilder,
-						   DocCollectionRepository collectionRepo) 
+						   DocCollectionRepository collectionRepo,
+						   SearchAssembler searchAssembler) 
 			throws IOException {
 		
 		this.storeRawFiles = storeRawFiles;
@@ -58,6 +61,7 @@ public class IndexingService {
 		this.urlListStorage = urlListStorage;
 		this.indexBuilder = indexBuilder;
 		this.collectionRepo = collectionRepo;
+		this.searchAssembler = searchAssembler;
 	}
 	
 	/**  
@@ -232,9 +236,10 @@ public class IndexingService {
 	 * @throws NoSuchDocCollectionException
 	 * @throws FileDeleteException 
 	 * @throws NoSuchFileException 
+	 * @throws FileReadException 
 	 */
 	public void removeDocCollection(DocCollection docCollection) 
-			throws NoSuchDocCollectionException, FileDeleteException, NoSuchFileException {
+			throws NoSuchDocCollectionException, FileDeleteException, NoSuchFileException, FileReadException {
 		
 		int id = docCollection.getId();
 		
@@ -264,6 +269,8 @@ public class IndexingService {
 		}
 		
 		collectionRepo.delete(docCollection);
+		
+		searchAssembler.updateIndexAccess();
 	}
 	
 	/**
@@ -306,6 +313,8 @@ public class IndexingService {
 		IndexingResult res = indexBuilder.buildIndex(docCollection);
 
 		collectionRepo.save(docCollection);
+		
+		searchAssembler.updateIndexAccess();
 		
 		return res;
 	}

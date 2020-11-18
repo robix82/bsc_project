@@ -1,7 +1,10 @@
-package ch.usi.hse.retrieval;
+package ch.usi.hse.testData;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import ch.usi.hse.retrieval.SearchResult;
+import ch.usi.hse.retrieval.SearchResultList;
 
 public class SearchData {
 	

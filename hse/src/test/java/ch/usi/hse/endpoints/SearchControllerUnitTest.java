@@ -1,7 +1,7 @@
 package ch.usi.hse.endpoints;
 
-import static ch.usi.hse.retrieval.SearchData.dummieSearchResultList;
-import static org.mockito.ArgumentMatchers.anyString;
+import static ch.usi.hse.testData.SearchData.dummieSearchResultList;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+import org.apache.lucene.queryparser.classic.ParseException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,8 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import ch.usi.hse.db.entities.Participant;
+import ch.usi.hse.exceptions.FileReadException;
 import ch.usi.hse.retrieval.SearchResultList;
 import ch.usi.hse.services.SearchService;
 
@@ -36,9 +39,9 @@ public class SearchControllerUnitTest {
 	private SearchResultList testSrl = dummieSearchResultList(10);
 	
 	@BeforeEach
-	public void setUp() {
+	public void setUp() throws ParseException, FileReadException {
 		
-		when(searchService.search(anyString())).thenReturn(testSrl);
+		when(searchService.search(anyString(), any(Participant.class))).thenReturn(testSrl);
 	}
 	
 	

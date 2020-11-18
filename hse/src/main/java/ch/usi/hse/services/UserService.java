@@ -14,7 +14,7 @@ import ch.usi.hse.db.entities.Experimenter;
 import ch.usi.hse.db.entities.Participant;
 import ch.usi.hse.db.entities.Role;
 import ch.usi.hse.db.entities.TestGroup;
-import ch.usi.hse.db.entities.User;
+import ch.usi.hse.db.entities.HseUser;
 import ch.usi.hse.db.repositories.AdministratorRepository;
 import ch.usi.hse.db.repositories.ExperimentRepository;
 import ch.usi.hse.db.repositories.ExperimenterRepository;
@@ -112,7 +112,7 @@ public class UserService {
 	 * 
 	 * @return List<User>
 	 */
-	public List<User> allUsers() {
+	public List<HseUser> allUsers() {
 		
 		return userRepository.findAll();
 	}
@@ -156,13 +156,24 @@ public class UserService {
 	 * @return User
 	 * @throws NoSuchUserException
 	 */
-	public User findUser(int id) throws NoSuchUserException {
+	public HseUser findUser(int id) throws NoSuchUserException {
 		
 		if (! userRepository.existsById(id)) {
 			throw new NoSuchUserException(id);
 		}
-		
-		return userRepository.findById(id);
+
+		if (administratorRepository.existsById(id)) {
+			return administratorRepository.findById(id);
+		}
+		else if (experimenterRepository.existsById(id)) {
+			return experimenterRepository.findById(id);
+		}
+		else if (participantRepository.existsById(id)) {
+			return participantRepository.findById(id);
+		}
+		else {
+			return userRepository.findById(id);
+		}	
 	}
 	
 	/**
@@ -172,13 +183,24 @@ public class UserService {
 	 * @return User
 	 * @throws NoSuchUserException
 	 */
-	public User findUser(String userName) throws NoSuchUserException {
+	public HseUser findUser(String userName) throws NoSuchUserException {
 		
 		if (! userRepository.existsByUserName(userName)) {
 			throw new NoSuchUserException(userName);
 		}
 		
-		return userRepository.findByUserName(userName);
+		if (administratorRepository.existsByUserName(userName)) {
+			return administratorRepository.findByUserName(userName);
+		}
+		else if (experimenterRepository.existsByUserName(userName)) {
+			return experimenterRepository.findByUserName(userName);
+		}
+		else if (participantRepository.existsByUserName(userName)) {
+			return participantRepository.findByUserName(userName);
+		}
+		else {
+			return userRepository.findByUserName(userName);
+		}
 	}
 
 	/**
@@ -541,7 +563,7 @@ public class UserService {
 		}
 		else {
 		
-			User u = userRepository.findById(id);
+			HseUser u = userRepository.findById(id);
 			userRepository.delete(u);
 		}
 	}

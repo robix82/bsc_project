@@ -2,7 +2,7 @@ package ch.usi.hse.db.repositories;
 
 import javax.transaction.Transactional;
 
-import ch.usi.hse.db.entities.User;
+import ch.usi.hse.db.entities.HseUser;
 
 /**
  * Repository for accessing User persintence via base class 
@@ -11,6 +11,7 @@ import ch.usi.hse.db.entities.User;
  *
  */
 @Transactional
-public interface UserRepository extends UserBaseRepository<User> {
+public interface UserRepository extends UserBaseRepository<HseUser> {
+
 
 }

@@ -16,7 +16,7 @@ import javax.persistence.*;
  */
 @Entity(name="user")
 @Inheritance(strategy=InheritanceType.JOINED)
-public class User {
+public class HseUser {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -37,7 +37,7 @@ public class User {
 			   inverseJoinColumns=@JoinColumn(name="role_id"))
 	protected Set<Role> roles;
 	
-	protected User() {
+	protected HseUser() {
 		  
 		id = 0;
 		userName = "";
@@ -46,7 +46,7 @@ public class User {
 		roles = new HashSet<>();
 	}
 	
-	protected User(int id, String userName, String password, Set<Role> roles) {
+	protected HseUser(int id, String userName, String password, Set<Role> roles) {
 		
 		this.id = id; 
 		this.userName = userName;
@@ -55,7 +55,7 @@ public class User {
 		this.roles = roles;
 	} 
 	
-	public User(String userName, String password) {
+	public HseUser(String userName, String password) {
 		
 		id = 0;
 		this.userName = userName;
@@ -119,11 +119,11 @@ public class User {
 			return true;
 		}
 		
-		if (! (o instanceof User)) {
+		if (! (o instanceof HseUser)) {
 			return false;
 		}
 		
-		User u = (User) o;
+		HseUser u = (HseUser) o;
 		
 		return u.userName.equals(userName);
 	}

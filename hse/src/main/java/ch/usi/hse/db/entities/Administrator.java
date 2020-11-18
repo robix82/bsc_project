@@ -11,7 +11,7 @@ import javax.persistence.Entity;
  *
  */
 @Entity(name="administrator")
-public class Administrator extends User {
+public class Administrator extends HseUser {
 
 	public Administrator() {
 		

@@ -32,6 +32,7 @@ import ch.usi.hse.exceptions.NoSuchDocCollectionException;
 import ch.usi.hse.exceptions.NoSuchFileException;
 import ch.usi.hse.indexing.IndexBuilder;
 import ch.usi.hse.indexing.IndexingResult;
+import ch.usi.hse.retrieval.SearchAssembler;
 import ch.usi.hse.storage.FileStorage;
 import ch.usi.hse.storage.UrlListStorage;
 
@@ -48,6 +49,9 @@ public class IndexingServiceTest {
 	
 	@Mock
 	private DocCollectionRepository collectionRepo;
+	
+	@Mock
+	private SearchAssembler searchAssembler;
 
 	private IndexingService indexingService;
 	
@@ -70,7 +74,8 @@ public class IndexingServiceTest {
 											  fileStorage,
 											  urlListStorage,
 											  indexBuilder,
-											  collectionRepo);
+											  collectionRepo,
+											  searchAssembler);
 
 		existingDirectory = Paths.get("validDir");
 		nonExistingDirectory = Paths.get("noSuchDir");
@@ -449,7 +454,7 @@ public class IndexingServiceTest {
 	}
 	
 	@Test // non-existing collection
-	public void testRemoveDocCollection2() throws FileDeleteException, NoSuchFileException {
+	public void testRemoveDocCollection2() throws FileDeleteException, NoSuchFileException, FileReadException {
 		
 		boolean exc = false;
 		

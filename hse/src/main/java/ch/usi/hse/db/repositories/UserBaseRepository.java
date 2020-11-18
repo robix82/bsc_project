@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 
-import ch.usi.hse.db.entities.User;
+import ch.usi.hse.db.entities.HseUser;
 
 /**
  * Base for User repositories
@@ -15,7 +15,7 @@ import ch.usi.hse.db.entities.User;
  * @param <T>
  */
 @NoRepositoryBean
-public interface UserBaseRepository<T extends User>  
+public interface UserBaseRepository<T extends HseUser>  
 	extends CrudRepository<T, Integer>{
 
 	public T findById(int id);

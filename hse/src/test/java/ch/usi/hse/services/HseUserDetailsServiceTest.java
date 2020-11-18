@@ -20,7 +20,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import ch.usi.hse.db.entities.Administrator;
 import ch.usi.hse.db.entities.Role;
-import ch.usi.hse.db.entities.User;
+import ch.usi.hse.db.entities.HseUser;
 import ch.usi.hse.exceptions.NoSuchUserException;
 
 @SpringBootTest
@@ -32,7 +32,7 @@ public class HseUserDetailsServiceTest {
 	@Autowired
 	private HseUserDetailsService testService;
 	
-	private User testUser;
+	private HseUser testUser;
 	private Set<Role> adminRoles;
 	private List<GrantedAuthority> adminAuthorities;
 	private String validName, badName;

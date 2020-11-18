@@ -14,7 +14,7 @@ import java.util.List;
 
 public class SearchResultTest {
 
-	private static long testId = 23;
+	private static int testId = 23;
 	private static String testUrl = "testUrl";
 	private static String testSummary = "testSummary";
 	

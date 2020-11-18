@@ -2,7 +2,9 @@ package ch.usi.hse.retrieval;
 
 import java.util.Objects;
 
-import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.document.Document;
+
+import ch.usi.hse.db.entities.DocCollection;
 
 /**
  * Data transfer class for serving search result summaries
@@ -12,7 +14,10 @@ import org.apache.lucene.search.ScoreDoc;
  */
 public class SearchResult {
 
-	private Long documentId;
+	private int collectionId;
+	private String collectionName;
+	private Integer documentId;
+	private double score;
 	private String url;
 	private String summary;
 	
@@ -21,7 +26,7 @@ public class SearchResult {
 	 */
 	public SearchResult() {
 		
-		documentId = -1L;
+		documentId = 0;
 		url = "";
 		summary = "";
 	}
@@ -33,7 +38,7 @@ public class SearchResult {
 	 * @param url
 	 * @param summary
 	 */
-	public SearchResult(long documentId, String url, String summary) {
+	public SearchResult(int documentId, String url, String summary) {
 		
 		this.documentId = documentId;
 		this.url = url;
@@ -41,16 +46,21 @@ public class SearchResult {
 	}
 	
 	/**
-	 * Bilds a SearchResult object given a Lucene ScoreDoc instance
+	 * Builds a SearchResult object given a Lucene ScoreDoc instance
 	 * 
 	 * @param doc
 	 */
-	public SearchResult(ScoreDoc doc) {
+	public SearchResult(Document doc, DocCollection collection, double score) {
 		
-		// TODO
+		documentId = 0; // Integer.parseInt(doc.get("idStr")); 
+		collectionId = collection.getId();
+		collectionName = collection.getName();
+		url = doc.get("url");
+		summary = "summary not yet implemented";
+		this.score = score;
 	}
 	
-	public long getDocumentId() {
+	public int getDocumentId() {
 		return documentId;
 	}
 	
@@ -62,7 +72,19 @@ public class SearchResult {
 		return summary;
 	}
 	
-	public void setDocumentId(long documentId) {
+	public int getCollectionId() {
+		return collectionId;
+	}
+	
+	public String getCollectionName() {
+		return collectionName;
+	}
+	
+	public double getScore() {
+		return score;
+	}
+	
+	public void setDocumentId(int documentId) {
 		this.documentId = documentId;
 	}
 	
@@ -72,6 +94,18 @@ public class SearchResult {
 	
 	public void setSummary(String summary) {
 		this.summary = summary;
+	}
+	
+	public void setCollectionId(int collectionId) {
+		this.collectionId = collectionId;
+	}
+	
+	public void setCollectionName(String collectionName) {
+		this.collectionName = collectionName;
+	}
+	
+	public void setScore(double score) {
+		this.score = score;
 	}
 	
 	@Override

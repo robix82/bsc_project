@@ -61,13 +61,15 @@ public class Indexer {
 		
 		doc.add(new IntPoint("id", ++count));
 		
+		doc.add(new StringField("idStr", Integer.toString(count), Field.Store.YES));
+		
 		doc.add(new StringField("url", source.getUrl(), Field.Store.YES));
 		
 		doc.add(new StringField("fileType", source.getFileType(), Field.Store.YES));
 		
 		doc.add(new TextField("title", title, Field.Store.YES));
 		
-		doc.add(new TextField("content", source.getContent(), Field.Store.NO));
+		doc.add(new TextField("content", source.getContent(), Field.Store.YES));
 		
 		writer.addDocument(doc);
 	}

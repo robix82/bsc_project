@@ -18,7 +18,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  *
  */
 @Entity(name="participant")
-public class Participant extends User {
+public class Participant extends HseUser {
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "group_id")

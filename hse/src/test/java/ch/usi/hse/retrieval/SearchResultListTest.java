@@ -1,6 +1,6 @@
 package ch.usi.hse.retrieval;
 
-import static ch.usi.hse.retrieval.SearchData.dummieSearchResults;
+import static ch.usi.hse.testData.SearchData.dummieSearchResults;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;

@@ -3,8 +3,6 @@ package ch.usi.hse.retrieval;
 import java.util.List;
 import java.util.Objects;
 
-import org.apache.lucene.search.TopDocs;
-
 import java.util.ArrayList;
 
 /**
@@ -39,15 +37,10 @@ public class SearchResultList {
 		this.searchResults = searchResults;
 	}
 	
-	/**
-	 * Builds a SearchResult object with the given the query string and a Lucene TopDocs instance
-	 * 
-	 * @param queryString
-	 * @param docs
-	 */
-	public SearchResultList(String queryString, TopDocs docs) {
+		public SearchResultList(String queryString) {
 		
-		// TODO
+		this.queryString = queryString;
+		searchResults = new ArrayList<>();
 	}
 	
 	public String getQueryString() {
@@ -64,6 +57,11 @@ public class SearchResultList {
 	
 	public void setSearchResults(List<SearchResult> searchResults) {
 		this.searchResults = searchResults;
+	}
+	
+	public void addSearchResult(SearchResult res) {
+		
+		searchResults.add(res);
 	}
 	
 	@Override

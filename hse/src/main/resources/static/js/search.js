@@ -1,8 +1,14 @@
 
 $(document).ready(function() {
 	
-		if (searchResultList != null) {
-			$("#search-input").val(searchResultList.queryString);
-		}
+	console.log("RESULTS:");
+	console.log(searchResultList);
+	
+	if (searchResultList != null) {
+		
+		
+		
+		$("#search-input").val(searchResultList.queryString);
+	}
 });
 
