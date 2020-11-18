@@ -575,6 +575,7 @@ public class ExperimentService {
 		}	
 		
 		ex.setStatus(Experiment.Status.READY);
+		checkReadyStatus(ex);
 		// TODO: clear collected data
 		
 		Experiment updated = experimentRepo.save(ex);
@@ -585,7 +586,8 @@ public class ExperimentService {
 	private void checkReadyStatus(Experiment e) {
 		
 		if (e.getStatus().equals(Experiment.Status.READY) ||
-			e.getStatus().equals(Experiment.Status.NOT_READY)) {
+			e.getStatus().equals(Experiment.Status.NOT_READY) ||
+			e.getStatus().equals(Experiment.Status.COMPLETE) ) {
 			
 			if (e.getTestGroups().isEmpty()) {
 				
@@ -602,7 +604,9 @@ public class ExperimentService {
 				}
 			}
 			
-			e.setStatus(Experiment.Status.READY);
+			if (! e.getStatus().equals(Experiment.Status.COMPLETE)) {
+				e.setStatus(Experiment.Status.READY);
+			}
 		}
 	}
 }

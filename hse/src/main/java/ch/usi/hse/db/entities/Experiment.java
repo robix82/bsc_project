@@ -181,6 +181,7 @@ public class Experiment {
 		
 		this.experimenter = experimenter;
 		
+		
 		if (experimenter != null) {
 			
 			experimenterId = experimenter.getId();

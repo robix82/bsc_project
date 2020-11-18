@@ -58,6 +58,7 @@ public class Experimenter extends User {
 	public void addExperiment(Experiment e) {
 		
 		e.setExperimenter(this);
+		
 		experiments.add(e);
 	}
 	
