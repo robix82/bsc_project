@@ -1,6 +1,7 @@
 package ch.usi.hse.endpoints;
 
 import org.apache.lucene.queryparser.classic.ParseException;
+import org.apache.lucene.search.highlight.InvalidTokenOffsetsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
@@ -47,7 +48,7 @@ public class SearchController {
 	
 	@PostMapping("/")
 	public ModelAndView postQuery(@AuthenticationPrincipal User user, String queryString) 
-			throws NoSuchUserException, ParseException, FileReadException {
+			throws NoSuchUserException, ParseException, FileReadException, InvalidTokenOffsetsException {
 		
 		HseUser hseUser = userService.findUser(user.getUsername());
 		

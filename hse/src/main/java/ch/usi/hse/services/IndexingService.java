@@ -247,6 +247,8 @@ public class IndexingService {
 			throw new NoSuchDocCollectionException(id);
 		}
 		
+		collectionRepo.delete(docCollection);
+		
 		if (docCollection.getIndexed()) {
 			
 			try {
@@ -262,15 +264,13 @@ public class IndexingService {
 					
 					fileStorage.removeDirectory(Paths.get(docCollection.getExtractionResultsDir()));
 				}
+				
+				searchAssembler.updateIndexAccess();
 			}
 			catch (NoSuchFileException e) {
 				System.out.println("unable to delete non-existing file");
 			}
 		}
-		
-		collectionRepo.delete(docCollection);
-		
-		searchAssembler.updateIndexAccess();
 	}
 	
 	/**

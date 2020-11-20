@@ -213,6 +213,8 @@ public class IndexingControllerIntegrationTest {
 		assertEquals(1, Files.list(Paths.get(c1.getIndexDir())).count());
 		assertEquals(2, Files.list(Paths.get(c1.getRawFilesDir())).count());
 		assertEquals(2, Files.list(Paths.get(c1.getExtractionResultsDir())).count());
+		
+		assertTrue(Files.exists(Paths.get("/home/robix/GIT/bsc_project/hse/data_storage/test/indices/c1")));
 	}
 	 
 	@Test
@@ -547,8 +549,9 @@ public class IndexingControllerIntegrationTest {
 		
 		DocCollection existingCollection = savedDocCollections.get(1);
 		int id = existingCollection.getId();
+				
 		String jsonString = getJson(existingCollection);
-		
+
 		long countBefore = collectionRepo.count();
 		assertTrue(collectionRepo.existsById(id));
 		
@@ -560,7 +563,7 @@ public class IndexingControllerIntegrationTest {
 		
 		assertEquals(existingCollection, resBody);
 		assertEquals(countBefore -1, collectionRepo.count());
-		assertFalse(collectionRepo.existsById(id));
+		assertFalse(collectionRepo.existsById(id)); 
 	}
 	
 	@Test // delete indexed DocCollection

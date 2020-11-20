@@ -38,18 +38,37 @@ h2 {
 	margin-right: .5rem;
 }
 
+
+
 #results {
 	
 	display: flex;
 	flex-flow: column nowrap;
 	align-items: flex-start;
 	width: 60%;
-	margin-top: 4rem;
+	margin-top: 2rem;
+}
+
+#resultPropertiesDisplay {
+	
+	font-size: 16pt;
+	margin-bottom: 1em;
 }
 
 .result-item {
 	
-	margin-top: 1rem;
+	margin-bottom: 2rem;
+}
+
+.result-url {
+	
+	font-size: 15pt;
+	margin-bottom: .3em;
+}
+
+.result-summary {
+	
+	font-size: 13pt;
 }
 
 

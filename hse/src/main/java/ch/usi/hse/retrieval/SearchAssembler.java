@@ -3,11 +3,13 @@ package ch.usi.hse.retrieval;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.it.ItalianAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
@@ -21,6 +23,11 @@ import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.search.highlight.Highlighter;
+import org.apache.lucene.search.highlight.InvalidTokenOffsetsException;
+import org.apache.lucene.search.highlight.QueryScorer;
+import org.apache.lucene.search.highlight.SimpleHTMLFormatter;
+import org.apache.lucene.search.highlight.TokenSources;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -45,8 +52,6 @@ public class SearchAssembler {
 	@Autowired
 	public SearchAssembler(DocCollectionRepository collectionRepo) throws FileReadException {
 		
-		System.out.println("SearchAssembler Constructor");
-		
 		this.collectionRepo = collectionRepo;
 		
 		stdAnalyzer = new StandardAnalyzer();
@@ -59,7 +64,7 @@ public class SearchAssembler {
 	
 	public void updateIndexAccess() throws FileReadException {
 			
-		List<DocCollection> allCollections = collectionRepo.findAll();
+		List<DocCollection> allCollections = collectionRepo.findByIndexed(true);
 		
 		directories = new HashMap<>();
 		readers = new HashMap<>();
@@ -86,7 +91,7 @@ public class SearchAssembler {
 	}
 
 	public SearchResultList getSearchResults(String queryString, List<DocCollection> docCollections) 
-			throws ParseException, FileReadException {
+			throws ParseException, FileReadException, InvalidTokenOffsetsException {
 		
 		SearchResultList res = new SearchResultList(queryString);
 		res.setQueryString(queryString);
@@ -105,23 +110,27 @@ public class SearchAssembler {
 			}
 		}
 		
+		Collections.sort(searchResults);
 		res.setSearchResults(searchResults);
 		
 		return res;
 	}
 	
 	private List<SearchResult> searchCollection(String queryString, DocCollection collection) 
-			throws ParseException, IOException {
+			throws ParseException, IOException, InvalidTokenOffsetsException {
 		
+		Analyzer analyzer;
 		QueryParser parser;
 		IndexSearcher searcher;
 		
 		if (collection.getLanguage().equals(Language.IT)) {
 			
+			analyzer = itAnalyzer;
 			parser = itParser;
 		}
 		else {
 			
+			analyzer = stdAnalyzer;
 			parser = stdParser;
 		}
 		
@@ -137,10 +146,49 @@ public class SearchAssembler {
 			
 			Document doc = searcher.doc(d.doc);
 			double score = d.score;
+			String summary = makeSummary(doc.get("content"), query, analyzer);
 			
-			results.add(new SearchResult(doc, collection, score));
+			results.add(new SearchResult(d.doc, doc, collection, score, summary));
 		}
 		
 		return results;
 	}
+	
+	/**
+	 * create String from text fragments with highlighted query terms
+	 * 
+	 * (based on http://makble.com/how-to-do-lucene-search-highlight-example)
+	 * 
+	 * @param text
+	 * @param query
+	 * @param analyzer
+	 * @return
+	 * @throws IOException
+	 * @throws InvalidTokenOffsetsException
+	 */
+	private String makeSummary(String text, Query query, Analyzer analyzer) 
+			throws IOException, InvalidTokenOffsetsException {
+		
+		Highlighter highlighter = new Highlighter(new SimpleHTMLFormatter(), new QueryScorer(query)); 
+		String fragments = "";
+		
+		if (text != null) {
+		
+			@SuppressWarnings("deprecation")
+			TokenStream ts = TokenSources.getTokenStream("default", text, analyzer);
+			
+			fragments = highlighter.getBestFragments(ts, text, 4, " ");
+			fragments += " (...)";
+		}
+		
+		return fragments;
+	}
 }
+
+
+
+
+
+
+
+

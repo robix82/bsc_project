@@ -12,12 +12,12 @@ import ch.usi.hse.db.entities.DocCollection;
  * @author robert.jans@usi.ch
  *
  */
-public class SearchResult {
+public class SearchResult implements Comparable<SearchResult> {
 
 	private int collectionId;
 	private String collectionName;
 	private Integer documentId;
-	private double score;
+	private Double score;
 	private String url;
 	private String summary;
 	
@@ -50,14 +50,15 @@ public class SearchResult {
 	 * 
 	 * @param doc
 	 */
-	public SearchResult(Document doc, DocCollection collection, double score) {
+	public SearchResult(int id, Document doc, DocCollection collection, double score, String summary) {
 		
-		documentId = 0; // Integer.parseInt(doc.get("idStr")); 
+		documentId = id; 
 		collectionId = collection.getId();
 		collectionName = collection.getName();
 		url = doc.get("url");
-		summary = "summary not yet implemented";
+		this.summary = summary;
 		this.score = score;
+		this.summary = summary;
 	}
 	
 	public int getDocumentId() {
@@ -107,6 +108,14 @@ public class SearchResult {
 	public void setScore(double score) {
 		this.score = score;
 	}
+	
+
+	@Override
+	public int compareTo(SearchResult res) {
+		
+		return res.score.compareTo(score);
+	}
+
 	
 	@Override
 	public boolean equals(Object o) {

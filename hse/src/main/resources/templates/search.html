@@ -39,13 +39,15 @@
 	
 	<div id="results" th:if="${searchResultList != null}">
 
+		<div id="resultPropertiesDisplay"></div>
+
 		<div th:each="result : ${searchResultList.searchResults}" class="result-item">
 		
 			<div class="result-url">
 				<a th:href="@{${result.url}}" th:text="${result.url}" target="blank"></a>
 			</div>
 			
-			<div class="result-summary" th:text="${result.summary}">
+			<div class="result-summary" th:utext="${result.summary}">
 			</div>
 			
 		</div>

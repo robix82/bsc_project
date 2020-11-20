@@ -1,6 +1,7 @@
 package ch.usi.hse.services;
 
 import org.apache.lucene.queryparser.classic.ParseException;
+import org.apache.lucene.search.highlight.InvalidTokenOffsetsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,8 +44,9 @@ public class SearchService {
 	 * @return SearchResultList 
 	 * @throws FileReadException 
 	 * @throws ParseException 
+	 * @throws InvalidTokenOffsetsException 
 	 */
-	public SearchResultList search(String queryString, HseUser user) throws ParseException, FileReadException {
+	public SearchResultList search(String queryString, HseUser user) throws ParseException, FileReadException, InvalidTokenOffsetsException {
 		
 		List<DocCollection> collections;
 		

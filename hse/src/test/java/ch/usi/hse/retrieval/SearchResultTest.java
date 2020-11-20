@@ -39,7 +39,7 @@ public class SearchResultTest {
 		
 		SearchResult res = new SearchResult();
 		
-		assertEquals(-1, res.getDocumentId());
+		assertEquals(0, res.getDocumentId());
 		assertEquals("", res.getUrl());
 		assertEquals("", res.getSummary());
 	}

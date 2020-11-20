@@ -7,6 +7,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 import java.util.List;
 
 import org.apache.lucene.queryparser.classic.ParseException;
+import org.apache.lucene.search.highlight.InvalidTokenOffsetsException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -35,7 +36,7 @@ public class SearchServiceTest {
 	private List<DocCollection> docCollections;
 	
 	@BeforeEach
-	public void setUp() throws ParseException, FileReadException {
+	public void setUp() throws ParseException, FileReadException, InvalidTokenOffsetsException {
 		
 		initMocks(this);
 		
@@ -54,7 +55,7 @@ public class SearchServiceTest {
 	}
 	
 	@Test
-	public void testQueryStringIsPreserved() throws ParseException, FileReadException {
+	public void testQueryStringIsPreserved() throws ParseException, FileReadException, InvalidTokenOffsetsException {
 		
 		SearchResultList srl = testService.search(testQueryString, testParticipant);
 		
