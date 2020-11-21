@@ -47,6 +47,9 @@ public class Experiment {
 	@OneToMany(mappedBy="experiment", fetch=FetchType.EAGER, orphanRemoval=true, cascade=CascadeType.ALL)
 	private Set<TestGroup> testGroups;
 	
+	@OneToMany(mappedBy="experiment", fetch=FetchType.EAGER, orphanRemoval=true, cascade=CascadeType.ALL)
+	private Set<UsageEvent> usageEvents;
+	
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="experimenter_id")
 	@JsonIgnore
@@ -120,6 +123,10 @@ public class Experiment {
 		return testGroups;
 	}
 	
+	public Set<UsageEvent> getUsageEvents() {
+		return usageEvents;
+	}
+	
 	public Experimenter getExperimenter() {
 		return experimenter;
 	}
@@ -175,6 +182,19 @@ public class Experiment {
 		}
 		
 		this.testGroups = testGroups;
+	}
+	
+	public void setUsageEvents(Set<UsageEvent> usageEvents) {
+		
+		if (usageEvents != null) {
+			
+			for (UsageEvent e : usageEvents) {
+				
+				e.setExperiment(this);
+			}
+		}
+		
+		this.usageEvents = usageEvents;
 	}
 	
 	public void setExperimenter(Experimenter experimenter) {
@@ -242,27 +262,25 @@ public class Experiment {
 		
 		testGroups.remove(group);
 	}
-	
-	public void removeTestGroup(String groupName) {
-		
-		TestGroup toRemove = null;
-		
-		for (TestGroup g : testGroups) {
-			if (g.getName().equals(groupName)) {
-				
-				toRemove = g;
-				break;
-			}
-		}
-		
-		if (toRemove != null) {
-			testGroups.remove(toRemove);
-		}
-	}
-	
+
 	public void clearTestGroups() {
 		
 		testGroups.clear();
+	}
+	
+	public void addUsageEvent(UsageEvent usageEvent) {
+		
+		usageEvent.setExperiment(this);
+		usageEvents.add(usageEvent);
+	}
+	
+	public void removeUsageEvent(UsageEvent usageEvent) {
+		usageEvents.remove(usageEvent);
+	}
+	
+	public void clearUsageEvents() {
+		
+		usageEvents.clear();
 	}
 	
 	@Override

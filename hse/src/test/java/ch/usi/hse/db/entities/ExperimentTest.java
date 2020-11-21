@@ -19,7 +19,7 @@ public class ExperimentTest {
 	private Experimenter testExperimenter;
 	private Set<TestGroup> testGroups;
 	private LocalDateTime d_created, d_conducted, d_start, d_end;
-	
+	private Set<UsageEvent> usageEvents;
 	
 	@BeforeEach
 	public void setUp() { 
@@ -29,11 +29,22 @@ public class ExperimentTest {
 		testGroups = new HashSet<>();
 		testExperimenter = new Experimenter("e1", "pwd");
 		testExperimenter.setId(724);
+		Participant p = new Participant("p", "pwd");
+		p.setId(74);
 		
 		TestGroup g1 = new TestGroup("g1");
 		g1.setId(1);
+		g1.addParticipant(p);
 		TestGroup g2 = new TestGroup("g2");
 		g2.setId(2);
+		
+		UsageEvent e1 = new UsageEvent(UsageEvent.Type.LOGIN, p, null);
+		e1.setId(1);
+		UsageEvent e2 = new UsageEvent(UsageEvent.Type.QUERY, p, "some query");
+		e2.setId(2);
+		usageEvents = new HashSet<>();
+		usageEvents.add(e1);
+		usageEvents.add(e2);
 		 
 		testGroups.add(g1); 
 		testGroups.add(g2);
@@ -97,6 +108,7 @@ public class ExperimentTest {
 		assertNotEquals(d_end, e.getEndTime());
 		assertEquals(0, e.getTestGroups().size()); 
 		assertNotEquals(testExperimenter, e.getExperimenter());
+		assertNotEquals(usageEvents, e.getUsageEvents());
 		
 		e.setId(testId);
 		e.setTitle(testTitle);
@@ -107,6 +119,7 @@ public class ExperimentTest {
 		e.setDateConducted(d_conducted);
 		e.setStartTime(d_start);
 		e.setEndTime(d_end);
+		e.setUsageEvents(usageEvents);
 		
 		assertEquals(testId, e.getId());
 		assertEquals(testTitle, e.getTitle());
@@ -127,6 +140,7 @@ public class ExperimentTest {
 		assertEquals(testExperimenter, e.getExperimenter());
 		assertEquals(testExperimenter.getId(), e.getExperimenterId());
 		assertEquals(testExperimenter.getUserName(), e.getExperimenterName());
+		assertIterableEquals(usageEvents, e.getUsageEvents());
 	}
 	
 	@Test
@@ -164,6 +178,18 @@ public class ExperimentTest {
 	}
 	
 	@Test
+	public void testClearTestGroups() {
+		
+		Experiment e = new Experiment(testId, testTitle, testGroups);
+		
+		assertNotEquals(0, e.getTestGroups().size());
+		
+		e.clearTestGroups();
+		
+		assertEquals(0, e.getTestGroups().size());
+	}
+	
+	@Test
 	public void testRemoveTestGroup1() {
 		
 		Experiment e = new Experiment(testId, testTitle, testGroups);
@@ -179,30 +205,50 @@ public class ExperimentTest {
 	}
 	
 	@Test
-	public void testRemoveTestGroup2() {
+	public void testAddUsageEvent() {
 		
 		Experiment e = new Experiment(testId, testTitle, testGroups);
-		TestGroup g = (TestGroup) testGroups.toArray()[0];
+		e.setUsageEvents(usageEvents);
+		UsageEvent newEvent = new UsageEvent();
+		newEvent.setId(99);
 		
-		assertEquals(2, e.getTestGroups().size());
-		assertTrue(e.getTestGroups().contains(g));
+		int count = e.getUsageEvents().size();
+		assertFalse(e.getUsageEvents().contains(newEvent));
 		
-		e.removeTestGroup(g.getName());
+		e.addUsageEvent(newEvent);
 		
-		assertEquals(1, e.getTestGroups().size());
-		assertFalse(e.getTestGroups().contains(g));
+		assertEquals(count +1, e.getUsageEvents().size());
+		assertTrue(e.getUsageEvents().contains(newEvent));
 	}
 	
 	@Test
-	public void testClearTestGroups() {
+	public void testRemoveUsageEvent() {
 		
 		Experiment e = new Experiment(testId, testTitle, testGroups);
+		e.setUsageEvents(usageEvents);
 		
-		assertNotEquals(0, e.getTestGroups().size());
+		UsageEvent evt = (UsageEvent) usageEvents.toArray()[0];
 		
-		e.clearTestGroups();
+		int count = e.getUsageEvents().size();
+		assertTrue(e.getUsageEvents().contains(evt));
 		
-		assertEquals(0, e.getTestGroups().size());
+		e.removeUsageEvent(evt);
+		
+		assertEquals(count -1, e.getUsageEvents().size());
+		assertFalse(e.getUsageEvents().contains(evt));
+	}
+	
+	@Test
+	public void testClearUsageEvents() {
+		
+		Experiment e = new Experiment(testId, testTitle, testGroups);
+		e.setUsageEvents(usageEvents);
+		
+		assertNotEquals(0, e.getUsageEvents().size());
+		
+		e.clearUsageEvents();
+		
+		assertEquals(0, e.getUsageEvents().size());
 	}
 	
 	@Test
