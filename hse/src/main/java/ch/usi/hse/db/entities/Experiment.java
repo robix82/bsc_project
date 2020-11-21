@@ -83,6 +83,7 @@ public class Experiment {
 		
 		id = 0; 
 		testGroups = new HashSet<>();
+		usageEvents = new HashSet<>();
 		status = Status.NOT_READY;
 		startTime = LocalDateTime.of(2000, 1, 1, 0, 0);
 		endTime = LocalDateTime.of(2000, 1, 1, 0, 0);
@@ -94,6 +95,7 @@ public class Experiment {
 		this.id = id;
 		this.title = title;
 		setTestGroups(testGroups);
+		usageEvents = new HashSet<>();
 		status = Status.NOT_READY;
 		startTime = LocalDateTime.of(2000, 1, 1, 0, 0);
 		endTime = LocalDateTime.of(2000, 1, 1, 0, 0);
@@ -104,6 +106,7 @@ public class Experiment {
 		
 		id = 0;
 		testGroups = new HashSet<>();
+		usageEvents = new HashSet<>();
 		this.title = title;
 		status = Status.NOT_READY;
 		startTime = LocalDateTime.of(2000, 1, 1, 0, 0);

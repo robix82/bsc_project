@@ -45,6 +45,7 @@ public class SearchResultListTest {
 		
 		String query = srl.getQueryString();
 		List<SearchResult> results = srl.getSearchResults();
+//		Map<Integer, Integer> stats = srl.get
 		
 		assertEquals("", query);
 		assertNotNull(results);
@@ -58,12 +59,6 @@ public class SearchResultListTest {
 		
 		assertEquals(testQueryString, srl.getQueryString());
 		assertIterableEquals(testSearchResults, srl.getSearchResults());
-	}
-	
-	@Test 
-	public void testConstructor3() {
-		
-		// TODO: test construction from Lucene TopDocs
 	}
 	
 	@Test

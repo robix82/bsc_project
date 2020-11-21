@@ -1,9 +1,13 @@
 package ch.usi.hse.retrieval;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
+import ch.usi.hse.db.entities.DocCollection;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  *  Data transfer class containing the query string and the retrieved results
@@ -16,6 +20,9 @@ public class SearchResultList {
 	private String queryString;
 	private List<SearchResult> searchResults;
 	
+	// map collection id to number of results belonging to the give collection
+	private Map<DocCollection, Integer>  collectionStats;
+	
 	/**
 	 * Default constructor
 	 */
@@ -23,6 +30,7 @@ public class SearchResultList {
 		
 		queryString = "";
 		searchResults = new ArrayList<>();
+		collectionStats = new HashMap<>();
 	}
 	
 	/**
@@ -35,6 +43,8 @@ public class SearchResultList {
 		
 		this.queryString = queryString;
 		this.searchResults = searchResults;
+		collectionStats = new HashMap<>();
+		computeCollectionStats();
 	}
 	
 		public SearchResultList(String queryString) {
@@ -51,17 +61,39 @@ public class SearchResultList {
 		return searchResults;
 	}
 	
+	public Map<DocCollection, Integer> getCollectionStats() {
+		return collectionStats;
+	}
+	
+	public void setCollectionStats(Map<DocCollection, Integer> collectionStats) {
+		this.collectionStats = collectionStats;
+	}
+	
 	public void setQueryString(String queryString) {
 		this.queryString = queryString;
 	}
 	
 	public void setSearchResults(List<SearchResult> searchResults) {
+		
 		this.searchResults = searchResults;
+		computeCollectionStats();
 	}
 	
 	public void addSearchResult(SearchResult res) {
 		
 		searchResults.add(res);
+		
+		DocCollection collection = res.getDocCollection();
+		
+		if (! collectionStats.containsKey(collection)) {
+			
+			collectionStats.put(collection, 1);
+		}
+		else {
+			
+			int n = collectionStats.get(collection);
+			collectionStats.put(collection, n+1);
+		}
 	}
 	
 	@Override
@@ -100,6 +132,26 @@ public class SearchResultList {
 	public int hashCode() {
 		
 		return Objects.hash(queryString, searchResults);
+	}
+	
+	private void computeCollectionStats() {
+		
+		collectionStats.clear();
+		
+		for (SearchResult res : searchResults) {
+			
+			DocCollection collection = res.getDocCollection();
+			
+			if (! collectionStats.containsKey(collection)) {
+				
+				collectionStats.put(collection, 1);
+			}
+			else {
+				
+				int n = collectionStats.get(collection);
+				collectionStats.put(collection, n+1);
+			}
+		}
 	}
 }
 

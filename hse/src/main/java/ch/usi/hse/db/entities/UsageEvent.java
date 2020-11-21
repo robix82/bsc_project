@@ -9,6 +9,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
@@ -17,12 +19,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 @Entity(name="usage_event")
+@Inheritance(strategy=InheritanceType.JOINED)
 public class UsageEvent {
 
 	public static enum Type {
 		
-		LOGIN,
-		LOGOUT,
+		SESSION,
 		QUERY,
 		DOC_CLICK
 	}
@@ -30,30 +32,27 @@ public class UsageEvent {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="event_id")
-	private Integer id;
+	protected Integer id;
 	
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="experiment_id")
 	@JsonIgnore
-	private Experiment experiment;
+	protected Experiment experiment;
 	
 	@Column(name="timestamp")
-	private LocalDateTime timestamp;
+	protected LocalDateTime timestamp;
 	
 	@Column(name="user_id")
-	private int userId;
+	protected int userId;
 	
 	@Column(name="group_id")
-	private int groupId;
+	protected int groupId;
 	
 	@Column(name="groupName")
-	private String groupName;
+	protected String groupName;
 	
 	@Column(name="event_type")
-	private Type eventType;
-	
-	@Column(name="content")
-	private String content;
+	protected Type eventType;
 	
 	public UsageEvent() {
 		
@@ -61,13 +60,12 @@ public class UsageEvent {
 		timestamp = LocalDateTime.now();
 	}
 	
-	public UsageEvent(Type eventType, Participant participant, String content) {
+	public UsageEvent(Type eventType, Participant participant) {
 		
 		id = 0;
 		timestamp = LocalDateTime.now();
 		this.eventType = eventType;
 		this.userId = participant.getId();
-		this.content = content;
 		
 		TestGroup group = participant.getTestGroup();
 		
@@ -133,14 +131,6 @@ public class UsageEvent {
 	
 	public void setEventType(Type eventType) {
 		this.eventType = eventType;
-	}
-	
-	public String getContent() {
-		return content;
-	}
-	
-	public void setContent(String content) {
-		this.content = content;
 	}
 	
 	@Override

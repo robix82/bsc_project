@@ -3,14 +3,17 @@ package ch.usi.hse.db.entities;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import ch.usi.hse.retrieval.SearchResult;
+import ch.usi.hse.retrieval.SearchResultList;
+
 public class UsageEventTest {
 
 	private UsageEvent.Type testType = UsageEvent.Type.QUERY;
-	private String testContent = "some query";
 	private Participant testUser;
 	private TestGroup testGroup;
 	private Experiment testExperiment;
@@ -28,6 +31,8 @@ public class UsageEventTest {
 		testGroup.addParticipant(testUser);
 		testExperiment.addTestGroup(testGroup);
 	}
+	
+	// BASE CLASS
 	
 	@Test
 	public void testSetup() {
@@ -48,7 +53,7 @@ public class UsageEventTest {
 	@Test
 	public void testConstructor2() {
 		
-		UsageEvent evt = new UsageEvent(testType, testUser, testContent);
+		UsageEvent evt = new UsageEvent(testType, testUser);
 		
 		assertEquals(0, evt.getId());
 		assertTrue(timeApproxEquals(LocalDateTime.now(), evt.getTimeStamp()));
@@ -56,7 +61,6 @@ public class UsageEventTest {
 		assertEquals(testGroup.getId(), evt.getGroupId());
 		assertEquals(testGroup.getName(), evt.getGroupName());
 		assertEquals(testType, evt.getEventType());
-		assertEquals(testContent, evt.getContent());
 	}
 	
 	@Test
@@ -76,7 +80,6 @@ public class UsageEventTest {
 		assertNotEquals(groupId, evt.getGroupId());
 		assertNotEquals(groupName, evt.getGroupName());
 		assertNotEquals(testType, evt.getEventType());
-		assertNotEquals(testContent, evt.getContent());
 		
 		evt.setId(testId);
 		evt.setTimestamp(testTime);
@@ -84,7 +87,6 @@ public class UsageEventTest {
 		evt.ssetGroupId(groupId);
 		evt.setGroupName(groupName);
 		evt.setEventType(testType);
-		evt.setContent(testContent);
 		
 		assertEquals(testId, evt.getId());
 		assertEquals(testTime, evt.getTimeStamp());
@@ -92,7 +94,6 @@ public class UsageEventTest {
 		assertEquals(groupId, evt.getGroupId());
 		assertEquals(groupName, evt.getGroupName());
 		assertEquals(testType, evt.getEventType());
-		assertEquals(testContent, evt.getContent());
 	}
 	
 	@Test
@@ -112,6 +113,157 @@ public class UsageEventTest {
 		
 		assertEquals(e1.hashCode(), e2.hashCode());
 		assertNotEquals(e1.hashCode(), e3.hashCode());
+	}
+	
+	// SESSION EVENT
+	
+	@Test
+	public void testSeConstructor1() {
+		
+		SessionEvent evt = new SessionEvent();
+		assertEquals(0, evt.getId());
+		assertEquals(UsageEvent.Type.SESSION, evt.getEventType());
+	}
+	
+	@Test
+	public void testSeConstructor2() {
+		
+		SessionEvent evt = new SessionEvent(testUser, SessionEvent.Event.LOGIN);
+		
+		assertEquals(0, evt.getId());
+		assertEquals(SessionEvent.Event.LOGIN, evt.getEvent());
+		assertEquals(UsageEvent.Type.SESSION, evt.getEventType());
+		assertEquals(testUser.getId(), evt.getUserId());
+	}
+	
+	@Test
+	public void testSeSetters() {
+		
+		SessionEvent.Event newSessionEvent = SessionEvent.Event.LOGOUT;
+		
+		SessionEvent evt = new SessionEvent(testUser, SessionEvent.Event.LOGIN);
+		
+		assertNotEquals(newSessionEvent, evt.getEvent());
+		
+		evt.setEvent(newSessionEvent);
+		
+		assertEquals(newSessionEvent, evt.getEvent());
+	}
+	
+	// QUERY EVENT
+	
+	@Test
+	public void testQeConstructor1() {
+		
+		QueryEvent evt = new QueryEvent();
+		
+		assertEquals(0, evt.getId());
+		assertEquals(0, evt.getQueryStats().size());
+		assertEquals(UsageEvent.Type.QUERY, evt.getEventType());
+	}
+	
+	@Test
+	public void testQeConstructor2() {
+		
+		int cId = 21;
+		
+		DocCollection c = new DocCollection("c", "list");
+		c.setId(cId);
+		SearchResult r1 = new SearchResult();
+		SearchResult r2 = new SearchResult();
+		
+		r1.setDocCollection(c);
+		r2.setDocCollection(c);
+		
+		String queryString = "some query";
+		
+		SearchResultList resList = new SearchResultList();
+		resList.setQueryString(queryString);
+		resList.addSearchResult(r1);
+		resList.addSearchResult(r2);
+		
+		QueryEvent evt = new QueryEvent(testUser, resList);
+		
+		assertEquals(0, evt.getId());
+		assertEquals(UsageEvent.Type.QUERY, evt.getEventType());
+		assertEquals(testUser.getId(), evt.getUserId());
+		assertEquals(queryString, evt.getQueryString());
+		assertEquals(2, evt.getTotalResults());
+		assertEquals(1, evt.getQueryStats().size());
+		
+		QueryStat qs = (QueryStat) evt.getQueryStats().toArray()[0];
+		assertEquals(cId, qs.getCollectionId());
+		assertEquals(c.getName(), qs.getCollectionName());
+		assertEquals(2, qs.getResultCount());
+	}
+	
+	@Test
+	public void testQeSetters() {
+		
+		String queryString = "some query";
+		int totalResults = 23;
+		QueryStat qs1 = new QueryStat();
+		QueryStat qs2 = new QueryStat();
+		qs1.setId(1);
+		qs2.setId(2);
+		Set<QueryStat> queryStats = Set.of(qs1, qs2);
+		
+		QueryEvent evt = new QueryEvent();
+		
+		assertNotEquals(queryString, evt.getQueryString());
+		assertNotEquals(totalResults, evt.getTotalResults());
+		assertNotEquals(queryStats, evt.getQueryStats());
+		
+		evt.setQueryString(queryString);
+		evt.setTotalResults(totalResults);
+		evt.setQueryStats(queryStats);
+		
+		assertEquals(queryString, evt.getQueryString());
+		assertEquals(totalResults, evt.getTotalResults());
+		assertEquals(queryStats, evt.getQueryStats());
+	}
+	
+	// DOC_CLICK EVENT
+	
+	@Test
+	public void testDcConstructor1() {
+		
+		DocClickEvent evt = new DocClickEvent();
+		assertEquals(0, evt.getId());
+		assertEquals(UsageEvent.Type.DOC_CLICK, evt.getEventType());
+	}
+	
+	@Test
+	public void testDcConstructor2() {
+		
+		String url = "www.test.com";
+		int docId = 27;
+		
+		DocClickEvent evt = new DocClickEvent(testUser, url, docId);
+		
+		assertEquals(0, evt.getId());
+		assertEquals(UsageEvent.Type.DOC_CLICK, evt.getEventType());
+		assertEquals(testUser.getId(), evt.getUserId());
+		assertEquals(url, evt.getUrl());
+		assertEquals(docId, evt.getDocumentId());
+	}
+	
+	@Test
+	public void testDcSetters() {
+		
+		String url = "www.test.com";
+		int docId = 27;
+		
+		DocClickEvent evt = new DocClickEvent();
+		
+		assertNotEquals(url, evt.getUrl());
+		assertNotEquals(docId, evt.getDocumentId());
+		
+		evt.setUrl(url);
+		evt.setDocumentId(docId);
+		
+		assertEquals(url, evt.getUrl());
+		assertEquals(docId, evt.getDocumentId());
 	}
 	
 	

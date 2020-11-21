@@ -8,7 +8,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,11 +53,6 @@ public class SearchResultTest {
 		assertEquals(testSummary, res.getSummary());
 	}
 	
-	@Test
-	public void testConstructor3() {
-		
-		// TODO: test construction from Lucene ScoreDoc
-	}
 	
 	@Test
 	public void testSetters() {

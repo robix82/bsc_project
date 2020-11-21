@@ -1364,7 +1364,7 @@ public class ExperimentsControllerIntegrationTest {
 	}
 	
 	private void clearRepositories() {
-				
+		
 		experimenterRepo.deleteAll();
 		experimentRepo.deleteAll();	
 		testGroupRepo.deleteAll();

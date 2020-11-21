@@ -38,9 +38,9 @@ public class ExperimentTest {
 		TestGroup g2 = new TestGroup("g2");
 		g2.setId(2);
 		
-		UsageEvent e1 = new UsageEvent(UsageEvent.Type.LOGIN, p, null);
+		UsageEvent e1 = new UsageEvent(UsageEvent.Type.SESSION, p);
 		e1.setId(1);
-		UsageEvent e2 = new UsageEvent(UsageEvent.Type.QUERY, p, "some query");
+		UsageEvent e2 = new UsageEvent(UsageEvent.Type.QUERY, p);
 		e2.setId(2);
 		usageEvents = new HashSet<>();
 		usageEvents.add(e1);

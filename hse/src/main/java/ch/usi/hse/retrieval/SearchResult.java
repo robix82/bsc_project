@@ -4,6 +4,8 @@ import java.util.Objects;
 
 import org.apache.lucene.document.Document;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import ch.usi.hse.db.entities.DocCollection;
 
 /**
@@ -20,6 +22,9 @@ public class SearchResult implements Comparable<SearchResult> {
 	private Double score;
 	private String url;
 	private String summary;
+	
+	@JsonIgnore
+	private DocCollection docCollection;
 	
 	/**
 	 * Default constructor
@@ -50,11 +55,12 @@ public class SearchResult implements Comparable<SearchResult> {
 	 * 
 	 * @param doc
 	 */
-	public SearchResult(int id, Document doc, DocCollection collection, double score, String summary) {
+	public SearchResult(int id, Document doc, DocCollection docCollection, double score, String summary) {
 		
+		this.docCollection = docCollection;
 		documentId = id; 
-		collectionId = collection.getId();
-		collectionName = collection.getName();
+		collectionId = docCollection.getId();
+		collectionName = docCollection.getName();
 		url = doc.get("url");
 		this.summary = summary;
 		this.score = score;
@@ -85,6 +91,10 @@ public class SearchResult implements Comparable<SearchResult> {
 		return score;
 	}
 	
+	public DocCollection getDocCollection() {
+		return docCollection;
+	}
+	
 	public void setDocumentId(int documentId) {
 		this.documentId = documentId;
 	}
@@ -109,6 +119,12 @@ public class SearchResult implements Comparable<SearchResult> {
 		this.score = score;
 	}
 	
+	public void setDocCollection(DocCollection docCollection) {
+		
+		this.docCollection = docCollection;
+		collectionId = docCollection.getId();
+		collectionName = docCollection.getName();
+	}
 
 	@Override
 	public int compareTo(SearchResult res) {
