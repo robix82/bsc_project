@@ -238,14 +238,23 @@ public class UsageEventTest {
 		
 		String url = "www.test.com";
 		int docId = 27;
+		int collectionId = 12;
+		String collectionName = "c12";
+		SearchResult r = new SearchResult();
+		r.setUrl(url);
+		r.setDocumentId(docId);
+		r.setCollectionId(collectionId);
+		r.setCollectionName(collectionName);
 		
-		DocClickEvent evt = new DocClickEvent(testUser, url, docId);
+		DocClickEvent evt = new DocClickEvent(testUser, r);
 		
 		assertEquals(0, evt.getId());
 		assertEquals(UsageEvent.Type.DOC_CLICK, evt.getEventType());
 		assertEquals(testUser.getId(), evt.getUserId());
 		assertEquals(url, evt.getUrl());
 		assertEquals(docId, evt.getDocumentId());
+		assertEquals(collectionId, evt.getCollectionId());
+		assertEquals(collectionName, evt.getCollectionName());
 	}
 	
 	@Test

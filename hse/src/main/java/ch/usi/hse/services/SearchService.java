@@ -5,6 +5,7 @@ import org.apache.lucene.search.highlight.InvalidTokenOffsetsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import ch.usi.hse.db.entities.DocClickEvent;
 import ch.usi.hse.db.entities.DocCollection;
 import ch.usi.hse.db.entities.Experiment;
 import ch.usi.hse.db.entities.HseUser;
@@ -16,6 +17,7 @@ import ch.usi.hse.exceptions.FileReadException;
 import ch.usi.hse.exceptions.NoSuchExperimentException;
 import ch.usi.hse.retrieval.SearchResultList;
 import ch.usi.hse.retrieval.SearchAssembler;
+import ch.usi.hse.retrieval.SearchResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,8 +89,39 @@ public class SearchService {
 		}		
 	}
 	
-	
+	public void addDocClickEvent(SearchResult searchResult, Participant participant) 
+			throws NoSuchExperimentException {
+		
+		int experimentId = participant.getExperimentId();
+		
+		if (! experimentRepo.existsById(experimentId)) {
+			throw new NoSuchExperimentException(experimentId);
+		}
+		
+		Experiment experiment = experimentRepo.findById(experimentId);
+		experiment.addUsageEvent(new DocClickEvent(participant, searchResult));
+		
+		experimentRepo.save(experiment);
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -44,7 +44,10 @@
 		<div th:each="result : ${searchResultList.searchResults}" class="result-item">
 		
 			<div class="result-url">
-				<a th:href="@{${result.url}}" th:text="${result.url}" target="blank"></a>
+				<a th:href="@{${result.url}}" 
+				   th:text="${result.url}" 
+				   target="blank"
+				   th:onclick="sendBrowseEvent([[${result}]])"></a>
 			</div>
 			
 			<div class="result-summary" th:utext="${result.summary}">

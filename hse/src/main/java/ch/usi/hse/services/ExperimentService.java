@@ -576,7 +576,7 @@ public class ExperimentService {
 		
 		ex.setStatus(Experiment.Status.READY);
 		checkReadyStatus(ex);
-		// TODO: clear collected data
+		ex.clearUsageEvents();
 		
 		Experiment updated = experimentRepo.save(ex);
 		
