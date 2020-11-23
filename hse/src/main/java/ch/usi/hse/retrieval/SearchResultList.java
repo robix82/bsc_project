@@ -47,10 +47,11 @@ public class SearchResultList {
 		computeCollectionStats();
 	}
 	
-		public SearchResultList(String queryString) {
+	public SearchResultList(String queryString) {
 		
 		this.queryString = queryString;
 		searchResults = new ArrayList<>();
+		collectionStats = new HashMap<>();
 	}
 	
 	public String getQueryString() {

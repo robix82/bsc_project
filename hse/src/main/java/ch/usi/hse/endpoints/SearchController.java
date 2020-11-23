@@ -6,12 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import ch.usi.hse.db.entities.HseUser;
 import ch.usi.hse.exceptions.FileReadException;
+import ch.usi.hse.exceptions.NoSuchExperimentException;
 import ch.usi.hse.exceptions.NoSuchUserException;
 import ch.usi.hse.retrieval.SearchResultList;
 import ch.usi.hse.services.SearchService;
@@ -24,6 +26,7 @@ import ch.usi.hse.services.UserService;
  * 
  */
 @Controller
+@CrossOrigin
 public class SearchController {
 
 	@Autowired
@@ -48,7 +51,11 @@ public class SearchController {
 	
 	@PostMapping("/")
 	public ModelAndView postQuery(@AuthenticationPrincipal User user, String queryString) 
-			throws NoSuchUserException, ParseException, FileReadException, InvalidTokenOffsetsException {
+			throws NoSuchUserException, 
+				   ParseException, 
+				   FileReadException, 
+				   InvalidTokenOffsetsException, 
+				   NoSuchExperimentException {
 		
 		HseUser hseUser = userService.findUser(user.getUsername());
 		
