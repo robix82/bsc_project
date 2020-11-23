@@ -1,5 +1,6 @@
 package ch.usi.hse.db.entities;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 
 import ch.usi.hse.retrieval.SearchResult;
@@ -7,11 +8,20 @@ import ch.usi.hse.retrieval.SearchResult;
 @Entity(name="doc_click_event")
 public class DocClickEvent extends UsageEvent {
 
+	@Column(name="url")
 	private String url;
+	
+	@Column(name="document_id")
 	private int documentId;
+	
+	@Column(name="collection_id")
 	private int collectionId;
+	
+	@Column(name="collection_name")
 	private String collectionName;
-	private int rank;
+	
+	@Column(name="document_rank")
+	private int documentRank;
 	
 	public DocClickEvent() {
 		
@@ -27,7 +37,7 @@ public class DocClickEvent extends UsageEvent {
 		documentId = searchResult.getDocumentId();
 		collectionId = searchResult.getCollectionId();
 		collectionName = searchResult.getCollectionName();
-		rank = searchResult.getRank();
+		documentRank = searchResult.getRank();
 	}
 	
 	public String getUrl() {
@@ -62,12 +72,12 @@ public class DocClickEvent extends UsageEvent {
 		this.collectionName = collectionName;
 	}
 	
-	public int getRank() {
-		return rank;
+	public int getDocumentRank() {
+		return documentRank;
 	}
 	
-	public void setRank(int rank) {
-		this.rank = rank;
+	public void setDocumentRank(int rank) {
+		this.documentRank = rank;
 	}
 }
 

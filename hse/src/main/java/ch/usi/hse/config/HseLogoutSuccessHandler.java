@@ -52,6 +52,7 @@ public class HseLogoutSuccessHandler implements LogoutSuccessHandler {
 				
 				Experiment experiment = experimentRepo.findById(experimentId);
 				experiment.addUsageEvent(new SessionEvent(participant, SessionEvent.Event.LOGOUT));
+				experimentRepo.save(experiment);
 			}
 		}
 		
