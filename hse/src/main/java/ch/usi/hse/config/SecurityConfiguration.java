@@ -29,6 +29,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
 	
+	@Autowired
+	private HseAuthenticationSuccessHandler loginHandler;
+	
+	@Autowired
+	private HseLogoutSuccessHandler logoutHandler;
+	
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		
@@ -64,22 +70,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 			.antMatchers("/indexing/**").hasAnyAuthority("EXPERIMENTER", "ADMIN")
 			.antMatchers("/admin/**").hasAuthority("ADMIN")
 			.anyRequest()
-			.authenticated().and().csrf().disable().formLogin()
-			.defaultSuccessUrl("/", true)
-			.and().logout()
+			.authenticated().and().csrf().disable()
+			.formLogin()
+			.successHandler(loginHandler)
+			.and()
+			.logout()
 			.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-			.logoutSuccessUrl("/login");
-
-		//	.and().exceptionHandling();
-		//	.accessDeniedPage("/accessDenied");			
-		//	.usernameParameter("user_name")
-		//	.passwordParameter("password")
-	//		.loginPage("/login").failureUrl("/login?error=true")
-	//		.usernameParameter("user_name")
-	//		.passwordParameter("password")
-
-
-
+			.logoutSuccessHandler(logoutHandler);
 	}
 	
 	

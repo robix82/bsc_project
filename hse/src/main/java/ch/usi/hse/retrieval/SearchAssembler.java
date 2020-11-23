@@ -111,6 +111,12 @@ public class SearchAssembler {
 		}
 		
 		Collections.sort(searchResults);
+		
+		for (int rank = 1; rank <= searchResults.size(); ++rank) {
+			
+			searchResults.get(rank -1).setRank(rank);
+		}
+		
 		res.setSearchResults(searchResults);
 		
 		return res;

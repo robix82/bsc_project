@@ -11,6 +11,7 @@ public class DocClickEvent extends UsageEvent {
 	private int documentId;
 	private int collectionId;
 	private String collectionName;
+	private int rank;
 	
 	public DocClickEvent() {
 		
@@ -26,6 +27,7 @@ public class DocClickEvent extends UsageEvent {
 		documentId = searchResult.getDocumentId();
 		collectionId = searchResult.getCollectionId();
 		collectionName = searchResult.getCollectionName();
+		rank = searchResult.getRank();
 	}
 	
 	public String getUrl() {
@@ -58,6 +60,14 @@ public class DocClickEvent extends UsageEvent {
 	
 	public void setCollectionName(String collectionName) {
 		this.collectionName = collectionName;
+	}
+	
+	public int getRank() {
+		return rank;
+	}
+	
+	public void setRank(int rank) {
+		this.rank = rank;
 	}
 }
 

@@ -20,6 +20,7 @@ public class SearchResult implements Comparable<SearchResult> {
 	private String collectionName;
 	private Integer documentId;
 	private Double score;
+	private int rank;
 	private String url;
 	private String summary;
 	
@@ -124,6 +125,14 @@ public class SearchResult implements Comparable<SearchResult> {
 		this.docCollection = docCollection;
 		collectionId = docCollection.getId();
 		collectionName = docCollection.getName();
+	}
+	
+	public int getRank() {
+		return rank;
+	}
+	
+	public void setRank(int rank) {
+		this.rank = rank;
 	}
 
 	@Override
