@@ -41,7 +41,6 @@ public class HseAuthenticationSuccessHandler implements AuthenticationSuccessHan
 		throws IOException {
 		
 		String uName = authentication.getName();
-		System.out.println("LOGIN: " + uName);
 		
 		User authUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();	
 		

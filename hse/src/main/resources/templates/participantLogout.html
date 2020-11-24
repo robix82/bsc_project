@@ -1,0 +1,25 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+	<!--/*/ <th:block th:include="fragments/general.html :: general_head">
+        	</th:block> /*/-->
+           
+	<link rel="stylesheet" th:href="@{/css/participantLogout.css}" />
+
+</head>
+
+
+<body>
+
+<div class="main-container">
+
+	<h1 th:text="#{m_sessionOver}"></h1>
+	
+	<h2 th:text="#{m_goodBye}"></h2>
+
+</div>
+
+</body>
+</html>

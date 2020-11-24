@@ -55,6 +55,15 @@ public class SearchController {
 		return mav;
 	}
 	
+	@GetMapping("/participantLogout")
+	public ModelAndView getParticcipantLogout() {
+		
+		ModelAndView mav = new ModelAndView();
+		mav.setViewName("participantLogout");
+		
+		return mav;
+	}
+	
 	@PostMapping("/")
 	public ModelAndView postQuery(@AuthenticationPrincipal User user, String queryString) 
 			throws NoSuchUserException, 

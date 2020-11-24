@@ -107,7 +107,8 @@ var m_status = $("#m_status").text();
 var m_queries = $("#m_queries").text();
 var m_clicks = $("#m_clicks").text();
 
-
+var m_sessionOver = $("#m_sessionOver").text();
+var m_goodBye = $("#m_goodBye").text();
 
 
 

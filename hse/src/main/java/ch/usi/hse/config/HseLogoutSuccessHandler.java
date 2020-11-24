@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.stereotype.Component;
 
@@ -35,13 +36,15 @@ public class HseLogoutSuccessHandler implements LogoutSuccessHandler {
 		throws IOException, ServletException {
 
 		String uName = authentication.getName();		
-		System.out.println("LOGOUT: " + uName);
+		String redirect = "/login";
 		
 		HttpSession session = request.getSession();
 		
 		if  (session != null) {
 			session.removeAttribute("user");
 		}
+		
+		response.setStatus(HttpServletResponse.SC_OK);
 		
 		if (participantRepo.existsByUserName(uName)) {
 			
@@ -56,10 +59,11 @@ public class HseLogoutSuccessHandler implements LogoutSuccessHandler {
 				experiment.addUsageEvent(new SessionEvent(participant, SessionEvent.Event.LOGOUT));
 				experimentRepo.save(experiment);
 			}
+			
+			redirect =  "/participantLogout";
 		}
-		
-		response.setStatus(HttpServletResponse.SC_OK);
-		response.sendRedirect("/login");
+
+		response.sendRedirect(redirect);
 	}
 }
 
