@@ -1,4 +1,6 @@
 
+var stommpCclient = null;
+
 $(document).ready(function() {
 	
 	console.log("RESULTS:");
@@ -9,6 +11,8 @@ $(document).ready(function() {
 		$("#resultPropertiesDisplay").text("Showing " + searchResultList.searchResults.length + " results");
 		$("#search-input").val(searchResultList.queryString);
 	}
+	
+	connectWebSocket();
 });
 
 function sendBrowseEvent(searchResult) {
@@ -29,3 +33,40 @@ function sendBrowseEvent(searchResult) {
 		}
 	);
 }
+
+function connectWebSocket() {
+	
+	
+	
+    var socket = new SockJS("/statusInfo");
+    stompClient = Stomp.over(socket);
+
+    stompClient.connect({}, function (frame) {
+
+        console.log('Connected: ' + frame);
+
+        stompClient.subscribe("/info", function (info) {
+	
+			if (info.body == "experiment_over") {
+				location.href = "/logout";
+			}
+			else {
+				console.log(info);
+			}
+        });
+    });
+}
+
+function disconnectWebSocket() {
+	
+    if (stompClient !== null) {
+        stompClient.disconnect();
+    }
+
+    console.log("Disconnected");
+}
+
+
+
+
+

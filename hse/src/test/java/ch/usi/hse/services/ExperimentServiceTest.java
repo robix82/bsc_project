@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import ch.usi.hse.db.entities.DocCollection;
 import ch.usi.hse.db.entities.Experiment;
@@ -51,6 +52,9 @@ public class ExperimentServiceTest {
 	@Mock
 	private ExperimentConfigStorage experimentConfigStorage;
 	
+	@Mock
+	private SimpMessagingTemplate simpMessagingTemplate;
+	
 	private ExperimentService service;
 	
 	private List<Experiment> savedExperiments;
@@ -71,7 +75,8 @@ public class ExperimentServiceTest {
 										collectionRepo,
 										experimenterRepo,
 										experimentConfigurer,
-										experimentConfigStorage);
+										experimentConfigStorage,
+										simpMessagingTemplate);
 		
 		// DocCollections
 		

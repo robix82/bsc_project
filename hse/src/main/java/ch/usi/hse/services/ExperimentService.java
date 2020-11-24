@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -45,6 +46,7 @@ public class ExperimentService {
 	private ExperimenterRepository experimenterRepo;
 	ExperimentConfigurer experimentConfigurer;
 	ExperimentConfigStorage experimentConfigStorage;
+	private SimpMessagingTemplate simpMessagingTemplate;
 	
 	@Autowired
 	public ExperimentService(ExperimentRepository experimentRepo,
@@ -54,7 +56,8 @@ public class ExperimentService {
 							 ExperimenterRepository experimenterRepo,
 							 ExperimentConfigurer experimentConfigurer,
 							 @Qualifier("ExperimentConfigStorage")
-							 ExperimentConfigStorage experimentConfigStorage) {
+							 ExperimentConfigStorage experimentConfigStorage,
+							 SimpMessagingTemplate simpMessagingTemplate) {
 		
 		this.experimentRepo = experimentRepo;
 		this.testGroupRepo = testGroupRepo;
@@ -63,6 +66,7 @@ public class ExperimentService {
 		this.experimenterRepo = experimenterRepo;
 		this.experimentConfigurer = experimentConfigurer;
 		this.experimentConfigStorage = experimentConfigStorage;
+		this.simpMessagingTemplate = simpMessagingTemplate;
 	}
 	
 	// GENERAL DB OPERATIONS
@@ -554,6 +558,8 @@ public class ExperimentService {
 		
 		Experiment updated = experimentRepo.save(ex);
 		
+		sendExperimentOverMessage();
+		
 		return updated;
 	}
 
@@ -581,6 +587,13 @@ public class ExperimentService {
 		Experiment updated = experimentRepo.save(ex);
 		
 		return updated;
+	}
+	
+	private void sendExperimentOverMessage() {
+		
+		String msg = "experiment_over";
+		
+		simpMessagingTemplate.convertAndSend("/info", msg);
 	}
 	
 	private void checkReadyStatus(Experiment e) {

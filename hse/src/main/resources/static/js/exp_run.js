@@ -81,10 +81,13 @@ function startExperiment() {
 }
 
 function stopExperiment() { 
+	
+	
 
 	submitExperiment("stop", (res) => {
 		
 		experiment= res;
+		updateInfoTables();
 		clearInterval(timerId);
 	
 		$("#startStopBtn").text(m_reset);
@@ -96,6 +99,8 @@ function stopExperiment() {
 		$("#status-display").text(m_experimentComplete);	
 		$("#evalBtn").show();
 	});	
+	
+	setTimeout(pollExperimentUpdate, 500);
 }
 
 function resetExperiment() {
@@ -115,6 +120,8 @@ function resetExperiment() {
 		
 		$("#status-display").text(m_experimentReady);	
 		$("#evalBtn").hide();
+		
+		updateInfoTables();
 	});
 }
 

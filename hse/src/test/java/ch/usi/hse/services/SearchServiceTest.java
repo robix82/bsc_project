@@ -50,7 +50,8 @@ public class SearchServiceTest {
 		
 		initMocks(this);
 		
-		testService = new SearchService(collectionRepo, experimentRepo, participantRepo, searchAssembler);
+		testService = new SearchService(collectionRepo, experimentRepo, participantRepo, 
+										searchAssembler);
 		
 		docCollections = List.of(new DocCollection("c1", "l1"));
 		
