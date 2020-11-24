@@ -13,6 +13,7 @@ import ch.usi.hse.db.entities.Participant;
 import ch.usi.hse.db.entities.QueryEvent;
 import ch.usi.hse.db.repositories.DocCollectionRepository;
 import ch.usi.hse.db.repositories.ExperimentRepository;
+import ch.usi.hse.db.repositories.ParticipantRepository;
 import ch.usi.hse.exceptions.FileReadException;
 import ch.usi.hse.exceptions.NoSuchExperimentException;
 import ch.usi.hse.retrieval.SearchResultList;
@@ -33,15 +34,18 @@ public class SearchService {
 
 	private DocCollectionRepository collectionRepo;
 	private ExperimentRepository experimentRepo;
+	private ParticipantRepository participantRepo;
 	private SearchAssembler searchAssembler;
 	
 	@Autowired
 	public SearchService(DocCollectionRepository collectionRepo,
 						 ExperimentRepository experimentRepo,
+						 ParticipantRepository participantRepo,
 						 SearchAssembler searchAssembler) {
 		
 		this.collectionRepo = collectionRepo;
 		this.experimentRepo = experimentRepo;
+		this.participantRepo =  participantRepo;
 		this.searchAssembler = searchAssembler;
 	}
 	
@@ -68,6 +72,8 @@ public class SearchService {
 			
 			Participant p = (Participant) user;
 			int experimentId = p.getExperimentId();
+			p.incQueryCount();
+			participantRepo.save(p);
 			
 			if (! experimentRepo.existsById(experimentId)) {
 				throw new NoSuchExperimentException(experimentId);
@@ -98,6 +104,8 @@ public class SearchService {
 			throw new NoSuchExperimentException(experimentId);
 		}
 		
+		participant.incClickCount();
+		participantRepo.save(participant);
 		Experiment experiment = experimentRepo.findById(experimentId);
 		experiment.addUsageEvent(new DocClickEvent(participant, searchResult));
 		

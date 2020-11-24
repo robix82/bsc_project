@@ -77,6 +77,8 @@ public class ParticipantTest {
 		
 		int eId = 21;
 		int gId = 22;
+		int qc = 10;
+		int cc = 20;
 		String eTitle = "eTitle";
 		String gName = "gName";
 		
@@ -84,16 +86,40 @@ public class ParticipantTest {
 		assertNotEquals(gId, p.getTestGroupId());
 		assertNotEquals(eTitle, p.getExperimentTitle());
 		assertNotEquals(gName, p.getTestGroupName());
+		assertNotEquals(qc, p.getQueryCount());
+		assertNotEquals(cc, p.getClickCount());
+		assertFalse(p.getOnline());
 		
 		p.setExperimentId(eId);
 		p.setTestGroupId(gId);
 		p.setExperimentTitle(eTitle);
 		p.setTestGroupName(gName);
+		p.setQueryCount(qc);
+		p.setClickCount(cc);
+		p.setOnline(true);
 		
 		assertEquals(eId, p.getExperimentId());
 		assertEquals(gId, p.getTestGroupId());
 		assertEquals(eTitle, p.getExperimentTitle());
 		assertEquals(gName, p.getTestGroupName());
+		assertEquals(qc, p.getQueryCount());
+		assertEquals(cc, p.getClickCount());
+		assertTrue(p.getOnline());
+	}
+	
+	@Test
+	public void testIncrements() {
+		
+		Participant p = new Participant();
+		
+		int q_0 = p.getQueryCount();
+		int c_0 = p.getClickCount();
+		
+		p.incQueryCount();
+		p.incClickCount();
+		
+		assertEquals(q_0 +1, p.getQueryCount());
+		assertEquals(c_0 +1, p.getClickCount());
 	}
 }
 

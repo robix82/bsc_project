@@ -56,6 +56,8 @@ public class HseAuthenticationSuccessHandler implements AuthenticationSuccessHan
 		if (participantRepo.existsByUserName(uName)) {
 			
 			Participant participant = participantRepo.findByUserName(uName);
+			participant.setOnline(true);
+			participantRepo.save(participant);
 			int experimentId = participant.getExperimentId();
 			
 			if (experimentRepo.existsById(experimentId)) {

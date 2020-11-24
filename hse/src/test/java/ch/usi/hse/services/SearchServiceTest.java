@@ -18,6 +18,7 @@ import ch.usi.hse.db.entities.Participant;
 import ch.usi.hse.db.entities.TestGroup;
 import ch.usi.hse.db.repositories.DocCollectionRepository;
 import ch.usi.hse.db.repositories.ExperimentRepository;
+import ch.usi.hse.db.repositories.ParticipantRepository;
 import ch.usi.hse.exceptions.FileReadException;
 import ch.usi.hse.retrieval.SearchAssembler;
 import ch.usi.hse.retrieval.SearchResultList;
@@ -30,6 +31,9 @@ public class SearchServiceTest {
 	
 	@Mock
 	private ExperimentRepository experimentRepo;
+	
+	@Mock
+	private ParticipantRepository participantRepo;
 	
 	@Mock
 	private SearchAssembler searchAssembler;
@@ -46,7 +50,7 @@ public class SearchServiceTest {
 		
 		initMocks(this);
 		
-		testService = new SearchService(collectionRepo, experimentRepo, searchAssembler);
+		testService = new SearchService(collectionRepo, experimentRepo, participantRepo, searchAssembler);
 		
 		docCollections = List.of(new DocCollection("c1", "l1"));
 		

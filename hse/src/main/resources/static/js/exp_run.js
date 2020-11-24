@@ -38,7 +38,31 @@ $(document).ready(function() {
 			location.href = "/experiments/setup/ui?expId=" + experiment.id;
 		});
 	}	
+	
+	updateInfoTables();
 });
+
+function updateInfoTables() {
+	
+	experiment.testGroups.forEach((group) => {
+		
+		group.participants.forEach((participant) => {
+			
+			let pId = participant.id;
+			let status = "offline";
+			$("#p_status_" + pId).css("color", "red");
+			
+			if (participant.online) {
+				status = "online";
+				$("#p_status_" + pId).css("color", "green");
+			}
+			
+			$("#p_status_" + pId).text(status);
+			$("#p_queries_" + pId).text(participant.queryCount);
+			$("#p_clicks_" + pId).text(participant.clickCount);
+		});
+	});
+}
 
 function startExperiment() {
 	
@@ -79,6 +103,7 @@ function resetExperiment() {
 	submitExperiment("reset", (res) => {
 		
 		experiment = res;
+		updateInfoTables();
 		t = 0;
 		$("#timer-display").text(tString(t));
 		
@@ -96,6 +121,7 @@ function resetExperiment() {
 function onTimeStep() {
 	
 	$("#timer-display").text(tString(++t));
+	pollExperimentUpdate();
 } 
 
 function gotoEval() {
@@ -116,6 +142,28 @@ function submitExperiment(action, onSuccess) {
 			success: (res) => {
 
 				onSuccess(res);
+			},
+			error: () => { 
+
+				console.log("unable to fetch update");
+			}
+		}
+	);
+}
+
+function pollExperimentUpdate() {
+	
+	let url = "/experiments/?id=" + experiment.id;
+	
+	$.ajax(url,
+		{
+			type: "GET",
+			dataType: "json",
+
+			success: (res) => {
+
+				experiment = res;
+				updateInfoTables();
 			},
 			error: (err) => { 
 

@@ -103,7 +103,9 @@ var m_experimentComplete = $("#m_experimentComplete").text();
 var m_experimentNotReady = $("#m_experimentNotReady").text();
 var m_experimentResetWarning = $("#m_experimentResetWarning").text();
 
-
+var m_status = $("#m_status").text();
+var m_queries = $("#m_queries").text();
+var m_clicks = $("#m_clicks").text();
 
 
 

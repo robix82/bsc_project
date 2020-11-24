@@ -6,6 +6,7 @@
 	align-items: flex-start;
 	margin-top: 3rem;
 	margin-bottom: 10rem;
+	width: 80%;
 }
 
 #main-control {
@@ -27,3 +28,21 @@
 	font-size: 18pt;
 	margin-bottom: 1em;
 }
+
+#experiment-info {
+
+	display: flex;
+	flex-flow: row  wrap;
+ 	margin-top: 1em;
+}
+
+.groupInfo  {
+	
+	margin-right: 4em;
+}
+
+
+
+
+
+

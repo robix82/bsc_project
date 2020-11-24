@@ -37,6 +37,15 @@ public class Participant extends HseUser {
 	@Column(name="experimentTitle")
 	private String experimentTitle;
 	
+	@Column(name="online")
+	private boolean online;
+	
+	@Column(name="query_count")
+	private int queryCount;
+	
+	@Column(name="click_count")
+	private int clickCount;
+	
 	public Participant() {
 		
 		super();
@@ -97,6 +106,18 @@ public class Participant extends HseUser {
 		return testGroupName;
 	}
 	
+	public boolean getOnline() {
+		return online;
+	}
+	
+	public int getQueryCount() {
+		return queryCount;
+	}
+	
+	public int getClickCount() {
+		return clickCount;
+	}
+	
 	public void setExperimentId(int experimentId) {
 		this.experimentId = experimentId;
 	}
@@ -111,6 +132,26 @@ public class Participant extends HseUser {
 	
 	public void setTestGroupName(String testGroupName) {
 		this.testGroupName = testGroupName;
+	}
+	
+	public void setOnline(boolean online) {
+		this.online = online;
+	}
+	
+	public void setQueryCount(int queryCount) {
+		this.queryCount = queryCount;
+	}
+	
+	public void setClickCount(int clickCount) {
+		this.clickCount = clickCount;
+	}
+	
+	public void incQueryCount() {
+		++queryCount;
+	}
+	
+	public  void incClickCount() {
+		++clickCount;
 	}
 }
 

@@ -34,6 +34,44 @@
 					th:text="#{m_evaluate}"
 					th:onclick="gotoEval()">
 			</button>
+			
+			<div id="experiment-info">
+			
+				<div th:each="testGroup : ${experiment.testGroups}" class="groupInfo">
+				
+					<h2 th:text="${testGroup.name}"></h2>
+					
+					<table class="table">
+						
+						<thead>
+						<tr>
+						
+							<th>id</th>
+							<th th:text="#{m_userName}"></th>
+							<th th:text="#{m_status}"></th>
+							<th th:text="#{m_queries}"></th>
+							<th th:text="#{m_clicks}"></th>	
+						
+						</tr>
+						</thead>
+						
+						<tbody>
+						<tr th:each="participant : ${testGroup.participants}">
+						
+							<td th:text="${participant.id}"></td>
+							<td th:text="${participant.userName}"></td>
+							<td th:id="'p_status_' + ${participant.id}"></td>
+							<td th:id="'p_queries_' + ${participant.id}"></td>
+							<td th:id="'p_clicks_' + ${participant.id}"></td>
+						
+						</tr> 
+						</tbody>
+					
+					</table>
+				
+				</div>
+			
+			</div>
 		
 		</div>
 	

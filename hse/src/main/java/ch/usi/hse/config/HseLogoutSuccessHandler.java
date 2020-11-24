@@ -46,6 +46,8 @@ public class HseLogoutSuccessHandler implements LogoutSuccessHandler {
 		if (participantRepo.existsByUserName(uName)) {
 			
 			Participant participant = participantRepo.findByUserName(uName);
+			participant.setOnline(false);
+			participantRepo.save(participant);
 			int experimentId = participant.getExperimentId();
 			
 			if (experimentRepo.existsById(experimentId)) {

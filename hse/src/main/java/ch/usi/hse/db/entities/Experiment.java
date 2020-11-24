@@ -284,6 +284,14 @@ public class Experiment {
 	public void clearUsageEvents() {
 		
 		usageEvents.clear();
+		
+		for (TestGroup g : testGroups) {
+			for (Participant p : g.getParticipants()) {
+				
+				p.setQueryCount(0);
+				p.setClickCount(0);
+			}
+		}
 	}
 	
 	@Override
