@@ -20,6 +20,7 @@ public class QueryStat {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="id")
+	@JsonIgnore
 	private Integer id;
 	
 	@ManyToOne(fetch=FetchType.EAGER)

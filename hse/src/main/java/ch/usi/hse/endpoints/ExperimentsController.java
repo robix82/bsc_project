@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import ch.usi.hse.db.entities.Experiment;
 import ch.usi.hse.db.entities.TestGroup;
 import ch.usi.hse.exceptions.ConfigParseException;
@@ -407,6 +409,49 @@ public class ExperimentsController {
 		Experiment updated = experimentService.resetExperiment(experiment);
 		
 		return new ResponseEntity<>(updated, HttpStatus.OK);
+	}
+	
+	// RESULT DATA EXPORT
+	
+	@GetMapping("/eval/export/raw_csv")
+	public void exportRawCsv(HttpServletResponse response, @RequestParam(required=true) int expId) 
+			throws NoSuchExperimentException, FileWriteException {
+		
+		Experiment experiment = experimentService.findExperiment(expId);
+		
+		InputStream is = experimentService.rawResultsCsv(experiment);
+		String fileName = experiment.getTitle() + ".csv";
+		
+		response.setContentType(MediaType.TEXT_PLAIN);
+		response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
+		
+		try {
+			FileCopyUtils.copy(is, response.getOutputStream());
+		}
+		catch (IOException e) {
+			throw new FileWriteException(fileName);
+		}
+	}
+	
+	@GetMapping("/eval/export/raw_json")
+	public void exportRawJson(HttpServletResponse response, @RequestParam(required=true) int expId) 
+			throws NoSuchExperimentException, FileWriteException, JsonProcessingException {
+		
+		
+		Experiment experiment = experimentService.findExperiment(expId);
+		
+		InputStream is = experimentService.rawResultsJson(experiment);
+		String fileName = experiment.getTitle() + ".json";
+		
+		response.setContentType(MediaType.TEXT_PLAIN);
+		response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
+		
+		try {
+			FileCopyUtils.copy(is, response.getOutputStream());
+		}
+		catch (IOException e) {
+			throw new FileWriteException(fileName);
+		}
 	}
 }
 

@@ -2,7 +2,6 @@ package ch.usi.hse.experiments;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
-import static org.mockito.Matchers.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 import java.io.InputStream;

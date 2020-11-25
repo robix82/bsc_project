@@ -5,12 +5,15 @@ import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 import java.util.List;
-
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import ch.usi.hse.db.entities.DocCollection;
 import ch.usi.hse.db.entities.Experiment;
@@ -27,6 +30,7 @@ import ch.usi.hse.exceptions.ExperimentStatusException;
 import ch.usi.hse.exceptions.NoSuchExperimentException;
 import ch.usi.hse.exceptions.NoSuchUserException;
 import ch.usi.hse.experiments.ExperimentConfigurer;
+import ch.usi.hse.experiments.ResultWriter;
 import ch.usi.hse.storage.ExperimentConfigStorage;
 
 public class ExperimentServiceTest {
@@ -55,6 +59,9 @@ public class ExperimentServiceTest {
 	@Mock
 	private SimpMessagingTemplate simpMessagingTemplate;
 	
+	@Mock
+	private ResultWriter resultWriter;
+	
 	private ExperimentService service;
 	
 	private List<Experiment> savedExperiments;
@@ -64,8 +71,11 @@ public class ExperimentServiceTest {
 	private List<TestGroup> savedTestGroups;
 	private List<Participant> savedParticipants;
 	
+	private String rawResultsCsv = "csv_string";
+	private String rawResultsJson = "json_string";
+	
 	@BeforeEach
-	public void setUp() {
+	public void setUp() throws NoSuchExperimentException, JsonProcessingException {
 		
 		initMocks(this);
 		
@@ -76,7 +86,8 @@ public class ExperimentServiceTest {
 										experimenterRepo,
 										experimentConfigurer,
 										experimentConfigStorage,
-										simpMessagingTemplate);
+										simpMessagingTemplate,
+										resultWriter);
 		
 		// DocCollections
 		
@@ -165,7 +176,11 @@ public class ExperimentServiceTest {
 		when(experimentRepo.findByExperimenter(experimenter2)).thenReturn(List.of(e3, e4));
 		when(experimentRepo.save(newExperiment)).thenReturn(newExperiment);
 		
+		InputStream rawCsvStream = new ByteArrayInputStream(rawResultsCsv.getBytes());
+		InputStream rawJsonStream = new ByteArrayInputStream(rawResultsJson.getBytes());
 		
+		when(resultWriter.rawDataCsv(e1)).thenReturn(rawCsvStream);
+		when(resultWriter.rawDataJson(e1)).thenReturn(rawJsonStream);
 	}
 	
 	@Test
@@ -657,6 +672,41 @@ public class ExperimentServiceTest {
 		
 		assertTrue(exc);
 	}
+	
+	
+	@Test
+	public void testRawResultsCsv() throws Exception {
+		
+		Experiment ex = savedExperiments.get(0);
+		
+		InputStream is = service.rawResultsCsv(ex);
+		
+		byte[] data = new byte[is.available()];
+		is.read(data);
+		String res = new String(data);
+		
+		assertEquals(rawResultsCsv, res);
+	}
+	
+	@Test
+	public void testRawResultsJson() throws Exception {
+		
+		Experiment ex = savedExperiments.get(0);
+		
+		InputStream is = service.rawResultsJson(ex);
+		
+		byte[] data = new byte[is.available()];
+		is.read(data);
+		String res = new String(data);
+		
+		assertEquals(rawResultsJson, res);
+	}
+	
+	
+	
+	
+	
+	
 	
 	/////////////////////
 	

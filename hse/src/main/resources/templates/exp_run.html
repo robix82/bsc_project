@@ -29,12 +29,6 @@
 			
 			<span id="status-display"></span>
 			
-			<button id="evalBtn" 
-					class="btn btn-lg btn-primary" 
-					th:text="#{m_evaluate}"
-					th:onclick="gotoEval()">
-			</button>
-			
 			<div id="experiment-info">
 			
 				<div th:each="testGroup : ${experiment.testGroups}" class="groupInfo">

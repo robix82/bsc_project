@@ -17,8 +17,6 @@ $(document).ready(function() {
 		});
 		
 		$("#status-display").text(m_experimentReady);
-		
-		$("#evalBtn").hide();
 	}
 	else if (experiment.status == "COMPLETE") {
 		
@@ -29,8 +27,6 @@ $(document).ready(function() {
 		});
 		
 		$("#status-display").text(m_experimentComplete);
-		
-		$("#evalBtn").show();
 	}
 	else {
 		
@@ -130,11 +126,6 @@ function onTimeStep() {
 	$("#timer-display").text(tString(++t));
 	pollExperimentUpdate();
 } 
-
-function gotoEval() {
-	
-	location.href= "/experiments/eval/ui?expId=" + experiment.id;
-}
 
 function submitExperiment(action, onSuccess) {
 	

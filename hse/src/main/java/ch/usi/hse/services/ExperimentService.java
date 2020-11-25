@@ -10,6 +10,8 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import ch.usi.hse.db.entities.DocCollection;
 import ch.usi.hse.db.entities.Experiment;
 import ch.usi.hse.db.entities.Experimenter;
@@ -33,6 +35,7 @@ import ch.usi.hse.exceptions.NoSuchTestGroupException;
 import ch.usi.hse.exceptions.NoSuchUserException;
 import ch.usi.hse.exceptions.UserExistsException;
 import ch.usi.hse.experiments.ExperimentConfigurer;
+import ch.usi.hse.experiments.ResultWriter;
 import ch.usi.hse.storage.ExperimentConfigStorage;
 
 
@@ -47,6 +50,7 @@ public class ExperimentService {
 	ExperimentConfigurer experimentConfigurer;
 	ExperimentConfigStorage experimentConfigStorage;
 	private SimpMessagingTemplate simpMessagingTemplate;
+	private ResultWriter resultWriter;
 	
 	@Autowired
 	public ExperimentService(ExperimentRepository experimentRepo,
@@ -57,7 +61,8 @@ public class ExperimentService {
 							 ExperimentConfigurer experimentConfigurer,
 							 @Qualifier("ExperimentConfigStorage")
 							 ExperimentConfigStorage experimentConfigStorage,
-							 SimpMessagingTemplate simpMessagingTemplate) {
+							 SimpMessagingTemplate simpMessagingTemplate,
+							 ResultWriter resultWriter) {
 		
 		this.experimentRepo = experimentRepo;
 		this.testGroupRepo = testGroupRepo;
@@ -67,6 +72,7 @@ public class ExperimentService {
 		this.experimentConfigurer = experimentConfigurer;
 		this.experimentConfigStorage = experimentConfigStorage;
 		this.simpMessagingTemplate = simpMessagingTemplate;
+		this.resultWriter = resultWriter;
 	}
 	
 	// GENERAL DB OPERATIONS
@@ -621,6 +627,27 @@ public class ExperimentService {
 				e.setStatus(Experiment.Status.READY);
 			}
 		}
+	}
+	
+	// RESULT DATA EXPORT
+	
+	public InputStream rawResultsCsv(Experiment experiment) throws NoSuchExperimentException {
+		
+		if (! experimentRepo.existsById(experiment.getId())) {
+			throw new NoSuchExperimentException(experiment.getId());
+		}
+		
+		return resultWriter.rawDataCsv(experiment);
+	}
+	
+	public InputStream rawResultsJson(Experiment experiment) 
+			throws JsonProcessingException, NoSuchExperimentException {
+		
+		if (! experimentRepo.existsById(experiment.getId())) {
+			throw new NoSuchExperimentException(experiment.getId());
+		}
+		
+		return resultWriter.rawDataJson(experiment);
 	}
 }
 
