@@ -45,6 +45,7 @@ public class QueryEvent extends UsageEvent {
 			DocCollection c = e.getKey();
 			QueryStat newStat = new QueryStat(c.getId(), c.getName(), e.getValue());
 			newStat.setQueryEvent(this);
+			
 			queryStats.add(newStat);
 		}
 	}

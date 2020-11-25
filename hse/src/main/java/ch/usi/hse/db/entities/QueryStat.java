@@ -28,7 +28,7 @@ public class QueryStat {
 	protected QueryEvent queryEvent;
 	
 	@Column(name="collection_id")
-	private int collectionId;
+	private Integer collectionId;
 	
 	@Column(name="collection_name")
 	private String collectionName;
@@ -38,6 +38,7 @@ public class QueryStat {
 	
 	public QueryStat() {
 		id = 0;
+		collectionId = 0;
 	}
 	
 	public QueryStat(int collectionId, String collectionName, int resultCount) {
@@ -101,13 +102,13 @@ public class QueryStat {
 		
 		QueryStat qs = (QueryStat) o;
 		
-		return qs.id.equals(id);
+		return qs.id.equals(id) && qs.collectionId.equals(collectionId);
 	}
 	
 	@Override
 	public int hashCode() {
 		
-		return Objects.hash(id);
+		return Objects.hash(id, collectionId);
 	}
 }
 

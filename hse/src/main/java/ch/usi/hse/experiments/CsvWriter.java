@@ -1,7 +1,5 @@
 package ch.usi.hse.experiments;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -23,7 +21,7 @@ import ch.usi.hse.db.repositories.UsageEventRepository;
 import ch.usi.hse.exceptions.NoSuchExperimentException;
 
 @Component
-public class ResultWriter {
+public class CsvWriter {
 	
 	
 	private ExperimentRepository experimentRepo;
@@ -32,11 +30,11 @@ public class ResultWriter {
 	private QueryEventRepository queryEventRepo;
 	private DocClickEventRepository docClickEventRepo;
 	
-	private final String notAssigned =  "N.A";
+	private final String notAssigned =  "N.A.";
 	private StringBuilder sb;
 	
 	@Autowired
-	public ResultWriter(ExperimentRepository experimentRepo,
+	public CsvWriter(ExperimentRepository experimentRepo,
 						UsageEventRepository usageEventRepo,
 						SessionEventRepository sessionEventRepo,
 						QueryEventRepository queryEventRepo,
@@ -49,7 +47,7 @@ public class ResultWriter {
 		this.docClickEventRepo = docClickEventRepo;
 	}
 
-	public InputStream experimentDataAsCsv(Experiment experiment) 
+	public String writeExperimentData(Experiment experiment) 
 			throws NoSuchExperimentException {
 		
 		if (! experimentRepo.existsById(experiment.getId())) {
@@ -92,7 +90,7 @@ public class ResultWriter {
 			sb.append("\n");
 		}
 				
-		return new ByteArrayInputStream(sb.toString().getBytes());
+		return sb.toString();
 	}
 	
 	private void addCsvHeader() {
@@ -135,8 +133,10 @@ public class ResultWriter {
 			sb.append("[")
 			  .append(qs.getCollectionName()).append(":")
 			  .append(qs.getResultCount())
-			  .append("],");
+			  .append("]");
 		}
+		
+		sb.append(",");
 	}
 	
 	private void addDocClickEventProperties(DocClickEvent e) {
