@@ -48,6 +48,7 @@ public class Experiment {
 	private Set<TestGroup> testGroups;
 	
 	@OneToMany(mappedBy="experiment", fetch=FetchType.EAGER, orphanRemoval=true, cascade=CascadeType.ALL)
+	@JsonIgnore
 	private Set<UsageEvent> usageEvents;
 	
 	@ManyToOne(fetch=FetchType.EAGER)

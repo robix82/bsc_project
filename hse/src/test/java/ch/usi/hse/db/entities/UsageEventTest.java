@@ -47,7 +47,7 @@ public class UsageEventTest {
 		UsageEvent evt = new UsageEvent();
 		
 		assertEquals(0, evt.getId());
-		assertTrue(timeApproxEquals(LocalDateTime.now(), evt.getTimeStamp()));
+		assertTrue(timeApproxEquals(LocalDateTime.now(), evt.getTimestamp()));
 	}
 	
 	@Test
@@ -56,7 +56,7 @@ public class UsageEventTest {
 		UsageEvent evt = new UsageEvent(testType, testUser);
 		
 		assertEquals(0, evt.getId());
-		assertTrue(timeApproxEquals(LocalDateTime.now(), evt.getTimeStamp()));
+		assertTrue(timeApproxEquals(LocalDateTime.now(), evt.getTimestamp()));
 		assertEquals(testUser.getId(), evt.getUserId());
 		assertEquals(testGroup.getId(), evt.getGroupId());
 		assertEquals(testGroup.getName(), evt.getGroupName());
@@ -75,7 +75,7 @@ public class UsageEventTest {
 		UsageEvent evt = new UsageEvent();
 		
 		assertNotEquals(testId, evt.getId());
-		assertNotEquals(testTime, evt.getTimeStamp());
+		assertNotEquals(testTime, evt.getTimestamp());
 		assertNotEquals(userId, evt.getUserId());
 		assertNotEquals(groupId, evt.getGroupId());
 		assertNotEquals(groupName, evt.getGroupName());
@@ -89,7 +89,7 @@ public class UsageEventTest {
 		evt.setEventType(testType);
 		
 		assertEquals(testId, evt.getId());
-		assertEquals(testTime, evt.getTimeStamp());
+		assertEquals(testTime, evt.getTimestamp());
 		assertEquals(userId, evt.getUserId());
 		assertEquals(groupId, evt.getGroupId());
 		assertEquals(groupName, evt.getGroupName());

@@ -93,7 +93,7 @@ public class UsageEvent {
 		this.experiment = experiment;
 	}
 	
-	public LocalDateTime getTimeStamp() {
+	public LocalDateTime getTimestamp() {
 		return timestamp;
 	}
 	
