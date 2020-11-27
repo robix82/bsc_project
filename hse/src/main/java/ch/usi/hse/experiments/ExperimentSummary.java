@@ -29,7 +29,7 @@ public class ExperimentSummary {
 	// totals
 	private int participants, totalQueries, totalClicks;
 	
-	// average stats
+	// average  stats
 	private DataStats queriesPerUser, clicksPerUser, clicksPerQuery, 
 					  timePerQuery, timePerClick;
 	

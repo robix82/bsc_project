@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import ch.usi.hse.db.entities.Experiment;
 import ch.usi.hse.db.entities.Participant;
+import ch.usi.hse.db.entities.SessionEvent;
 import ch.usi.hse.db.entities.TestGroup;
 import ch.usi.hse.db.entities.UsageEvent;
 import ch.usi.hse.db.repositories.DocClickEventRepository;
@@ -91,7 +92,26 @@ public class EventDataExtractor {
 	
 	public DataStats clicksPerQuery(Experiment experiment) {
 		
+		List<Double> data = new ArrayList<>();
 		
+		for (int id : participantIds(experiment)) {
+			
+			data.addAll(clicksPerQuery(id));
+		}
+		
+		return new DataStats(data);
+	}
+	
+	public DataStats clicksPerQuery(TestGroup testGroup) {
+		
+		List<Double> data = new ArrayList<>();
+		
+		for (int id : participantIds(testGroup)) {
+			
+			data.addAll(clicksPerQuery(id));
+		}
+		
+		return new DataStats(data);
 	}
 	
 	private List<Integer> participantIds(Experiment experiment) {
@@ -118,12 +138,43 @@ public class EventDataExtractor {
 	}
 	
 
-	private double clicksPerQuery(int userId) {
+	private List<Double> clicksPerQuery(int userId) {
 		
-		int queries = qeRepo.findByUserId(userId).size();
-		int clicks = ceRepo.findByUserId(userId).size();
+		List<UsageEvent> history = ueRepo.findByUserId(userId);		
+		List<Double> res = new ArrayList<>();
 		
-		return (double) clicks / queries;
+		int idx = 0;
+		int clickCount = 0;
+		UsageEvent evt; 
+		
+		while (idx < history.size()) {
+			
+			evt = history.get(idx++);
+			
+			if (evt.getEventType().equals(UsageEvent.Type.SESSION)) {
+				
+				SessionEvent se = (SessionEvent) evt;
+				
+				if (se.getEvent().equals(SessionEvent.Event.LOGOUT)) {
+					return res;
+				}
+			}
+			else if (evt.getEventType().equals(UsageEvent.Type.QUERY)) {
+				
+				evt = history.get(idx);
+				clickCount = 0;
+				
+				while (evt.getEventType().equals(UsageEvent.Type.DOC_CLICK)) {
+					
+					++clickCount;
+					evt = history.get(++idx);
+				}
+				
+				res.add((double) clickCount);
+			}
+		}
+
+		return res;
 	}
 }
 
