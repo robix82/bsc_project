@@ -24,8 +24,8 @@ public class DataStatsTest {
 		
 		assertEquals(expectedTotal, stats.getTotal(), eps);
 		assertEquals(expectedMean, stats.getMean(), eps);
-		assertEquals(expectedMedian, stats.getMedian());
-		assertEquals(expectedStdDev, stats.getStandardDeviation());
+		assertEquals(expectedMedian, stats.getMedian(), eps);
+		assertEquals(expectedStdDev, stats.getStandardDeviation(), eps);
 	}
 }
 
