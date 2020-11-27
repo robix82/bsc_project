@@ -15,8 +15,34 @@ public class DataStats {
 	private double total;
 	private double mean;
 	private double median;
-	private double stdDev;
+	private double standardDeviation;
 	
+	/**
+	 * Full arguments constructor for json I/O
+	 * 
+	 * @param n
+	 * @param total
+	 * @param mean
+	 * @param median
+	 * @param standardDeviation
+	 */
+	public DataStats(int n, double total, double mean, 
+					 double median, double standardDeviation) {
+		
+		this.n = n;
+		this.total = total;
+		this.mean = mean;
+		this.median = median;
+		this.standardDeviation = standardDeviation;
+	}
+	
+	
+	/**
+	 * Contruct from value list 
+	 * (computes statistical metrics based on the given values)
+	 * 
+	 * @param values
+	 */
 	public DataStats(List<Double> values) {
 		
 		n = values.size();
@@ -41,10 +67,10 @@ public class DataStats {
 			squareSum += (v - mean) * (v - mean);
 		}
 		
-		stdDev = Math.sqrt(squareSum / n);
+		standardDeviation = Math.sqrt(squareSum / n);
 	}
 	
-	public int getValueCount() {
+	public int getN() {
 		return n;
 	}
 	
@@ -61,7 +87,7 @@ public class DataStats {
 	}
 	
 	public double getStandardDeviation() {
-		return stdDev;
+		return standardDeviation;
 	}
 }
 

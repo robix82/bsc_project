@@ -10,10 +10,11 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import ch.usi.hse.db.entities.Experiment;
 import ch.usi.hse.db.entities.TestGroup;
-import ch.usi.hse.db.repositories.DocClickEventRepository;
-import ch.usi.hse.db.repositories.QueryEventRepository;
 
 @Component
 public class ExperimentSummary {
@@ -33,16 +34,52 @@ public class ExperimentSummary {
 					  timePerQuery, timePerClick;
 	
 	
+	@JsonIgnore
+	private EventDataExtractor dataExtractor;
 	
-	private QueryEventRepository qeRepo;
-	private DocClickEventRepository ceRepo;
-	
+	/**
+	 * Autowired constructor for usage as Component
+	 * 
+	 * @param qeRepo
+	 * @param ceRepo
+	 */
 	@Autowired
-	public ExperimentSummary(QueryEventRepository qeRepo,
-							  DocClickEventRepository ceRepo) {
+	public ExperimentSummary(EventDataExtractor dataExtractor) {
 		
-		this.qeRepo = qeRepo;
-		this.ceRepo = ceRepo;
+		this.dataExtractor = dataExtractor;
+	}
+	
+	/**
+	 * Full arguments constructor for json I/O
+	 * 
+	 */
+	public ExperimentSummary(@JsonProperty("title") String title,
+							 @JsonProperty("dateConducted")LocalDateTime dateConducted,
+							 @JsonProperty("duration")Duration duration,
+							 @JsonProperty("groupNames")List<String> groupNames,
+							 @JsonProperty("participantsPerGroup")Map<String, Integer> participantsPerGroup,
+							 @JsonProperty("participants")int participants,
+							 @JsonProperty("totalQueries")int totalQueries,
+							 @JsonProperty("totalClicks")int totalClicks,
+							 @JsonProperty("queriesPerUser")DataStats queriesPerUser,
+							 @JsonProperty("clicksPerUser")DataStats clicksPerUser,
+							 @JsonProperty("clicksPerQuery")DataStats clicksPerQuery,
+							 @JsonProperty("timePerQuery")DataStats timePerQuery,
+							 @JsonProperty("timePerClick")DataStats timePerClick) {
+		
+		this.title = title;
+		this.dateConducted = dateConducted;
+		this.duration = duration;
+		this.groupNames = groupNames;
+		this.participantsPerGroup = participantsPerGroup;
+		this.participants = participants;
+		this.totalQueries = totalQueries;
+		this.totalClicks = totalClicks;
+		this.queriesPerUser = queriesPerUser;
+		this.clicksPerUser = clicksPerUser;
+		this.clicksPerQuery = clicksPerQuery;
+		this.timePerQuery = timePerQuery;
+		this.timePerClick = timePerClick;
 	}
 
 	public ExperimentSummary fromExperiment(Experiment experiment) {
@@ -65,122 +102,62 @@ public class ExperimentSummary {
 			participants += gParticipants;
 		}
 		
-		totalQueries = qeRepo.findByExperiment(experiment).size();
-		totalClicks = ceRepo.findByExperiment(experiment).size();
+		totalQueries = dataExtractor.queriesPerExperiment(experiment);
+		totalClicks = dataExtractor.clicksPerExperiment(experiment);
 		
 		return this;
 	}
 	
-	// GETTERS AND SETTERS (for json i/o)
-	
-	// general
-	
 	public String getTitle() {
 		return title;
-	}
-	
-	public void setTitle(String title) {
-		this.title = title;
 	}
 	
 	public LocalDateTime getDateConducted() {
 		return dateConducted;
 	}
 	
-	public void setDateConducted(LocalDateTime dateConducted) {
-		this.dateConducted = dateConducted;
-	}
-	
 	public Duration getDuration() {
 		return duration;
 	}
 	
-	public void setDuration(Duration duration) {
-		this.duration = duration;
-	}
-	
-	public List<String> getGroupNammes() {
+	public List<String> getGroupNames() {
 		return groupNames;
-	}
-	
-	public void setGroupNames(List<String> groupNames) {
-		this.groupNames = groupNames;
 	}
 	
 	public Map<String, Integer> getParticipantsPerGroup() {
 		return participantsPerGroup;
 	}
 	
-	public void setParticipantsPerGroup(Map<String, Integer> participantsPerGroup) {
-		this.participantsPerGroup = participantsPerGroup;
-	}
-	
-	// totals
-	
 	public int getParticipants() {
 		return participants;
-	}
-	
-	public void setParticipants(int participants) {
-		this.participants = participants;
 	}
 	
 	public int getTotalQueries() {
 		return totalQueries;
 	}
 	
-	public void setTotalQueries(int totalQueries) {
-		this.totalQueries = totalQueries;
-	}
-	
 	public int getTotalClicks() {
 		return totalClicks;
 	}
 	
-	public void setTotalClicks(int totalClicks) {
-		this.totalClicks = totalClicks;
-	}
-	
-	// average stats
-	
 	public DataStats getQueriesPerUser() {
 		return queriesPerUser;
-	}
-	
-	public void setQueriesPerUser(DataStats queriesPerUser) {
-		this.queriesPerUser = queriesPerUser;
 	}
 	
 	public DataStats getClicksPerUser() {
 		return clicksPerUser;
 	}
 	
-	public void setClicksPerUser(DataStats clicksPerUser) {
-		this.clicksPerUser = clicksPerUser;
-	}
-	
 	public DataStats getClicksPerQuery() {
 		return clicksPerQuery;
-	}
-	
-	public  void setClicksPerQuery(DataStats clicksPerQuery) {
-		this.clicksPerQuery = clicksPerQuery; 
 	}
 	
 	public DataStats getTimePerQuery() {
 		return timePerQuery;
 	}
 	
-	public void setTimePerQuery(DataStats timePerQuery) {
-		this.timePerQuery = timePerQuery;
-	}
-	
 	public DataStats getTimePerClick() {
 		return timePerClick;
-	}
-	
-	public void setTimePerClick(DataStats timePerClick) {
-		this.timePerClick = timePerClick;
 	}
 }
 
