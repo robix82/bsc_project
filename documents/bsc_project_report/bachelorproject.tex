@@ -118,7 +118,7 @@ as eight milestones; the milestones are divided into the categories \emph{Must h
 \section{Project design} \label{design}
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{General architecture}
+\subsection{General structure}
 
 Given the close relationships between the experiment configuration, conduction, and analysis, I decided to include
 most of the implied functionalities into a single web application, called \emph{HSE (Health Search Engine)}.
@@ -231,38 +231,92 @@ links accompanied by short summaries (snippets) with highlighted query terms.
 
 \begin{figure} [h]
 \centering
-\includegraphics[width=0.8\textwidth]{img/searchUi}
+\includegraphics[width=0.7\textwidth]{img/searchUi}
 \caption{User interface available to participants}
 \label{fig:searchUi}
 \end{figure}
 
+\subsection{Evaluating an experiment}
 
+After an experiment has been conducted, the  related evaluation interface becomes available. From on page
+experimenters can inspect the experiment's results and export  the complete raw data
+or pre-processed data summaries. The U.I. includes visualizations of the most relevant data features.
+
+The raw data can be exported either in csv or json format, and consists i a list of all user actions occurred during the experiment. 
+Each record has a timestamp, a user id and a group id. Query event records include the query text and the proportions in which
+the data collections are represented  in the result list. Document click event records include the document id, its URL, and
+the document collection to which it belongs.
+
+The data summaries include overall experiment statistics and per-group statistics. Moreover the individual user histories can be 
+exported in the same format as the raw data.
+
+
+Per-experiment statistics include the total count of clicks and queries as well as averages, medians, and standard deviations
+for queries per user, clicks per user, clicks per query, time per query and time per click.
+
+Per group statistics include the same metrics as the per-experiment statistics, plus totals, averages, medians and standard deviations
+for clicks per document collection.
+
+\TODO{describe in more detail}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Architecture and employed frameworks} \label{architecture}
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+\subsection{Architecture}
+
+
+
+\subsection{Lucene: an open source information retrieval library}
+
+\TODO{library description}
+
+\subsection{SpringBoot: a Java framework for web applications}
+
+\TODO{framework description}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Implementation details} \label{implementation}
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
-\TODO{}
+\subsection{Indexing}
+
+\subsection{Retrieval}
+
+\subsection{Usage Tracking}
+
+\subsection{Data pre-processing}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Under the hood: The information retrieval process} \label{ir}
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\TODO{describe indexing, scoring formula, vector space retrieval model, etc...}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Quality assessment and evaluation} \label{evaluation}
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
-\TODO{}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Conclusions} \label{conclusions}
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
-\TODO{}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Future work} \label{futureWork}
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
-\TODO{}
+
 
 
 %%%%%
