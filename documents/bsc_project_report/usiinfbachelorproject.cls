@@ -170,7 +170,7 @@
 \hspace{-0.8mm}\rule[3.6mm]{\textwidth-123mm}{0.2pt}
 \vspace{-20mm}
 \begin{flushright}
-{\Large \textsf{Bachelor Thesis}}
+{\Large \textsf{Bachelor Project}}
 \end{flushright}
 \vspace{1mm}
 \hfill {%
