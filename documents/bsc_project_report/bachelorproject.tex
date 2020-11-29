@@ -1,6 +1,8 @@
 \documentclass[]{usiinfbachelorproject}
 
 \usepackage{color}
+\usepackage{caption}
+\usepackage{subcaption}
 
 \captionsetup{labelfont={bf}}
 
@@ -155,7 +157,72 @@ to export both the raw data and the summaries as files.
 
 \newpage
 
-\subsection{Search user interface}
+\subsection{Defining the document corpora}
+
+In order to define the document collections (corpora) to be used during subsequent experiments, 
+an experimenter can upload text files containing lists of web URL's. The files are  stored, so they can be reused 
+for defining multiple document collections. Via a popup menu a new  document collection can be defined by providing a name, 
+the collection's language the related url list.
+Clicking on the ''index'' button initiates the indexing process, which includes data download and the creation of a index
+data structure for retrieval. The details of the indexing process are explained in section xxx \TODO{link actual section}.
+\textbf{Figures ~\ref{fig:indexingA} and ~\ref{fig:indexingB}} show the relevant parts of the interface.
+
+\begin{figure}[h]
+     
+     \centering
+     \begin{subfigure}[b]{0.6\textwidth}
+         \centering
+         \includegraphics[width=.8\linewidth]{img/indexing1}
+         \caption{indexing  u.i}
+         \label{fig:indexingA}
+     \end{subfigure}
+  %   \hfill
+     \begin{subfigure}[b]{0.3\textwidth}
+         \centering
+         \includegraphics[width=.6\linewidth]{img/indexing2}
+         \caption{popup for defining  document collections}
+         \label{fig:indexingB}
+     \end{subfigure}
+   %  \hfill
+
+\end{figure}
+
+\subsection{Setting up an experiment}
+
+The U.I. for experiment setup allows to define the details of an experiment to be carried out. This step involves creating
+test groups with associated participants and document collections. Groups can be defined either manually or by using an
+ uploaded configuration file. In both cases the test group configuration can later be edited manually. 
+The interface allows to link each group to a set of previously indexed document collections. 
+\textbf{Figure ~\ref{fig:setup}} shows this U.I.
+
+\begin{figure} [h]
+\centering
+\includegraphics[width=0.8\textwidth]{img/setup}
+\caption{U.I. for experiment setup}
+\label{fig:setup}
+\end{figure}
+
+\subsection{Running an experiment}
+
+The U.I. for experiment execution inccludes a start/stop/reset button, a timer, and a tabular display 
+showing the current participant activities. Clicking the start button starts the timer, enables the participants to log in and
+initiates the data collection process. While the experiment is running, all queries and click carried out by the
+participants are stored as database records including a timestamp, user id, group id, and query/document related data.
+The details of the data collection process are described in section xxx \TODO{link actual section}.
+When the stop button is clicked the participants are logged out and all transient data is saved to the database.
+after the experiment is complete the related evaluation page becomes available.
+In case something goes wrong, the experiment can be reset. This causes all query and click data to be deleted, while the
+experiments configuration is preserved.
+\textbf{Figure ~\ref{fig:run}} shows this U.I.
+
+\begin{figure} [h]
+\centering
+\includegraphics[width=0.6\textwidth]{img/run}
+\caption{U.I. for experiment execution}
+\label{fig:run}
+\end{figure}
+
+\subsection{Search user interface available to participants}
 
 The interface available to the participants looks similar to the main page of most known search engines. It simply
 includes a search text bar and a button for entering queries, and displays the results as a list of
@@ -170,7 +237,7 @@ links accompanied by short summaries (snippets) with highlighted query terms.
 \end{figure}
 
 
-\TODO{}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Implementation details} \label{implementation}
