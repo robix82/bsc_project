@@ -84,6 +84,7 @@ public class ExperimentSummary {
 
 	public ExperimentSummary fromExperiment(Experiment experiment) {
 		
+		// general and totals
 		title = experiment.getTitle();
 		dateConducted = experiment.getDateConducted();
 		duration = experiment.getDuration();
@@ -104,6 +105,14 @@ public class ExperimentSummary {
 		
 		totalQueries = dataExtractor.queriesPerExperiment(experiment);
 		totalClicks = dataExtractor.clicksPerExperiment(experiment);
+		
+		// average stats
+		
+		queriesPerUser = dataExtractor.queriesPerUser(experiment);
+		clicksPerUser = dataExtractor.clicksPerUser(experiment);
+		clicksPerQuery = dataExtractor.clicksPerQuery(experiment);
+		timePerQuery = dataExtractor.timePerQuery(experiment);
+		timePerClick = dataExtractor.timePerClick(experiment);
 		
 		return this;
 	}

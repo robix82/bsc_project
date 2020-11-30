@@ -2,6 +2,8 @@ package ch.usi.hse.experiments;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -15,6 +17,13 @@ import ch.usi.hse.db.repositories.DocClickEventRepository;
 import ch.usi.hse.db.repositories.QueryEventRepository;
 import ch.usi.hse.db.repositories.UsageEventRepository;
 
+/**
+ * utilities for extracting and processing
+ * information from the raw data collected during experiments 
+ * 
+ * @author robert.jans@usi.ch
+ *
+ */
 @Component
 public class EventDataExtractor {
 
@@ -102,6 +111,54 @@ public class EventDataExtractor {
 		return new DataStats(data);
 	}
 	
+	public DataStats timePerQuery(Experiment experiment) {
+		
+		List<Double> data = new ArrayList<>();
+		
+		for (int id : participantIds(experiment)) {
+			
+			data.addAll(timePerQuery(id));
+		}
+		
+		return new DataStats(data);
+	}
+	
+	public DataStats timePerQuery(TestGroup testGroup) {
+		
+		List<Double> data = new ArrayList<>();
+		
+		for (int id : participantIds(testGroup)) {
+			
+			data.addAll(timePerQuery(id));
+		}
+		
+		return new DataStats(data);
+	}
+	
+	public DataStats timePerClick(Experiment experiment) {
+		
+		List<Double> data = new ArrayList<>();
+		
+		for (int id : participantIds(experiment)) {
+			
+			data.addAll(timePerClick(id));
+		}
+		
+		return new DataStats(data);
+	}
+	
+	public DataStats timePerClick(TestGroup testGroup) {
+		
+		List<Double> data = new ArrayList<>();
+		
+		for (int id : participantIds(testGroup)) {
+			
+			data.addAll(timePerClick(id));
+		}
+		
+		return new DataStats(data);
+	}
+	
 	public DataStats clicksPerQuery(TestGroup testGroup) {
 		
 		List<Double> data = new ArrayList<>();
@@ -174,6 +231,89 @@ public class EventDataExtractor {
 			}
 		}
 
+		return res;
+	}
+	
+	private List<Double> timePerQuery(int userId) {
+		
+		List<UsageEvent> history = ueRepo.findByUserId(userId);		
+		List<Double> res = new ArrayList<>();
+		
+		int idx = 0;
+		UsageEvent evt = history.get(idx++);
+		
+		while (idx < history.size()) {
+						
+			while (! evt.getEventType().equals(UsageEvent.Type.QUERY)) {
+				
+				evt = history.get(idx++);
+				
+				if (evt.getEventType().equals(UsageEvent.Type.SESSION)) {
+					
+					SessionEvent se = (SessionEvent) evt;
+					
+					if (se.getEvent().equals(SessionEvent.Event.LOGOUT)) {
+						return res;
+					}
+				}
+			}
+			
+			if (evt.getEventType().equals(UsageEvent.Type.QUERY)) {
+
+				LocalDateTime t0 = evt.getTimestamp();
+				evt = history.get(idx++);
+				
+				while (evt.getEventType().equals(UsageEvent.Type.DOC_CLICK)) {
+					evt = history.get(idx++);
+				}
+				
+				LocalDateTime t1 = evt.getTimestamp();
+				
+				Duration dt = Duration.between(t0,  t1);
+				
+				res.add((double) dt.getSeconds());
+			}
+		}
+		
+		return res;
+	}
+	
+	private List<Double> timePerClick(int userId) {
+		
+		List<UsageEvent> history = ueRepo.findByUserId(userId);		
+		List<Double> res = new ArrayList<>();
+		
+		int idx = 0;
+		UsageEvent evt = history.get(idx++);
+		
+		while (idx < history.size()) {
+			
+			while (! evt.getEventType().equals(UsageEvent.Type.DOC_CLICK)) {
+				
+				evt = history.get(idx++);
+				
+				if (evt.getEventType().equals(UsageEvent.Type.SESSION)) {
+					
+					SessionEvent se = (SessionEvent) evt;
+					
+					if (se.getEvent().equals(SessionEvent.Event.LOGOUT)) {
+						return res;
+					}
+				}
+			}
+			
+			if (evt.getEventType().equals(UsageEvent.Type.DOC_CLICK)) {
+				
+				LocalDateTime t0 = evt.getTimestamp();
+				
+				evt = history.get(idx++);
+				
+				LocalDateTime t1 = evt.getTimestamp();
+				Duration dt = Duration.between(t0,  t1);
+				res.add((double) dt.getSeconds());
+			}
+		}
+		
 		return res;
 	}
 }
