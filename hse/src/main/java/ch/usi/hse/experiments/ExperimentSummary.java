@@ -103,8 +103,8 @@ public class ExperimentSummary {
 			participants += gParticipants;
 		}
 		
-		totalQueries = dataExtractor.queriesPerExperiment(experiment);
-		totalClicks = dataExtractor.clicksPerExperiment(experiment);
+		totalQueries = dataExtractor.totalQueries(experiment);
+		totalClicks = dataExtractor.totalClicks(experiment);
 		
 		// average stats
 		

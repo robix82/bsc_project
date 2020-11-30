@@ -1,6 +1,8 @@
 package ch.usi.hse.experiments;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -41,16 +43,26 @@ public class EventDataExtractor {
 		this.ceRepo = ceRepo;
 	}
 	
-	public int queriesPerExperiment(Experiment experiment) {
+	public int totalQueries(Experiment experiment) {
 		
 		return qeRepo.findByExperiment(experiment).size();
 	}
 	
-	public int clicksPerExperiment(Experiment experiment) {
+	public int totalQueries(TestGroup testGroup) {
 		
-		return qeRepo.findByExperiment(experiment).size();
+		return qeRepo.findByGroupId(testGroup.getId()).size();
 	}
 	
+	public int totalClicks(Experiment experiment) {
+		
+		return ceRepo.findByExperiment(experiment).size();
+	}
+	
+	public int totalClicks(TestGroup testGroup) {
+	
+		return ceRepo.findByGroupId(testGroup.getId()).size();
+	}
+		
 	public DataStats queriesPerUser(Experiment experiment) {
 		
 		List<Double> queryCounts = new ArrayList<>();
@@ -77,26 +89,26 @@ public class EventDataExtractor {
 	
 	public DataStats clicksPerUser(Experiment experiment) {
 		
-		List<Double> queryCounts = new ArrayList<>();
+		List<Double> clickCounts = new ArrayList<>();
 		
 		for (int id : participantIds(experiment)) {
 			
-			queryCounts.add((double) ceRepo.findByUserId(id).size());
+			clickCounts.add((double) ceRepo.findByUserId(id).size());
 		}
 		
-		return new DataStats(queryCounts);
+		return new DataStats(clickCounts);
 	}
 	
 	public DataStats clicksPerUser(TestGroup testGroup) {
 		
-		List<Double> queryCounts = new ArrayList<>();
+		List<Double> clickCounts = new ArrayList<>();
 		
 		for (int id : participantIds(testGroup)) {
 			
-			queryCounts.add((double) ceRepo.findByUserId(id).size());
+			clickCounts.add((double) ceRepo.findByUserId(id).size());
 		}
 		
-		return new DataStats(queryCounts);
+		return new DataStats(clickCounts);
 	}
 	
 	public DataStats clicksPerQuery(Experiment experiment) {
@@ -104,6 +116,18 @@ public class EventDataExtractor {
 		List<Double> data = new ArrayList<>();
 		
 		for (int id : participantIds(experiment)) {
+			
+			data.addAll(clicksPerQuery(id));
+		}
+		
+		return new DataStats(data);
+	}
+	
+	public DataStats clicksPerQuery(TestGroup testGroup) {
+		
+		List<Double> data = new ArrayList<>();
+		
+		for (int id : participantIds(testGroup)) {
 			
 			data.addAll(clicksPerQuery(id));
 		}
@@ -159,18 +183,6 @@ public class EventDataExtractor {
 		return new DataStats(data);
 	}
 	
-	public DataStats clicksPerQuery(TestGroup testGroup) {
-		
-		List<Double> data = new ArrayList<>();
-		
-		for (int id : participantIds(testGroup)) {
-			
-			data.addAll(clicksPerQuery(id));
-		}
-		
-		return new DataStats(data);
-	}
-	
 	private List<Integer> participantIds(Experiment experiment) {
 		
 		List<Integer> ids = new ArrayList<>();
@@ -197,7 +209,7 @@ public class EventDataExtractor {
 
 	private List<Double> clicksPerQuery(int userId) {
 		
-		List<UsageEvent> history = ueRepo.findByUserId(userId);		
+		List<UsageEvent> history = userHistory(userId);		
 		List<Double> res = new ArrayList<>();
 		
 		int idx = 0;
@@ -236,7 +248,7 @@ public class EventDataExtractor {
 	
 	private List<Double> timePerQuery(int userId) {
 		
-		List<UsageEvent> history = ueRepo.findByUserId(userId);		
+		List<UsageEvent> history = userHistory(userId);		
 		List<Double> res = new ArrayList<>();
 		
 		int idx = 0;
@@ -259,11 +271,12 @@ public class EventDataExtractor {
 			}
 			
 			if (evt.getEventType().equals(UsageEvent.Type.QUERY)) {
-
+				
 				LocalDateTime t0 = evt.getTimestamp();
-				evt = history.get(idx++);
+				evt = history.get(idx++);			
 				
 				while (evt.getEventType().equals(UsageEvent.Type.DOC_CLICK)) {
+					
 					evt = history.get(idx++);
 				}
 				
@@ -280,7 +293,7 @@ public class EventDataExtractor {
 	
 	private List<Double> timePerClick(int userId) {
 		
-		List<UsageEvent> history = ueRepo.findByUserId(userId);		
+		List<UsageEvent> history = userHistory(userId);		
 		List<Double> res = new ArrayList<>();
 		
 		int idx = 0;
@@ -316,6 +329,23 @@ public class EventDataExtractor {
 		
 		return res;
 	}
+	
+	private List<UsageEvent> userHistory(int userId) {
+		
+		List<UsageEvent> events = ueRepo.findByUserId(userId);
+		
+		Collections.sort(events,  byTimeStampComparator);
+		
+		return events;
+	}
+	
+	private Comparator<UsageEvent> byTimeStampComparator = new Comparator<UsageEvent>() {
+		
+		public int compare(UsageEvent e1, UsageEvent e2) {
+			
+			return e1.getTimestamp().compareTo(e2.getTimestamp());
+		}
+	};
 }
 
 
