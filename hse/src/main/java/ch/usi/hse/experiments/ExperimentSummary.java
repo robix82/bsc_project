@@ -16,6 +16,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import ch.usi.hse.db.entities.Experiment;
 import ch.usi.hse.db.entities.TestGroup;
 
+/**
+ * Data class storing per-experiment usage statistics
+ * 
+ * @author robert.jans@usi.ch
+ *
+ */
 @Component
 public class ExperimentSummary {
 	
@@ -52,6 +58,19 @@ public class ExperimentSummary {
 	/**
 	 * Full arguments constructor for json I/O
 	 * 
+	 * @param title
+	 * @param dateConducted
+	 * @param duration
+	 * @param groupNames
+	 * @param participantsPerGroup
+	 * @param participants
+	 * @param totalQueries
+	 * @param totalClicks
+	 * @param queriesPerUser
+	 * @param clicksPerUser
+	 * @param clicksPerQuery
+	 * @param timePerQuery
+	 * @param timePerClick
 	 */
 	public ExperimentSummary(@JsonProperty("title") String title,
 							 @JsonProperty("dateConducted")LocalDateTime dateConducted,
