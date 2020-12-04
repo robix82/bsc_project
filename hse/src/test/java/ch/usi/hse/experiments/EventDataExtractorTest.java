@@ -7,9 +7,12 @@ import static org.mockito.MockitoAnnotations.initMocks;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -512,7 +515,7 @@ public class EventDataExtractorTest {
 	}
 	
 	@Test
-	public void testTimePerQueryByETestGrou() {
+	public void testTimePerQueryByTestGroup() {
 		
 		// all times per query in the test data are3 sec.
 		
@@ -561,6 +564,54 @@ public class EventDataExtractorTest {
 				
 		assertTrue(statsEquals(expected, actual));
 	}
+
+	@Test
+	public void testClicksPerDocCollection() {
+		
+		List<Double> g1c1Clicks = List.of(2.0, 2.0);
+		List<Double> g1c2Clicks = List.of(2.0, 0.0);
+		
+		Map<String, DataStats> expectedStats = new HashMap<>();
+		expectedStats.put(c1.getName(), new DataStats(g1c1Clicks));
+		expectedStats.put(c2.getName(), new DataStats(g1c2Clicks));
+		
+		Map<String, DataStats> actualStats = extractor.clicksPerDocCollection(g1);
+		
+		assertEquals(expectedStats.size(), actualStats.size());
+		
+		for (Entry<String, DataStats> e : expectedStats.entrySet()) {
+			
+			String name = e.getKey();
+			
+			assertTrue(actualStats.containsKey(name));
+			assertTrue(statsEquals(e.getValue(), actualStats.get(name)));
+		}
+	}
+	
+	@Test
+	public void testTimePerDocCollection() {
+		
+		List<Double> g1c1Times = List.of(2.0, 2.0);
+		List<Double> g1c2Times = List.of(2.0, 0.0);
+		
+		Map<String, DataStats> expectedStats = new HashMap<>();
+		expectedStats.put(c1.getName(), new DataStats(g1c1Times));
+		expectedStats.put(c2.getName(), new DataStats(g1c2Times));
+		
+		Map<String, DataStats> actualStats = extractor.timePerDocCollection(g1);
+		
+		assertEquals(expectedStats.size(), actualStats.size());
+		
+		for (Entry<String, DataStats> e : expectedStats.entrySet()) {
+			
+			String name = e.getKey();
+			
+			assertTrue(actualStats.containsKey(name));
+			assertTrue(statsEquals(e.getValue(), actualStats.get(name)));
+		}
+	}
+
+	/////////////////
 
 	private boolean statsEquals(DataStats stats1, DataStats stats2) {
 		
