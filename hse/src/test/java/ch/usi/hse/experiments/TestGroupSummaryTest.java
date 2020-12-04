@@ -90,7 +90,7 @@ public class TestGroupSummaryTest {
 		timePerDocCollection.put(c1.getName(), new DataStats(List.of(17.0, 18.0, 19.0)));
 		timePerDocCollection.put(c2.getName(), new DataStats(List.of(20.0, 21.0, 22.0)));
 		
-		// set up mock DataExtractor
+		// set up mock EventDataExtractor
 		
 		when(dataExtractor.totalQueries(testGroup)).thenReturn(totalQueries);
 		when(dataExtractor.totalClicks(testGroup)).thenReturn(totalClicks);
@@ -106,7 +106,7 @@ public class TestGroupSummaryTest {
 	@Test
 	public void testConstructor1() {
 		
-		TestGroupSummary summary = new TestGroupSummary(dataExtractor, testGroup);
+		TestGroupSummary summary = new TestGroupSummary(testGroup, dataExtractor);
 		
 		assertEquals(groupName, summary.getGroupName());
 		assertIterableEquals(collectionNames, summary.getCollectionNames());

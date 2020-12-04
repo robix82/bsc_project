@@ -7,10 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import ch.usi.hse.db.entities.Experiment;
@@ -22,7 +18,6 @@ import ch.usi.hse.db.entities.TestGroup;
  * @author robert.jans@usi.ch
  *
  */
-@Component
 public class ExperimentSummary {
 	
 	// general
@@ -39,20 +34,55 @@ public class ExperimentSummary {
 	private DataStats queriesPerUser, clicksPerUser, clicksPerQuery, 
 					  timePerQuery, timePerClick;
 	
+	private List<TestGroupSummary> groupSummaries;
 	
-	@JsonIgnore
-	private EventDataExtractor dataExtractor;
 	
 	/**
-	 * Autowired constructor for usage as Component
+	 * Construct from Experiment and EventDataExtractor
 	 * 
-	 * @param qeRepo
-	 * @param ceRepo
+	 * @param experiment
+	 * @param dataExtractor
 	 */
-	@Autowired
-	public ExperimentSummary(EventDataExtractor dataExtractor) {
+	public ExperimentSummary(Experiment experiment, EventDataExtractor dataExtractor) {
 		
-		this.dataExtractor = dataExtractor;
+		// general and totals
+		title = experiment.getTitle();
+		dateConducted = experiment.getDateConducted();
+		duration = experiment.getDuration();
+				
+		groupNames = new ArrayList<>();
+		participantsPerGroup = new HashMap<>();
+		participants = 0;
+				
+		for (TestGroup g : experiment.getTestGroups()) {
+					
+			String gName = g.getName();
+			int gParticipants = g.getParticipants().size();
+					
+			groupNames.add(gName);
+			participantsPerGroup.put(gName, gParticipants);
+			participants += gParticipants;
+		}
+				
+		totalQueries = dataExtractor.totalQueries(experiment);
+		totalClicks = dataExtractor.totalClicks(experiment);
+				
+		// average stats
+				
+		queriesPerUser = dataExtractor.queriesPerUser(experiment);
+		clicksPerUser = dataExtractor.clicksPerUser(experiment);
+		clicksPerQuery = dataExtractor.clicksPerQuery(experiment);
+		timePerQuery = dataExtractor.timePerQuery(experiment);
+		timePerClick = dataExtractor.timePerClick(experiment);
+		
+		// group summaries
+		
+		groupSummaries = new ArrayList<>();
+		
+		for (TestGroup g : experiment.getTestGroups()) {
+			
+			groupSummaries.add(new TestGroupSummary(g, dataExtractor));
+		}
 	}
 	
 	/**
@@ -84,7 +114,8 @@ public class ExperimentSummary {
 							 @JsonProperty("clicksPerUser")DataStats clicksPerUser,
 							 @JsonProperty("clicksPerQuery")DataStats clicksPerQuery,
 							 @JsonProperty("timePerQuery")DataStats timePerQuery,
-							 @JsonProperty("timePerClick")DataStats timePerClick) {
+							 @JsonProperty("timePerClick")DataStats timePerClick,
+							 @JsonProperty("groupSummaries") List<TestGroupSummary> groupSummaries) {
 		
 		this.title = title;
 		this.dateConducted = dateConducted;
@@ -99,41 +130,7 @@ public class ExperimentSummary {
 		this.clicksPerQuery = clicksPerQuery;
 		this.timePerQuery = timePerQuery;
 		this.timePerClick = timePerClick;
-	}
-
-	public ExperimentSummary fromExperiment(Experiment experiment) {
-		
-		// general and totals
-		title = experiment.getTitle();
-		dateConducted = experiment.getDateConducted();
-		duration = experiment.getDuration();
-		
-		groupNames = new ArrayList<>();
-		participantsPerGroup = new HashMap<>();
-		participants = 0;
-		
-		for (TestGroup g : experiment.getTestGroups()) {
-			
-			String gName = g.getName();
-			int gParticipants = g.getParticipants().size();
-			
-			groupNames.add(gName);
-			participantsPerGroup.put(gName, gParticipants);
-			participants += gParticipants;
-		}
-		
-		totalQueries = dataExtractor.totalQueries(experiment);
-		totalClicks = dataExtractor.totalClicks(experiment);
-		
-		// average stats
-		
-		queriesPerUser = dataExtractor.queriesPerUser(experiment);
-		clicksPerUser = dataExtractor.clicksPerUser(experiment);
-		clicksPerQuery = dataExtractor.clicksPerQuery(experiment);
-		timePerQuery = dataExtractor.timePerQuery(experiment);
-		timePerClick = dataExtractor.timePerClick(experiment);
-		
-		return this;
+		this.groupSummaries = groupSummaries;
 	}
 	
 	public String getTitle() {
@@ -186,6 +183,10 @@ public class ExperimentSummary {
 	
 	public DataStats getTimePerClick() {
 		return timePerClick;
+	}
+	
+	public List<TestGroupSummary> getGroupSummaries() {
+		return groupSummaries;
 	}
 }
 

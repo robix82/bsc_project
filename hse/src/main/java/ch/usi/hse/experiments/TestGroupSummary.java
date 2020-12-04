@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import ch.usi.hse.db.entities.DocCollection;
@@ -31,19 +30,14 @@ public class TestGroupSummary {
 	// per docCollection stats (Collection name : data)
 	private Map<String, DataStats> clicksPerDocCollection, timePerDocCollection;
 	
-	@JsonIgnore
-	private EventDataExtractor dataExtractor;
-	
 	
 	/**
-	 * Construct from TestGroup
+	 * Construct from TestGroup and EventDataExtractor
 	 * 
 	 * @param dataExtractor
 	 * @param testGroup
 	 */
-	public TestGroupSummary(EventDataExtractor dataExtractor, TestGroup testGroup) {
-		
-		this.dataExtractor = dataExtractor;
+	public TestGroupSummary(TestGroup testGroup, EventDataExtractor dataExtractor) {
 		
 		groupName = testGroup.getName();
 		

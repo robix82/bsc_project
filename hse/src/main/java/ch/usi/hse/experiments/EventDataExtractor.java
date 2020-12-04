@@ -11,9 +11,6 @@ import java.util.concurrent.TimeUnit;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import ch.usi.hse.db.entities.DocClickEvent;
 import ch.usi.hse.db.entities.DocCollection;
 import ch.usi.hse.db.entities.Experiment;
@@ -32,14 +29,12 @@ import ch.usi.hse.db.repositories.UsageEventRepository;
  * @author robert.jans@usi.ch
  *
  */
-@Component
 public class EventDataExtractor {
 
 	private UsageEventRepository ueRepo;
 	private QueryEventRepository qeRepo;
 	private DocClickEventRepository ceRepo;
 	
-	@Autowired
 	public EventDataExtractor(UsageEventRepository ueRepo,
 							  QueryEventRepository qeRepo,
 							  DocClickEventRepository ceRepo) {
