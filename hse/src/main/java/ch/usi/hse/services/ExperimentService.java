@@ -34,7 +34,9 @@ import ch.usi.hse.exceptions.NoSuchFileException;
 import ch.usi.hse.exceptions.NoSuchTestGroupException;
 import ch.usi.hse.exceptions.NoSuchUserException;
 import ch.usi.hse.exceptions.UserExistsException;
+import ch.usi.hse.experiments.EventDataExtractor;
 import ch.usi.hse.experiments.ExperimentConfigurer;
+import ch.usi.hse.experiments.ExperimentSummary;
 import ch.usi.hse.experiments.ResultWriter;
 import ch.usi.hse.storage.ExperimentConfigStorage;
 
@@ -51,6 +53,7 @@ public class ExperimentService {
 	ExperimentConfigStorage experimentConfigStorage;
 	private SimpMessagingTemplate simpMessagingTemplate;
 	private ResultWriter resultWriter;
+	private EventDataExtractor dataExtractor;
 	
 	@Autowired
 	public ExperimentService(ExperimentRepository experimentRepo,
@@ -62,7 +65,8 @@ public class ExperimentService {
 							 @Qualifier("ExperimentConfigStorage")
 							 ExperimentConfigStorage experimentConfigStorage,
 							 SimpMessagingTemplate simpMessagingTemplate,
-							 ResultWriter resultWriter) {
+							 ResultWriter resultWriter,
+							 EventDataExtractor dataExtractor) {
 		
 		this.experimentRepo = experimentRepo;
 		this.testGroupRepo = testGroupRepo;
@@ -73,6 +77,7 @@ public class ExperimentService {
 		this.experimentConfigStorage = experimentConfigStorage;
 		this.simpMessagingTemplate = simpMessagingTemplate;
 		this.resultWriter = resultWriter;
+		this.dataExtractor = dataExtractor;
 	}
 	
 	// GENERAL DB OPERATIONS
@@ -629,7 +634,7 @@ public class ExperimentService {
 		}
 	}
 	
-	// RESULT DATA EXPORT
+	// RESULT DATA PROCESSING / EXPORT
 	
 	public InputStream rawResultsCsv(Experiment experiment) throws NoSuchExperimentException {
 		
@@ -648,6 +653,19 @@ public class ExperimentService {
 		}
 		
 		return resultWriter.rawDataJson(experiment);
+	}
+	
+	public ExperimentSummary experimentSummary(Experiment experiment) throws ExperimentStatusException {		
+		
+		Experiment.Status requiredStatus = Experiment.Status.COMPLETE;
+		Experiment.Status actualStatus = experiment.getStatus();
+		
+		if (! actualStatus.equals(requiredStatus)) {
+			
+			throw new ExperimentStatusException(requiredStatus, actualStatus);
+		}
+		
+		return new ExperimentSummary(experiment, dataExtractor);
 	}
 }
 

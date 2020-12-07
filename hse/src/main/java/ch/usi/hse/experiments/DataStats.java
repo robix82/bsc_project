@@ -1,5 +1,7 @@
 package ch.usi.hse.experiments;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -47,27 +49,32 @@ public class DataStats {
 		
 		n = values.size();
 		
-		// median
-		int m1 = (int) Math.floor((double) (n+1)/2) -1;
-		int m2 = (int) Math.ceil((double) (n+1)/2) -1;
-		median = (values.get(m1) + values.get(m2)) / 2;
-		
-		// total and mean
-		for (Double v : values) {			
-			total += v;
+		if (n > 0) {
+			
+			// median
+			List<Double> valuesCp = new ArrayList<>(values);
+			Collections.sort(valuesCp);
+			int m1 = (int) Math.floor((double) (n+1)/2) -1;
+			int m2 = (int) Math.ceil((double) (n+1)/2) -1;
+			median = (valuesCp.get(m1) + valuesCp.get(m2)) / 2;
+			
+			// total and mean
+			for (Double v : values) {			
+				total += v;
+			}
+			
+			mean = total / n;
+			
+			// standard deviation
+			
+			double squareSum = 0;
+			
+			for (double v : values) {
+				squareSum += (v - mean) * (v - mean);
+			}
+			
+			standardDeviation = Math.sqrt(squareSum / n);
 		}
-		
-		mean = total / n;
-		
-		// standard deviation
-		
-		double squareSum = 0;
-		
-		for (double v : values) {
-			squareSum += (v - mean) * (v - mean);
-		}
-		
-		standardDeviation = Math.sqrt(squareSum / n);
 	}
 	
 	public int getN() {

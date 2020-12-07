@@ -20,21 +20,28 @@
 	
 	<div id="inner-container">
 	
-		<h2>Raw result data</h2>
-	
-		<button class="btn btn-sm btn-light">
-				<a class="dl-link" 
-				   th:href="@{/experiments/eval/export/raw_csv?expId=} + ${experiment.id}">
-							export as .csv
-				</a>
-		</button>
+		<div id="raw-dl-display">
+			<h2>Raw result data</h2>
 		
-		<button class="btn btn-sm btn-light">
-				<a class="dl-link" 
-				   th:href="@{/experiments/eval/export/raw_json?expId=} + ${experiment.id}">
-							export as .json
-				</a>
-		</button>
+			<button class="btn btn-sm btn-light">
+					<a class="dl-link" 
+					   th:href="@{/experiments/eval/export/raw_csv?expId=} + ${experiment.id}">
+								export as .csv
+					</a>
+			</button>
+			
+			<button class="btn btn-sm btn-light">
+					<a class="dl-link" 
+					   th:href="@{/experiments/eval/export/raw_json?expId=} + ${experiment.id}">
+								export as .json
+					</a>
+			</button>
+		</div>
+		
+		<div id="summary-display">
+		
+		
+		</div>
 	
 	</div>
 	
@@ -44,6 +51,7 @@
 <script th:inline="javascript">
 	/*<![CDATA[*/
 	var experiment = /*[[${experiment}]]*/ "default";
+	var summary = /*[[${summary}]]*/ "default";
 	/*]]>*/
 </script>
 

@@ -29,6 +29,7 @@ import ch.usi.hse.exceptions.ExperimentExistsException;
 import ch.usi.hse.exceptions.ExperimentStatusException;
 import ch.usi.hse.exceptions.NoSuchExperimentException;
 import ch.usi.hse.exceptions.NoSuchUserException;
+import ch.usi.hse.experiments.EventDataExtractor;
 import ch.usi.hse.experiments.ExperimentConfigurer;
 import ch.usi.hse.experiments.ResultWriter;
 import ch.usi.hse.storage.ExperimentConfigStorage;
@@ -62,6 +63,9 @@ public class ExperimentServiceTest {
 	@Mock
 	private ResultWriter resultWriter;
 	
+	@Mock
+	private EventDataExtractor dataExtractor;
+	
 	private ExperimentService service;
 	
 	private List<Experiment> savedExperiments;
@@ -87,7 +91,8 @@ public class ExperimentServiceTest {
 										experimentConfigurer,
 										experimentConfigStorage,
 										simpMessagingTemplate,
-										resultWriter);
+										resultWriter,
+										dataExtractor);
 		
 		// DocCollections
 		

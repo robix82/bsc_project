@@ -8,6 +8,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
 
@@ -29,12 +33,14 @@ import ch.usi.hse.db.repositories.UsageEventRepository;
  * @author robert.jans@usi.ch
  *
  */
+@Component
 public class EventDataExtractor {
 
 	private UsageEventRepository ueRepo;
 	private QueryEventRepository qeRepo;
 	private DocClickEventRepository ceRepo;
 	
+	@Autowired
 	public EventDataExtractor(UsageEventRepository ueRepo,
 							  QueryEventRepository qeRepo,
 							  DocClickEventRepository ceRepo) {
@@ -273,6 +279,10 @@ public class EventDataExtractor {
 		List<UsageEvent> history = userHistory(userId);		
 		List<Double> res = new ArrayList<>();
 		
+		if (history.isEmpty()) {
+			return res;
+		}
+		
 		int idx = 0;
 		int clickCount = 0;
 		UsageEvent evt; 
@@ -311,6 +321,10 @@ public class EventDataExtractor {
 		
 		List<UsageEvent> history = userHistory(userId);		
 		List<Double> res = new ArrayList<>();
+		
+		if (history.isEmpty()) {
+			return res;
+		}
 		
 		int idx = 0;
 		UsageEvent evt = history.get(idx++);
@@ -357,6 +371,10 @@ public class EventDataExtractor {
 		List<UsageEvent> history = userHistory(userId);		
 		List<Double> res = new ArrayList<>();
 		
+		if (history.isEmpty()) {
+			return res;
+		}
+		
 		int idx = 0;
 		UsageEvent evt = history.get(idx++);
 		
@@ -395,6 +413,10 @@ public class EventDataExtractor {
 		
 		List<UsageEvent> history = userHistory(userId);
 		Map<String, Double> res = new HashMap<>();
+		
+		if (history.isEmpty()) {
+			return res;
+		}
 		
 		for (String name : collectionNames) {
 			res.put(name,  0.0);
@@ -438,6 +460,10 @@ public class EventDataExtractor {
 		
 		List<UsageEvent> history = userHistory(userId);
 		Map<String, Double> res = new HashMap<>();
+		
+		if (history.isEmpty()) {
+			return res;
+		}
 		
 		for (String name : collectionNames) {
 			res.put(name,  0.0);

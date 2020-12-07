@@ -32,6 +32,7 @@ import ch.usi.hse.exceptions.NoSuchFileException;
 import ch.usi.hse.exceptions.NoSuchTestGroupException;
 import ch.usi.hse.exceptions.NoSuchUserException;
 import ch.usi.hse.exceptions.UserExistsException;
+import ch.usi.hse.experiments.ExperimentSummary;
 import ch.usi.hse.services.ExperimentService;
 import ch.usi.hse.services.UserService;
 
@@ -117,14 +118,20 @@ public class ExperimentsController {
 	 * @param expId
 	 * @return
 	 * @throws NoSuchExperimentException 
+	 * @throws ExperimentStatusException 
 	 */
 	@GetMapping("/eval/ui")
 	public ModelAndView getExperimentsEvalUi(@RequestParam(required=true) int expId) 
-			throws NoSuchExperimentException {
+			throws NoSuchExperimentException, ExperimentStatusException {
+		
+		Experiment experiment = experimentService.findExperiment(expId);
+		ExperimentSummary summary = experimentService.experimentSummary(experiment);
 		
 		ModelAndView mav = new ModelAndView();
 		mav.setViewName("exp_eval");
-		mav.addObject("experiment", experimentService.findExperiment(expId));
+		mav.addObject("experiment", experiment);
+		mav.addObject("summary", summary);
+		
 		
 		return mav;
 	}
