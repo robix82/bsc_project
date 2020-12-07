@@ -313,6 +313,8 @@ public class ExperimentsControllerIntegrationTest {
 	public void testGetExperimentsEvalUi1() throws Exception {
 		
 		Experiment experiment = savedExperiments.get(0);
+		experiment.setStatus(Experiment.Status.COMPLETE);
+		experimentRepo.save(experiment);
 		
 		String url = UriComponentsBuilder.fromUriString(base + "/eval/ui")
 				 						 .queryParam("expId", experiment.getId())
@@ -378,6 +380,7 @@ public class ExperimentsControllerIntegrationTest {
 		int existingId = savedExperiments.get(0).getId();
 		Experiment experiment = new Experiment("test");
 		experiment.setId(existingId);
+		experiment.setStatus(Experiment.Status.COMPLETE);
 		String jsonString = writer.writeValueAsString(experiment);
 		
 		MvcResult res = mvc.perform(post(base + "/").contentType(json).content(jsonString))
