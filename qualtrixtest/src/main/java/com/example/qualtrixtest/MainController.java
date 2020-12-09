@@ -9,7 +9,17 @@ import org.springframework.web.servlet.ModelAndView;
 public class MainController {
 
 	@GetMapping("/")
-	public ModelAndView getHome(@RequestParam(name="g", required=true) String group) {
+	public ModelAndView getHome() {
+		
+		ModelAndView mav = new ModelAndView();
+		
+		mav.setViewName("home");
+		
+		return mav;
+	}
+	
+	@GetMapping("/wg")
+	public ModelAndView getHomeWg(@RequestParam(name="g", required=true) String group) {
 		
 		ModelAndView mav = new ModelAndView();
 		
