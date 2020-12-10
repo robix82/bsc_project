@@ -9,22 +9,12 @@ import org.springframework.web.servlet.ModelAndView;
 public class MainController {
 
 	@GetMapping("/")
-	public ModelAndView getHome() {
+	public ModelAndView getHome(@RequestParam(required=false) String uid) {
 		
 		ModelAndView mav = new ModelAndView();
+		mav.addObject("uid", uid);
 		
 		mav.setViewName("home");
-		
-		return mav;
-	}
-	
-	@GetMapping("/wg")
-	public ModelAndView getHomeWg(@RequestParam(name="g", required=true) String group) {
-		
-		ModelAndView mav = new ModelAndView();
-		
-		mav.setViewName("home");
-		mav.addObject("group", group);
 		
 		return mav;
 	}
