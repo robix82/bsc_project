@@ -11,7 +11,7 @@ The current version can be run by issuing `docker-compose up`
 from the `hse` directory.
 If the images are not already installed on the system, the latest hse image as well as
 the required MySql image will be downloaded from DockerHub.
-The application's user interface runs on tcp port 80.
+The application's user interface runs on tcp port 8081 (the port can be configured in docker-compose.yml).
 
 ### Build with Maven
 
