@@ -64,6 +64,7 @@ public class SearchController {
 	public ModelAndView getParticcipantLogout() {
 		
 		ModelAndView mav = new ModelAndView();
+		mav.addObject("baseUrl", baseUrl);
 		mav.setViewName("participantLogout");
 		mav.addObject("baseUrl", baseUrl);
 		
@@ -83,6 +84,7 @@ public class SearchController {
 		SearchResultList srl = searchService.search(queryString, hseUser);
 		
 		ModelAndView mav = new ModelAndView();
+		mav.addObject("baseUrl", baseUrl);
 		mav.setViewName("search");
 		mav.addObject("searchResultList", srl);
 		

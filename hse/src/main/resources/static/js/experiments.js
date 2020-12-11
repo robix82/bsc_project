@@ -110,7 +110,7 @@ function showExperimentDeleteModal(experiment) {
 
 function submitExperiment(experiment, method) {
 	
-	let url = baseUrl + "experiments";
+	let url = baseUrl + "experiments/";
 	
 	$.ajax(url,
 		{
@@ -132,7 +132,7 @@ function submitExperiment(experiment, method) {
 
 function deleteExperiment(experiment) {
 
-	let url = baseUrl + "experiments";
+	let url = baseUrl + "experiments/"
 	
 	$.ajax(url,
 		{

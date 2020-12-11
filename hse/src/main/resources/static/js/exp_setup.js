@@ -31,7 +31,7 @@ function submitConfigFile() {
 	if ($("#configFileInput")[0].files.length > 0) {
 		
 		formData.append("file", $("#configFileInput")[0].files[0]);
-		let url = baseUrl + "/experiments/testGroups/config/ul";
+		let url = baseUrl + "experiments/testGroups/config/ul";
 		
 		$.ajax(url,
 			   {
@@ -141,8 +141,6 @@ function showTestGroupDeleteModal(testGroup) {
 
 function showDocCollectionSelectModal(testGroup) {
 	
-	console.log("showDocCollectionSelectModal(" + testGroup.name + ")");
-	
 	$("#selctCollectionBtn").on("click", () => {
 		
 		let collection = getDocCollection($("#docCollectionSelect").val());
@@ -223,7 +221,7 @@ function removeDocCollection(testGroup, collectionId) {
 
 function submitTestGroup(testGroup, method) {
 	
-	let url = baseUrl + "/experiments/testGroups";
+	let url = baseUrl + "experiments/testGroups/";
 	
 	$.ajax(url,
 		{

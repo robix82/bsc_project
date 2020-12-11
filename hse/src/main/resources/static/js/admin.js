@@ -142,7 +142,7 @@ function submitUser(user, category, method) {
 
 function deleteUser(user, category) {
 
-	let url = baseUrl + "/admin/" + category;
+	let url = baseUrl + "admin/" + category;
 	
 	$.ajax(url,
 		{
