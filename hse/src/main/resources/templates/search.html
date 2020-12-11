@@ -37,6 +37,11 @@
 		</form>
 	</div>
 	
+	<div th:if="${experimentId != null}" th:text="'Experiment: ' + ${experimentId}"></div>
+	<div th:if="${groupId != null}" th:text="'Group: ' + ${groupId}"></div>
+	<div th:if="${userId != null}" th:text="'User: ' + ${userId}"></div>
+	<div th:if="${surveyUrl != null}" th:text="'Survey: ' + ${surveyUrl}"></div>
+	
 	<div id="results" th:if="${searchResultList != null}">
 
 		<div id="resultPropertiesDisplay"></div>

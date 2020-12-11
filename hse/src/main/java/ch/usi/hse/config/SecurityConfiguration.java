@@ -55,17 +55,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	public void configure(HttpSecurity http) throws Exception {
 		
 		http.csrf().disable()
-			.authorizeRequests()
-			
-			/*
-			// unrestricted access during development
-			.antMatchers("/").permitAll() 
-			.antMatchers("/experiments/**").permitAll()
-			.antMatchers("/indexing/**").permitAll()
-			.antMatchers("/admin/**").permitAll();
-
-			*/
-			
+			.authorizeRequests()			
+			.antMatchers("/from_survey/**").permitAll()
 			.antMatchers("/participantLogout").permitAll()
 			.antMatchers("/test").permitAll() // temporary
 			.antMatchers("/experiments/**").hasAnyAuthority("EXPERIMENTER", "ADMIN")

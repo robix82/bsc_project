@@ -46,6 +46,9 @@ public class Participant extends HseUser {
 	@Column(name="click_count")
 	private int clickCount;
 	
+	@Column(name="surveyUrl")
+	private String surveyUrl;
+	
 	public Participant() {
 		
 		super();
@@ -152,6 +155,14 @@ public class Participant extends HseUser {
 	
 	public  void incClickCount() {
 		++clickCount;
+	}
+	
+	public String getSurveyUrl() {
+		return surveyUrl;
+	}
+	
+	public void setSurveyUrl(String surveyUrl) {
+		this.surveyUrl = surveyUrl;
 	}
 }
 

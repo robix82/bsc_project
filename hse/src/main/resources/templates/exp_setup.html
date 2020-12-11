@@ -94,7 +94,7 @@
 				<div th:each="testGroup : ${experiment.testGroups}" class="test-group-div">
 				
 					<div class="test-group-header">
-						<h4 th:text="${testGroup.name}"></h4>
+						<h4 th:text="${testGroup.name} + ' [' + ${testGroup.id} + ']'"></h4>
 						
 						<button class="btn btn-sm btn-danger" 
 								th:onclick="showTestGroupDeleteModal([[${testGroup}]])">

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import ch.usi.hse.db.entities.HseUser;
@@ -74,9 +75,6 @@ public class SearchController {
 		
 		HseUser hseUser = userService.findUser(user.getUsername());
 		
-		System.out.println("QUERY: " + queryString);
-		System.out.println("USER: " + hseUser.getUserName() + " " + hseUser.getId());
-		
 		SearchResultList srl = searchService.search(queryString, hseUser);
 		
 		ModelAndView mav = new ModelAndView();
@@ -87,8 +85,8 @@ public class SearchController {
 	}
 	
 	@PostMapping("/browse")
-	public ResponseEntity<String> postBrowseEent(@AuthenticationPrincipal User user,
-												 @RequestBody SearchResult clickedResult) 
+	public ResponseEntity<String> postBrowseEvent(@AuthenticationPrincipal User user,
+												  @RequestBody SearchResult clickedResult) 
 			throws NoSuchExperimentException, NoSuchUserException {
 		
 		

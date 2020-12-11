@@ -26,6 +26,7 @@
 			
 			<tr th:each="experiment : ${experiments}"  class="list-row table-light">
 						
+				<td th:text="${experiment.id}"></td>
 				<td th:text="${experiment.title}"></td>
 				<td th:text="${experiment.experimenterName}"></td>
 				<td th:id="'exp_creationDate_' + ${experiment.id}"></td>

@@ -22,6 +22,7 @@ import ch.usi.hse.db.repositories.ParticipantRepository;
 import ch.usi.hse.db.repositories.RoleRepository;
 import ch.usi.hse.db.repositories.TestGroupRepository;
 import ch.usi.hse.db.repositories.UserRepository;
+import ch.usi.hse.exceptions.NoSuchTestGroupException;
 import ch.usi.hse.exceptions.NoSuchUserException;
 import ch.usi.hse.exceptions.UserExistsException;
 
@@ -42,6 +43,8 @@ public class UserService {
 	private ExperimentRepository experimentRepository;
 	private RoleRepository roleRepository;
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
+	
+	private String surveyUserPassword = "xxxyyyzzz";
 	 
 	@Autowired 
 	public UserService(UserRepository userRepository, 
@@ -106,6 +109,14 @@ public class UserService {
 	}
 	
 	// RETRIEVE USER LISTS
+	
+	public boolean userExists(int id) {
+		return userRepository.existsById(id);
+	}
+	
+	public boolean userExists(String name) {
+		return userRepository.existsByUserName(name);
+	}
 	
 	/**
 	 * returns all saved users
@@ -390,6 +401,39 @@ public class UserService {
 		Participant saved = participantRepository.save(newParticipant);
 		
 		return saved;
+	}
+	
+	public int addSurveyParticipant(String name, int groupId, String surveyUrl) 
+			throws UserExistsException, NoSuchTestGroupException {
+		
+		String userName = "svu_" + name;
+		Participant saved;
+		
+		if (! testGroupRepository.existsById(groupId)) {
+			throw new NoSuchTestGroupException(groupId);
+		}
+		
+		if (! participantRepository.existsByUserName(userName)) {
+			
+			if (userRepository.existsByUserName(userName)) {
+				throw new UserExistsException(userName);
+			}
+			
+			Participant p = new Participant(userName, surveyUserPassword);
+			saved = participantRepository.save(p);
+		}
+		else {
+			
+			saved = participantRepository.findByUserName(userName);
+		}
+		
+		TestGroup g = testGroupRepository.findById(groupId);
+		g.addParticipant(saved);
+		testGroupRepository.save(g);
+		
+		saved.setSurveyUrl(surveyUrl);
+		
+		return saved.getId();
 	}
 	
 	// UPDATE EXISTING USERS
