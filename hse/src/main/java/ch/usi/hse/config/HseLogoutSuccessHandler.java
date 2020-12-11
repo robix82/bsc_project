@@ -39,7 +39,7 @@ public class HseLogoutSuccessHandler implements LogoutSuccessHandler {
 		throws IOException, ServletException {
 
 		String uName = authentication.getName();		
-		String redirect = baseUrl + "login";
+		String redirect = "login";
 		
 		HttpSession session = request.getSession();
 		
@@ -63,7 +63,7 @@ public class HseLogoutSuccessHandler implements LogoutSuccessHandler {
 				experimentRepo.save(experiment);
 			}
 			
-			redirect =  "/participantLogout";
+			redirect = baseUrl + "participantLogout";
 		}
 
 		response.sendRedirect(redirect);
