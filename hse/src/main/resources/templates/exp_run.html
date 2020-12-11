@@ -6,7 +6,7 @@
 	<!--/*/ <th:block th:include="fragments/general.html :: general_head">
         	</th:block> /*/-->
            
-	<link rel="stylesheet" th:href="@{/css/exp_run.css}" />
+	<link rel="stylesheet" th:href="@{${baseUrl} + 'css/exp_run.css'}" />
 
 </head>
 
@@ -84,7 +84,7 @@
 <th:block th:include="fragments/general.html :: commonScripts"></th:block>
 <th:block th:include="fragments/modals.html :: modals"></th:block>
 
-<script th:src="@{/js/exp_run.js}"></script>
+<script th:src="@{${baseUrl} + 'js/exp_run.js'}"></script>
 
 </body>
 

@@ -14,8 +14,9 @@ function submitUrlFile() {
 	if ($("#urlListFileInput")[0].files.length > 0) {
 		
 		formData.append("file", $("#urlListFileInput")[0].files[0]);
+		let url = baseUrl + "indexing/urlLists";
 		
-		$.ajax("/indexing/urlLists",
+		$.ajax(url,
 			   {
 			    type : "POST",
 			    data : formData,
@@ -65,7 +66,9 @@ function showDocCollectionInputModal(collection) {
 		collection.urlListName = urlListName;
 		collection.language = language;
 		
-		$.ajax("/indexing/docCollections",
+		let url = baseUrl + "indexing/docCollections";
+		
+		$.ajax(url,
 			{
 				type: method,
 				dataType: "json",
@@ -91,7 +94,7 @@ function showUrlListDeleteModal(fileName) {
 	
 	showConfirmDeleteModal(fileName, () => { 
 		
-		let url = "/indexing/urlLists?fileName=" + fileName;
+		let url = baseUrl + "indexing/urlLists?fileName=" + fileName;
 		
 		$.ajax(url,
 				{
@@ -118,7 +121,9 @@ function showCollectionDeleteModal(collection) {
 
 function deleteCollection(collection) {
 	
-	$.ajax("/indexing/docCollections",
+	let url = baseUrl + "indexing/docCollections";
+	
+	$.ajax(url,
 		{
 			type: "DELETE",
 			dataType: "json",
@@ -139,7 +144,9 @@ function doIndex(collection) {
 	
 	$("#processingModal").modal("show");
 	
-	$.ajax("/indexing/buildIndex",
+	let url = baseUrl + "indexing/buildIndex";
+	
+	$.ajax(url,
 			{
 				type: "POST",
 				dataType: "json",

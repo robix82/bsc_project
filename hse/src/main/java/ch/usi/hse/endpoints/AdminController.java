@@ -1,6 +1,7 @@
 package ch.usi.hse.endpoints;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -34,6 +35,9 @@ public class AdminController {
 	@Autowired 
 	private UserService userService;
 	
+	@Value("${baseUrl}")
+	private String baseUrl;
+	
 	/**
 	 * Serves the main admin UI page
 	 * 
@@ -46,6 +50,7 @@ public class AdminController {
 		ModelAndView mav = new ModelAndView();
 		mav.setViewName("admin"); 
 		 
+		mav.addObject("baseUrl", baseUrl);
 		mav.addObject("administrators", userService.allAdministrators());
 		mav.addObject("experimenters", userService.allExperimenters());
 		mav.addObject("participants", userService.allParticipants());

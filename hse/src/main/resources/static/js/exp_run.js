@@ -78,8 +78,6 @@ function startExperiment() {
 
 function stopExperiment() { 
 	
-	
-
 	submitExperiment("stop", (res) => {
 		
 		experiment= res;
@@ -129,7 +127,7 @@ function onTimeStep() {
 
 function submitExperiment(action, onSuccess) {
 	
-	let url = "/experiments/" + action;
+	let url = baseUrl + "experiments/" + action;
 	
 	$.ajax(url,
 		{
@@ -151,7 +149,7 @@ function submitExperiment(action, onSuccess) {
 
 function pollExperimentUpdate() {
 	
-	let url = "/experiments/?id=" + experiment.id;
+	let url = baseUrl + "experiments/?id=" + experiment.id;
 	
 	$.ajax(url,
 		{

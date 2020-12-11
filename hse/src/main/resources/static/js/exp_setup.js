@@ -31,8 +31,9 @@ function submitConfigFile() {
 	if ($("#configFileInput")[0].files.length > 0) {
 		
 		formData.append("file", $("#configFileInput")[0].files[0]);
+		let url = baseUrl + "/experiments/testGroups/config/ul";
 		
-		$.ajax("/experiments/testGroups/config/ul",
+		$.ajax(url,
 			   {
 			    type : "POST",
 			    data : formData,
@@ -52,7 +53,7 @@ function showConfigFileDeleteModal(fileName) {
 	
 	showConfirmDeleteModal(fileName, () => { 
 		
-		let url = "/experiments/testGroups/config?fileName=" + fileName;
+		let url = baseUrl + "experiments/testGroups/config?fileName=" + fileName;
 		
 		$.ajax(url,
 				{
@@ -86,7 +87,7 @@ function submitFileConfig(file) {
 	
 	console.log("submitting file config " + file);
 	
-	let url = "/experiments/testGroups/config?configFileName=" + file;
+	let url = baseUrl + "experiments/testGroups/config?configFileName=" + file;
 	
 	$.ajax(url,
 		{
@@ -222,7 +223,9 @@ function removeDocCollection(testGroup, collectionId) {
 
 function submitTestGroup(testGroup, method) {
 	
-	$.ajax("/experiments/testGroups",
+	let url = baseUrl + "/experiments/testGroups";
+	
+	$.ajax(url,
 		{
 			type: method,
 			dataType: "json",

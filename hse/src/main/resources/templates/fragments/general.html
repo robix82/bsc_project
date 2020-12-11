@@ -8,12 +8,11 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	
-    <link rel="stylesheet" th:href="@{/lib/bootstrap/css/bootstrap.min.css}"/>
-	<link rel="stylesheet" th:href="@{/lib/icons.css}"/>
-	<link rel="stylesheet" th:href="@{/css/main.css}"/>
-	<link rel="stylesheet" th:href="@{/css/navBar.css}" />
-	<link rel="stylesheet" th:href="@{/css/modals.css}" />
-	<link rel="shortcut icon" type="image/png" th:href="@{/favicon.ico}"/>
+    <link rel="stylesheet" th:href="@{${baseUrl} + 'lib/bootstrap/css/bootstrap.min.css'}"/>
+	<link rel="stylesheet" th:href="@{${baseUrl} + 'lib/icons.css'}"/>
+	<link rel="stylesheet" th:href="@{${baseUrl} + 'css/main.css'}"/>
+	<link rel="stylesheet" th:href="@{${baseUrl} + 'css/navBar.css'}" />
+	<link rel="stylesheet" th:href="@{${baseUrl} + 'css/modals.css'}" />
 	
 </head>
 
@@ -23,15 +22,15 @@
 
 	  	<div id="internal-links">
 
-			<a  class="internal-link" th:href="@{/}" th:text="#{m_search}"></a>
+			<a  class="internal-link" th:href="@{${baseUrl}}" th:text="#{m_search}"></a>
 			
-			<a class="internal-link" th:href="@{/experiments/ui}" th:text="#{m_experiments}"></a>
+			<a class="internal-link" th:href="@{${baseUrl} + 'experiments/ui'}" th:text="#{m_experiments}"></a>
 
-			<a class="internal-link" th:href="@{/indexing/ui}" th:text="#{m_indexing}"></a>
+			<a class="internal-link" th:href="@{${baseUrl} + 'indexing/ui'}" th:text="#{m_indexing}"></a>
 			
-			<a sec:authorize="hasAuthority('ADMIN')" class="internal-link" th:href="@{/admin/ui}" th:text="#{m_admin}"></a>
+			<a sec:authorize="hasAuthority('ADMIN')" class="internal-link" th:href="@{${baseUrl} + 'admin/ui'}" th:text="#{m_admin}"></a>
 			
-			<a class="internal-link" th:href="@{/logout}">Logout</a>
+			<a class="internal-link" th:href="@{${baseUrl} + 'logout'}">Logout</a>
 			
 		</div>
 		
@@ -43,13 +42,20 @@
 	</nav>
 
    	<th:block th:fragment="commonScripts">
+
+		<!-- pass baseUrl to js -->
+		<script th:inline="javascript">
+			/*<![CDATA[*/
+			var baseUrl = /*[[${baseUrl}]]*/ "default";
+			/*]]>*/
+		</script>
 	
-	  	<script th:src="@{/lib/jquery-3.4.1.min.js}"></script>
-	  	<script th:src="@{/lib/bootstrap/js/bootstrap.min.js}"></script>
-		<script th:src="@{/js/messages.js}"></script>
-	  	<script th:src="@{/js/main.js}"></script>
-		<script th:src="@{/lib/stomp/sockjs.min.js}"></script>
-    	<script th:src="@{/lib/stomp/stomp.min.js}"></script>
+	  	<script th:src="@{${baseUrl} + 'lib/jquery-3.4.1.min.js'}"></script>
+	  	<script th:src="@{${baseUrl} + 'lib/bootstrap/js/bootstrap.min.js'}"></script>
+		<script th:src="@{${baseUrl} + 'js/messages.js'}"></script>
+	  	<script th:src="@{${baseUrl} + 'js/main.js'}"></script>
+		<script th:src="@{${baseUrl} + 'lib/stomp/sockjs.min.js'}"></script>
+    	<script th:src="@{${baseUrl} + 'lib/stomp/stomp.min.js'}"></script>
 	
 	</th:block>
 

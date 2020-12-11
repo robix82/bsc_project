@@ -6,7 +6,7 @@
 	<!--/*/ <th:block th:include="fragments/general.html :: general_head">
         	</th:block> /*/-->
            
-	<link rel="stylesheet" th:href="@{/css/indexing.css}" />
+	<link rel="stylesheet" th:href="@{${baseUrl} + 'css/indexing.css'}" />
 
 </head>
 
@@ -40,7 +40,7 @@
 							
 							<td>
 								<button class="btn btn-sm btn-light">
-								<a class="dl-link" th:href="@{/indexing/urlLists/dl?fileName=} + ${urlList}">
+								<a class="dl-link" th:href="@{${baseUrl} + 'indexing/urlLists/dl?fileName='} + ${urlList}">
 								<span class="glyphicon glyphicon-save"></span>
 								</a>
 								</button>
@@ -162,7 +162,7 @@
 <th:block th:include="fragments/general.html :: commonScripts"></th:block>
 <th:block th:include="fragments/modals.html :: modals"></th:block>
 
-<script th:src="@{/js/indexing.js}"></script>
+<script th:src="@{${baseUrl} + 'js/indexing.js'}"></script>
 
 </body>
 

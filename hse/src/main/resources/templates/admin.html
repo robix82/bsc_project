@@ -6,7 +6,7 @@
 	<!--/*/ <th:block th:include="fragments/general.html :: general_head">
         	</th:block> /*/-->
            
-	<link rel="stylesheet" th:href="@{/css/admin.css}" />
+	<link rel="stylesheet" th:href="@{${baseUrl} + 'css/admin.css'}" />
 
 </head>
 
@@ -128,7 +128,7 @@
 <th:block th:include="fragments/general.html :: commonScripts"></th:block>
 <th:block th:include="fragments/modals.html :: modals"></th:block>
 
-<script th:src="@{/js/admin.js}"></script>
+<script th:src="@{${baseUrl} + 'js/admin.js'}"></script>
 
 </body>
 

@@ -6,7 +6,7 @@
 	<!--/*/ <th:block th:include="fragments/general.html :: general_head">
         	</th:block> /*/-->
            
-	<link rel="stylesheet" th:href="@{/css/exp_eval.css}" />
+	<link rel="stylesheet" th:href="@{${baseUrl} + 'css/exp_eval.css'}" />
 
 </head>
 
@@ -25,14 +25,14 @@
 		
 			<button class="btn btn-sm btn-light">
 					<a class="dl-link" 
-					   th:href="@{/experiments/eval/export/raw_csv?expId=} + ${experiment.id}">
+					   th:href="@{${baseUrl} + 'experiments/eval/export/raw_csv?expId='} + ${experiment.id}">
 								export as .csv
 					</a>
 			</button>
 			
 			<button class="btn btn-sm btn-light">
 					<a class="dl-link" 
-					   th:href="@{/experiments/eval/export/raw_json?expId=} + ${experiment.id}">
+					   th:href="@{${baseUrl} + 'experiments/eval/export/raw_json?expId='} + ${experiment.id}">
 								export as .json
 					</a>
 			</button>
@@ -59,7 +59,7 @@
 <th:block th:include="fragments/general.html :: commonScripts"></th:block>
 <th:block th:include="fragments/modals.html :: modals"></th:block>
 
-<script th:src="@{/js/exp_eval.js}"></script>
+<script th:src="@{${baseUrl} + 'js/exp_eval.js'}"></script>
 
 </body>
 

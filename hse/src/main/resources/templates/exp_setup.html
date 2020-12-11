@@ -6,7 +6,7 @@
 	<!--/*/ <th:block th:include="fragments/general.html :: general_head">
         	</th:block> /*/-->
            
-	<link rel="stylesheet" th:href="@{/css/exp_setup.css}" />
+	<link rel="stylesheet" th:href="@{${baseUrl} + 'css/exp_setup.css'}" />
 
 </head>
 
@@ -51,7 +51,7 @@
 					<td>
 						<button class="btn btn-sm btn-light">
 							<a class="dl-link" 
-							   th:href="@{/experiments/testGroups/config/dl?fileName=} + ${file}" 
+							   th:href="@{${baseUrl} + 'experiments/testGroups/config/dl?fileName='} + ${file}" 
 							   target="blank">
 							<span class="glyphicon glyphicon-search"></span>
 							</a>
@@ -183,7 +183,7 @@
 <th:block th:include="fragments/general.html :: commonScripts"></th:block>
 <th:block th:include="fragments/modals.html :: modals"></th:block>
 
-<script th:src="@{/js/exp_setup.js}"></script>
+<script th:src="@{${baseUrl} + 'js/exp_setup.js'}"></script>
 
 </body>
 

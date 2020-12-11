@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.MediaType;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -53,6 +54,9 @@ public class ExperimentsController {
 	@Autowired
 	private UserService userService;
 	
+	@Value("${baseUrl}")
+	private String baseUrl;
+	
 	// UI CONTROLLERS
 	
 	/**
@@ -66,7 +70,7 @@ public class ExperimentsController {
 		ModelAndView mav = new ModelAndView();
 		mav.setViewName("experiments");
 		
-		// TODO: maybe select only experiments of currently logged in experimenter
+		mav.addObject("baseUrl", baseUrl);
 		mav.addObject("experiments", experimentService.allExperiments());
 		mav.addObject("experimenters", userService.allExperimenters());
 		
@@ -86,7 +90,9 @@ public class ExperimentsController {
 			throws NoSuchExperimentException, FileReadException {
 		
 		ModelAndView mav = new ModelAndView();
+		
 		mav.setViewName("exp_setup");
+		mav.addObject("baseUrl", baseUrl);
 		mav.addObject("experiment", experimentService.findExperiment(expId));
 		mav.addObject("docCollections", experimentService.getIndexedDocCollections());
 		mav.addObject("configFiles", experimentService.savedConfigFiles());
@@ -106,6 +112,7 @@ public class ExperimentsController {
 			throws NoSuchExperimentException {
 		
 		ModelAndView mav = new ModelAndView();
+		mav.addObject("baseUrl", baseUrl);
 		mav.setViewName("exp_run");
 		mav.addObject("experiment", experimentService.findExperiment(expId));
 		
@@ -128,6 +135,7 @@ public class ExperimentsController {
 		ExperimentSummary summary = experimentService.experimentSummary(experiment);
 		
 		ModelAndView mav = new ModelAndView();
+		mav.addObject("baseUrl", baseUrl);
 		mav.setViewName("exp_eval");
 		mav.addObject("experiment", experiment);
 		mav.addObject("summary", summary);

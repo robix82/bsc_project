@@ -120,7 +120,7 @@ function showExperimenterDeleteModal(experimenter) {
 
 function submitUser(user, category, method) { 
 	
-	let url = "/admin/" + category;
+	let url = baseUrl + "admin/" + category;
 	
 	$.ajax(url,
 		{
@@ -142,7 +142,7 @@ function submitUser(user, category, method) {
 
 function deleteUser(user, category) {
 
-	let url = "/admin/" + category;
+	let url = baseUrl + "/admin/" + category;
 	
 	$.ajax(url,
 		{

@@ -29,7 +29,7 @@ function setupButtons(experiment) {
 	$(evalBtnId).prop("disabled", true);
 	
 	$(configBtnId).on("click", () => {
-		location.href= "/experiments/setup/ui?expId=" + expId;
+		location.href= baseUrl + "experiments/setup/ui?expId=" + expId;
 	});
 	
 	if (expStatus == "READY" || expStatus == "COMPLETE") {
@@ -37,7 +37,7 @@ function setupButtons(experiment) {
 		$(runBtnId).prop("disabled", false);
 		
 		$(runBtnId).on("click", () => {
-			location.href= "/experiments/run/ui?expId=" + expId;
+			location.href= baseUrl + "experiments/run/ui?expId=" + expId;
 		});
 	}
 	
@@ -46,7 +46,7 @@ function setupButtons(experiment) {
 		$(evalBtnId).prop("disabled", false);
 	
 		$(evalBtnId).on("click", () => {
-			location.href= "/experiments/eval/ui?expId=" + expId;
+			location.href= baseUrl + "experiments/eval/ui?expId=" + expId;
 		});
 	}
 }
@@ -110,9 +110,9 @@ function showExperimentDeleteModal(experiment) {
 
 function submitExperiment(experiment, method) {
 	
-	let succMsg = m_experiment + " " + experiment.title + " " + m_saved + ".";
+	let url = baseUrl + "experiments";
 	
-	$.ajax("/experiments/",
+	$.ajax(url,
 		{
 			type: method,
 			dataType: "json",
@@ -132,8 +132,9 @@ function submitExperiment(experiment, method) {
 
 function deleteExperiment(experiment) {
 
+	let url = baseUrl + "experiments";
 	
-	$.ajax("/experiments/",
+	$.ajax(url,
 		{
 			type: "DELETE",
 			dataType: "json",

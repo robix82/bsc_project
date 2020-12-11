@@ -1,5 +1,5 @@
 
-var stommpCclient = null;
+var stommpClient = null;
 
 $(document).ready(function() {
 	
@@ -45,10 +45,10 @@ function connectWebSocket() {
 
         console.log('Connected: ' + frame);
 
-        stompClient.subscribe("/info", function (info) {
+        stompClient.subscribe(baseUrl + "info", function (info) {
 	
 			if (info.body == "experiment_over") {
-				location.href = "/logout";
+				location.href = baseUrl + "logout";
 			}
 			else {
 				console.log(info);

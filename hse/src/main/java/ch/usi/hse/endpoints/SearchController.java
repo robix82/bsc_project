@@ -4,6 +4,7 @@ package ch.usi.hse.endpoints;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.search.highlight.InvalidTokenOffsetsException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import ch.usi.hse.db.entities.HseUser;
@@ -39,6 +39,9 @@ public class SearchController {
 	@Autowired
 	private SearchService searchService;
 	
+	@Value("${baseUrl}")
+	private String baseUrl;
+	
 	@Autowired
 	private UserService userService;
 	
@@ -51,6 +54,7 @@ public class SearchController {
 	public ModelAndView getSearchUi() {
     		
 		ModelAndView mav = new ModelAndView();
+		mav.addObject("baseUrl", baseUrl);
 		mav.setViewName("search");
 		
 		return mav;
@@ -61,6 +65,7 @@ public class SearchController {
 		
 		ModelAndView mav = new ModelAndView();
 		mav.setViewName("participantLogout");
+		mav.addObject("baseUrl", baseUrl);
 		
 		return mav;
 	}

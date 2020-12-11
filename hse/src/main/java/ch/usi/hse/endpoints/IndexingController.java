@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.MediaType;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -50,6 +51,9 @@ public class IndexingController {
 	@Autowired
 	private IndexingService indexingService;
 	
+	@Value("${baseUrl}")
+	private String baseUrl;
+	
 	/**
 	 * Serves the main indexing UI page
 	 * 
@@ -61,6 +65,7 @@ public class IndexingController {
 		
 		ModelAndView mav = new ModelAndView();
 		mav.setViewName("indexing");
+		mav.addObject("baseUrl", baseUrl);
 		mav.addObject("urlLists", indexingService.savedUrlLists());
 		mav.addObject("docCollections", indexingService.docCollections());
 		mav.addObject("languages", Language.languages);
