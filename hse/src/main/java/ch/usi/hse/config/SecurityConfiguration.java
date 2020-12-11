@@ -1,6 +1,7 @@
 package ch.usi.hse.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -23,6 +24,9 @@ import ch.usi.hse.services.HseUserDetailsService;
 
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
+	@Value("${baseUrl}")
+	private String baseUrl;
+	
 	@Autowired
 	private HseUserDetailsService userDetailsService;
 	
@@ -65,10 +69,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 			.anyRequest()
 			.authenticated().and().csrf().disable()
 			.formLogin()
+			.loginProcessingUrl(baseUrl + "login")
 			.successHandler(loginHandler)
 			.and()
 			.logout()
-			.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+			.logoutRequestMatcher(new AntPathRequestMatcher(baseUrl + "logout"))
 			.logoutSuccessHandler(logoutHandler);
 	}
 	

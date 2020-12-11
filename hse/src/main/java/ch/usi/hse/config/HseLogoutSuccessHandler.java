@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -21,6 +22,9 @@ import ch.usi.hse.db.repositories.ParticipantRepository;
 @Component("HseLogoutSuccessHandler")
 public class HseLogoutSuccessHandler implements LogoutSuccessHandler {
 
+	@Value("${baseUrl}")
+	private String baseUrl;
+	
 	@Autowired
 	private ParticipantRepository participantRepo;
 	
@@ -35,7 +39,7 @@ public class HseLogoutSuccessHandler implements LogoutSuccessHandler {
 		throws IOException, ServletException {
 
 		String uName = authentication.getName();		
-		String redirect = "/login";
+		String redirect = baseUrl + "login";
 		
 		HttpSession session = request.getSession();
 		
