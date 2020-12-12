@@ -53,6 +53,8 @@ public class HseAuthenticationSuccessHandler implements AuthenticationSuccessHan
 		session.setAttribute("username", uName);
 		session.setAttribute("authorities", authentication.getAuthorities());
 		
+		System.out.println("LOGIN SUCCESS: redirecting to " + baseUrl);
+		
 		response.setStatus(HttpServletResponse.SC_OK);
 		response.sendRedirect(baseUrl);
 		

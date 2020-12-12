@@ -37,6 +37,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	private HseAuthenticationSuccessHandler loginHandler;
 	
 	@Autowired
+	private HseAuthenticationFailureHandler loginFailureHandler;
+	
+	@Autowired
 	private HseLogoutSuccessHandler logoutHandler;
 	
 	@Override
@@ -61,16 +64,22 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		http.csrf().disable()
 			.authorizeRequests()			
 			.antMatchers("/from_survey/**").permitAll()
+			.antMatchers("/login").permitAll()
 			.antMatchers("/participantLogout").permitAll()
 			.antMatchers("/test").permitAll() // temporary
 			.antMatchers("/experiments/**").hasAnyAuthority("EXPERIMENTER", "ADMIN")
 			.antMatchers("/indexing/**").hasAnyAuthority("EXPERIMENTER", "ADMIN")
-			.antMatchers("/admin/**").hasAuthority("ADMIN")
+		//	.antMatchers("/admin/**").hasAuthority("ADMIN")
+			.antMatchers("/admin/**").permitAll()
 			.anyRequest()
-			.authenticated().and().csrf().disable()
+			.authenticated()
+			.and()
 			.formLogin()
-			.loginProcessingUrl(baseUrl + "login")
+			.loginPage(baseUrl + "login")
+			.usernameParameter("user_name")
+			.passwordParameter("password")
 			.successHandler(loginHandler)
+			.failureHandler(loginFailureHandler)
 			.and()
 			.logout()
 			.logoutRequestMatcher(new AntPathRequestMatcher(baseUrl + "logout"))
