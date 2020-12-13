@@ -22,7 +22,7 @@
 	</div>
 	
 	<div id="search-bar">
-		<form th:action="@{/}" method="POST">
+		<form th:action="@{${baseUrl}}" method="POST">
 		
 		<input id="search-input" 
 				    name="queryString" 
@@ -36,6 +36,8 @@
 		
 		</form>
 	</div>
+	
+	<a th:href="@{${surveyUrl}}">back to survey</a>
 	
 	<div th:if="${experimentId != null}" th:text="'Experiment: ' + ${experimentId}"></div>
 	<div th:if="${groupId != null}" th:text="'Group: ' + ${groupId}"></div>

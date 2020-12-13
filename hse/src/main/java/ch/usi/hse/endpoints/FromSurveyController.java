@@ -1,6 +1,9 @@
 package ch.usi.hse.endpoints;
 
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import ch.usi.hse.db.entities.HseUser;
 import ch.usi.hse.exceptions.NoSuchTestGroupException;
 import ch.usi.hse.exceptions.NoSuchUserException;
 import ch.usi.hse.exceptions.UserExistsException;
@@ -36,34 +40,35 @@ public class FromSurveyController {
 	private String baseUrl;
 
 	@GetMapping("/")
-	public ModelAndView getSearchUiFromSurvey(@RequestParam(name="xid") int experimentId,
-											  @RequestParam(name="gid") int groupId,
-											  @RequestParam(name="uid") int userId,
-											  @RequestParam(name="qurl") String surveyUrl) {
+	public ModelAndView getSearchUiFromSurvey(HttpServletRequest request, @RequestParam(name="uid") int userId) 
+			throws NoSuchUserException {
+		
+		HseUser user = userService.findUser(userId);
+		
+		try {
+	        request.login(user.getUserName(), UserService.surveyUserPassword);
+	    } catch (ServletException e) {
+	        System.out.println("Error while login");
+	    }
 		
 		ModelAndView mav = new ModelAndView();
 		mav.setViewName("search");
 		mav.addObject("baseUrl", baseUrl);
-		mav.addObject("experimentId", experimentId);
-		mav.addObject("groupId", groupId);
-		mav.addObject("userId", userId);
-		mav.addObject("surveyUrl", surveyUrl);
-		
+
 		return mav;
 	}
 	
 	@PostMapping("/addUser")
-	public ResponseEntity<Integer> addUser(@RequestParam String name, 
-										   @RequestParam int groupId, 
+	public ResponseEntity<HseUser> addUser(@RequestParam int groupId, 
 										   @RequestParam String surveyUrl)
 	
 			throws NoSuchUserException, 
 				   UserExistsException, 
 				   NoSuchTestGroupException {
 		
-		int userId = userService.addSurveyParticipant(name, groupId, surveyUrl);
+		HseUser user = userService.addSurveyParticipant(groupId, surveyUrl);
 		
-		return new ResponseEntity<>(userId, HttpStatus.OK);
+		return new ResponseEntity<>(user, HttpStatus.OK);
 	}
 }
 

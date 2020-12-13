@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -44,7 +45,7 @@ public class UserService {
 	private RoleRepository roleRepository;
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
 	
-	private String surveyUserPassword = "xxxyyyzzz";
+	public static String surveyUserPassword = "xxxyyyzzz";
 	 
 	@Autowired 
 	public UserService(UserRepository userRepository, 
@@ -403,10 +404,10 @@ public class UserService {
 		return saved;
 	}
 	
-	public int addSurveyParticipant(String name, int groupId, String surveyUrl) 
+	public HseUser addSurveyParticipant(int groupId, String surveyUrl) 
 			throws UserExistsException, NoSuchTestGroupException {
 		
-		String userName = "svu_" + name;
+		String userName = "svu_" + RandomStringUtils.random(20, true, true);
 		Participant saved;
 		
 		if (! testGroupRepository.existsById(groupId)) {
@@ -419,7 +420,10 @@ public class UserService {
 				throw new UserExistsException(userName);
 			}
 			
-			Participant p = new Participant(userName, surveyUserPassword);
+			String pwd = bCryptPasswordEncoder.encode(surveyUserPassword);
+			
+			Participant p = new Participant(userName, pwd);
+			p.setActive(true);
 			saved = participantRepository.save(p);
 		}
 		else {
@@ -433,7 +437,7 @@ public class UserService {
 		
 		saved.setSurveyUrl(surveyUrl);
 		
-		return saved.getId();
+		return saved;
 	}
 	
 	// UPDATE EXISTING USERS

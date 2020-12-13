@@ -69,20 +69,20 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 			.antMatchers("/test").permitAll() // temporary
 			.antMatchers("/experiments/**").hasAnyAuthority("EXPERIMENTER", "ADMIN")
 			.antMatchers("/indexing/**").hasAnyAuthority("EXPERIMENTER", "ADMIN")
-		//	.antMatchers("/admin/**").hasAuthority("ADMIN")
-			.antMatchers("/admin/**").permitAll()
+			.antMatchers("/admin/**").hasAuthority("ADMIN")
 			.anyRequest()
 			.authenticated()
 			.and()
 			.formLogin()
 			.loginPage(baseUrl + "login")
+			.loginProcessingUrl("/login")
 			.usernameParameter("user_name")
 			.passwordParameter("password")
 			.successHandler(loginHandler)
 			.failureHandler(loginFailureHandler)
 			.and()
 			.logout()
-			.logoutRequestMatcher(new AntPathRequestMatcher(baseUrl + "logout"))
+			.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
 			.logoutSuccessHandler(logoutHandler);
 	}
 	
