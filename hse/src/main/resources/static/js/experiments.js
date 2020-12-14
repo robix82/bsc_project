@@ -3,6 +3,7 @@ $(document).ready(function() {
 	
 //	console.log(experiments);
 //	console.log(experimenters);
+//  console.log(administrators);
 	
 	experiments.forEach((experiment) => {
 		
@@ -62,6 +63,15 @@ function getExperimenter(id) {
 		}
 	}
 	
+	for (let i = 0; i < administrators.length; i++) {
+		
+		let administrator = administrators[i];
+		
+		if (administrator.id == id) {
+			return administrator;
+		}
+	}
+	
 	return null;
 }
 
@@ -91,6 +101,7 @@ function showExperimentInputModal(experiment) {
 		}
 		
 		experiment.title = title;
+		experiment.mode = $("#modeSelect").val();
 		let experimenter = getExperimenter($("#experimenterSelect").val());
 		experiment.experimenterId = experimenter.id;
 		experiment.experimenterName = experimenter.userName;
@@ -109,7 +120,7 @@ function showExperimentDeleteModal(experiment) {
 }
 
 function submitExperiment(experiment, method) {
-	
+
 	let url = baseUrl + "experiments/";
 	
 	$.ajax(url,

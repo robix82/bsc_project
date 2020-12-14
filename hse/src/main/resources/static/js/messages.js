@@ -85,6 +85,7 @@ var m_title = $("#m_title").text();
 var m_missingTitle = $("#m_missingTitle").text(); 
 var m_experimentExists = $("#m_experimentExists").text(); 
 var m_experimentNotFound = $("#m_experimentNotFound").text(); 
+var m_mode = $("#m_mode").text();
 
 var m_availableConfigFiles = $("#m_availableConfigFiles").text(); 
 var m_experimentDetails = $("#m_experimentDetails").text(); 
@@ -110,7 +111,7 @@ var m_clicks = $("#m_clicks").text();
 var m_sessionOver = $("#m_sessionOver").text();
 var m_goodBye = $("#m_goodBye").text();
 
-
+var m_notRunning = $("#m_notRunning").text();
 
 
 

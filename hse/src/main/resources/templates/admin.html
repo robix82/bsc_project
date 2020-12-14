@@ -52,7 +52,7 @@
 						</td>
 						
 						<td>
-							<button class="btn btn-sm btn-light"
+							<button th:if="${(#lists.size(administrators) != 1)}"  class="btn btn-sm btn-light"
 									th:onclick="showAdminDeleteModal([[${administrator}]])">
 							<span class="glyphicon glyphicon-remove"></span>
 							</button>

@@ -186,6 +186,12 @@ public class ExperimentServiceTest {
 		
 		when(resultWriter.rawDataCsv(e1)).thenReturn(rawCsvStream);
 		when(resultWriter.rawDataJson(e1)).thenReturn(rawJsonStream);
+		
+		for (Experiment e : savedExperiments) {
+			
+			e.setMode(Experiment.Mode.STAND_ALONE);
+			experimentRepo.save(e);
+		}
 	}
 	
 	@Test

@@ -1,0 +1,32 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+	<!--/*/ <th:block th:include="fragments/general.html :: general_head">
+        	</th:block> /*/-->
+           
+	<link rel="stylesheet" type="text/css" th:href="@{${baseUrl} + 'css/not_running.css'}" />
+
+</head>
+
+
+<body>
+
+<div class="main-container">
+
+	<h1 th:text="#{m_notRunning}"></h1>
+	
+	
+
+</div>
+
+<script th:inline="javascript">
+	/*<![CDATA[*/
+	var experiment = /*[[${experiment}]]*/ "default";
+	var surveyUrl = /*[[${surveyUrl}]]*/ "default";
+	/*]]>*/
+</script>
+
+</body>
+</html>

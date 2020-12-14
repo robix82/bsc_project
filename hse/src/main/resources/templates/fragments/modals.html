@@ -398,15 +398,37 @@
                             <input id="experimentTitleInput" type="text" class="form-control input-lg">
                         </div>
              	</div>
+
+				<div class="form-group">
+                	<label class="control-label" th:text="#{m_mode}"></label>
+                        <div>
+							<select id="modeSelect" class="form-control input-lg">
+
+								<option th:value="QUALTRICS"
+										th:text="Qualtrics">
+								</option>
+								
+								<option th:value="STAND_ALONE"
+										th:text="stand-alone">
+								</option>
+
+                            </select>
+                        </div>
+             	</div>
 			
 				<div class="form-group">
                 	<label class="control-label" th:text="#{m_experimenter}"></label>
-                        <div th:if="${experimenters != null}">
+                        <div>
                             <select id="experimenterSelect" class="form-control input-lg">
 
 								<option th:each="experimenter : ${experimenters}" 
 										th:value="${experimenter.id}"
 										th:text="${experimenter.userName}">
+								</option>
+								
+								<option th:each="administrator : ${administrators}" 
+										th:value="${administrator.id}"
+										th:text="${administrator.userName}">
 								</option>
 
                             </select>

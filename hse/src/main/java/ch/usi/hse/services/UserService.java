@@ -404,7 +404,7 @@ public class UserService {
 		return saved;
 	}
 	
-	public HseUser addSurveyParticipant(int groupId, String surveyUrl) 
+	public Participant addSurveyParticipant(int groupId, String surveyUrl) 
 			throws UserExistsException, NoSuchTestGroupException {
 		
 		String userName = "svu_" + RandomStringUtils.random(20, true, true);

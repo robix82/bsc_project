@@ -36,6 +36,12 @@ public class Experiment {
 		COMPLETE
 	} 
 	
+	public static enum Mode {
+		
+		STAND_ALONE,
+		QUALTRICS
+	}
+	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="experiment_id")
@@ -64,6 +70,9 @@ public class Experiment {
 	
 	@Column(name="status") 
 	private Status status;
+	
+	@Column(name="mode")
+	private Mode mode;
 	 
 	@Column(name="date_creaed")
 	private LocalDateTime dateCreated; 
@@ -147,6 +156,10 @@ public class Experiment {
 		return status;
 	}
 	
+	public Mode getMode() {
+		return mode;
+	}
+	
 	public LocalDateTime getDateCreated() {
 		return dateCreated;
 	}
@@ -228,6 +241,10 @@ public class Experiment {
 	
 	public void setStatus(Status status) {
 		this.status = status;
+	}
+	
+	public void setMode(Mode mode) {
+		this.mode = mode;
 	}
 	
 	public void setDateCreated(LocalDateTime dateCreated) {

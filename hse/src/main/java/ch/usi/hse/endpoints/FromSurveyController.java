@@ -16,10 +16,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import ch.usi.hse.db.entities.Experiment;
 import ch.usi.hse.db.entities.HseUser;
+import ch.usi.hse.db.entities.Participant;
+import ch.usi.hse.exceptions.NoSuchExperimentException;
 import ch.usi.hse.exceptions.NoSuchTestGroupException;
 import ch.usi.hse.exceptions.NoSuchUserException;
 import ch.usi.hse.exceptions.UserExistsException;
+import ch.usi.hse.services.ExperimentService;
 import ch.usi.hse.services.UserService;
 
 /**
@@ -36,14 +40,22 @@ public class FromSurveyController {
 	@Autowired
 	private UserService userService;
 	
+	@Autowired private ExperimentService experimentService;
+	
 	@Value("${baseUrl}")
 	private String baseUrl;
 
 	@GetMapping("/")
 	public ModelAndView getSearchUiFromSurvey(HttpServletRequest request, @RequestParam(name="uid") int userId) 
-			throws NoSuchUserException {
+			throws NoSuchUserException, NoSuchExperimentException {
 		
-		HseUser user = userService.findUser(userId);
+		Participant user = userService.findParticipant(userId);
+		Experiment experiment = experimentService.findExperiment(user.getExperimentId());
+		
+		if (! experiment.getStatus().equals(Experiment.Status.RUNNING)) {
+			
+			return notRunning(experiment, user.getSurveyUrl());
+		}
 		
 		try {
 	        request.login(user.getUserName(), UserService.surveyUserPassword);
@@ -54,6 +66,7 @@ public class FromSurveyController {
 		ModelAndView mav = new ModelAndView();
 		mav.setViewName("search");
 		mav.addObject("baseUrl", baseUrl);
+		mav.addObject("surveyUrl", user.getSurveyUrl());
 
 		return mav;
 	}
@@ -69,6 +82,17 @@ public class FromSurveyController {
 		HseUser user = userService.addSurveyParticipant(groupId, surveyUrl);
 		
 		return new ResponseEntity<>(user, HttpStatus.OK);
+	}
+	
+	@GetMapping("/not_running")
+	private ModelAndView notRunning(Experiment experiment, String surveyUrl) {
+		
+		ModelAndView mav = new ModelAndView();
+		mav.setViewName("not_running");
+		mav.addObject("experiment", experiment);
+		mav.addObject("surveyUrl", surveyUrl);
+		
+		return mav;
 	}
 }
 

@@ -28,6 +28,7 @@
 						
 				<td th:text="${experiment.id}"></td>
 				<td th:text="${experiment.title}"></td>
+				<td th:text="${experiment.mode}"></td>
 				<td th:text="${experiment.experimenterName}"></td>
 				<td th:id="'exp_creationDate_' + ${experiment.id}"></td>
 				
@@ -83,6 +84,7 @@
 	/*<![CDATA[*/
 	var experiments = /*[[${experiments}]]*/ "default";
 	var experimenters = /*[[${experimenters}]]*/ "default";
+	var administrators = /*[[${administrators}]]*/ "default";
 	/*]]>*/
 </script>
 

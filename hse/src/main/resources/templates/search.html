@@ -37,11 +37,8 @@
 		</form>
 	</div>
 	
-	<a th:href="@{${surveyUrl}}">back to survey</a>
-	
-	<div th:if="${experimentId != null}" th:text="'Experiment: ' + ${experimentId}"></div>
-	<div th:if="${groupId != null}" th:text="'Group: ' + ${groupId}"></div>
-	<div th:if="${userId != null}" th:text="'User: ' + ${userId}"></div>
+	<a th:if="${surveyUrl != null}" th:href="@{${surveyUrl}}">back to survey</a>
+
 	<div th:if="${surveyUrl != null}" th:text="'Survey: ' + ${surveyUrl}"></div>
 	
 	<div id="results" th:if="${searchResultList != null}">
@@ -69,6 +66,7 @@
 <script th:inline="javascript">
 	/*<![CDATA[*/
 	var searchResultList = /*[[${searchResultList}]]*/ "default";
+	var surveyUrl = /*[[${surveyUrl}]]*/ "default";
 	/*]]>*/
 </script>
 

@@ -35,20 +35,24 @@ function sendBrowseEvent(searchResult) {
 }
 
 function connectWebSocket() {
-	
-	
-	
-    var socket = new SockJS("/statusInfo");
+		
+    var socket = new SockJS(baseUrl + "statusInfo");
     stompClient = Stomp.over(socket);
 
     stompClient.connect({}, function (frame) {
 
         console.log('Connected: ' + frame);
 
-        stompClient.subscribe(baseUrl + "info", function (info) {
+        stompClient.subscribe("/info", function (info) {
 	
 			if (info.body == "experiment_over") {
-				location.href = baseUrl + "logout";
+				
+				if (surveyUrl) {
+					location.href = surveyUrl;
+				}
+				else {
+					location.href = baseUrl + "logout";
+				}
 			}
 			else {
 				console.log(info);

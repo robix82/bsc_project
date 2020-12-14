@@ -20,7 +20,7 @@
 	
 	<div id="inner-container">
 	
-		<div class="tab-container">
+		<div th:if="${experiment.mode.name() == 'STAND_ALONE'}" class="tab-container">
 		
 			<div class="tab-header">
 				<h2 th:text="#{m_availableConfigFiles}"></h2>	
@@ -130,10 +130,10 @@
 					
 					</table>
 					
-					<div class="test-group-sub-header">
+					<div th:if="${! #lists.isEmpty(testGroup.participants)} or ${experiment.mode.name()} == 'STAND_ALONE'" class="test-group-sub-header">
 						<h5 th:text="#{m_participants}"></h5>
 										
-						<button class="btn btn-sm btn-secondary" 
+						<button th:if="${experiment.mode.name() == 'STAND_ALONE'}" class="btn btn-sm btn-secondary" 
 								th:onclick="showParticipantInputModal([[${testGroup}]])">
 						<span class="glyphicon glyphicon-plus"></span>						
 					</div>
@@ -145,7 +145,7 @@
 							<td th:text="${participant.userName}"></td>
 							<td class="table-space">
 							
-							<td>
+							<td th:if="${experiment.mode.name() == 'STAND_ALONE'}">
 								<button class="btn btn-sm btn-light" 
 										th:onclick="showParticipantDeleteModal([[${testGroup}]], [[${participant}]])">
 										<span class="glyphicon glyphicon-remove"></span>	

@@ -621,10 +621,19 @@ public class ExperimentService {
 	
 			for (TestGroup g : e.getTestGroups()) {
 				
-				if (g.getParticipants().isEmpty() || g.getDocCollections().isEmpty()) {
+				if (g.getDocCollections().isEmpty()) {
 					
 					e.setStatus(Experiment.Status.NOT_READY);
 					return;
+				}
+				
+				if (e.getMode().equals(Experiment.Mode.STAND_ALONE)) {
+					
+					if (g.getParticipants().isEmpty() || g.getDocCollections().isEmpty()) {
+						
+						e.setStatus(Experiment.Status.NOT_READY);
+						return;
+					}
 				}
 			}
 			

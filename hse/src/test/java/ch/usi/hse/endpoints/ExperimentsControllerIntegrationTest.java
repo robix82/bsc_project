@@ -202,6 +202,11 @@ public class ExperimentsControllerIntegrationTest {
 												newConfigData);
 		
 		
+		for (Experiment e : savedExperiments) {
+			
+			e.setMode(Experiment.Mode.STAND_ALONE);
+			experimentRepo.save(e);
+		}
 	}
 	
 	@AfterEach
