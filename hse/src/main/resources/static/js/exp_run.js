@@ -1,5 +1,6 @@
 
 var t = 0;
+var t0;
 var running = false;
 var timerId;
 
@@ -18,6 +19,19 @@ $(document).ready(function() {
 		
 		$("#status-display").text(m_experimentReady);
 	}
+	else if (experiment.status == "RUNNING") {
+		
+		t0 = new Date(experiment.startTime);
+		onTimeStep();
+		timerId = setInterval(onTimeStep, 1000);
+		
+		$("#startStopBtn").text(m_stop);
+		$("#status-display").text(m_experimentRunning)	
+				
+		$("#startStopBtn").off("click").on("click", () => {
+			stopExperiment();
+		});
+	}
 	else if (experiment.status == "COMPLETE") {
 		
 		$("#startStopBtn").text(m_reset);
@@ -31,7 +45,7 @@ $(document).ready(function() {
 	else {
 		
 		showErrorModal(m_error, m_experimentNotReady, () => {
-			location.href = "/experiments/setup/ui?expId=" + experiment.id;
+			location.href = baseUrl + "experiments/setup/ui?expId=" + experiment.id;
 		});
 	}	
 	
@@ -65,6 +79,8 @@ function startExperiment() {
 	submitExperiment("start", (res) => {
 	
 		experiment = res;
+		t0 = new Date(experiment.startTime);
+		t0.setSeconds(t0.getSeconds() + 1);
 		timerId = setInterval(onTimeStep, 1000);
 		
 		$("#startStopBtn").text(m_stop);
@@ -120,6 +136,8 @@ function resetExperiment() {
 }
 
 function onTimeStep() {
+	
+	t = (new Date() - t0) / 1000;
 	
 	$("#timer-display").text(tString(++t));
 	pollExperimentUpdate();

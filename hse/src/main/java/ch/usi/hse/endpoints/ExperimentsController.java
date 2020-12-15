@@ -73,7 +73,6 @@ public class ExperimentsController {
 		mav.addObject("baseUrl", baseUrl);
 		mav.addObject("experiments", experimentService.allExperiments());
 		mav.addObject("experimenters", userService.allExperimenters());
-		mav.addObject("administrators", userService.allAdministrators());
 		
 		return mav;
 	}

@@ -33,7 +33,7 @@ function setupButtons(experiment) {
 		location.href= baseUrl + "experiments/setup/ui?expId=" + expId;
 	});
 	
-	if (expStatus == "READY" || expStatus == "COMPLETE") {
+	if (expStatus == "READY" ||expStatus == "RUNNING" || expStatus == "COMPLETE") {
 		
 		$(runBtnId).prop("disabled", false);
 		
@@ -63,19 +63,16 @@ function getExperimenter(id) {
 		}
 	}
 	
-	for (let i = 0; i < administrators.length; i++) {
-		
-		let administrator = administrators[i];
-		
-		if (administrator.id == id) {
-			return administrator;
-		}
-	}
-	
 	return null;
 }
 
 function showExperimentInputModal(experiment) {
+	
+	if (experimenters.length == 0) {
+		
+		showErrorModal(m_error, m_noExperimenter);
+		return;
+	}
 	
 	let method = "POST";
 	

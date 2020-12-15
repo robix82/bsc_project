@@ -112,6 +112,8 @@ var m_sessionOver = $("#m_sessionOver").text();
 var m_goodBye = $("#m_goodBye").text();
 
 var m_notRunning = $("#m_notRunning").text();
+var m_backToSurvey = $("#m_backToSurvey").text();
+var m_noExperimenter = $("#m_noExperimenter").text();
 
 
 
