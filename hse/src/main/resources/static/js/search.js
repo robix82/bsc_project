@@ -1,10 +1,7 @@
 
-var stommpClient = null;
+var stompClient = null;
 
 $(document).ready(function() {
-	
-	console.log("RESULTS:");
-	console.log(searchResultList);
 	
 	if (searchResultList != null) {
 		
@@ -17,7 +14,7 @@ $(document).ready(function() {
 
 function sendBrowseEvent(searchResult) {
 	
-	$.ajax("/browse",
+	$.ajax(baseUrl + "browse",
 		{
 			type: "POST",
 			contentType: 'application/json; charset=utf-8',
@@ -39,18 +36,18 @@ function connectWebSocket() {
     var socket = new SockJS(baseUrl + "statusInfo");
     stompClient = Stomp.over(socket);
 
-    stompClient.connect({}, function (frame) {
-
-        console.log('Connected: ' + frame);
+    stompClient.connect({}, () => {
 
         stompClient.subscribe("/info", function (info) {
 	
 			if (info.body == "experiment_over") {
 				
 				if (surveyUrl) {
+					
 					location.href = surveyUrl;
 				}
 				else {
+
 					location.href = baseUrl + "logout";
 				}
 			}
@@ -66,8 +63,6 @@ function disconnectWebSocket() {
     if (stompClient !== null) {
         stompClient.disconnect();
     }
-
-    console.log("Disconnected");
 }
 
 

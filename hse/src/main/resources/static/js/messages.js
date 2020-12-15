@@ -115,6 +115,11 @@ var m_notRunning = $("#m_notRunning").text();
 var m_backToSurvey = $("#m_backToSurvey").text();
 var m_noExperimenter = $("#m_noExperimenter").text();
 
+var m_created = $("#m_created").text();
+var m_ready = $("#m_ready").text();
+var m_running = $("#m_running").text();
+var m_completed = $("#m_completed").text();
+
 
 
 

@@ -3,6 +3,7 @@ package ch.usi.hse.services;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.search.highlight.InvalidTokenOffsetsException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import ch.usi.hse.db.entities.DocClickEvent;
@@ -36,17 +37,20 @@ public class SearchService {
 	private ExperimentRepository experimentRepo;
 	private ParticipantRepository participantRepo;
 	private SearchAssembler searchAssembler;
+	private SimpMessagingTemplate simpMessagingTemplate;
 	
 	@Autowired
 	public SearchService(DocCollectionRepository collectionRepo,
 						 ExperimentRepository experimentRepo,
 						 ParticipantRepository participantRepo,
-						 SearchAssembler searchAssembler) {
+						 SearchAssembler searchAssembler,
+						 SimpMessagingTemplate simpMessagingTemplate) {
 		
 		this.collectionRepo = collectionRepo;
 		this.experimentRepo = experimentRepo;
 		this.participantRepo =  participantRepo;
 		this.searchAssembler = searchAssembler;
+		this.simpMessagingTemplate = simpMessagingTemplate;
 	}
 	
 	/**
@@ -86,6 +90,8 @@ public class SearchService {
 			experiment.addUsageEvent(new QueryEvent(p, srl));
 			experimentRepo.save(experiment);
 			
+			simpMessagingTemplate.convertAndSend("/userActions", experiment);
+			
 			return srl;
 		}
 		else {
@@ -107,9 +113,9 @@ public class SearchService {
 		participant.incClickCount();
 		participantRepo.save(participant);
 		Experiment experiment = experimentRepo.findById(experimentId);
-		experiment.addUsageEvent(new DocClickEvent(participant, searchResult));
-		
+		experiment.addUsageEvent(new DocClickEvent(participant, searchResult));	
 		experimentRepo.save(experiment);
+		simpMessagingTemplate.convertAndSend("/userActions", experiment);
 	}
 }
 

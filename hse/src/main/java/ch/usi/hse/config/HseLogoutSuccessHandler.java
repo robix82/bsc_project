@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -30,6 +31,9 @@ public class HseLogoutSuccessHandler implements LogoutSuccessHandler {
 	
 	@Autowired
 	private ExperimentRepository experimentRepo;
+	
+	@Autowired
+	private SimpMessagingTemplate simpMessagingTemplate;
 	
 	@Override
 	public void onLogoutSuccess(HttpServletRequest request, 
@@ -61,7 +65,9 @@ public class HseLogoutSuccessHandler implements LogoutSuccessHandler {
 				Experiment experiment = experimentRepo.findById(experimentId);
 				experiment.addUsageEvent(new SessionEvent(participant, SessionEvent.Event.LOGOUT));
 				experimentRepo.save(experiment);
+				simpMessagingTemplate.convertAndSend("/userActions", experiment);
 			}
+			
 			
 			redirect = baseUrl + "participantLogout";
 		}

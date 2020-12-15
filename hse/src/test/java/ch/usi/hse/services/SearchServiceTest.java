@@ -11,6 +11,7 @@ import org.apache.lucene.search.highlight.InvalidTokenOffsetsException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import ch.usi.hse.db.entities.DocCollection;
 import ch.usi.hse.db.entities.Experiment;
@@ -37,6 +38,9 @@ public class SearchServiceTest {
 	
 	@Mock
 	private SearchAssembler searchAssembler;
+	
+	@Mock
+	private SimpMessagingTemplate simpMessagingTemplate;
 
 	private SearchService testService;
 	private String testQueryString = "test query";
@@ -51,7 +55,7 @@ public class SearchServiceTest {
 		initMocks(this);
 		
 		testService = new SearchService(collectionRepo, experimentRepo, participantRepo, 
-										searchAssembler);
+										searchAssembler, simpMessagingTemplate);
 		
 		docCollections = List.of(new DocCollection("c1", "l1"));
 		

@@ -61,7 +61,7 @@ public class SearchController {
 	}
 	
 	@GetMapping("/participantLogout")
-	public ModelAndView getParticcipantLogout() {
+	public ModelAndView getParticipantLogout() {
 		
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("baseUrl", baseUrl);

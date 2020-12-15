@@ -4,9 +4,13 @@ var t0;
 var running = false;
 var timerId;
 
+var stompClient = null;
+
 $(document).ready(function() {
 	
-	console.log(experiment);
+//	console.log(experiment);
+
+	connectWebSocket();
 	
 	t = 0;
 	$("#timer-display").text(tString(t));
@@ -140,7 +144,6 @@ function onTimeStep() {
 	t = (new Date() - t0) / 1000;
 	
 	$("#timer-display").text(tString(++t));
-	pollExperimentUpdate();
 } 
 
 function submitExperiment(action, onSuccess) {
@@ -165,29 +168,27 @@ function submitExperiment(action, onSuccess) {
 	);
 }
 
-function pollExperimentUpdate() {
-	
-	let url = baseUrl + "experiments/?id=" + experiment.id;
-	
-	$.ajax(url,
-		{
-			type: "GET",
-			dataType: "json",
+function connectWebSocket() {
+		
+    var socket = new SockJS(baseUrl + "statusInfo");
+    stompClient = Stomp.over(socket);
 
-			success: (res) => {
+    stompClient.connect({}, () => {
 
-				experiment = res;
-				updateInfoTables();
-			},
-			error: (err) => { 
+        stompClient.subscribe("/userActions", function (res) {
 
-				handleHttpError(err);
-			}
-		}
-	);
+			experiment = JSON.parse(res.body);
+			updateInfoTables();
+        });
+    });
 }
 
-
+function disconnectWebSocket() {
+	
+    if (stompClient !== null) {
+        stompClient.disconnect();
+    }
+}
 
 
 

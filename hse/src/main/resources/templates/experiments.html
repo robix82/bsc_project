@@ -31,6 +31,10 @@
 				<td th:text="${experiment.mode}"></td>
 				<td th:text="${experiment.experimenterName}"></td>
 				<td th:id="'exp_creationDate_' + ${experiment.id}"></td>
+				<td th:if="${experiment.status.name() == 'NOT_READY'}" th:text="#{m_created}"></td>
+				<td th:if="${experiment.status.name() == 'READY'}" th:text="#{m_ready}"></td>
+				<td th:if="${experiment.status.name() == 'RUNNING'}" th:text="#{m_running}"></td>
+				<td th:if="${experiment.status.name() == 'COMPLETE'}" th:text="#{m_completed}"></td>
 				
 				<td class="table-space"></td>
 							
