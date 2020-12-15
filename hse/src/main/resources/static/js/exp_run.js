@@ -38,6 +38,9 @@ $(document).ready(function() {
 	}
 	else if (experiment.status == "COMPLETE") {
 		
+		t = Math.round(experiment.duration);
+		$("#timer-display").text(tString(t));
+		
 		$("#startStopBtn").text(m_reset);
 		
 		$("#startStopBtn").on("click", () => {
@@ -113,8 +116,6 @@ function stopExperiment() {
 		$("#status-display").text(m_experimentComplete);	
 		$("#evalBtn").show();
 	});	
-	
-	setTimeout(pollExperimentUpdate, 500);
 }
 
 function resetExperiment() {

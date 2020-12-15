@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import ch.usi.hse.db.entities.Experiment;
 import ch.usi.hse.db.entities.HseUser;
 import ch.usi.hse.db.entities.Participant;
@@ -84,6 +86,17 @@ public class FromSurveyController {
 		return new ResponseEntity<>(user, HttpStatus.OK);
 	}
 	
+	@GetMapping("/is_running")
+	public ResponseEntity<ExperimentInfo> checkIsRunning(@RequestParam int expId) 
+			throws NoSuchExperimentException {
+		
+		Experiment experiment = experimentService.findExperiment(expId);
+		boolean isRunning = experiment.getStatus().equals(Experiment.Status.RUNNING);
+		ExperimentInfo info = new ExperimentInfo(expId, isRunning);
+		
+		return new ResponseEntity<>(info, HttpStatus.OK);
+	}
+	
 	@GetMapping("/not_running")
 	private ModelAndView notRunning(Experiment experiment, String surveyUrl) {
 		
@@ -93,6 +106,29 @@ public class FromSurveyController {
 		mav.addObject("surveyUrl", surveyUrl);
 		
 		return mav;
+	}
+	
+	private class ExperimentInfo {
+		
+		private int id;
+		private boolean isRunning;
+		
+		public ExperimentInfo(@JsonProperty("id") int id,
+							  @JsonProperty("isRunning") boolean isRunning) {
+			
+			this.id = id;
+			this.isRunning = isRunning;
+		}
+		
+		@SuppressWarnings("unused")
+		public int getId() {
+			return id;
+		}
+		
+		@SuppressWarnings("unused")
+		public boolean getIsRunning() {
+			return isRunning;
+		}
 	}
 }
 
