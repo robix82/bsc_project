@@ -50,6 +50,8 @@ public class HseAuthenticationSuccessHandler implements AuthenticationSuccessHan
 		
 		String uName = authentication.getName();
 		
+		System.out.println("LOGIN SUCCESS: " + uName);
+		
 		User authUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();	
 		
 		HttpSession session = request.getSession();

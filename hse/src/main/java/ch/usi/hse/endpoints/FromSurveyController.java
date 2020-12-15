@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,12 +45,15 @@ public class FromSurveyController {
 	
 	@Autowired private ExperimentService experimentService;
 	
+	@Autowired
+	private SimpMessagingTemplate simpMessagingTemplate;
+	
 	@Value("${baseUrl}")
 	private String baseUrl;
 
 	@GetMapping("/")
 	public ModelAndView getSearchUiFromSurvey(HttpServletRequest request, @RequestParam(name="uid") int userId) 
-			throws NoSuchUserException, NoSuchExperimentException {
+			throws NoSuchUserException, NoSuchExperimentException, UserExistsException {
 		
 		Participant user = userService.findParticipant(userId);
 		Experiment experiment = experimentService.findExperiment(user.getExperimentId());
@@ -60,15 +64,21 @@ public class FromSurveyController {
 		}
 		
 		try {
-	        request.login(user.getUserName(), UserService.surveyUserPassword);
-	    } catch (ServletException e) {
+	        
+			request.login(user.getUserName(), UserService.surveyUserPassword);
+			
+			user.setOnline(true);
+			userService.updateParticipant(user);
+			simpMessagingTemplate.convertAndSend("/userActions", experiment);
+	    } 
+		catch (ServletException e) {
+			
 	        System.out.println("Error while login");
 	    }
 		
 		ModelAndView mav = new ModelAndView();
 		mav.setViewName("search");
 		mav.addObject("baseUrl", baseUrl);
-		mav.addObject("surveyUrl", user.getSurveyUrl());
 
 		return mav;
 	}

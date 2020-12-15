@@ -68,9 +68,20 @@ public class HseLogoutSuccessHandler implements LogoutSuccessHandler {
 				simpMessagingTemplate.convertAndSend("/userActions", experiment);
 			}
 			
+			String surveyUrl = participant.getSurveyUrl();
 			
-			redirect = baseUrl + "participantLogout";
+			if (surveyUrl != null) {
+				
+				redirect = surveyUrl;
+			}
+			else {
+				
+				redirect = baseUrl + "participantLogout";
+			}
+			 
 		}
+		
+		System.out.println("LOGOUT SUCCESS: redirecting to " + redirect);
 
 		response.sendRedirect(redirect);
 	}

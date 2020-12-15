@@ -408,7 +408,7 @@ public class UserService {
 			throws UserExistsException, NoSuchTestGroupException {
 		
 		String userName = "svu_" + RandomStringUtils.random(20, true, true);
-		Participant saved;
+		Participant participant;
 		
 		if (! testGroupRepository.existsById(groupId)) {
 			throw new NoSuchTestGroupException(groupId);
@@ -423,21 +423,24 @@ public class UserService {
 			String pwd = bCryptPasswordEncoder.encode(surveyUserPassword);
 			
 			Participant p = new Participant(userName, pwd);
-			p.setActive(true);
-			saved = participantRepository.save(p);
+			participant = participantRepository.save(p);
 		}
 		else {
 			
-			saved = participantRepository.findByUserName(userName);
+			participant = participantRepository.findByUserName(userName);
 		}
 		
+		participant.setActive(true);
+		participant.setSurveyUrl(surveyUrl);
+		participantRepository.save(participant);
+		
 		TestGroup g = testGroupRepository.findById(groupId);
-		g.addParticipant(saved);
+		g.addParticipant(participant);
 		testGroupRepository.save(g);
 		
-		saved.setSurveyUrl(surveyUrl);
+		participant.setSurveyUrl(surveyUrl);
 		
-		return saved;
+		return participant;
 	}
 	
 	// UPDATE EXISTING USERS

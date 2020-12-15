@@ -42,14 +42,7 @@ function connectWebSocket() {
 	
 			if (info.body == "experiment_over") {
 				
-				if (surveyUrl) {
-					
-					location.href = surveyUrl;
-				}
-				else {
-
-					location.href = baseUrl + "logout";
-				}
+				location.href = baseUrl + "logout";
 			}
 			else {
 				console.log(info);
