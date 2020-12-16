@@ -20,6 +20,7 @@ import ch.usi.hse.db.entities.HseUser;
 import ch.usi.hse.db.entities.Participant;
 import ch.usi.hse.exceptions.FileReadException;
 import ch.usi.hse.exceptions.NoSuchExperimentException;
+import ch.usi.hse.exceptions.NoSuchFileException;
 import ch.usi.hse.exceptions.NoSuchUserException;
 import ch.usi.hse.retrieval.SearchResult;
 import ch.usi.hse.retrieval.SearchResultList;
@@ -77,17 +78,22 @@ public class SearchController {
 				   ParseException, 
 				   FileReadException, 
 				   InvalidTokenOffsetsException, 
-				   NoSuchExperimentException {
+				   NoSuchExperimentException, 
+				   NoSuchFileException {
 		
-		HseUser hseUser = userService.findUser(user.getUsername());
 		
-		SearchResultList srl = searchService.search(queryString, hseUser);
 		
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("baseUrl", baseUrl);
 		mav.setViewName("search");
-		mav.addObject("searchResultList", srl);
 		
+		if (! queryString.isBlank()) {
+			
+			HseUser hseUser = userService.findUser(user.getUsername());
+			SearchResultList srl = searchService.search(queryString, hseUser);
+			mav.addObject("searchResultList", srl);
+		}
+				
 		return mav;
 	}
 	

@@ -86,14 +86,17 @@ public class SearchResultList {
 		
 		DocCollection collection = res.getDocCollection();
 		
-		if (! collectionStats.containsKey(collection)) {
+		if (collection != null) {
 			
-			collectionStats.put(collection, 1);
-		}
-		else {
-			
-			int n = collectionStats.get(collection);
-			collectionStats.put(collection, n+1);
+			if (! collectionStats.containsKey(collection)) {
+				
+				collectionStats.put(collection, 1);
+			}
+			else {
+				
+				int n = collectionStats.get(collection);
+				collectionStats.put(collection, n+1);
+			}
 		}
 	}
 	

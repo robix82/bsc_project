@@ -122,6 +122,20 @@ public class SearchAssembler {
 		return res;
 	}
 	
+	public SearchResultList getFirstQueryList(List<String> urls, String queryString) {
+		
+		SearchResultList res = new SearchResultList(queryString);
+		
+		for (String url : urls) {
+			
+			SearchResult r = new SearchResult(0, url, ""); // TODO retrieve doc id and summary
+			r.setScore(0);
+			res.addSearchResult(r); 
+		}
+		
+		return res;
+	}
+	
 	private List<SearchResult> searchCollection(String queryString, DocCollection collection) 
 			throws ParseException, IOException, InvalidTokenOffsetsException {
 		

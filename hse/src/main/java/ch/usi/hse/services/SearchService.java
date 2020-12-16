@@ -12,12 +12,15 @@ import ch.usi.hse.db.entities.Experiment;
 import ch.usi.hse.db.entities.HseUser;
 import ch.usi.hse.db.entities.Participant;
 import ch.usi.hse.db.entities.QueryEvent;
+import ch.usi.hse.db.entities.TestGroup;
 import ch.usi.hse.db.repositories.DocCollectionRepository;
 import ch.usi.hse.db.repositories.ExperimentRepository;
 import ch.usi.hse.db.repositories.ParticipantRepository;
 import ch.usi.hse.exceptions.FileReadException;
 import ch.usi.hse.exceptions.NoSuchExperimentException;
+import ch.usi.hse.exceptions.NoSuchFileException;
 import ch.usi.hse.retrieval.SearchResultList;
+import ch.usi.hse.storage.UrlListStorage;
 import ch.usi.hse.retrieval.SearchAssembler;
 import ch.usi.hse.retrieval.SearchResult;
 
@@ -38,19 +41,22 @@ public class SearchService {
 	private ParticipantRepository participantRepo;
 	private SearchAssembler searchAssembler;
 	private SimpMessagingTemplate simpMessagingTemplate;
+	private UrlListStorage urlListStorage;
 	
 	@Autowired
 	public SearchService(DocCollectionRepository collectionRepo,
 						 ExperimentRepository experimentRepo,
 						 ParticipantRepository participantRepo,
 						 SearchAssembler searchAssembler,
-						 SimpMessagingTemplate simpMessagingTemplate) {
+						 SimpMessagingTemplate simpMessagingTemplate,
+						 UrlListStorage urlListStorage) {
 		
 		this.collectionRepo = collectionRepo;
 		this.experimentRepo = experimentRepo;
 		this.participantRepo =  participantRepo;
 		this.searchAssembler = searchAssembler;
 		this.simpMessagingTemplate = simpMessagingTemplate;
+		this.urlListStorage = urlListStorage;
 	}
 	
 	/**
@@ -63,28 +69,48 @@ public class SearchService {
 	 * @throws ParseException 
 	 * @throws InvalidTokenOffsetsException 
 	 * @throws NoSuchExperimentException 
+	 * @throws NoSuchFileException 
 	 */
 	public SearchResultList search(String queryString, HseUser user) 
 			throws ParseException, 
 				   FileReadException, 
 				   InvalidTokenOffsetsException, 
-				   NoSuchExperimentException {
+				   NoSuchExperimentException, 
+				   NoSuchFileException {
 		
 		List<DocCollection> collections;
 		
 		if (user instanceof Participant) {
 			
+			String query = queryString.trim().toLowerCase();
+			
 			Participant p = (Participant) user;
 			int experimentId = p.getExperimentId();
 			p.incQueryCount();
+			
+			if (p.getQueryCount() == 1) {
+				p.setFirstQuery(query);
+			}
+			
 			participantRepo.save(p);
 			
 			if (! experimentRepo.existsById(experimentId)) {
 				throw new NoSuchExperimentException(experimentId);
 			}
 			
-			collections = new ArrayList<>(p.getTestGroup().getDocCollections());
-			SearchResultList srl = searchAssembler.getSearchResults(queryString, collections);
+			TestGroup group = p.getTestGroup();
+			SearchResultList srl;
+			
+			if (query.equals(p.getFirstQuery())) {
+				
+				List<String> urls = urlListStorage.getUrlLines(group.getFirstQueryList());
+				srl = searchAssembler.getFirstQueryList(urls, queryString);
+			}
+			else {
+			
+				collections = new ArrayList<>(group.getDocCollections());
+				srl = searchAssembler.getSearchResults(queryString, collections);
+			}
 			
 			Experiment experiment = experimentRepo.findById(p.getExperimentId());
 			experiment.addUsageEvent(new QueryEvent(p, srl));

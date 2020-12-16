@@ -49,6 +49,9 @@ public class Participant extends HseUser {
 	@Column(name="surveyUrl")
 	private String surveyUrl;
 	
+	@Column(name="firstQuery")
+	private String firstQuery;
+	
 	public Participant() {
 		
 		super();
@@ -163,6 +166,14 @@ public class Participant extends HseUser {
 	
 	public void setSurveyUrl(String surveyUrl) {
 		this.surveyUrl = surveyUrl;
+	}
+	
+	public String getFirstQuery() {
+		return firstQuery;
+	}
+	
+	public void setFirstQuery(String firstQuery) {
+		this.firstQuery = firstQuery;
 	}
 }
 
