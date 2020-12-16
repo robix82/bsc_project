@@ -130,6 +130,17 @@
 					
 					</table>
 					
+					<div class="test-group-sub-header">
+						<h5 th:text="#{m_firstQueryList}"></h5>
+					
+						<button class="btn btn-sm btn-secondary" 
+								th:onclick="showUrlListModal([[${testGroup}]])">
+						<span th:text="#{m_set}"></span>
+						</button>
+					</div>
+					
+					<div th:if="${testGroup.firstQueryList != null}" th:text="${testGroup.firstQueryList}"></div>
+					
 					<div th:if="${! #lists.isEmpty(testGroup.participants)} or ${experiment.mode.name()} == 'STAND_ALONE'" class="test-group-sub-header">
 						<h5 th:text="#{m_participants}"></h5>
 										
@@ -176,6 +187,7 @@
 	var experiment = /*[[${experiment}]]*/ "default";
 	var docCollections = /*[[${docCollections}]]*/ "default";
 	var configFiles = /*[[${configFiles}]]*/ "default";
+	var urlLists = /*[[${urlLists}]]*/ "default";
 	/*]]>*/
 </script>
 

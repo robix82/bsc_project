@@ -34,6 +34,7 @@ var m_experiments = $("#m_experiments").text();
 var m_indexing = $("#m_indexing").text();
 var m_admin = $("#m_admin").text();
 var m_setUp = $("#m_setUp").text();
+var m_set = $("#m_set").text();
 
 var m_user = $("#m_user").text();
 var m_users = $("#m_users").text();
@@ -94,6 +95,7 @@ var m_invalidConfigFile = $("#m_invalidConfigFile").text();
 
 var m_addTestGroup = $("#m_addTestGroup").text();
 var m_chooseDocCollection = $("#m_chooseDocCollection").text();
+var m_firstQueryList = $("#m_firstQueryList").text();
 
 var m_start = $("#m_start").text();
 var m_stop = $("#m_stop").text();

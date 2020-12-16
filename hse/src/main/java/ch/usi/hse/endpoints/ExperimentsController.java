@@ -36,6 +36,7 @@ import ch.usi.hse.exceptions.TestGroupExistsException;
 import ch.usi.hse.exceptions.UserExistsException;
 import ch.usi.hse.experiments.ExperimentSummary;
 import ch.usi.hse.services.ExperimentService;
+import ch.usi.hse.services.IndexingService;
 import ch.usi.hse.services.UserService;
 
 /**
@@ -54,6 +55,9 @@ public class ExperimentsController {
 	
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private IndexingService indexingService;
 	
 	@Value("${baseUrl}")
 	private String baseUrl;
@@ -97,6 +101,7 @@ public class ExperimentsController {
 		mav.addObject("experiment", experimentService.findExperiment(expId));
 		mav.addObject("docCollections", experimentService.getIndexedDocCollections());
 		mav.addObject("configFiles", experimentService.savedConfigFiles());
+		mav.addObject("urlLists", indexingService.savedUrlLists());
 		
 		return mav;
 	}
@@ -364,7 +369,6 @@ public class ExperimentsController {
 		InputStream is = experimentService.getConfigFile(fileName);
 		
 		response.setContentType(MediaType.TEXT_PLAIN);
-	//	response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
 		
 		try {
 			FileCopyUtils.copy(is, response.getOutputStream());
@@ -373,6 +377,8 @@ public class ExperimentsController {
 			throw new FileReadException(fileName);
 		}
 	}
+	
+	// REST API for experiment execution
 	
 	/**
 	 * Start the given experiment's execution.

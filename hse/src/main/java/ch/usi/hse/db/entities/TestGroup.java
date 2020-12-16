@@ -57,6 +57,9 @@ public class TestGroup {
 	@Column(name="experiment_title")
 	private String experimentTitle; 
 	
+	@Column(name="firstQueryList")
+	private String firstQueryList;
+	
 	public TestGroup() {
 		
 		id = 0;
@@ -197,6 +200,14 @@ public class TestGroup {
 	public void clearDocCollections() {
 		
 		docCollections.clear();
+	}
+	
+	public String getFirstQueryList() {
+		return firstQueryList;
+	}
+	
+	public void setFirstQueryList(String firstQueryList) {
+		this.firstQueryList = firstQueryList;
 	}
 	
 	@Override

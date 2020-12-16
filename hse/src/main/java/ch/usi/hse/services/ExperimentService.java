@@ -301,7 +301,11 @@ public class ExperimentService {
 	 * @throws NoSuchDocCollectionException 
 	 * @throws UserExistsException 
 	 */
-	public TestGroup updateTestGroup(TestGroup testGroup) throws NoSuchTestGroupException, NoSuchExperimentException, NoSuchDocCollectionException, UserExistsException {
+	public TestGroup updateTestGroup(TestGroup testGroup) 
+			throws NoSuchTestGroupException, 
+				   NoSuchExperimentException, 
+				   NoSuchDocCollectionException, 
+				   UserExistsException {
 		
 		int groupId = testGroup.getId();
 		
@@ -344,6 +348,7 @@ public class ExperimentService {
 		TestGroup found = testGroupRepo.findById(testGroup.getId());
 		found.setName(testGroup.getName());
 		found.setDocCollections(testGroup.getDocCollections());
+		found.setFirstQueryList(testGroup.getFirstQueryList());
 
 		found.clearParticipants();		
 		testGroupRepo.save(found);

@@ -1,8 +1,12 @@
 $(document).ready(function() {
 	
+	/*
 	console.log(experiment);
 	console.log(docCollections);
 	console.log(configFiles);
+	*/
+	
+	console.log(urlLists);
 	
 	$("#configFileInput").on("change", () => {
 
@@ -150,6 +154,17 @@ function showDocCollectionSelectModal(testGroup) {
 	});
 		
 	$("#selectDocCollectionModal").modal("show");
+}
+
+function showUrlListModal(testGroup) {
+	
+	$("#fqlSelectBtn").off("click").on("click", () => {
+
+		testGroup.firstQueryList = $("#fqlSelect").val();
+		submitTestGroup(testGroup, "PUT");
+	})
+	
+	$("#firstQuerySelectModal").modal("show");
 }
 
 function showParticipantInputModal(testGroup) {

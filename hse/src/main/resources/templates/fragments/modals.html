@@ -635,6 +635,54 @@
 	
 </div>
 
+<div class="modal fade" id="firstQuerySelectModal">
+		
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content">
+		
+			<div class="modal-header text-center">
+				<h4 class="modal-title w-100" th:text="#{m_set} + ' ' + #{m_firstQueryList}"></h4>
+		   	</div>
+		
+			<div class="modal-body">
+			
+			
+				<div class="form-group">
+                	<label class="control-label" th:text="#{m_firstQueryList}"></label>
+                        <div>
+                            <select id="fqlSelect" class="form-control input-lg">
+
+								<option th:each="fileName : ${urlLists}" 
+										th:value="${fileName}"
+										th:text="${fileName}">
+								</option>
+
+                            </select>
+                        </div>
+             	</div>
+			
+			</div>
+		
+			<div class="modal-footer">
+			
+				<button class="btn btn-light" 
+						data-dismiss="modal" 
+						th:text="#{m_close}">
+				</button>
+				
+				<button id="fqlSelectBtn" 
+						class="btn btn-primary" 
+						data-dismiss="modal" 
+						th:text="#{m_ok}">
+				</button>
+				
+			</div>
+		
+		</div>
+	</div>
+	
+</div>
+
 </th:block>
 
 </body>
