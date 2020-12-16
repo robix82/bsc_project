@@ -185,10 +185,14 @@ function handleApiError(errJson) {
 		
 		showErrorModal(m_error, m_invalidConfigFile + ": " + errJson.errorMessage);
 	}
+	else if (errType == "TestGroupExistsException") {
+		
+		showErrorModal(m_error, m_testGroupExists);
+	}
 	
 	else {
 
-		console.log(err);
+		console.log(errJson);
 		showErrorModal(m_error, m_generalError);
 	}
 }

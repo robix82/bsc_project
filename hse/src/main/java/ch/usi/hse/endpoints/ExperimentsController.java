@@ -32,6 +32,7 @@ import ch.usi.hse.exceptions.NoSuchExperimentException;
 import ch.usi.hse.exceptions.NoSuchFileException;
 import ch.usi.hse.exceptions.NoSuchTestGroupException;
 import ch.usi.hse.exceptions.NoSuchUserException;
+import ch.usi.hse.exceptions.TestGroupExistsException;
 import ch.usi.hse.exceptions.UserExistsException;
 import ch.usi.hse.experiments.ExperimentSummary;
 import ch.usi.hse.services.ExperimentService;
@@ -234,10 +235,11 @@ public class ExperimentsController {
 	 * @param testGroup
 	 * @return
 	 * @throws NoSuchExperimentException
+	 * @throws TestGroupExistsException 
 	 */
 	@PostMapping("/testGroups")
 	public ResponseEntity<TestGroup> postTestGroup(@RequestBody TestGroup testGroup) 
-			throws NoSuchExperimentException {
+			throws NoSuchExperimentException, TestGroupExistsException {
 		
 		TestGroup saved = experimentService.addTestGroup(testGroup);
 		

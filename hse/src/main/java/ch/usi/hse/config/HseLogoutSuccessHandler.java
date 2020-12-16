@@ -80,8 +80,6 @@ public class HseLogoutSuccessHandler implements LogoutSuccessHandler {
 			}
 			 
 		}
-		
-		System.out.println("LOGOUT SUCCESS: redirecting to " + redirect);
 
 		response.sendRedirect(redirect);
 	}

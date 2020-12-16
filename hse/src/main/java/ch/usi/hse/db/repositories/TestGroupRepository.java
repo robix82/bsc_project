@@ -19,4 +19,5 @@ public interface TestGroupRepository extends CrudRepository<TestGroup, Integer> 
 
 	public List<TestGroup> findAll();
 	public TestGroup findById(int id);
+	public boolean existsByNameAndExperimentId(String name, int experimentId);
 }

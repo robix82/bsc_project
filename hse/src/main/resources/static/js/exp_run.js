@@ -26,6 +26,12 @@ $(document).ready(function() {
 	else if (experiment.status == "RUNNING") {
 		
 		t0 = new Date(experiment.startTime);
+		
+		if (experiment.mode == "QUALTRICS") {
+			
+			t0.setHours(t0.getHours() + 1);
+		}
+		
 		onTimeStep();
 		timerId = setInterval(onTimeStep, 1000);
 		
@@ -88,6 +94,12 @@ function startExperiment() {
 		experiment = res;
 		t0 = new Date(experiment.startTime);
 		t0.setSeconds(t0.getSeconds() + 1);
+		
+		if (experiment.mode == "QUALTRICS") {
+			
+			t0.setHours(t0.getHours() + 1);
+		}
+		
 		timerId = setInterval(onTimeStep, 1000);
 		
 		$("#startStopBtn").text(m_stop);
@@ -136,7 +148,7 @@ function resetExperiment() {
 		$("#status-display").text(m_experimentReady);	
 		$("#evalBtn").hide();
 		
-		updateInfoTables();
+		location.reload();
 	});
 }
 
@@ -181,6 +193,11 @@ function connectWebSocket() {
 			experiment = JSON.parse(res.body);
 			updateInfoTables();
         });
+
+		stompClient.subscribe("/userAdded", () => {
+			
+			location.reload();
+		})
     });
 }
 

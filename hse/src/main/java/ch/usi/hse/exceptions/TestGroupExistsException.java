@@ -11,4 +11,9 @@ public class TestGroupExistsException extends EntityExistsException {
 		
 		super("A TestGroup with id " + id + " already exists"); 
 	}
+	
+	public TestGroupExistsException(String name) {
+		
+		super("A TestGroup with name " + name + " already exists");
+	}
 }

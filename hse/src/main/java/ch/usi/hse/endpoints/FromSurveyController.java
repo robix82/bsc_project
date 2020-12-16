@@ -20,7 +20,6 @@ import org.springframework.web.servlet.ModelAndView;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import ch.usi.hse.db.entities.Experiment;
-import ch.usi.hse.db.entities.HseUser;
 import ch.usi.hse.db.entities.Participant;
 import ch.usi.hse.exceptions.NoSuchExperimentException;
 import ch.usi.hse.exceptions.NoSuchTestGroupException;
@@ -52,11 +51,17 @@ public class FromSurveyController {
 	private String baseUrl;
 
 	@GetMapping("/")
-	public ModelAndView getSearchUiFromSurvey(HttpServletRequest request, @RequestParam(name="uid") int userId) 
-			throws NoSuchUserException, NoSuchExperimentException, UserExistsException {
+	public ModelAndView getSearchUiFromSurvey(HttpServletRequest request, 
+											  @RequestParam(name="uid") int userId,
+											  @RequestParam(name="svUrl") String surveyUrl) 
+	
+			throws NoSuchUserException, 
+				   NoSuchExperimentException, 
+				   UserExistsException {
 		
 		Participant user = userService.findParticipant(userId);
-		Experiment experiment = experimentService.findExperiment(user.getExperimentId());
+		int experimentId = user.getExperimentId();
+		Experiment experiment = experimentService.findExperiment(experimentId);
 		
 		if (! experiment.getStatus().equals(Experiment.Status.RUNNING)) {
 			
@@ -68,8 +73,10 @@ public class FromSurveyController {
 			request.login(user.getUserName(), UserService.surveyUserPassword);
 			
 			user.setOnline(true);
+			user.setSurveyUrl(surveyUrl);
 			userService.updateParticipant(user);
-			simpMessagingTemplate.convertAndSend("/userActions", experiment);
+			Experiment updatedExperiment = experimentService.findExperiment(experimentId);
+			simpMessagingTemplate.convertAndSend("/userActions", updatedExperiment);
 	    } 
 		catch (ServletException e) {
 			
@@ -84,16 +91,18 @@ public class FromSurveyController {
 	}
 	
 	@PostMapping("/addUser")
-	public ResponseEntity<HseUser> addUser(@RequestParam int groupId, 
-										   @RequestParam String surveyUrl)
+	public ResponseEntity<UserIdInfo> addUser(@RequestParam int groupId)
 	
 			throws NoSuchUserException, 
 				   UserExistsException, 
-				   NoSuchTestGroupException {
+				   NoSuchTestGroupException, 
+				   NoSuchExperimentException {
 		
-		HseUser user = userService.addSurveyParticipant(groupId, surveyUrl);
+		Participant user = userService.addSurveyParticipant(groupId);
+
+		simpMessagingTemplate.convertAndSend("/userAdded", "new survey user");
 		
-		return new ResponseEntity<>(user, HttpStatus.OK);
+		return new ResponseEntity<>(new UserIdInfo(user.getId()), HttpStatus.OK);
 	}
 	
 	@GetMapping("/is_running")
@@ -116,6 +125,21 @@ public class FromSurveyController {
 		mav.addObject("surveyUrl", surveyUrl);
 		
 		return mav;
+	}
+	
+	private class UserIdInfo {
+		
+		private int id;
+		
+		public UserIdInfo(@JsonProperty("id") int id) {
+			
+			this.id = id;
+		}
+		
+		@SuppressWarnings("unused")
+		public int getId() {
+			return id;
+		}
 	}
 	
 	private class ExperimentInfo {

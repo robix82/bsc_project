@@ -404,7 +404,7 @@ public class UserService {
 		return saved;
 	}
 	
-	public Participant addSurveyParticipant(int groupId, String surveyUrl) 
+	public Participant addSurveyParticipant(int groupId) 
 			throws UserExistsException, NoSuchTestGroupException {
 		
 		String userName = "svu_" + RandomStringUtils.random(20, true, true);
@@ -430,17 +430,17 @@ public class UserService {
 			participant = participantRepository.findByUserName(userName);
 		}
 		
+		
 		participant.setActive(true);
-		participant.setSurveyUrl(surveyUrl);
-		participantRepository.save(participant);
+		participantRepository.save(participant);	
 		
 		TestGroup g = testGroupRepository.findById(groupId);
 		g.addParticipant(participant);
 		testGroupRepository.save(g);
 		
-		participant.setSurveyUrl(surveyUrl);
+		Participant updatedParticipant = participantRepository.findById(participant.getId());
 		
-		return participant;
+		return updatedParticipant;
 	}
 	
 	// UPDATE EXISTING USERS

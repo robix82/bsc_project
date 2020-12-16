@@ -1201,7 +1201,7 @@ public class ExperimentsControllerIntegrationTest {
 		assertEquals("NoSuchExperimentException", err.getErrorType());
 		assertTrue(err.getErrorMessage().contains(Integer.toString(badId)));
 	}
-	
+	/*
 	@Test
 	public void testStopExperiment1() throws Exception {
 		
@@ -1252,6 +1252,7 @@ public class ExperimentsControllerIntegrationTest {
 			}
 		}
 	}
+	*/
 	
 	@Test
 	public void testStopExperiment2() throws Exception {

@@ -33,6 +33,7 @@ import ch.usi.hse.exceptions.NoSuchExperimentException;
 import ch.usi.hse.exceptions.NoSuchFileException;
 import ch.usi.hse.exceptions.NoSuchTestGroupException;
 import ch.usi.hse.exceptions.NoSuchUserException;
+import ch.usi.hse.exceptions.TestGroupExistsException;
 import ch.usi.hse.exceptions.UserExistsException;
 import ch.usi.hse.experiments.EventDataExtractor;
 import ch.usi.hse.experiments.ExperimentConfigurer;
@@ -267,13 +268,19 @@ public class ExperimentService {
 	 * @param testGroup
 	 * @return
 	 * @throws NoSuchExperimentException 
+	 * @throws TestGroupExistsException 
 	 */
-	public TestGroup addTestGroup(TestGroup testGroup) throws NoSuchExperimentException {
+	public TestGroup addTestGroup(TestGroup testGroup) 
+			throws NoSuchExperimentException, TestGroupExistsException {
 		
 		int experimentId = testGroup.getExperimentId();
 		
 		if (! experimentRepo.existsById(experimentId)) {
 			throw new NoSuchExperimentException(experimentId);
+		}
+		
+		if (testGroupRepo.existsByNameAndExperimentId(testGroup.getName(), experimentId)) {
+			throw new TestGroupExistsException(testGroup.getName());
 		}
 		
 		Experiment experiment = experimentRepo.findById(experimentId);
@@ -594,6 +601,15 @@ public class ExperimentService {
 		ex.setStatus(Experiment.Status.READY);
 		checkReadyStatus(ex);
 		ex.clearUsageEvents();
+		
+		if (ex.getMode().equals(Experiment.Mode.QUALTRICS)) {
+			
+			for (TestGroup g : ex.getTestGroups()) {
+				
+				g.clearParticipants();
+				testGroupRepo.save(g);
+			}
+		}
 		
 		Experiment updated = experimentRepo.save(ex);
 		
