@@ -46,10 +46,13 @@
 
 \newpage
 
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{(Temporary) Source Download and Running Application}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-The source codes and related documentation files are available on \href{https://github.com/robix82/bsc_project/}{GitHub}.
+The source codes and related documentation files are available on \emph{GitHub} under \\
+
+\href{https://github.com/robix82/bsc_project/}{https://github.com/robix82/bsc\_project/}. \\
 
 The repository can be cloned by issuing the following command 
 \begin{verbatim}
@@ -57,7 +60,9 @@ git clone https://github.com/robix82/bsc_project.git
 \end{verbatim}
 
 For testing the application and its interactions with Qualtrics, I temporarily deployed it on \\
-\url{http://www.robix-projects.org/hse}.
+
+\url{http://www.robix-projects.org/hse}. \\
+
 
 You can log in using the following credentials;
 
@@ -65,6 +70,122 @@ You can log in using the following credentials;
 \item username: admin
 \item password: admin
 \end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Technologies used}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The project is constructed as a web application using the \emph{SpringBoot} framework. It consists in 
+a back-end written in java, HTMl pages (served via the \emph{Thymeleaf} templating engine), some
+\emph(JavaScript) to be run on client side, and \emph{css} files for the user interface styling. 
+Data is stored in part in a \emph{MySql} database and in part as text files
+on the server's file system. The \emph{JQuery} and \emph{Bootstrap} frameworks are used for keeping the
+front-end code as simple as possible.
+
+Dependency management and build configurations are handled by the \emph{Maven} project management tool.
+In order to allow a simple deployment procedure, the application is packaged into a \emph{Docker} image
+at build time. The application can be started and stopped using \emph{Docker Compose} which automatically
+downloads, initializes, and links the required \emph{MySql} database.
+For a detailed deployment description, see section~\ref{sec:deployment}. 
+For inspecting and/or modifying the source code, I suggest using the \emph{Eclipse} IDE.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Configuration, Build and Deployment}
+\label{sec:deployment}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Dependencies}
+
+The system on which you build the application must have the following software installed:
+
+\begin{itemize}
+
+\item Java JDK 11
+
+\item Apache Maven 3.6.3
+
+\item Docker version 20.10.1
+
+\end{itemize}
+
+If you need to run the application locally without using docker, also \emph{MySql} is required. 
+
+The server on which the application is to be deployed, only needs \emph{Docker} and \emph{Docker Compose}.
+
+\subsection{Configuration Files}
+
+\subsubsection{Maven configuration: pom.xml}
+
+The build settings used by \emph{Maven} are defined in \texttt{/hse/pom.xm}. This file contains some general information
+about the project, such as name and version, as well as a list of java packages and \emph{Maven} plugins which are 
+downloaded and set up at build time. The File also declares two profiles (``dev'' and ``prod''). The ``dev'' profile 
+is intended for creating a local build to be used during development, while the ``prod'' profile is to be used for building the deployment version.
+The profiles are linked to specific configuration files which contain various settings such as server ports and global
+constants: when the profile ``dev'' is selected, the application uses the file \texttt{/hse/src/main/resources/application-dev.properties};
+when ``prod'' is selected, \texttt{/hse/src/main/resources/application-prod.properties}. 
+
+By default the ``dev'' profile is selected;
+for using the ``prod'' profile, the flag \texttt{-Pprod} is to be included in the \emph{Maven} command 
+(e.g. \texttt{mvn -Pprod clean install}).
+
+\subsubsection{Specific configurations in \texttt{.properties} files}
+
+The directory \texttt{/hse/src/main/resources/} contains three files with extension \texttt{.properties}:
+
+\texttt{application.properties}, \texttt{application-dev.properties} and \texttt{application-prod.properties}.
+The first one contains settings that are applied independently of the selected profile, while the other
+two contain profile-specific settings. The crucial settings to be considered at build time are the 
+\texttt{spring.datasource.xxx} properties, which indicates the database which the application is going to connect to, and 
+the \texttt{baseUrl} parameter, which indicates the prefix used at server level.
+For instance in the \texttt{application-prod.properties} as I have set it up, the data source is pointing to a \emph{MySql} Docker container,
+and the base url is set to \texttt{/hse/}, since I deploy it on \texttt{http://www.robix-projects.org/hse/}. 
+In the \texttt{application-dev.properties} file the data source points to a local \emph{MySql} instance and the baseUrl is \texttt{/}.
+
+The other properties indicate directory paths and should not need to be modified.
+
+\subsubsection{docker-compose.yml}
+
+The simplest way to run the application on a server is by using \emph{Docker Compose}. The way in which the containers are created from the images
+and the internal ports used are defined in 
+\texttt{/hse/docker-compose.yml}.
+
+\subsection{Creating a local build}
+
+\subsubsection{Preparing the database}
+
+In order to run the application locally , a \emph{MySql} database service running on port 3306 is required. The service must contain a database
+named \texttt{hse\_db} and should be accessible via username \texttt{root} and password \texttt{root}. The tables
+are created automatically at application startup. If you need to use other login credentials, or the service is running on another port, these
+parameters can be set in \texttt{application-dev.properties}.
+
+\subsubsection{Issuing the build command}
+
+The command
+\begin{verbatim}
+mvn clean install
+\end{verbatim}
+initiates the build process. The process involves executing several test suites, which should work without failure. In case
+the tests fail (e.g. due to path incompatibilities or missing files) the tests can be skipped using the \texttt{-DskipTests} flag:
+\begin{verbatim}
+mvn -DskipTests clean install
+\end{verbatim}
+
+\subsubsection{Running the application}
+
+Once the application is built, it can be run in several ways. During development it is convenient to run it from the IDE (in
+\emph{Eclipse} package explorer, right-click on project $\rightarrow$ Run As $\rightarrow$ Spring Boot App). Alternatives are to run it from command
+line using \emph{Maven}:
+\begin{verbatim}
+cd hse/
+mvn spring-boot:run
+\end{verbatim}
+or using \emph{Java}:
+
+\begin{verbatim}
+cd hse/target/
+java -jar hse-0.1.jar
+\end{verbatim}
+
 
 
 

@@ -88,7 +88,9 @@ public class SearchService {
 			int experimentId = p.getExperimentId();
 			p.incQueryCount();
 			
-			if (p.getQueryCount() == 1) {
+			TestGroup group = p.getTestGroup();
+			
+			if (p.getQueryCount() == 1 && group.getFirstQueryList() != null) {
 				p.setFirstQuery(query);
 			}
 			
@@ -98,7 +100,7 @@ public class SearchService {
 				throw new NoSuchExperimentException(experimentId);
 			}
 			
-			TestGroup group = p.getTestGroup();
+			
 			SearchResultList srl;
 			
 			if (query.equals(p.getFirstQuery())) {
