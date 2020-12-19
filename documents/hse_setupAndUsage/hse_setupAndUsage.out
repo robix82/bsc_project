@@ -10,3 +10,7 @@
 \BOOKMARK [3][-]{subsubsection.3.3.1}{Preparing the database}{subsection.3.3}% 10
 \BOOKMARK [3][-]{subsubsection.3.3.2}{Issuing the build command}{subsection.3.3}% 11
 \BOOKMARK [3][-]{subsubsection.3.3.3}{Running the application}{subsection.3.3}% 12
+\BOOKMARK [2][-]{subsection.3.4}{Example deployment on Ubuntu Server with Apache2}{section.3}% 13
+\BOOKMARK [3][-]{subsubsection.3.4.1}{Create and transfer the Docker image}{subsection.3.4}% 14
+\BOOKMARK [3][-]{subsubsection.3.4.2}{Load the image and start the application}{subsection.3.4}% 15
+\BOOKMARK [3][-]{subsubsection.3.4.3}{Apache2 configuration}{subsection.3.4}% 16

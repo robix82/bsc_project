@@ -42,13 +42,19 @@
 
 \newpage
 
+\hypersetup{
+  linkcolor=black
+}
 \tableofcontents
+\hypersetup{
+  linkcolor=blue
+}
 
 \newpage
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{(Temporary) Source Download and Running Application}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 The source codes and related documentation files are available on \emph{GitHub} under \\
 
@@ -71,9 +77,9 @@ You can log in using the following credentials;
 \item password: admin
 \end{itemize}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Technologies used}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 The project is constructed as a web application using the \emph{SpringBoot} framework. It consists in 
 a back-end written in java, HTMl pages (served via the \emph{Thymeleaf} templating engine), some
@@ -89,11 +95,12 @@ downloads, initializes, and links the required \emph{MySql} database.
 For a detailed deployment description, see section~\ref{sec:deployment}. 
 For inspecting and/or modifying the source code, I suggest using the \emph{Eclipse} IDE.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Configuration, Build and Deployment}
 \label{sec:deployment}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Dependencies}
 
 The system on which you build the application must have the following software installed:
@@ -112,6 +119,7 @@ If you need to run the application locally without using docker, also \emph{MySq
 
 The server on which the application is to be deployed, only needs \emph{Docker} and \emph{Docker Compose}.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Configuration Files}
 
 \subsubsection{Maven configuration: pom.xml}
@@ -149,6 +157,7 @@ The simplest way to run the application on a server is by using \emph{Docker Com
 and the internal ports used are defined in 
 \texttt{/hse/docker-compose.yml}.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Creating a local build}
 
 \subsubsection{Preparing the database}
@@ -186,7 +195,82 @@ cd hse/target/
 java -jar hse-0.1.jar
 \end{verbatim}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Example deployment on \emph{Ubuntu Server} with \emph{Apache2}}
 
+\subsubsection{Create and transfer the \emph{Docker} image}
+
+The first step consists in creating the application's image by issuing
+
+\begin{verbatim}
+cd hse/
+mvn -Pprod clean install
+\end{verbatim}
+
+At this point, the output of \texttt{docker image ls} should contain a line similar to:
+
+\begin{verbatim}
+REPOSITORY           TAG       IMAGE ID       CREATED             SIZE
+robix82/usi.ch-hse   0.1       c2137e7cc110   37 seconds ago      758MB
+\end{verbatim}
+
+Once the image is created it can be exported as a \texttt{.tar} file by issuing
+
+\begin{verbatim}
+docker save robix82/usi.ch-hse:0.1 > hse.tar
+\end{verbatim}
+
+Finally the \texttt{.tar} file and \texttt{/hse/docker-compose.yml} must be copied to the server, e.g. using \texttt{scp}.
+
+\subsubsection{Load the image and start the application}
+
+On the server, the image from the \texttt{.tar} file can be loaded with
+
+\begin{verbatim}
+docker load < hse.tar
+\end{verbatim}
+
+With the image loaded, the application can be started by issuing
+
+\begin{verbatim}
+docker-compose up &
+\end{verbatim}
+
+from the directory containing the \texttt{docker-compose.yml} file. The required \emph{MySql} image will
+be downloaded and initialized automatically.
+
+At this point the application is reachable on port 8081 (the port can be configured in \texttt{docker-compose.yml}).
+
+\subsubsection{Apache2 configuration}
+
+In order to make the application reachable on the server's external address with a custom prefix, it is necessary to
+configure a virtual host using Apache's \texttt{mod\_proxy} module. For details on \texttt{mod\_proxy}, please
+refer to \\ \href{https://www.digitalocean.com/community/tutorials/how-to-use-apache-http-server-as-reverse-proxy-using-mod_proxy-extension}{https://www.digitalocean.com/community/tutorials/...} \\
+
+The virtual host configuration is done by placing a file (in this example \texttt{hse.conf}) in \texttt{/etc/apache2/sites-available/} and creating
+a symlink to it in \texttt{/etc/apache2/sites-enabled/}:
+
+\begin{verbatim}
+ln -s /etc/apache2/sites-available/hse.conf /etc/apache2/sites-enabled/
+\end{verbatim}
+
+The content of the \texttt{.conf} file should look similar to
+
+\begin{verbatim}
+<VirtualHost *:80>
+
+  ServerName www.robix-projects.org
+  ProxyPreserveHost On
+
+  ProxyPass /hse/ http://127.0.0.1:8081/
+  ProxyPassReverse /hse/ http://127.0.0.1:8081/
+
+</VirtualHost>
+\end{verbatim}
+
+This configuration makes the application available under \texttt{http://www.robix-projects.org/hse}. Notice that
+the prefix \texttt{/hse/} must match the \texttt{baseUrl} property in \texttt{application-prod.properties}
+and the port (8081 in this example) must correspond to the port defined in \texttt{docker-compose.yml}. 
 
 
 \end{document}
