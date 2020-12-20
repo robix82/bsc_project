@@ -1,5 +1,5 @@
 \contentsline {section}{\numberline {1}(Temporary) Source Download and Running Application}{3}{section.1}%
-\contentsline {section}{\numberline {2}Technologies used}{3}{section.2}%
+\contentsline {section}{\numberline {2}Employed Technologies}{3}{section.2}%
 \contentsline {section}{\numberline {3}Configuration, Build and Deployment}{3}{section.3}%
 \contentsline {subsection}{\numberline {3.1}Dependencies}{3}{subsection.3.1}%
 \contentsline {subsection}{\numberline {3.2}Configuration Files}{3}{subsection.3.2}%
@@ -14,3 +14,6 @@
 \contentsline {subsubsection}{\numberline {3.4.1}Create and transfer the \emph {Docker} image}{5}{subsubsection.3.4.1}%
 \contentsline {subsubsection}{\numberline {3.4.2}Load the image and start the application}{5}{subsubsection.3.4.2}%
 \contentsline {subsubsection}{\numberline {3.4.3}Apache2 configuration}{5}{subsubsection.3.4.3}%
+\contentsline {section}{\numberline {4}Usage}{6}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Users, Roles and their Definition}{6}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}URL lists and Document collections}{6}{subsection.4.2}%

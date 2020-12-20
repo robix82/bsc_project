@@ -78,7 +78,7 @@ You can log in using the following credentials;
 \end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Technologies used}
+\section{Employed Technologies}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 The project is constructed as a web application using the \emph{SpringBoot} framework. It consists in 
@@ -271,6 +271,55 @@ The content of the \texttt{.conf} file should look similar to
 This configuration makes the application available under \texttt{http://www.robix-projects.org/hse}. Notice that
 the prefix \texttt{/hse/} must match the \texttt{baseUrl} property in \texttt{application-prod.properties}
 and the port (8081 in this example) must correspond to the port defined in \texttt{docker-compose.yml}. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Usage}
+\label{sec:usage}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Users, Roles and their Definition}
+
+The application distinguishes three types (roles) of users: \emph{Administrators}, \emph{experimenters}, and \emph{participants}.
+Depending on a user's role, different UI elements are visible or accessible: participants can access only the search interface; 
+experimenters have access to the indexing and the experiment setup interfaces; administrators have access to all interfaces,
+including a page for creating, updating and removing administrators and experimenters. Participants can be defined
+by administrators or experimenters when an experiment is set up, or automatically if the experiment is run within
+a \emph{Qualtrics} survey.
+
+If the application is newly installed, a default user with \emph{Administrator} role created. This user can log in using
+the user name ``\emph{admin}'' and password ``\emph{admin}''.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{URL lists and Document collections}
+
+Before an experiment can set up, at least one document collection must be available. These can be created on the \emph{indexing}
+UI page available to experimenters and administrators (see \textbf{Figure \ref{fig:indexingUi}}). Creating a document collection involves
+the following steps:
+\begin{itemize}
+
+\item Upload a URL list, i.e. a text file (.txt) containing one url per line.
+
+\item Define a doc collection by setting its name, the URL list to be used, and the language (\emph{IT} or \emph{EN})
+        of the web pages.
+
+\item Start the indexing process. This may take a long time since it involves downloading all the pages over the network;
+      while testing I observed times in the order of one second per URL.
+
+\end{itemize}
+
+Document collections will later be assigned 
+to test groups, so the search engine returns different results depending on which test group a participant belongs to. Optionaly
+a document collection can be set as fixed result for the first query; in this case the first query submitted by a
+participant returns this entire document collection, in the order in which the URLs are set in the list used for generating the collection.
+
+\begin{figure} [h]
+\centering
+\includegraphics[width=0.7\textwidth]{img/indexingUi}
+\caption{User interface for creating document collections}
+\label{fig:indexingUi}
+\end{figure}
+
 
 
 \end{document}

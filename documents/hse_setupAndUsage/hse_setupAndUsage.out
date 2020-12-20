@@ -1,5 +1,5 @@
 \BOOKMARK [1][-]{section.1}{\(Temporary\) Source Download and Running Application}{}% 1
-\BOOKMARK [1][-]{section.2}{Technologies used}{}% 2
+\BOOKMARK [1][-]{section.2}{Employed Technologies}{}% 2
 \BOOKMARK [1][-]{section.3}{Configuration, Build and Deployment}{}% 3
 \BOOKMARK [2][-]{subsection.3.1}{Dependencies}{section.3}% 4
 \BOOKMARK [2][-]{subsection.3.2}{Configuration Files}{section.3}% 5
@@ -14,3 +14,6 @@
 \BOOKMARK [3][-]{subsubsection.3.4.1}{Create and transfer the Docker image}{subsection.3.4}% 14
 \BOOKMARK [3][-]{subsubsection.3.4.2}{Load the image and start the application}{subsection.3.4}% 15
 \BOOKMARK [3][-]{subsubsection.3.4.3}{Apache2 configuration}{subsection.3.4}% 16
+\BOOKMARK [1][-]{section.4}{Usage}{}% 17
+\BOOKMARK [2][-]{subsection.4.1}{Users, Roles and their Definition}{section.4}% 18
+\BOOKMARK [2][-]{subsection.4.2}{URL lists and Document collections}{section.4}% 19
