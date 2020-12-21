@@ -11,9 +11,11 @@ import org.springframework.stereotype.Component;
 
 import ch.usi.hse.db.entities.Experiment;
 import ch.usi.hse.db.entities.Participant;
+import ch.usi.hse.db.entities.Role;
 import ch.usi.hse.db.entities.TestGroup;
 import ch.usi.hse.db.repositories.ExperimentRepository;
 import ch.usi.hse.db.repositories.ParticipantRepository;
+import ch.usi.hse.db.repositories.RoleRepository;
 import ch.usi.hse.db.repositories.TestGroupRepository;
 import ch.usi.hse.exceptions.ConfigParseException;
 import ch.usi.hse.exceptions.FileReadException;
@@ -31,6 +33,7 @@ public class ExperimentConfigurer {
 
 	private ExperimentConfigStorage configStorage;
 	private ParticipantRepository participantRepo;
+	private RoleRepository roleRepo;
 	private TestGroupRepository testGroupRepo;
 	private ExperimentRepository experimentRepo;
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -42,6 +45,7 @@ public class ExperimentConfigurer {
 	public ExperimentConfigurer(@Qualifier("ExperimentConfigStorage")
 								ExperimentConfigStorage configStorage,
 								ParticipantRepository participantRepo,
+								RoleRepository roleRepo,
 								TestGroupRepository testGroupRepo,
 								ExperimentRepository experimentRepo,
 								BCryptPasswordEncoder bCryptPasswordEncoder) {
@@ -49,6 +53,7 @@ public class ExperimentConfigurer {
 		
 		this.configStorage = configStorage;
 		this.participantRepo = participantRepo;
+		this.roleRepo = roleRepo;
 		this.testGroupRepo = testGroupRepo;
 		this.experimentRepo = experimentRepo;
 		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
@@ -107,7 +112,11 @@ public class ExperimentConfigurer {
 				
 				userNames.add(userName);
 				String pwd = bCryptPasswordEncoder.encode(words[1]);
-				Participant p = participantRepo.save(new Participant(userName, pwd));
+				Participant newParticipant = new Participant(userName, pwd);
+				Set<Role> roles = new HashSet<>();
+				roles.add(roleRepo.findByRole("PARTICIPANT"));
+				newParticipant.setRoles(roles);
+				Participant p = participantRepo.save(newParticipant);
 				g.addParticipant(p);
 			}
 			

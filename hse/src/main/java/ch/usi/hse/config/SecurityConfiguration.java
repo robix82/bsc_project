@@ -62,6 +62,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	public void configure(HttpSecurity http) throws Exception {
 		
 		http.csrf().disable()
+			.headers().frameOptions().sameOrigin()
+			.and()
 			.authorizeRequests()			
 			.antMatchers("/from_survey/**").permitAll()
 			.antMatchers("/login").permitAll()

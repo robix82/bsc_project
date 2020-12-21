@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import ch.usi.hse.db.entities.HseUser;
@@ -96,6 +97,17 @@ public class SearchController {
 			mav.addObject("searchResultList", srl);
 		}
 				
+		return mav;
+	}
+
+	@GetMapping("/doc")
+	public ModelAndView getResultDoc(@RequestParam String url) {
+		
+		ModelAndView mav = new ModelAndView();
+		mav.setViewName("document");
+		mav.addObject("baseUrl", baseUrl);
+		mav.addObject("docUrl", url);
+		
 		return mav;
 	}
 	

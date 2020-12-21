@@ -1,5 +1,7 @@
 
-nav {
+/* ADMIN NAV */
+
+#admin-nav {
 	display: flex;
 	flex-flow: row;
 	justify-content: space-between;
@@ -19,7 +21,8 @@ a.internal-link {
 	
 	display: flex;
 	flex-direction: row;
-	padding: 1em;
+	padding-left: 1em;
+	padding-left: 1em;
 }
 
 .langSelector {
@@ -33,3 +36,28 @@ a.internal-link {
 .langSelector:hover {
 	color: #9494b8;
 }
+
+/* PARTICIPANT NAV */
+
+#participant-nav {
+	display: flex;
+	flex-flow: row;
+	justify-content: space-between;
+	align-items: center;
+	padding-left: 1em;
+	padding-right: 1em;
+}
+
+.participant-link {
+	
+	color: white;
+	margin-right: .5em;
+	font-weight: bold;
+	height: 1em;
+}
+
+
+
+
+
+

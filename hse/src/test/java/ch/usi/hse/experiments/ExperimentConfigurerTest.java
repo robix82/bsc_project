@@ -18,6 +18,7 @@ import ch.usi.hse.db.entities.Participant;
 import ch.usi.hse.db.entities.TestGroup;
 import ch.usi.hse.db.repositories.ExperimentRepository;
 import ch.usi.hse.db.repositories.ParticipantRepository;
+import ch.usi.hse.db.repositories.RoleRepository;
 import ch.usi.hse.db.repositories.TestGroupRepository;
 import ch.usi.hse.exceptions.ConfigParseException;
 import ch.usi.hse.exceptions.FileReadException;
@@ -31,6 +32,9 @@ public class ExperimentConfigurerTest {
 	
 	@Mock
 	private ParticipantRepository participantRepo;
+	
+	@Mock
+	private RoleRepository roleRepo;
 	
 	@Mock
 	private TestGroupRepository testGroupRepo;
@@ -55,6 +59,7 @@ public class ExperimentConfigurerTest {
 		
 		configurer = new ExperimentConfigurer(configStorage, 
 											  participantRepo, 
+											  roleRepo,
 											  testGroupRepo, 
 											  experimentRepo, 
 											  bCryptPasswordEncoder);
