@@ -36,7 +36,6 @@ import ch.usi.hse.exceptions.TestGroupExistsException;
 import ch.usi.hse.exceptions.UserExistsException;
 import ch.usi.hse.experiments.ExperimentSummary;
 import ch.usi.hse.services.ExperimentService;
-import ch.usi.hse.services.IndexingService;
 import ch.usi.hse.services.UserService;
 
 /**
@@ -55,9 +54,6 @@ public class ExperimentsController {
 	
 	@Autowired
 	private UserService userService;
-	
-	@Autowired
-	private IndexingService indexingService;
 	
 	@Value("${baseUrl}")
 	private String baseUrl;
@@ -101,7 +97,6 @@ public class ExperimentsController {
 		mav.addObject("experiment", experimentService.findExperiment(expId));
 		mav.addObject("docCollections", experimentService.getIndexedDocCollections());
 		mav.addObject("configFiles", experimentService.savedConfigFiles());
-		mav.addObject("urlLists", indexingService.savedUrlLists());
 		
 		return mav;
 	}

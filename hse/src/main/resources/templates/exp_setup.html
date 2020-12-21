@@ -139,7 +139,7 @@
 						</button>
 					</div>
 					
-					<div th:if="${testGroup.firstQueryList != null}" th:text="${testGroup.firstQueryList}"></div>
+					<div th:if="${testGroup.firstQueryCollection != null}" th:text="${testGroup.firstQueryCollection.name}"></div>
 					
 					<div th:if="${! #lists.isEmpty(testGroup.participants)} or ${experiment.mode.name()} == 'STAND_ALONE'" class="test-group-sub-header">
 						<h5 th:text="#{m_participants}"></h5>

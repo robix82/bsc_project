@@ -652,9 +652,9 @@
                         <div>
                             <select id="fqlSelect" class="form-control input-lg">
 
-								<option th:each="fileName : ${urlLists}" 
-										th:value="${fileName}"
-										th:text="${fileName}">
+								<option th:each="collection : ${docCollections}" 
+										th:value="${collection.id}"
+										th:text="${collection.name}">
 								</option>
 
                             </select>

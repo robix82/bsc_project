@@ -20,7 +20,6 @@ import ch.usi.hse.exceptions.FileReadException;
 import ch.usi.hse.exceptions.NoSuchExperimentException;
 import ch.usi.hse.exceptions.NoSuchFileException;
 import ch.usi.hse.retrieval.SearchResultList;
-import ch.usi.hse.storage.UrlListStorage;
 import ch.usi.hse.retrieval.SearchAssembler;
 import ch.usi.hse.retrieval.SearchResult;
 
@@ -41,22 +40,19 @@ public class SearchService {
 	private ParticipantRepository participantRepo;
 	private SearchAssembler searchAssembler;
 	private SimpMessagingTemplate simpMessagingTemplate;
-	private UrlListStorage urlListStorage;
 	
 	@Autowired
 	public SearchService(DocCollectionRepository collectionRepo,
 						 ExperimentRepository experimentRepo,
 						 ParticipantRepository participantRepo,
 						 SearchAssembler searchAssembler,
-						 SimpMessagingTemplate simpMessagingTemplate,
-						 UrlListStorage urlListStorage) {
+						 SimpMessagingTemplate simpMessagingTemplate) {
 		
 		this.collectionRepo = collectionRepo;
 		this.experimentRepo = experimentRepo;
 		this.participantRepo =  participantRepo;
 		this.searchAssembler = searchAssembler;
 		this.simpMessagingTemplate = simpMessagingTemplate;
-		this.urlListStorage = urlListStorage;
 	}
 	
 	/**
@@ -90,7 +86,7 @@ public class SearchService {
 			
 			TestGroup group = p.getTestGroup();
 			
-			if (p.getQueryCount() == 1 && group.getFirstQueryList() != null) {
+			if (p.getQueryCount() == 1 && group.getFirstQueryCollection() != null) {
 				p.setFirstQuery(query);
 			}
 			
@@ -105,8 +101,7 @@ public class SearchService {
 			
 			if (query.equals(p.getFirstQuery())) {
 				
-				List<String> urls = urlListStorage.getUrlLines(group.getFirstQueryList());
-				srl = searchAssembler.getFirstQueryList(urls, queryString);
+				srl = searchAssembler.getFirstQueryList(group.getFirstQueryCollection(), queryString);
 			}
 			else {
 			

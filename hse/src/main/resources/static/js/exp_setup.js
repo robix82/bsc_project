@@ -160,7 +160,7 @@ function showUrlListModal(testGroup) {
 	
 	$("#fqlSelectBtn").off("click").on("click", () => {
 
-		testGroup.firstQueryList = $("#fqlSelect").val();
+		testGroup.firstQueryCollection = getDocCollection($("#fqlSelect").val());
 		submitTestGroup(testGroup, "PUT");
 	})
 	

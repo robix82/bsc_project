@@ -23,7 +23,6 @@ import ch.usi.hse.db.repositories.ParticipantRepository;
 import ch.usi.hse.exceptions.FileReadException;
 import ch.usi.hse.retrieval.SearchAssembler;
 import ch.usi.hse.retrieval.SearchResultList;
-import ch.usi.hse.storage.UrlListStorage;
 import ch.usi.hse.testData.SearchData;
 
 public class SearchServiceTest {
@@ -42,9 +41,6 @@ public class SearchServiceTest {
 	
 	@Mock
 	private SimpMessagingTemplate simpMessagingTemplate;
-	
-	@Mock
-	private UrlListStorage urlListStorage;
 
 	private SearchService testService;
 	private String testQueryString = "test query";
@@ -59,7 +55,7 @@ public class SearchServiceTest {
 		initMocks(this);
 		
 		testService = new SearchService(collectionRepo, experimentRepo, participantRepo, 
-										searchAssembler, simpMessagingTemplate, urlListStorage);
+										searchAssembler, simpMessagingTemplate);
 		
 		docCollections = List.of(new DocCollection("c1", "l1"));
 		

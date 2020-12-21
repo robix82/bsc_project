@@ -122,16 +122,11 @@ public class SearchAssembler {
 		return res;
 	}
 	
-	public SearchResultList getFirstQueryList(List<String> urls, String queryString) {
+	public SearchResultList getFirstQueryList(DocCollection firstQueryCollection, String queryString) {
 		
 		SearchResultList res = new SearchResultList(queryString);
 		
-		for (String url : urls) {
-			
-			SearchResult r = new SearchResult(0, url, ""); // TODO retrieve doc id and summary
-			r.setScore(0);
-			res.addSearchResult(r); 
-		}
+		// TODO
 		
 		return res;
 	}

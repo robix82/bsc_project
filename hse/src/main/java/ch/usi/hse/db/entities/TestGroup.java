@@ -16,6 +16,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -57,8 +58,8 @@ public class TestGroup {
 	@Column(name="experiment_title")
 	private String experimentTitle; 
 	
-	@Column(name="firstQueryList")
-	private String firstQueryList;
+	@OneToOne
+	private DocCollection firstQueryCollection;
 	
 	public TestGroup() {
 		
@@ -202,12 +203,12 @@ public class TestGroup {
 		docCollections.clear();
 	}
 	
-	public String getFirstQueryList() {
-		return firstQueryList;
+	public DocCollection getFirstQueryCollection() {
+		return firstQueryCollection;
 	}
 	
-	public void setFirstQueryList(String firstQueryList) {
-		this.firstQueryList = firstQueryList;
+	public void setFirstQueryCollection(DocCollection firstQueryCollection) {
+		this.firstQueryCollection= firstQueryCollection;
 	}
 	
 	@Override
