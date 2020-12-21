@@ -1,6 +1,8 @@
 package ch.usi.hse.endpoints;
 
 
+import java.io.IOException;
+
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.search.highlight.InvalidTokenOffsetsException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,8 +81,8 @@ public class SearchController {
 				   FileReadException, 
 				   InvalidTokenOffsetsException, 
 				   NoSuchExperimentException, 
-				   NoSuchFileException {
-		
+				   NoSuchFileException, 
+				   IOException {
 		
 		
 		ModelAndView mav = new ModelAndView();

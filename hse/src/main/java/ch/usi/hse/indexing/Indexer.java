@@ -13,6 +13,7 @@ import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.index.IndexWriterConfig.OpenMode;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.springframework.stereotype.Component;
@@ -38,7 +39,9 @@ public class Indexer {
 			analyzer = new StandardAnalyzer();
 		}
 		
-		writer = new IndexWriter(directory, new IndexWriterConfig(analyzer));
+		IndexWriterConfig config = new IndexWriterConfig(analyzer);
+		config.setOpenMode(OpenMode.CREATE);
+		writer = new IndexWriter(directory, config);
 		
 		count = 0;
 	}

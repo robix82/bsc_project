@@ -122,11 +122,40 @@ public class SearchAssembler {
 		return res;
 	}
 	
-	public SearchResultList getFirstQueryList(DocCollection firstQueryCollection, String queryString) {
+	public SearchResultList getFirstQueryList(DocCollection firstQueryCollection, String queryString) 
+			throws IOException, ParseException, InvalidTokenOffsetsException {
+		
+		Analyzer analyzer;
+		QueryParser parser;
+		
+		if (firstQueryCollection.getLanguage().equals(Language.IT)) {
+			
+			analyzer = itAnalyzer;
+			parser = itParser;
+		}
+		else {
+			
+			analyzer = stdAnalyzer;
+			parser = stdParser;
+		}
 		
 		SearchResultList res = new SearchResultList(queryString);
+		Query query = parser.parse(queryString);
+		IndexReader reader = readers.get(firstQueryCollection.getId());
+
 		
-		// TODO
+		for (int i=0; i< reader.maxDoc(); i++) {
+
+			Document document = reader.document(i);
+			String summary = makeSummary(document.get("content"), query, analyzer);
+			
+			if (summary.equals(" (...)")) {
+				
+				summary = makeDefaultSummary(document.get("content"));
+			}
+			
+			res.addSearchResult(new SearchResult(i, document, firstQueryCollection, 0, summary));
+		}
 		
 		return res;
 	}
@@ -197,6 +226,25 @@ public class SearchAssembler {
 		}
 		
 		return fragments;
+	}
+	
+	private String makeDefaultSummary(String text) {
+		
+		String[] words = text.split("\\s+");
+		String summary = "";
+		
+		for (int i = 0; i < 40; ++i) {
+			
+			if (i == words.length) {
+				break;
+			}
+			
+			summary += words[i] + " ";
+		}
+		
+		summary += "(...)";
+		
+		return summary;
 	}
 }
 

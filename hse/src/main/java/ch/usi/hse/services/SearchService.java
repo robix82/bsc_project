@@ -23,6 +23,7 @@ import ch.usi.hse.retrieval.SearchResultList;
 import ch.usi.hse.retrieval.SearchAssembler;
 import ch.usi.hse.retrieval.SearchResult;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,13 +67,14 @@ public class SearchService {
 	 * @throws InvalidTokenOffsetsException 
 	 * @throws NoSuchExperimentException 
 	 * @throws NoSuchFileException 
+	 * @throws IOException 
 	 */
 	public SearchResultList search(String queryString, HseUser user) 
 			throws ParseException, 
 				   FileReadException, 
 				   InvalidTokenOffsetsException, 
 				   NoSuchExperimentException, 
-				   NoSuchFileException {
+				   NoSuchFileException, IOException {
 		
 		List<DocCollection> collections;
 		
