@@ -19,5 +19,9 @@
 \contentsline {subsection}{\numberline {4.2}URL lists and Document collections \small {(.../indexing/ui)}}{6}{subsection.4.2}%
 \contentsline {subsection}{\numberline {4.3}Experiment Definition \small {(.../experiments/ui)}}{7}{subsection.4.3}%
 \contentsline {subsection}{\numberline {4.4}Experiment Configuration \small {(.../experiments/setup/ui)}}{7}{subsection.4.4}%
-\contentsline {subsubsection}{\numberline {4.4.1}configuration in stand-alone mode}{7}{subsubsection.4.4.1}%
-\contentsline {subsubsection}{\numberline {4.4.2}configuration in Qualtrics mode}{8}{subsubsection.4.4.2}%
+\contentsline {subsubsection}{\numberline {4.4.1}Configuration in stand-alone mode}{7}{subsubsection.4.4.1}%
+\contentsline {subsubsection}{\numberline {4.4.2}Configuration in Qualtrics mode}{8}{subsubsection.4.4.2}%
+\contentsline {subsection}{\numberline {4.5}Experiment Execution \small {(.../experiments/run/ui)}}{9}{subsection.4.5}%
+\contentsline {subsection}{\numberline {4.6}Setting up a linked Qualtrics survey}{9}{subsection.4.6}%
+\contentsline {subsubsection}{\numberline {4.6.1}Survey Questions}{9}{subsubsection.4.6.1}%
+\contentsline {subsubsection}{\numberline {4.6.2}Survey Flow}{10}{subsubsection.4.6.2}%

@@ -362,7 +362,7 @@ document collections and participants to them. Moreover a document collection ca
 Participants and groups can be defined manually or loaded from a configuration file. If the mode is \emph{Qualtrics}, participants are created while
 they take part in the survey.
 
-\subsubsection{configuration in stand-alone mode}
+\subsubsection{Configuration in stand-alone mode}
 
 The setup UI for stand-alone experiments includes a section for uploading, inspecting, or deleting configuration files (which can be used for
 defining test groups and participants), as well as a section for editing the test groups. \textbf{Figure \ref{fig:expSetupUi1}}
@@ -394,7 +394,7 @@ have some participants and at least one document collection.
 
 \newpage
 
-\subsubsection{configuration in Qualtrics mode}
+\subsubsection{Configuration in Qualtrics mode}
 
 In Qualtrics mode the setup options are similar, but the participants don't need to be specified, as they are defined during survey.
 So the is no need for configuration files. For the configuration to be complete, there must be at least one test group, and each test group
@@ -409,6 +409,163 @@ two test groups. Notice the test group's id number: this will be needed when set
 \caption{Experiment setup UI for Qualtrics mode}
 \label{fig:expSetupUi2}
 \end{figure}
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Experiment Execution \small{(.../experiments/run/ui)}}
+
+If an experiment is configured, the related execution UI becomes available. The interface is quite simple: there is a button
+for starting, stopping and resetting the experiment, as well as live updated information on participants activities.
+In stand-alone mode all participants are listed from the beginning, while in Qualtrics mode they appear as they log in.
+
+The purpose of the start / stop mechanism is to enable participant access and to measure the experiment's duration. As
+soon as the experiment is started, participants can lo in; when the experiment is stopped they are automatically logged out.
+In case the experiment is defined in Qualtrics mode, the participants are redirected back to the survey.
+After an experiment is started, the page can be left and returned to later.
+\textbf{Figure \ref{fig:expRunUi}} shows the interface for running an experiment.
+
+\begin{figure} [h]
+\centering
+\includegraphics[width=0.5\textwidth]{img/expRunUi}
+\caption{Experiments run UI}
+\label{fig:expRunUi}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Setting up a linked Qualtrics survey}
+
+For linking a survey to an experiment, the survey must contain
+a block whose ``next'' button redirects to HSE, a failure block to be displayed in case accidentally the experiment is not running, or
+there is some connection error,
+and some settings at the beginning of the \emph{Survey flow}. 
+
+\subsubsection{Survey Questions}
+
+The redirection is set via \emph{JavaScript} in the survey question (see
+\textbf{Figure \ref{fig:qualtricsLinkJs}}). The failure block needs no specific configuration.
+
+\begin{figure} [h]
+     \centering
+     \hfill
+     \begin{subfigure}[c]{0.3\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{img/qsl1}
+         \caption{Opening the JS editor}
+         \label{fig:qsl1}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[c]{0.35\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{img/qsl2}
+         \caption{Edited JS}
+         \label{fig:qsl2}
+     \end{subfigure}
+     \hfill
+     \caption{}
+     \label{fig:qualtricsLinkJs}
+\end{figure}
+
+In the JS editor there are three default functions: \texttt{Qualtrics.SurveyEngine.addOnload(...)}, \texttt{Qualtrics.SurveyEngine.addReady(...)},
+and \texttt{Qualtrics.SurveyEngine.addOnUnload(...)}. The first and third functions don't need to be modified, while the
+\texttt{Qualtrics.SurveyEngine.addReady(...)} function needs to be edited as follows:
+
+
+\begin{verbatim}
+Qualtrics.SurveyEngine.addOnReady(function()
+{
+    if ("${e://Field/hse_visited}" != "true") {
+
+        $('NextButton').on("click", () => {
+            Qualtrics.SurveyEngine.setEmbeddedData( 'hse_visited', "true" );
+            location.href = "http://[hse server url]/from_survey/ 
+                             ?uid=${e://Field/userId}&svUrl=${e://Field/Q_URL}";				   
+        });
+    }
+    else {
+
+        $('NextButton').click();					  
+    }					  
+});
+\end{verbatim}
+
+\subsubsection{Survey Flow}
+
+The following elements are to be added at the beginning of the survey flow, in the order thea are presented here:
+
+\begin{enumerate}
+
+\item
+    An \emph{Embedded Data} element for initializing some variables:
+
+    \begin{figure} [h]
+    \centering
+    \includegraphics[width=.9\textwidth]{img/qflow1}
+    \label{fig:qflow1} 
+    \end{figure}
+
+\item
+    A \emph{Web Service} element to do an API call for checking that the given experiment is actually running:
+
+    \begin{figure} [h]
+    \centering
+    \includegraphics[width=.9\textwidth]{img/qflow2}
+    \label{fig:qflow1} 
+    \end{figure}
+
+\newpage
+
+\item
+    A \emph{Branch} element to interrupt the survey if the experiment is not running:
+
+    \begin{figure} [h]
+    \centering
+    \includegraphics[width=.9\textwidth]{img/qflow3}
+    \label{fig:qflow1} 
+    \end{figure}
+
+\item
+    A \emph{Randomizer} element for assigning participants to test groups:
+
+    \begin{figure} [h]
+    \centering
+    \includegraphics[width=.9\textwidth]{img/qflow4}
+    \label{fig:qflow1} 
+    \end{figure}
+
+\item
+    A \emph{Web Service} element for initializing the participant in HSE:
+
+    \begin{figure} [h]
+    \centering
+    \includegraphics[width=.9\textwidth]{img/qflow5}
+    \label{fig:qflow1} 
+    \end{figure}
+
+\end{enumerate}
+
+\vspace{.5cm}
+
+\textbf{Figure \ref{fig:qflow}} on the next page shows the entire edited survey flow.
+
+\begin{figure} [h]
+\centering
+\includegraphics[width=\textwidth]{img/qflow}
+\caption{Edited Survey Flow}
+\label{fig:qflow}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 \end{document}

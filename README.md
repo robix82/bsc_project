@@ -5,22 +5,9 @@ Experimental Apparatus for a Digital Health Literacy Experiment
 
 HSE is the core part of the apparatus, consisting in a special purpose Lucene based search engine. HSE is implemented as a Java SpringBoot web application, using Apache Maven for dependency management and build. Javadoc describing the individual classes an methods is available under [hse_javadoc](hse_javadoc).
 
-### Run using docker-compose
+### Setup and Usage
 
-The current version can be run by issuing `docker-compose up`
-from the `hse` directory.
-If the images are not already installed on the system, the latest hse image as well as
-the required MySql image will be downloaded from DockerHub.
-The application's user interface runs on tcp port 8081 (the port can be configured in docker-compose.yml).
-
-### Build with Maven
-
-running `mvn clean install`
-from the `hse` directory creates a local build intended to be used during development. Running this build requires a local MySql instance running on port 3306 and containing a database named `hse_db`.
-The development version runs on tcp port 8080.
-
-running 
-  `mvn -Pprod clean install` creates the final docker image.
+A detailed setup and usage guide is available under [documents/hse_setupAndUsage/hse_setupAndUsage.pdf](documents/hse_setupAndUsage/)
 
 ### Default login
 

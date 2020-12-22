@@ -58,6 +58,9 @@ public class ExperimentsController {
 	@Value("${baseUrl}")
 	private String baseUrl;
 	
+	@Value("${dt}")
+	private Integer dt;
+	
 	// UI CONTROLLERS
 	
 	/**
@@ -114,6 +117,7 @@ public class ExperimentsController {
 		
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("baseUrl", baseUrl);
+		mav.addObject("dt");
 		mav.setViewName("exp_run");
 		mav.addObject("experiment", experimentService.findExperiment(expId));
 		

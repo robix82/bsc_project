@@ -26,11 +26,8 @@ $(document).ready(function() {
 	else if (experiment.status == "RUNNING") {
 		
 		t0 = new Date(experiment.startTime);
-		
-		if (experiment.mode == "QUALTRICS") {
-			
-			t0.setHours(t0.getHours() + 1);
-		}
+		t0.setHours(t0.getHours() + dt);
+
 		
 		onTimeStep();
 		timerId = setInterval(onTimeStep, 1000);
@@ -94,11 +91,7 @@ function startExperiment() {
 		experiment = res;
 		t0 = new Date(experiment.startTime);
 		t0.setSeconds(t0.getSeconds() + 1);
-		
-		if (experiment.mode == "QUALTRICS") {
-			
-			t0.setHours(t0.getHours() + 1);
-		}
+		t0.setHours(t0.getHours() + dt);
 		
 		timerId = setInterval(onTimeStep, 1000);
 		
