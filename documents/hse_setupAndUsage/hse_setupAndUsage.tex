@@ -18,9 +18,9 @@
 }
 
 \usepackage{caption}
-\captionsetup[figure]{labelformat=empty}
+%\captionsetup[figure]{labelformat=empty}
 \usepackage{subcaption}
-\captionsetup[subfigure]{labelformat=empty}
+%\captionsetup[subfigure]{labelformat=empty}
 
 
 
@@ -277,8 +277,9 @@ and the port (8081 in this example) must correspond to the port defined in \text
 \label{sec:usage}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Users, Roles and their Definition}
+\subsection{Users, Roles and their Definition \small{(.../admin/ui)}}
 
 The application distinguishes three types (roles) of users: \emph{Administrators}, \emph{experimenters}, and \emph{participants}.
 Depending on a user's role, different UI elements are visible or accessible: participants can access only the search interface; 
@@ -291,7 +292,7 @@ If the application is newly installed, a default user with \emph{Administrator} 
 the user name ``\emph{admin}'' and password ``\emph{admin}''.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{URL lists and Document collections}
+\subsection{URL lists and Document collections \small{(.../indexing/ui)}}
 
 Before an experiment can set up, at least one document collection must be available. These can be created on the \emph{indexing}
 UI page available to experimenters and administrators (see \textbf{Figure \ref{fig:indexingUi}}). Creating a document collection involves
@@ -311,15 +312,103 @@ the following steps:
 Document collections will later be assigned 
 to test groups, so the search engine returns different results depending on which test group a participant belongs to. Optionaly
 a document collection can be set as fixed result for the first query; in this case the first query submitted by a
-participant returns this entire document collection, in the order in which the URLs are set in the list used for generating the collection.
+participant returns this entire document collection, in the order in which the URLs are set in the list used for generating it.
 
 \begin{figure} [h]
 \centering
-\includegraphics[width=0.7\textwidth]{img/indexingUi}
+\includegraphics[width=0.9\textwidth]{img/indexingUi}
 \caption{User interface for creating document collections}
 \label{fig:indexingUi}
 \end{figure}
 
+\newpage
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Experiment Definition \small{(.../experiments/ui)}}
+
+The \emph{/experiments/ui} page lists all defined experiments. Each line shows the experiment's unique id (needed for running
+with a \emph{Qualtrics} survey, its title, mode (\emph{stand\_alone} or \emph{Qualtrics}), the assigned experimenter, the date on which it was defined, 
+its status (one of \emph{created}, \emph{ready}, \emph{running}, or \emph{complete}), and buttons leading to the UI for configuration,
+execution, and evaluation. The buttons are enabled or disabled depending on the experiment's status. \textbf{Figure \ref{fig:experimentsUi}}
+shows the experiments interface.
+
+\begin{figure} [h]
+     \centering
+     \begin{subfigure}[b]{0.8\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{img/experiments_1}
+         \caption{Experiments list}
+         \label{fig:experimentsUi1}
+     \end{subfigure}
+     \par\bigskip
+     \begin{subfigure}[b]{0.8\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{img/experiments_2}
+         \caption{Popup for defining a new experiment}
+         \label{fig:experimentsUi2}
+     \end{subfigure}
+     \caption{Interface for defining experiments}
+     \label{fig:experimentsUi}
+\end{figure}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Experiment Configuration \small{(.../experiments/setup/ui)}}
+
+The interface for experiment configuration is reachable by clicking on the \emph{configure} button in the
+experiments list UI. If the experiment's mode is \emph{stand\_alone} the configuration involves creating test groups and assigning 
+document collections and participants to them. Moreover a document collection can be set as predefined result list for the first query.
+Participants and groups can be defined manually or loaded from a configuration file. If the mode is \emph{Qualtrics}, participants are created while
+they take part in the survey.
+
+\subsubsection{configuration in stand-alone mode}
+
+The setup UI for stand-alone experiments includes a section for uploading, inspecting, or deleting configuration files (which can be used for
+defining test groups and participants), as well as a section for editing the test groups. \textbf{Figure \ref{fig:expSetupUi1}}
+shows the page after two test groups have been added and edited; \textbf{Figure \ref{fig:expConfigFile}} shows an example of a configuration file. 
+For the configuration to be complete, i.e. its status being set to 
+\emph{complete} and the \emph{run} UI being available, there must be at least one test group defined, and each test group must 
+have some participants and at least one document collection.
+
+\begin{figure} [ht]
+     \centering
+     \hfill
+     \begin{subfigure}{0.32\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{img/expSetup1}
+         \caption{Experiment setup UI for stand-alone mode}
+         \label{fig:expSetupUi1}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}{0.5\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{img/expConfigFile}
+         \caption{Example of a configuration file}
+         \label{fig:expConfigFile}
+     \end{subfigure}
+     \hfill
+     \caption{}
+     \label{fig:expConfigUi1}
+\end{figure}
+
+\newpage
+
+\subsubsection{configuration in Qualtrics mode}
+
+In Qualtrics mode the setup options are similar, but the participants don't need to be specified, as they are defined during survey.
+So the is no need for configuration files. For the configuration to be complete, there must be at least one test group, and each test group
+must have at least one document collection. 
+
+\textbf{Figure \ref{fig:expSetupUi2}} shows the configuration interface after creating and editing
+two test groups. Notice the test group's id number: this will be needed when setting up the related Qualtrics survey. 
+
+\begin{figure} [h]
+\centering
+\includegraphics[width=0.5\textwidth]{img/expSetupUi2}
+\caption{Experiment setup UI for Qualtrics mode}
+\label{fig:expSetupUi2}
+\end{figure}
 
 
 \end{document}

@@ -15,5 +15,9 @@
 \contentsline {subsubsection}{\numberline {3.4.2}Load the image and start the application}{5}{subsubsection.3.4.2}%
 \contentsline {subsubsection}{\numberline {3.4.3}Apache2 configuration}{5}{subsubsection.3.4.3}%
 \contentsline {section}{\numberline {4}Usage}{6}{section.4}%
-\contentsline {subsection}{\numberline {4.1}Users, Roles and their Definition}{6}{subsection.4.1}%
-\contentsline {subsection}{\numberline {4.2}URL lists and Document collections}{6}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.1}Users, Roles and their Definition \small {(.../admin/ui)}}{6}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}URL lists and Document collections \small {(.../indexing/ui)}}{6}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Experiment Definition \small {(.../experiments/ui)}}{7}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}Experiment Configuration \small {(.../experiments/setup/ui)}}{7}{subsection.4.4}%
+\contentsline {subsubsection}{\numberline {4.4.1}configuration in stand-alone mode}{7}{subsubsection.4.4.1}%
+\contentsline {subsubsection}{\numberline {4.4.2}configuration in Qualtrics mode}{8}{subsubsection.4.4.2}%

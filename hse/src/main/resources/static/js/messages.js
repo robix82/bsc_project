@@ -123,7 +123,7 @@ var m_ready = $("#m_ready").text();
 var m_running = $("#m_running").text();
 var m_completed = $("#m_completed").text();
 
-
+var m_completeSurvey = $("#m_completeSurvey").text();
 
 
 

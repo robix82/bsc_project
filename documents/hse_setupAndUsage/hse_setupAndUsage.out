@@ -15,5 +15,9 @@
 \BOOKMARK [3][-]{subsubsection.3.4.2}{Load the image and start the application}{subsection.3.4}% 15
 \BOOKMARK [3][-]{subsubsection.3.4.3}{Apache2 configuration}{subsection.3.4}% 16
 \BOOKMARK [1][-]{section.4}{Usage}{}% 17
-\BOOKMARK [2][-]{subsection.4.1}{Users, Roles and their Definition}{section.4}% 18
-\BOOKMARK [2][-]{subsection.4.2}{URL lists and Document collections}{section.4}% 19
+\BOOKMARK [2][-]{subsection.4.1}{Users, Roles and their Definition \(.../admin/ui\)}{section.4}% 18
+\BOOKMARK [2][-]{subsection.4.2}{URL lists and Document collections \(.../indexing/ui\)}{section.4}% 19
+\BOOKMARK [2][-]{subsection.4.3}{Experiment Definition \(.../experiments/ui\)}{section.4}% 20
+\BOOKMARK [2][-]{subsection.4.4}{Experiment Configuration \(.../experiments/setup/ui\)}{section.4}% 21
+\BOOKMARK [3][-]{subsubsection.4.4.1}{configuration in stand-alone mode}{subsection.4.4}% 22
+\BOOKMARK [3][-]{subsubsection.4.4.2}{configuration in Qualtrics mode}{subsection.4.4}% 23
