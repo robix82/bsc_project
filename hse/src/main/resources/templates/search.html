@@ -45,7 +45,7 @@
 		<div th:each="result : ${searchResultList.searchResults}" class="result-item">
 		
 			<div class="result-url">
-				<a th:href="@{${baseUrl} + 'doc?url=' + ${result.url}}" 
+				<a th:href="@{${baseUrl} + 'doc?url=' + ${result.url} + '&fileType=' + ${result.fileType}}" 
 				   th:text="${result.url}" 
 				   target="blank"
 				   th:onclick="sendBrowseEvent([[${result}]])"></a>

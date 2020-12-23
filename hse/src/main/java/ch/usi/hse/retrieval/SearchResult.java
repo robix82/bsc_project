@@ -23,6 +23,7 @@ public class SearchResult implements Comparable<SearchResult> {
 	private int rank;
 	private String url;
 	private String summary;
+	private String fileType;
 	
 	@JsonIgnore
 	private DocCollection docCollection;
@@ -63,6 +64,7 @@ public class SearchResult implements Comparable<SearchResult> {
 		collectionId = docCollection.getId();
 		collectionName = docCollection.getName();
 		url = doc.get("url");
+		fileType = doc.get("fileType");
 		this.summary = summary;
 		this.score = score;
 		this.summary = summary;
@@ -133,6 +135,14 @@ public class SearchResult implements Comparable<SearchResult> {
 	
 	public void setRank(int rank) {
 		this.rank = rank;
+	}
+	
+	public String getFileType() {
+		return fileType;
+	}
+	
+	public void setFileType(String fileType) {
+		this.fileType = fileType;
 	}
 
 	@Override

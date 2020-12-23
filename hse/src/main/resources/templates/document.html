@@ -20,9 +20,32 @@
 
 <div class="main-container">
 
-	<iframe is="x-frame-bypass" id="page-frame" th:src="${docUrl}" title="W3Schools Free Online Web Tutorials"></iframe>
+	
+
+	<iframe th:if="${fileType == 'HTML'}"
+			is="x-frame-bypass" 
+			class="page-frame" 
+			th:src="${docUrl}" 
+			title="doc">
+	</iframe>
+	
+	<object th:if="${fileType == 'PDF'}"
+			th:data="${docUrl}" 
+			type="application/pdf"
+			class="page-frame">
+    </object>
 
 </div>
+
+<script th:inline="javascript">
+	/*<![CDATA[*/
+	var docUrl = /*[[${docUrl}]]*/ "default";
+	var fileType = /*[[${fileType}]]*/ "default";
+	/*]]>*/
+	
+	console.log("docUrl: " + docUrl);
+	console.log("fileType: " + fileType)
+</script>
 
 <th:block th:include="fragments/messages.html :: messages"></th:block>
 <th:block th:include="fragments/general.html :: commonScripts"></th:block>

@@ -101,12 +101,14 @@ public class SearchController {
 	}
 
 	@GetMapping("/doc")
-	public ModelAndView getResultDoc(@RequestParam String url) {
+	public ModelAndView getResultDoc(@RequestParam String url,
+									 @RequestParam String fileType) {
 		
 		ModelAndView mav = new ModelAndView();
 		mav.setViewName("document");
 		mav.addObject("baseUrl", baseUrl);
 		mav.addObject("docUrl", url);
+		mav.addObject("fileType", fileType);
 		
 		return mav;
 	}
