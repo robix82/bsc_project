@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -69,8 +70,11 @@ public class ResultWriter {
 	
 			zip.putNextEntry(new ZipEntry(fName));	
 			zip.write(csv.getBytes());
+			zip.closeEntry();
 		}
 		
+		zip.finish();
+
 		return new ByteArrayInputStream(bytesOut.toByteArray());
 	}
 	

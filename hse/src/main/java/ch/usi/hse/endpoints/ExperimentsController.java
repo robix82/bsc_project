@@ -486,12 +486,35 @@ public class ExperimentsController {
 		try {
 			
 			InputStream is = experimentService.userHistoriesCsv(groupId);
-			FileCopyUtils.copy(is, response.getOutputStream());
+			
 			response.setHeader("Content-Disposition", "attachment; filename=" + fName);
-			response.setHeader("Content-Type", "application/zip");
+			response.setContentType("application/octet-stream");
+			response.setStatus(HttpServletResponse.SC_OK);
+			FileCopyUtils.copy(is, response.getOutputStream());
 		}
 		catch (IOException e) {
 			throw new FileWriteException(fName);
+		}
+	}
+	
+	@GetMapping("/eval/export/histories_json")
+	public void exportHistoriesJson(HttpServletResponse response, @RequestParam(required=true) int expId) 
+			throws NoSuchExperimentException, FileWriteException, JsonProcessingException {
+		
+		
+		Experiment experiment = experimentService.findExperiment(expId);
+		
+		InputStream is = experimentService.userHistoriesJson(experiment);
+		String fileName = experiment.getTitle() + "_histories" + ".json";
+		
+		response.setContentType(MediaType.TEXT_PLAIN);
+		response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
+		
+		try {
+			FileCopyUtils.copy(is, response.getOutputStream());
+		}
+		catch (IOException e) {
+			throw new FileWriteException(fileName);
 		}
 	}
 }
