@@ -1,5 +1,6 @@
 package ch.usi.hse.services;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -94,10 +95,10 @@ public class ExperimentService {
 	}
 	
 	/**
-	 * retriee an experiment by id
+	 * retrieve an experiment by id
 	 * 
 	 * @param id
-	 * @return
+	 * @return Experiment
 	 * @throws NoSuchExperimentException
 	 */
 	public Experiment findExperiment(int id) throws NoSuchExperimentException {
@@ -107,6 +108,22 @@ public class ExperimentService {
 		}
 		
 		return experimentRepo.findById(id);
+	}
+	
+	/**
+	 * retrieve a TestGroup by id
+	 * 
+	 * @param id
+	 * @return TestGroup
+	 * @throws NoSuchTestGroupException 
+	 */
+	public TestGroup findTestGroup(int id) throws NoSuchTestGroupException {
+		
+		if (! testGroupRepo.existsById(id)) {
+			throw new NoSuchTestGroupException(id);
+		}
+		
+		return testGroupRepo.findById(id);
 	}
 	
 	/**
@@ -683,6 +700,28 @@ public class ExperimentService {
 		}
 		
 		return resultWriter.rawDataJson(experiment);
+	}
+	
+	public InputStream userHistoriesCsv(int groupId) 
+			throws IOException, NoSuchTestGroupException {
+		
+		if (! testGroupRepo.existsById(groupId)) {
+			throw new NoSuchTestGroupException(groupId);
+		}
+		
+		TestGroup testGroup = testGroupRepo.findById(groupId);
+		
+		return resultWriter.userHistoriesCsv(testGroup);
+	}
+	
+	public InputStream userHistoriesJson(Experiment experiment) 
+			throws NoSuchExperimentException, JsonProcessingException {
+		
+		if (! experimentRepo.existsById(experiment.getId())) {
+			throw new NoSuchExperimentException(experiment.getId());
+		}
+		
+		return resultWriter.userHistoriesJson(experiment);
 	}
 	
 	public ExperimentSummary experimentSummary(Experiment experiment) throws ExperimentStatusException {		

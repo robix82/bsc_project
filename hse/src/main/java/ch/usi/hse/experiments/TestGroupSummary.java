@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import ch.usi.hse.db.entities.DocCollection;
 import ch.usi.hse.db.entities.TestGroup;
+import ch.usi.hse.db.entities.UsageEvent;
 
 /**
  * Data class storing per-testgroup statistics
@@ -29,6 +30,8 @@ public class TestGroupSummary {
 	
 	// per docCollection stats (Collection name : data)
 	private Map<String, DataStats> clicksPerDocCollection, timePerDocCollection;
+	
+	private Map<Integer, List<UsageEvent>> userHistories;
 	
 	
 	/**
@@ -57,6 +60,7 @@ public class TestGroupSummary {
 		timePerClick = dataExtractor.timePerClick(testGroup);
 		clicksPerDocCollection = dataExtractor.clicksPerDocCollection(testGroup);
 		timePerDocCollection = dataExtractor.timePerDocCollection(testGroup);
+		userHistories = dataExtractor.userHistories(testGroup);
 	}
 	
 	/**
@@ -86,7 +90,8 @@ public class TestGroupSummary {
 							@JsonProperty("timePerQuery") DataStats timePerQuery,
 							@JsonProperty("timePerClick") DataStats timePerClick,
 							@JsonProperty("clicksPerDocCollection") Map<String, DataStats> clicksPerDocCollection,
-							@JsonProperty("timePerDocCollection") Map<String, DataStats> timePerDocCollection) {
+							@JsonProperty("timePerDocCollection") Map<String, DataStats> timePerDocCollection,
+							@JsonProperty("userHistories") Map<Integer, List<UsageEvent>> userHistories) {
 		
 		
 		this.groupName = groupName;
@@ -101,6 +106,7 @@ public class TestGroupSummary {
 		this.timePerClick = timePerClick;
 		this.clicksPerDocCollection = clicksPerDocCollection;
 		this.timePerDocCollection = timePerDocCollection;
+		this.userHistories = userHistories;
 	}
 	
 	// getters
@@ -151,6 +157,10 @@ public class TestGroupSummary {
 	
 	public Map<String, DataStats> getTimePerDocCollection() {
 		return timePerDocCollection;
+	}
+	
+	public Map<Integer, List<UsageEvent>> getUserHistories() {
+		return userHistories;
 	}
 }
 

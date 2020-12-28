@@ -58,10 +58,10 @@ public class CsvWriterTest {
 		initMocks(this);
 		
 		csvWriter = new CsvWriter(experimentRepo,
-									 usageEventRepo,
-									 sessionEventRepo,
-									 queryEventRepo,
-									 docClickEventRepo);
+								  usageEventRepo,
+								  sessionEventRepo,
+								  queryEventRepo,
+								  docClickEventRepo);
 		
 		// set up test experiment
 		

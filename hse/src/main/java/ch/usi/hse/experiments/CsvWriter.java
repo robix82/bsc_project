@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import ch.usi.hse.db.entities.DocClickEvent;
 import ch.usi.hse.db.entities.Experiment;
+import ch.usi.hse.db.entities.Participant;
 import ch.usi.hse.db.entities.QueryEvent;
 import ch.usi.hse.db.entities.QueryStat;
 import ch.usi.hse.db.entities.SessionEvent;
@@ -63,33 +64,26 @@ public class CsvWriter {
 		
 		for (UsageEvent event : events) {
 			
-			int eventId = event.getId();
-			addBaseProperties(event);
-			
-			if (sessionEventRepo.existsById(eventId)) {
-				
-				SessionEvent sessionEvent = sessionEventRepo.findById(eventId);
-				addSessionEventProperties(sessionEvent);
-				fillNotAssigned(8);
-			}
-			else if (queryEventRepo.existsById(eventId)) {
-								
-				QueryEvent queryEvent = queryEventRepo.findById(eventId);
-				fillNotAssigned(1);
-				addQueryEventProperties(queryEvent);
-				fillNotAssigned(5);
-			}
-			else if (docClickEventRepo.existsById(eventId)) {
-				
-				DocClickEvent docClickEvent = docClickEventRepo.findById(eventId);
-				fillNotAssigned(4);
-				addDocClickEventProperties(docClickEvent);
-			}
-			
-			sb.setLength(sb.length() - 1);
-			sb.append("\n");
+			addCsvLine(event);
 		}
 				
+		return sb.toString();
+	}
+	
+	public String writeUserData(Participant participant) {
+				
+		sb = new StringBuilder();
+		
+		List<UsageEvent> events = usageEventRepo.findByUserId(participant.getId());
+		Collections.sort(events, byTimeStampComparator);
+		
+		addCsvHeader();
+		
+		for (UsageEvent event : events) {
+			
+			addCsvLine(event);
+		}
+		
 		return sb.toString();
 	}
 	
@@ -106,6 +100,35 @@ public class CsvWriter {
 		
 		// DocClickEvent properties
 		sb.append("url,documentId,documentRank,collectionId,collectionName\n");
+	}
+	
+	private void addCsvLine(UsageEvent event) {
+		
+		int eventId = event.getId();
+		addBaseProperties(event);
+		
+		if (sessionEventRepo.existsById(eventId)) {
+			
+			SessionEvent sessionEvent = sessionEventRepo.findById(eventId);
+			addSessionEventProperties(sessionEvent);
+			fillNotAssigned(8);
+		}
+		else if (queryEventRepo.existsById(eventId)) {
+							
+			QueryEvent queryEvent = queryEventRepo.findById(eventId);
+			fillNotAssigned(1);
+			addQueryEventProperties(queryEvent);
+			fillNotAssigned(5);
+		}
+		else if (docClickEventRepo.existsById(eventId)) {
+			
+			DocClickEvent docClickEvent = docClickEventRepo.findById(eventId);
+			fillNotAssigned(4);
+			addDocClickEventProperties(docClickEvent);
+		}
+		
+		sb.setLength(sb.length() - 1);
+		sb.append("\n");
 	}
 	
 	private void addBaseProperties(UsageEvent e) {

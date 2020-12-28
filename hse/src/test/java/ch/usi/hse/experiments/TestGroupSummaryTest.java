@@ -129,7 +129,7 @@ public class TestGroupSummaryTest {
 														totalQueries, totalClicks, queriesPerUser,
 														clicksPerUser, clicksPerQuery, timePerQuery, 
 														timePerClick, clicksPerDocCollection, 
-														timePerDocCollection);
+														timePerDocCollection, new HashMap<>());
 		
 		assertEquals(groupName, summary.getGroupName());
 		assertIterableEquals(collectionNames, summary.getCollectionNames());
@@ -152,7 +152,7 @@ public class TestGroupSummaryTest {
 														totalQueries, totalClicks, queriesPerUser,
 														clicksPerUser, clicksPerQuery, timePerQuery, 
 														timePerClick, clicksPerDocCollection, 
-														timePerDocCollection);
+														timePerDocCollection, new HashMap<>());
 		
 		String jsonString = writer.writeValueAsString(summary);
 		

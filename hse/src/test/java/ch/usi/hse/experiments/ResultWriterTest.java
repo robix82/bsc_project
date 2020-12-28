@@ -33,6 +33,9 @@ public class ResultWriterTest {
 	@Mock
 	private CsvWriter csvWriter;
 	
+	@Mock
+	private EventDataExtractor dataExtractor;
+	
 	private ResultWriter resultWriter;
 	private ObjectMapper mapper;
 	private ObjectWriter writer;
@@ -45,7 +48,7 @@ public class ResultWriterTest {
 		
 		initMocks(this);
 		
-		resultWriter = new ResultWriter(csvWriter);
+		resultWriter = new ResultWriter(csvWriter, dataExtractor);
 		
 		mapper = new ObjectMapper();
 		mapper.findAndRegisterModules();

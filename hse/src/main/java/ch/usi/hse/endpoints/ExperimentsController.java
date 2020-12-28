@@ -475,6 +475,25 @@ public class ExperimentsController {
 			throw new FileWriteException(fileName);
 		}
 	}
+	
+	@GetMapping("/eval/export/histories_csv")
+	public void exportHistoriesCsv(HttpServletResponse response, @RequestParam(required=true) int groupId) 
+			throws NoSuchTestGroupException, FileWriteException {
+		
+		TestGroup group = experimentService.findTestGroup(groupId);
+		String fName = group.getName() + ".zip";
+			
+		try {
+			
+			InputStream is = experimentService.userHistoriesCsv(groupId);
+			FileCopyUtils.copy(is, response.getOutputStream());
+			response.setHeader("Content-Disposition", "attachment; filename=" + fName);
+			response.setHeader("Content-Type", "application/zip");
+		}
+		catch (IOException e) {
+			throw new FileWriteException(fName);
+		}
+	}
 }
 
 

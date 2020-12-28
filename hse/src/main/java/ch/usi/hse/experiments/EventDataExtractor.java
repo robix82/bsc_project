@@ -248,6 +248,18 @@ public class EventDataExtractor {
 		return res;
 	}
 	
+	public Map<Integer, List<UsageEvent>> userHistories(TestGroup group) {
+		
+		Map<Integer, List<UsageEvent>> histories = new HashMap<>();
+		
+		for (int id : participantIds(group)) {
+			
+			histories.put(id, userHistory(id));
+		}
+		
+		return histories;
+	}
+	
 	// PRIVATE UTILITY METHODS
 	
 	private List<Integer> participantIds(Experiment experiment) {
