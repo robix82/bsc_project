@@ -19,6 +19,7 @@
 <h1 th:text="#{m_evaluate} + ' ' + ${experiment.title}"></h1>
 <span id="dateDisp"></span>
 <span id="durationDisp"></span> 
+<span th:text="#{m_participants} + ': ' + ${summary.participants}"></span>
 
 <div id="inner-container">
 
@@ -28,6 +29,7 @@
 		
 	<h2 th:text="#{m_exportData}"></h2>
 		
+	<div class="eval-secton-content">
 		
 	<table class="table table-hover">
 			
@@ -112,23 +114,10 @@
 		</td>
         
 	  </tr>
-				
-			<!--	
-			
-
-			
-			
-			<button th:each="testGroup : ${experiment.testGroups}" class="btn btn-sm btn-light">		
-				<a class="dl-link" 
-				   th:href="@{${baseUrl} + 'experiments/eval/export/histories_csv?groupId='} + ${testGroup.id}"
-				   th:text="${testGroup.name} + ' histories as .csv'" 
-				>
-				</a>
-			</button>
-			-->
 			
 	</table>	
 			
+    </div>			
   </div>
 		
   <!-- GENERAL STATISTICS -->
@@ -136,6 +125,13 @@
   <div class="eval-section">
 
 	<h2 th:text="#{m_generalStatistics}"></h2>
+	
+	<div id="generalStats" class="eval-secton-content">
+	
+	  <div th:text="#{m_totalQueries} + ': ' + ${summary.totalQueries}"></div>
+	  <div th:text="#{m_totalClicks} + ': ' + ${summary.totalClicks}"></div>
+
+	</div>
 
   </div>
  

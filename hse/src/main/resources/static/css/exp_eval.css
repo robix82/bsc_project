@@ -36,13 +36,38 @@ h5 {
 .eval-section {
 	
 	margin-top: 1em;
+	font-size: 12pt;
 }
 
 .eval-section h2 {
 	
-	margin-bottom: 1em;
+	margin-bottom: .5em;
 }
 
+.eval-secton-content {
+	
+	margin-left: 1em;
+}
+
+.stats-div {
+	
+	display: flex;
+	flex-flow: row nowrap;
+	
+	margin-top: .5em;
+}
+
+.stats-title {
+	
+	font-weight: bold;
+	margin-right: 1em;
+}
+
+.stats-details {
+	
+	display: flex;
+	flex-flow: column nowrap;
+}
 
 
 

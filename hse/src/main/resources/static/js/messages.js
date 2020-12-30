@@ -136,6 +136,38 @@ var m_userHistories = $("#m_userHistories").text();
 var m_date = $("#m_date").text();
 var m_duration = $("#m_duration").text();
 
+var m_totalQueries = $("#m_totalQueries").text();
+var m_totalClicks = $("#m_totalClicks").text();
+var m_queriesPerUser = $("#m_queriesPerUser").text();
+var m_clicksPerUser = $("#m_clicksPerUser").text();
+var m_clicksPerQuery = $("#m_clicksPerQuery").text();
+var m_timePerQuery = $("#m_timePerQuery").text();
+var m_timePerClick = $("#m_timePerClick").text();
+
+var m_total = $("#m_total").text();
+var m_mean = $("#m_mean").text();
+var m_median = $("#m_median").text();
+var m_stdDev = $("#m_stdDev").text();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
