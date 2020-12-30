@@ -126,6 +126,16 @@ var m_completed = $("#m_completed").text();
 var m_completeSurvey = $("#m_completeSurvey").text();
 
 
+var m_exportData = $("#m_exportData").text();
+var m_csv = $("#m_csv").text();
+var m_json = $("#m_json").text();
+var m_overall = $("#m_overall").text();
+var m_rawData = $("#m_rawData").text();
+var m_userHistories = $("#m_userHistories").text();
+
+var m_date = $("#m_date").text();
+var m_duration = $("#m_duration").text();
+
 
 
 

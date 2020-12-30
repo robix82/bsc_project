@@ -5,5 +5,8 @@ $(document).ready(function() {
 	console.log("SUMMARY:");
 	console.log(summary);
 	
-//	$("#summary-display").text(JSON.stringify(summary));
+	$("#dateDisp").text(m_date + ": " + new Date(summary.dateConducted).toLocaleDateString());
+	$("#durationDisp").text(m_duration + ": " + tString(summary.duration));
 });
+
+

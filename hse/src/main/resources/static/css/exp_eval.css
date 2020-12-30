@@ -1,0 +1,55 @@
+
+h2 {
+	
+	font-size: 20pt;
+}
+
+h3 {
+	
+	font-size: 18pt;
+}
+
+h4 {
+	
+	font-size: 16pt;
+}
+
+h5 {
+	
+	font-size: 14pt;
+}
+
+.dl-link {
+	color: black;
+}
+
+#inner-container {
+	
+	display: flex;
+	flex-flow: column nowrap;
+	align-items: flex-start;
+	margin-top: 3rem;
+	margin-bottom: 10rem;
+	width: 80%;
+}
+
+.eval-section {
+	
+	margin-top: 1em;
+}
+
+.eval-section h2 {
+	
+	margin-bottom: 1em;
+}
+
+
+
+
+
+
+
+
+
+
+

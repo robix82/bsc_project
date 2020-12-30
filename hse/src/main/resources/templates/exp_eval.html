@@ -16,33 +16,107 @@
 
 <div class="main-container">
 
-	<h1 th:text="#{m_evaluate} + ' ' + ${experiment.title}"></h1>
-	
-	<div id="inner-container">
-	
-		<div id="raw-dl-display">
-			<h2>Raw result data</h2>
+<h1 th:text="#{m_evaluate} + ' ' + ${experiment.title}"></h1>
+<span id="dateDisp"></span>
+<span id="durationDisp"></span> 
+
+<div id="inner-container">
+
+  <!-- DATA EXPORTS -->
+
+  <div class="eval-section">
 		
-			<button class="btn btn-sm btn-light">
+	<h2 th:text="#{m_exportData}"></h2>
+		
+		
+	<table class="table table-hover">
+			
+	  <tr class="table-light">
+
+		<td th:text="#{m_rawData}">
+
 				<a class="dl-link" 
 					   th:href="@{${baseUrl} + 'experiments/eval/export/raw_csv?expId='} + ${experiment.id}">
 								export as .csv
 				</a>
-			</button>
-			
-			<button class="btn btn-sm btn-light">
+		</td>
+		
+		<td>
+		<button class="btn btn-sm btn-light">
+		  <a class="dl-link" 
+			 th:href="@{${baseUrl} + 'experiments/eval/export/raw_csv?expId='} + ${experiment.id}">
+			 <span class="glyphicon glyphicon-save"></span>
+			 <span th:text="#{m_csv}">
+		  </a>
+		</button>
+		</td>
+		
+		<td>
+		<button class="btn btn-sm btn-light">
+		  <a class="dl-link" 
+			 th:href="@{${baseUrl} + 'experiments/eval/export/raw_json?expId='} + ${experiment.id}">
+			 <span class="glyphicon glyphicon-save"></span>
+			 <span th:text="#{m_json}">
+		  </a>
+		</button>
+		</td>
+        
+	  </tr>
+
+	  <tr class="table-light">
+
+		<td th:text="#{m_overall} + ' ' + #{m_userHistories}">
+
 				<a class="dl-link" 
-					   th:href="@{${baseUrl} + 'experiments/eval/export/raw_json?expId='} + ${experiment.id}">
-								export as .json
+					   th:href="@{${baseUrl} + 'experiments/eval/export/raw_csv?expId='} + ${experiment.id}">
+								export as .csv
 				</a>
-			</button>
-			
-			<button class="btn btn-sm btn-light">		
+		</td>
+		
+		<td>
+		</td>
+		
+		<td>
+		<button class="btn btn-sm btn-light">
+		  <a class="dl-link" 
+			 th:href="@{${baseUrl} + 'experiments/eval/export/histories_json?expId='} + ${experiment.id}">
+			 <span class="glyphicon glyphicon-save"></span>
+			 <span th:text="#{m_json}">
+		  </a>
+		</button>
+		</td>
+        
+	  </tr>
+
+	  <tr th:each="testGroup : ${experiment.testGroups}" class="table-light">
+
+		<td th:text="${testGroup.name} + ' ' + #{m_userHistories}">
+
 				<a class="dl-link" 
-					   th:href="@{${baseUrl} + 'experiments/eval/export/histories_json?expId='} + ${experiment.id}">
-								per user histories as .json
+					   th:href="@{${baseUrl} + 'experiments/eval/export/raw_csv?expId='} + ${experiment.id}">
+								export as .csv
 				</a>
-			</button>
+		</td>
+		
+		<td>
+		</td>
+		
+		<td>
+		<button class="btn btn-sm btn-light">
+		  <a class="dl-link" 
+			 th:href="@{${baseUrl} + 'experiments/eval/export/histories_csv?groupId='} + ${testGroup.id}">
+			 <span class="glyphicon glyphicon-save"></span>
+			 <span th:text="#{m_csv}">
+		  </a>
+		</button>
+		</td>
+        
+	  </tr>
+				
+			<!--	
+			
+
+			
 			
 			<button th:each="testGroup : ${experiment.testGroups}" class="btn btn-sm btn-light">		
 				<a class="dl-link" 
@@ -51,17 +125,32 @@
 				>
 				</a>
 			</button>
+			-->
 			
-		</div>
+	</table>	
+			
+  </div>
 		
-		<div id="summary-display">
-		
-		
-		</div>
+  <!-- GENERAL STATISTICS -->
+
+  <div class="eval-section">
+
+	<h2 th:text="#{m_generalStatistics}"></h2>
+
+  </div>
+ 
+  <!-- PER-GROUP STATISTICS -->
+
+  <div class="eval-section">
+
+	<h2 th:text="#{m_perGroupStatistics}"></h2>
 	
-	</div>
+  </div>
 	
+</div>	
 </div>
+
+
 
 <!-- pass variables to js -->
 <script th:inline="javascript">
