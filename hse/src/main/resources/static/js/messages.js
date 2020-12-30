@@ -149,8 +149,10 @@ var m_mean = $("#m_mean").text();
 var m_median = $("#m_median").text();
 var m_stdDev = $("#m_stdDev").text();
 
-
-
+var m_nParticipants = $("#m_nParticipants").text();
+var m_collectionDistributions = $("#m_collectionDistributions").text();
+var m_clicks = $("#m_clicks").text();
+var m_totalTime = $("#m_totalTime").text();
 
 
 

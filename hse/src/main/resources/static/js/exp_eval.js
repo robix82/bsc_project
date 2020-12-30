@@ -25,7 +25,67 @@ function displayGeneralStats() {
 
 function displayPerGroupStats() {
 	
+	let mainDiv = document.getElementById("perGroupStats");
 	
+	summary.groupSummaries.forEach((gs) => {
+		
+		let groupDiv = document.createElement("div");
+		groupDiv.classList.add("eval-secton-content");
+		
+		
+		
+		let header = document.createElement("h3");
+		header.innerText = gs.groupName + " (" + gs.participants + " " + m_nParticipants + ")"; 
+		
+		let statsDiv = document.createElement("div");
+		statsDiv.classList.add("eval-secton-content");
+		
+		let queriesDiv = document.createElement("div");
+		let clicksDiv = document.createElement("div");
+		queriesDiv.innerText = m_totalQueries + ": " + gs.totalQueries;
+		clicksDiv.innerText = m_totalClicks + ": " + gs.totalClicks;
+		statsDiv.appendChild(queriesDiv);
+		statsDiv.appendChild(clicksDiv);
+		
+		addStatsDiv(gs.queriesPerUser, m_queriesPerUser, statsDiv);
+		addStatsDiv(gs.clicksPerUser, m_clicksPerUser, statsDiv);
+		addStatsDiv(gs.clicksPerQuery, m_clicksPerQuery, statsDiv);
+		addStatsDiv(gs.timePerQuery, m_timePerQuery, statsDiv);
+		addStatsDiv(gs.timePerClick, m_timePerClick, statsDiv);
+		
+		let subHeader = document.createElement("h4");
+		subHeader.innerText = m_collectionDistributions + ":";
+		
+		statsDiv.appendChild(subHeader);
+		
+		let docDistributionsContainer = document.createElement("div");
+		docDistributionsContainer.classList.add("doc-distributions-div");
+		
+		gs.collectionNames.forEach((collection) => {
+			
+			let docDistributionItem = document.createElement("div");
+			docDistributionItem.classList.add("doc-distributions-item");
+			
+			let collectionHeader = document.createElement("h5");
+			collectionHeader.innerText = collection;
+			
+			docDistributionItem.appendChild(collectionHeader);
+			
+			let clickStats = gs.clicksPerDocCollection[collection];
+			let timeStats = gs.timePerDocCollection[collection];
+			
+			addStatsDiv(clickStats, m_clicks, docDistributionItem);
+			addStatsDiv(timeStats, m_totalTime, docDistributionItem);
+			
+			docDistributionsContainer.appendChild(docDistributionItem);
+		})
+		
+		statsDiv.appendChild(docDistributionsContainer);
+		
+		groupDiv.appendChild(header);
+		groupDiv.appendChild(statsDiv);
+		mainDiv.appendChild(groupDiv);
+	});
 }
 
 function addStatsDiv(stats, title, parent) {

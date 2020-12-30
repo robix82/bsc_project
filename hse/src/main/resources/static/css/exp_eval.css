@@ -47,6 +47,12 @@ h5 {
 .eval-secton-content {
 	
 	margin-left: 1em;
+	margin-bottom: 1em;
+}
+
+.eval-secton-content h4 {
+	
+	margin-top: 1em;
 }
 
 .stats-div {
@@ -69,7 +75,19 @@ h5 {
 	flex-flow: column nowrap;
 }
 
+.doc-distributions-div {
+	
+	display: flex;
+	flex-flow: row wrap;
+}
 
+.doc-distributions-item {
+	
+	margin-right: 1em;
+	margin-top: 1em;
+	padding: .5em;
+	background-color: #eeeeee;
+}
 
 
 
