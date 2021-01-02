@@ -1,11 +1,9 @@
 package ch.usi.hse.endpoints;
 
 import static ch.usi.hse.testData.SearchData.dummieSearchResultList;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,15 +39,21 @@ public class SearchControllerUnitTest {
 		when(searchService.handleRepeatedQuery(anyString(), any(Participant.class))).thenReturn(testSrl);
 	}
 	
+	@Test
+	public void testSetup() {
+		
+		assertNotNull(searchService);
+		assertNotNull(mvc);
+	}
 	
-	
+	/*
 	@Test
 	public void testGetSearchUi() throws Exception {
 		
 		mvc.perform(get("/")).andExpect(status().isOk())
 						   .andExpect(view().name("search"));
 	}
-	/*
+
 	@Test
 	public void testPostQuery() throws Exception {
 		

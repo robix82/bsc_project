@@ -17,7 +17,6 @@ import ch.usi.hse.db.entities.DocCollection;
 import ch.usi.hse.db.entities.Experiment;
 import ch.usi.hse.db.entities.Participant;
 import ch.usi.hse.db.entities.TestGroup;
-import ch.usi.hse.db.repositories.DocCollectionRepository;
 import ch.usi.hse.db.repositories.ExperimentRepository;
 import ch.usi.hse.db.repositories.ParticipantRepository;
 import ch.usi.hse.db.repositories.TestGroupRepository;
@@ -28,8 +27,6 @@ import ch.usi.hse.testData.SearchData;
 
 public class SearchServiceTest {
 	
-	@Mock
-	private DocCollectionRepository collectionRepo;
 	
 	@Mock
 	private ExperimentRepository experimentRepo;
@@ -58,7 +55,7 @@ public class SearchServiceTest {
 		
 		initMocks(this);
 		
-		testService = new SearchService(collectionRepo, experimentRepo, participantRepo, groupRepo, 
+		testService = new SearchService(experimentRepo, participantRepo, groupRepo, 
 										searchAssembler, simpMessagingTemplate);
 		
 		docCollections = List.of(new DocCollection("c1", "l1"));

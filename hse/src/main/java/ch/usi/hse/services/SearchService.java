@@ -9,17 +9,14 @@ import org.springframework.stereotype.Service;
 import ch.usi.hse.db.entities.DocClickEvent;
 import ch.usi.hse.db.entities.DocCollection;
 import ch.usi.hse.db.entities.Experiment;
-import ch.usi.hse.db.entities.HseUser;
 import ch.usi.hse.db.entities.Participant;
 import ch.usi.hse.db.entities.QueryEvent;
 import ch.usi.hse.db.entities.TestGroup;
-import ch.usi.hse.db.repositories.DocCollectionRepository;
 import ch.usi.hse.db.repositories.ExperimentRepository;
 import ch.usi.hse.db.repositories.ParticipantRepository;
 import ch.usi.hse.db.repositories.TestGroupRepository;
 import ch.usi.hse.exceptions.FileReadException;
 import ch.usi.hse.exceptions.NoSuchExperimentException;
-import ch.usi.hse.exceptions.NoSuchFileException;
 import ch.usi.hse.exceptions.NoSuchTestGroupException;
 import ch.usi.hse.exceptions.NoSuchUserException;
 import ch.usi.hse.retrieval.SearchResultList;
@@ -39,7 +36,6 @@ import java.util.List;
 @Service
 public class SearchService {
  
-	private DocCollectionRepository collectionRepo;
 	private ExperimentRepository experimentRepo;
 	private ParticipantRepository participantRepo;
 	private TestGroupRepository groupRepo;
@@ -47,14 +43,12 @@ public class SearchService {
 	private SimpMessagingTemplate simpMessagingTemplate;
 	
 	@Autowired
-	public SearchService(DocCollectionRepository collectionRepo,
-						 ExperimentRepository experimentRepo,
+	public SearchService(ExperimentRepository experimentRepo,
 						 ParticipantRepository participantRepo,
 						 TestGroupRepository groupRepo,
 						 SearchAssembler searchAssembler,
 						 SimpMessagingTemplate simpMessagingTemplate) {
 		
-		this.collectionRepo = collectionRepo;
 		this.experimentRepo = experimentRepo;
 		this.participantRepo =  participantRepo;
 		this.groupRepo = groupRepo;
@@ -65,7 +59,13 @@ public class SearchService {
 	
 	
 	public SearchResultList handleNewQuery(String query, Participant participant) 
-			throws NoSuchUserException, NoSuchTestGroupException, NoSuchExperimentException {
+			throws NoSuchUserException, 
+				   NoSuchTestGroupException, 
+				   NoSuchExperimentException, 
+				   IOException, 
+				   ParseException, 
+				   InvalidTokenOffsetsException, 
+				   FileReadException {
 		
 		checkDataConsistency(participant);
 		
@@ -88,7 +88,12 @@ public class SearchService {
 	}
 
 	public SearchResultList handleRepeatedQuery(String query, Participant participant) 
-			throws NoSuchUserException, NoSuchTestGroupException, NoSuchExperimentException {
+			throws NoSuchUserException, 
+				   NoSuchTestGroupException, 
+				   NoSuchExperimentException, 
+				   IOException, ParseException, 
+				   InvalidTokenOffsetsException, 
+				   FileReadException {
 		
 		checkDataConsistency(participant);
 		
@@ -105,7 +110,13 @@ public class SearchService {
 	}
 	
 	public SearchResultList handleFirstQuery(String query, Participant participant) 
-			throws NoSuchUserException, NoSuchTestGroupException, NoSuchExperimentException {
+			throws NoSuchUserException, 
+			       NoSuchTestGroupException, 
+			       NoSuchExperimentException, 
+			       IOException, 
+			       ParseException, 
+			       InvalidTokenOffsetsException, 
+			       FileReadException {
 		
 		checkDataConsistency(participant);
 		
@@ -138,16 +149,34 @@ public class SearchService {
 		simpMessagingTemplate.convertAndSend("/userActions", experiment);
 	}
 	
-	private SearchResultList search(String queryString, Participant p) {
+	private SearchResultList search(String query, Participant p) 
+			throws ParseException, 
+			       FileReadException, 
+			       InvalidTokenOffsetsException {
 		
-		return null;
+		TestGroup g = groupRepo.findById(p.getTestGroupId());
+		List<DocCollection> collections = new ArrayList<>(g.getDocCollections());
+		
+		return searchAssembler.getSearchResults(query, collections);
 	}
 	
-	private SearchResultList getFirstQueryList(String queryString, Participant p) {
+	private SearchResultList getFirstQueryList(String query, Participant p) 
+			throws IOException, 
+				   ParseException, 
+				   InvalidTokenOffsetsException, 
+				   FileReadException {
 		
+		TestGroup g = groupRepo.findById(p.getTestGroupId());
+		DocCollection fqCollection = g.getFirstQueryCollection();
 		
-		
-		return null;
+		if (fqCollection != null) {
+			
+			return searchAssembler.getFirstQueryList(fqCollection, query);
+		}
+		else {
+			
+			return search(query, p);
+		}
 	}
 	
 	private void sendNewQueryMessage(Participant p, SearchResultList srl) {
