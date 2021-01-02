@@ -58,7 +58,6 @@ public class HseAuthenticationSuccessHandler implements AuthenticationSuccessHan
 		session.setAttribute("authorities", authentication.getAuthorities());
 		
 		response.setStatus(HttpServletResponse.SC_OK);
-		response.sendRedirect(baseUrl);
 		
 		if (participantRepo.existsByUserName(uName)) {
 			
@@ -76,6 +75,12 @@ public class HseAuthenticationSuccessHandler implements AuthenticationSuccessHan
 				
 				simpMessagingTemplate.convertAndSend("/userActions", experiment);
 			}
+			
+			response.sendRedirect(baseUrl);
+		}
+		else {
+			
+			response.sendRedirect(baseUrl + "experiments/ui");
 		}
 	}
 }

@@ -36,7 +36,9 @@ public class SearchControllerUnitTest {
 	@BeforeEach
 	public void setUp() throws Exception {
 		
-		when(searchService.search(anyString(), any(Participant.class))).thenReturn(testSrl);
+		when(searchService.handleFirstQuery(anyString(), any(Participant.class))).thenReturn(testSrl);
+		when(searchService.handleNewQuery(anyString(), any(Participant.class))).thenReturn(testSrl);
+		when(searchService.handleRepeatedQuery(anyString(), any(Participant.class))).thenReturn(testSrl);
 	}
 	
 	

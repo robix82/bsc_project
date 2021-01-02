@@ -52,6 +52,9 @@ public class Participant extends HseUser {
 	@Column(name="firstQuery")
 	private String firstQuery;
 	
+	@Column(name="lastQuery")
+	private String lastQuery;
+	
 	public Participant() {
 		
 		super();
@@ -174,6 +177,14 @@ public class Participant extends HseUser {
 	
 	public void setFirstQuery(String firstQuery) {
 		this.firstQuery = firstQuery;
+	}
+	
+	public String getLastQuery() {
+		return lastQuery;
+	}
+	
+	public void setLastQuery(String lastQuery) {
+		this.lastQuery = lastQuery;
 	}
 }
 

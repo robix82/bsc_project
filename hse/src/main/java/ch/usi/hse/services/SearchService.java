@@ -16,9 +16,12 @@ import ch.usi.hse.db.entities.TestGroup;
 import ch.usi.hse.db.repositories.DocCollectionRepository;
 import ch.usi.hse.db.repositories.ExperimentRepository;
 import ch.usi.hse.db.repositories.ParticipantRepository;
+import ch.usi.hse.db.repositories.TestGroupRepository;
 import ch.usi.hse.exceptions.FileReadException;
 import ch.usi.hse.exceptions.NoSuchExperimentException;
 import ch.usi.hse.exceptions.NoSuchFileException;
+import ch.usi.hse.exceptions.NoSuchTestGroupException;
+import ch.usi.hse.exceptions.NoSuchUserException;
 import ch.usi.hse.retrieval.SearchResultList;
 import ch.usi.hse.retrieval.SearchAssembler;
 import ch.usi.hse.retrieval.SearchResult;
@@ -35,10 +38,11 @@ import java.util.List;
  */
 @Service
 public class SearchService {
-
+ 
 	private DocCollectionRepository collectionRepo;
 	private ExperimentRepository experimentRepo;
 	private ParticipantRepository participantRepo;
+	private TestGroupRepository groupRepo;
 	private SearchAssembler searchAssembler;
 	private SimpMessagingTemplate simpMessagingTemplate;
 	
@@ -46,84 +50,75 @@ public class SearchService {
 	public SearchService(DocCollectionRepository collectionRepo,
 						 ExperimentRepository experimentRepo,
 						 ParticipantRepository participantRepo,
+						 TestGroupRepository groupRepo,
 						 SearchAssembler searchAssembler,
 						 SimpMessagingTemplate simpMessagingTemplate) {
 		
 		this.collectionRepo = collectionRepo;
 		this.experimentRepo = experimentRepo;
 		this.participantRepo =  participantRepo;
+		this.groupRepo = groupRepo;
 		this.searchAssembler = searchAssembler;
 		this.simpMessagingTemplate = simpMessagingTemplate;
 	}
 	
-	/**
-	 * Performs the index search given a query string
-	 * and the user who  is performing the query
-	 * 
-	 * @param queryString
-	 * @return SearchResultList 
-	 * @throws FileReadException 
-	 * @throws ParseException 
-	 * @throws InvalidTokenOffsetsException 
-	 * @throws NoSuchExperimentException 
-	 * @throws NoSuchFileException 
-	 * @throws IOException 
-	 */
-	public SearchResultList search(String queryString, HseUser user) 
-			throws ParseException, 
-				   FileReadException, 
-				   InvalidTokenOffsetsException, 
-				   NoSuchExperimentException, 
-				   NoSuchFileException, IOException {
+	
+	
+	public SearchResultList handleNewQuery(String query, Participant participant) 
+			throws NoSuchUserException, NoSuchTestGroupException, NoSuchExperimentException {
 		
-		List<DocCollection> collections;
+		checkDataConsistency(participant);
 		
-		if (user instanceof Participant) {
-			
-			String query = queryString.trim().toLowerCase();
-			
-			Participant p = (Participant) user;
-			int experimentId = p.getExperimentId();
-			p.incQueryCount();
-			
-			TestGroup group = p.getTestGroup();
-			
-			if (p.getQueryCount() == 1 && group.getFirstQueryCollection() != null) {
-				p.setFirstQuery(query);
-			}
-			
-			participantRepo.save(p);
-			
-			if (! experimentRepo.existsById(experimentId)) {
-				throw new NoSuchExperimentException(experimentId);
-			}
-			
-			
-			SearchResultList srl;
-			
-			if (query.equals(p.getFirstQuery())) {
-				
-				srl = searchAssembler.getFirstQueryList(group.getFirstQueryCollection(), queryString);
-			}
-			else {
-			
-				collections = new ArrayList<>(group.getDocCollections());
-				srl = searchAssembler.getSearchResults(queryString, collections);
-			}
-			
-			Experiment experiment = experimentRepo.findById(p.getExperimentId());
-			experiment.addUsageEvent(new QueryEvent(p, srl));
-			experimentRepo.save(experiment);
-			
-			simpMessagingTemplate.convertAndSend("/userActions", experiment);
-			
-			return srl;
+		SearchResultList srl;
+		
+		if (query.equals(participant.getFirstQuery())) {			
+			srl = getFirstQueryList(query, participant);
 		}
-		else {
+		else {			
+			srl = search(query, participant);
+		}
+		
+		participant.setLastQuery(query);
+		participant.incQueryCount();
+		participantRepo.save(participant);
+		
+		sendNewQueryMessage(participant, srl);
+		
+		return srl;
+	}
+
+	public SearchResultList handleRepeatedQuery(String query, Participant participant) 
+			throws NoSuchUserException, NoSuchTestGroupException, NoSuchExperimentException {
+		
+		checkDataConsistency(participant);
+		
+		SearchResultList srl;
+		
+		if (query.equals(participant.getFirstQuery())) {			
+			srl = getFirstQueryList(query, participant);
+		}
+		else {			
+			srl = search(query, participant);
+		}
+		
+		return srl;
+	}
+	
+	public SearchResultList handleFirstQuery(String query, Participant participant) 
+			throws NoSuchUserException, NoSuchTestGroupException, NoSuchExperimentException {
+		
+		checkDataConsistency(participant);
+		
+		SearchResultList srl = getFirstQueryList(query, participant);
+		
+		participant.setFirstQuery(query);
+		participant.setLastQuery(query);
+		participant.incQueryCount();
+		participantRepo.save(participant);
 			
-			collections = collectionRepo.findAll();
-			return searchAssembler.getSearchResults(queryString, collections);
-		}		
+		sendNewQueryMessage(participant, srl);
+		
+		return srl;
 	}
 	
 	public void addDocClickEvent(SearchResult searchResult, Participant participant) 
@@ -141,6 +136,47 @@ public class SearchService {
 		experiment.addUsageEvent(new DocClickEvent(participant, searchResult));	
 		experimentRepo.save(experiment);
 		simpMessagingTemplate.convertAndSend("/userActions", experiment);
+	}
+	
+	private SearchResultList search(String queryString, Participant p) {
+		
+		return null;
+	}
+	
+	private SearchResultList getFirstQueryList(String queryString, Participant p) {
+		
+		
+		
+		return null;
+	}
+	
+	private void sendNewQueryMessage(Participant p, SearchResultList srl) {
+		
+		Experiment experiment = experimentRepo.findById(p.getExperimentId());
+		experiment.addUsageEvent(new QueryEvent(p, srl));
+		experimentRepo.save(experiment);
+		
+		simpMessagingTemplate.convertAndSend("/userActions", experiment);
+	}
+	
+	private void checkDataConsistency(Participant p) 
+			throws NoSuchUserException, NoSuchTestGroupException, NoSuchExperimentException {
+		
+		int participantId = p.getId();
+		int groupId = p.getTestGroupId();
+		int experimentId = p.getExperimentId();
+		
+		if (! participantRepo.existsById(participantId)) {
+			throw new NoSuchUserException("participant", participantId);
+		}
+		
+		if (! groupRepo.existsById(groupId)) {
+			throw new NoSuchTestGroupException(groupId);
+		}
+		
+		if (! experimentRepo.existsById(experimentId)) {
+			throw new NoSuchExperimentException(experimentId);
+		}
 	}
 }
 

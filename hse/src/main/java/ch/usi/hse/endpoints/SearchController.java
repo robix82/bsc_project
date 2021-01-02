@@ -24,6 +24,7 @@ import ch.usi.hse.db.entities.Participant;
 import ch.usi.hse.exceptions.FileReadException;
 import ch.usi.hse.exceptions.NoSuchExperimentException;
 import ch.usi.hse.exceptions.NoSuchFileException;
+import ch.usi.hse.exceptions.NoSuchTestGroupException;
 import ch.usi.hse.exceptions.NoSuchUserException;
 import ch.usi.hse.retrieval.SearchResult;
 import ch.usi.hse.retrieval.SearchResultList;
@@ -53,6 +54,7 @@ public class SearchController {
 	 * Serves the main search UI page
 	 * 
 	 * @return ModelAndView
+	 * @throws NoSuchTestGroupException 
 	 */
 	@GetMapping("/")
 	public ModelAndView getSearchUi(@AuthenticationPrincipal User user, String queryString) 
@@ -62,19 +64,45 @@ public class SearchController {
 				   InvalidTokenOffsetsException, 
 				   NoSuchExperimentException, 
 				   NoSuchFileException, 
-				   IOException {
+				   IOException, NoSuchTestGroupException {
 		
+		Participant participant = userService.findParticipant(user.getUsername());
+		
+		String query = null;
+		SearchResultList srl = null;
+		
+		if (queryString != null && ! queryString.isBlank()) {
+			
+			query = queryString.trim().toLowerCase();
+		}
+		
+		if (query == null) {
+			
+			String lastQuery = participant.getLastQuery();
+			
+			if (lastQuery != null) {
+				
+				srl = searchService.handleRepeatedQuery(lastQuery, participant);
+			}
+		}
+		else if (participant.getQueryCount() == 0) {
+			
+			srl = searchService.handleFirstQuery(query, participant);
+		}
+		else if (query.equals(participant.getLastQuery())) {
+			
+			srl = searchService.handleRepeatedQuery(query, participant);
+		}
+		else {
+			
+			srl = searchService.handleNewQuery(query, participant);
+		}
+
 		
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("baseUrl", baseUrl);
 		mav.setViewName("search");
-		
-		if (queryString != null && ! queryString.isBlank()) {
-			
-			HseUser hseUser = userService.findUser(user.getUsername());
-			SearchResultList srl = searchService.search(queryString, hseUser);
-			mav.addObject("searchResultList", srl);
-		}
+		mav.addObject("searchResultList", srl);
 				
 		return mav;
 	}
