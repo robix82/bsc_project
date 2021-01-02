@@ -48,35 +48,14 @@ public class SearchController {
 	
 	@Autowired
 	private UserService userService;
-	
+
 	/**
 	 * Serves the main search UI page
 	 * 
 	 * @return ModelAndView
 	 */
 	@GetMapping("/")
-	public ModelAndView getSearchUi() {
-    		
-		ModelAndView mav = new ModelAndView();
-		mav.addObject("baseUrl", baseUrl);
-		mav.setViewName("search");
-		
-		return mav;
-	}
-	
-	@GetMapping("/participantLogout")
-	public ModelAndView getParticipantLogout() {
-		
-		ModelAndView mav = new ModelAndView();
-		mav.addObject("baseUrl", baseUrl);
-		mav.setViewName("participantLogout");
-		mav.addObject("baseUrl", baseUrl);
-		
-		return mav;
-	}
-	
-	@PostMapping("/")
-	public ModelAndView postQuery(@AuthenticationPrincipal User user, String queryString) 
+	public ModelAndView getSearchUi(@AuthenticationPrincipal User user, String queryString) 
 			throws NoSuchUserException, 
 				   ParseException, 
 				   FileReadException, 
@@ -90,13 +69,24 @@ public class SearchController {
 		mav.addObject("baseUrl", baseUrl);
 		mav.setViewName("search");
 		
-		if (! queryString.isBlank()) {
+		if (queryString != null && ! queryString.isBlank()) {
 			
 			HseUser hseUser = userService.findUser(user.getUsername());
 			SearchResultList srl = searchService.search(queryString, hseUser);
 			mav.addObject("searchResultList", srl);
 		}
 				
+		return mav;
+	}
+
+	@GetMapping("/participantLogout")
+	public ModelAndView getParticipantLogout() {
+		
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("baseUrl", baseUrl);
+		mav.setViewName("participantLogout");
+		mav.addObject("baseUrl", baseUrl);
+		
 		return mav;
 	}
 

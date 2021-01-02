@@ -23,7 +23,7 @@
 	</div>
 	
 	<div id="search-bar">
-		<form th:action="@{${baseUrl}}" method="POST">
+		<form th:action="@{${baseUrl}}" method="GET">
 		
 		<input id="search-input" 
 				    name="queryString" 
@@ -47,7 +47,6 @@
 			<div class="result-url">
 				<a th:href="@{${baseUrl} + 'doc?url=' + ${result.url} + '&fileType=' + ${result.fileType}}" 
 				   th:text="${result.url}" 
-				   target="blank"
 				   th:onclick="sendBrowseEvent([[${result}]])"></a>
 			</div>
 			
