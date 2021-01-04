@@ -590,6 +590,7 @@ public class ExperimentService {
 			for (Participant p : g.getParticipants()) {
 				
 				p.setActive(false);
+				p.setOnline(false);
 			}
 		}
 		
@@ -638,6 +639,76 @@ public class ExperimentService {
 		return updated;
 	}
 	
+	
+	
+	// RESULT DATA PROCESSING / EXPORT
+	
+	public InputStream rawResultsCsv(Experiment experiment) throws NoSuchExperimentException {
+		
+		if (! experimentRepo.existsById(experiment.getId())) {
+			throw new NoSuchExperimentException(experiment.getId());
+		}
+		
+		return resultWriter.rawDataCsv(experiment);
+	}
+	
+	public InputStream rawResultsJson(Experiment experiment) 
+			throws JsonProcessingException, NoSuchExperimentException {
+		
+		if (! experimentRepo.existsById(experiment.getId())) {
+			throw new NoSuchExperimentException(experiment.getId());
+		}
+		
+		return resultWriter.rawDataJson(experiment);
+	}
+	
+	public InputStream summaryJson(Experiment experiment) 
+			throws NoSuchExperimentException, JsonProcessingException {
+		
+		if (! experimentRepo.existsById(experiment.getId())) {
+			throw new NoSuchExperimentException(experiment.getId());
+		}
+		
+		return resultWriter.summaryJson(experiment);
+	}
+	
+	public InputStream userHistoriesCsv(int groupId) 
+			throws IOException, NoSuchTestGroupException {
+		
+		if (! testGroupRepo.existsById(groupId)) {
+			throw new NoSuchTestGroupException(groupId);
+		}
+		
+		TestGroup testGroup = testGroupRepo.findById(groupId);
+		
+		return resultWriter.userHistoriesCsv(testGroup);
+	}
+	
+	public InputStream userHistoriesJson(Experiment experiment) 
+			throws NoSuchExperimentException, JsonProcessingException {
+		
+		if (! experimentRepo.existsById(experiment.getId())) {
+			throw new NoSuchExperimentException(experiment.getId());
+		}
+		
+		return resultWriter.userHistoriesJson(experiment);
+	}
+	
+	public ExperimentSummary experimentSummary(Experiment experiment) throws ExperimentStatusException {		
+		
+		Experiment.Status requiredStatus = Experiment.Status.COMPLETE;
+		Experiment.Status actualStatus = experiment.getStatus();
+		
+		if (! actualStatus.equals(requiredStatus)) {
+			
+			throw new ExperimentStatusException(requiredStatus, actualStatus);
+		}
+		
+		return new ExperimentSummary(experiment, dataExtractor);
+	}
+	
+	// PRIVATE METHODS
+	
 	private void sendExperimentOverMessage() {
 		
 		String msg = "experiment_over";
@@ -679,62 +750,6 @@ public class ExperimentService {
 				e.setStatus(Experiment.Status.READY);
 			}
 		}
-	}
-	
-	// RESULT DATA PROCESSING / EXPORT
-	
-	public InputStream rawResultsCsv(Experiment experiment) throws NoSuchExperimentException {
-		
-		if (! experimentRepo.existsById(experiment.getId())) {
-			throw new NoSuchExperimentException(experiment.getId());
-		}
-		
-		return resultWriter.rawDataCsv(experiment);
-	}
-	
-	public InputStream rawResultsJson(Experiment experiment) 
-			throws JsonProcessingException, NoSuchExperimentException {
-		
-		if (! experimentRepo.existsById(experiment.getId())) {
-			throw new NoSuchExperimentException(experiment.getId());
-		}
-		
-		return resultWriter.rawDataJson(experiment);
-	}
-	
-	public InputStream userHistoriesCsv(int groupId) 
-			throws IOException, NoSuchTestGroupException {
-		
-		if (! testGroupRepo.existsById(groupId)) {
-			throw new NoSuchTestGroupException(groupId);
-		}
-		
-		TestGroup testGroup = testGroupRepo.findById(groupId);
-		
-		return resultWriter.userHistoriesCsv(testGroup);
-	}
-	
-	public InputStream userHistoriesJson(Experiment experiment) 
-			throws NoSuchExperimentException, JsonProcessingException {
-		
-		if (! experimentRepo.existsById(experiment.getId())) {
-			throw new NoSuchExperimentException(experiment.getId());
-		}
-		
-		return resultWriter.userHistoriesJson(experiment);
-	}
-	
-	public ExperimentSummary experimentSummary(Experiment experiment) throws ExperimentStatusException {		
-		
-		Experiment.Status requiredStatus = Experiment.Status.COMPLETE;
-		Experiment.Status actualStatus = experiment.getStatus();
-		
-		if (! actualStatus.equals(requiredStatus)) {
-			
-			throw new ExperimentStatusException(requiredStatus, actualStatus);
-		}
-		
-		return new ExperimentSummary(experiment, dataExtractor);
 	}
 }
 

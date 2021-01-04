@@ -57,6 +57,15 @@ public class ResultWriter {
 		return new ByteArrayInputStream(jsonData);
 	}
 	
+	public InputStream summaryJson(Experiment experiment) throws JsonProcessingException {
+		
+		ExperimentSummary summary = new ExperimentSummary(experiment, dataExtractor);
+		
+		byte[] jsonData = jsonWriter.writeValueAsBytes(summary);
+		
+		return new ByteArrayInputStream(jsonData);
+	}
+	
 	public InputStream userHistoriesCsv(TestGroup testGroup) throws IOException {
 		
 		ByteArrayOutputStream bytesOut = new ByteArrayOutputStream();

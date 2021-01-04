@@ -476,6 +476,26 @@ public class ExperimentsController {
 		}
 	}
 	
+	@GetMapping("/eval/export/summary_json")
+	public void exportSummaryJson(HttpServletResponse response, @RequestParam(required=true) int expId) 
+			throws NoSuchExperimentException, FileWriteException, JsonProcessingException {
+		
+		Experiment experiment = experimentService.findExperiment(expId);
+		
+		InputStream is = experimentService.summaryJson(experiment);
+		String fileName = experiment.getTitle() + ".json";
+		
+		response.setContentType(MediaType.TEXT_PLAIN);
+		response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
+		
+		try {
+			FileCopyUtils.copy(is, response.getOutputStream());
+		}
+		catch (IOException e) {
+			throw new FileWriteException(fileName);
+		}
+	}
+	
 	@GetMapping("/eval/export/histories_csv")
 	public void exportHistoriesCsv(HttpServletResponse response, @RequestParam(required=true) int groupId) 
 			throws NoSuchTestGroupException, FileWriteException {

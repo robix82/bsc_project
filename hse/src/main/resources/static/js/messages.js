@@ -154,7 +154,7 @@ var m_collectionDistributions = $("#m_collectionDistributions").text();
 var m_clicks = $("#m_clicks").text();
 var m_totalTime = $("#m_totalTime").text();
 
-
+var m_dataSummary = $("#m_dataSummary").text();
 
 
 
