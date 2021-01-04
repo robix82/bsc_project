@@ -6,8 +6,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -50,6 +48,16 @@ public class EventDataExtractor {
 		this.ceRepo = ceRepo;
 	}
 	
+	public int effectiveUserCount(Experiment experiment) {
+		
+		return participantIds(experiment).size();
+	}
+	
+	public int effectiveUserCount(TestGroup testGroup) {
+		
+		return participantIds(testGroup).size();
+	}
+	
 	public int totalQueries(Experiment experiment) {
 		
 		return qeRepo.findByExperiment(experiment).size();
@@ -72,148 +80,141 @@ public class EventDataExtractor {
 		
 	public DataStats queriesPerUser(Experiment experiment) {
 		
-		List<Double> queryCounts = new ArrayList<>();
+		DataStats stats = new DataStats();
 		
 		for (int id : participantIds(experiment)) {
-			
-			queryCounts.add((double) qeRepo.findByUserId(id).size());
+	
+			stats.appendValue(qeRepo.findByUserId(id).size());
 		}
 		
-		return new DataStats(queryCounts);
+		return stats;
 	}
 	
 	public DataStats queriesPerUser(TestGroup testGroup) {
 		
-		List<Double> queryCounts = new ArrayList<>();
+		DataStats stats = new DataStats();
 		
 		for (int id : participantIds(testGroup)) {
-			
-			queryCounts.add((double) qeRepo.findByUserId(id).size());
+				
+			stats.appendValue(qeRepo.findByUserId(id).size());
 		}
 		
-		return new DataStats(queryCounts);
+		return stats;
 	}
 	
 	public DataStats clicksPerUser(Experiment experiment) {
 		
-		List<Double> clickCounts = new ArrayList<>();
+		DataStats stats = new DataStats();
 		
 		for (int id : participantIds(experiment)) {
-			
-			clickCounts.add((double) ceRepo.findByUserId(id).size());
+				
+			stats.appendValue(ceRepo.findByUserId(id).size());
 		}
 		
-		return new DataStats(clickCounts);
+		return stats;
 	}
 	
 	public DataStats clicksPerUser(TestGroup testGroup) {
 		
-		List<Double> clickCounts = new ArrayList<>();
+		DataStats stats = new DataStats();
 		
 		for (int id : participantIds(testGroup)) {
-			
-			clickCounts.add((double) ceRepo.findByUserId(id).size());
+
+			stats.appendValue(ceRepo.findByUserId(id).size());
 		}
 		
-		return new DataStats(clickCounts);
+		return stats;
 	}
 	
 	public DataStats clicksPerQuery(Experiment experiment) {
 		
-		List<Double> data = new ArrayList<>();
+		DataStats stats = new DataStats();
 		
 		for (int id : participantIds(experiment)) {
-			
-			data.addAll(clicksPerQuery(id));
+				
+			stats.appendValues(clicksPerQuery(id));
 		}
 		
-		return new DataStats(data);
+		return stats;
 	}
 	
 	public DataStats clicksPerQuery(TestGroup testGroup) {
 		
-		List<Double> data = new ArrayList<>();
+		DataStats stats = new DataStats();
 		
 		for (int id : participantIds(testGroup)) {
-			
-			data.addAll(clicksPerQuery(id));
+				
+			stats.appendValues(clicksPerQuery(id));
 		}
 		
-		return new DataStats(data);
+		return stats;
 	}
 	
 	public DataStats timePerQuery(Experiment experiment) {
 		
-		List<Double> data = new ArrayList<>();
+		DataStats stats = new DataStats();
 		
 		for (int id : participantIds(experiment)) {
-			
-			data.addAll(timePerQuery(id));
+
+			stats.appendValues(timePerQuery(id));
 		}
 		
-		return new DataStats(data);
+		return stats;
 	}
 	
 	public DataStats timePerQuery(TestGroup testGroup) {
 		
-		List<Double> data = new ArrayList<>();
+		DataStats stats = new DataStats();
 		
 		for (int id : participantIds(testGroup)) {
-			
-			data.addAll(timePerQuery(id));
+
+			stats.appendValues(timePerQuery(id));
 		}
 		
-		return new DataStats(data);
+		return stats;
 	}
 	
 	public DataStats timePerClick(Experiment experiment) {
 		
-		List<Double> data = new ArrayList<>();
+		DataStats stats = new DataStats();
 		
 		for (int id : participantIds(experiment)) {
-			
-			data.addAll(timePerClick(id));
+
+			stats.appendValues(timePerClick(id));
 		}
 		
-		return new DataStats(data);
+		return stats;
 	}
 	
 	public DataStats timePerClick(TestGroup testGroup) {
 		
-		List<Double> data = new ArrayList<>();
+		DataStats stats = new DataStats();
 		
 		for (int id : participantIds(testGroup)) {
-			
-			data.addAll(timePerClick(id));
+
+			stats.appendValues(timePerClick(id));
 		}
 		
-		return new DataStats(data);
+		return stats;
 	}
 	
 	public Map<String, DataStats> clicksPerDocCollection(TestGroup testGroup) {
 		
-		Map<String, DataStats> res = new HashMap<>(); 
-		Map<String, List<Double>> tmpData = new HashMap<>();
-		List<String> collectionNames = new ArrayList<>();
+		Map<String, DataStats> res = new HashMap<>();
 		
 		for (DocCollection c : testGroup.getDocCollections()) {
-			collectionNames.add(c.getName());
-			tmpData.put(c.getName(), new ArrayList<>());
-		}
-		
-		for (int userId : participantIds(testGroup)) {
-			
-			Map<String, Double> perUserData = clicksPerDocCollection(collectionNames, userId);
-			
-			for (Entry<String, Double> e : perUserData.entrySet()) {
 
-				tmpData.get(e.getKey()).add(e.getValue());
-			}
+			res.put(c.getName(), new DataStats());
 		}
 		
-		for (Entry<String, List<Double>> e : tmpData.entrySet()) {
+		for (int id : participantIds(testGroup)) {
 			
-			res.put(e.getKey(), new DataStats(e.getValue()));
+			List<UsageEvent> h = userHistory(id);
+		
+			for (String cName : res.keySet()) {
+					
+				res.get(cName).appendValue(clicksPerCollection(h, cName));
+			}
 		}
 		
 		return res;
@@ -221,28 +222,21 @@ public class EventDataExtractor {
 	
 	public Map<String, DataStats> timePerDocCollection(TestGroup testGroup) {
 		
-		Map<String, DataStats> res= new HashMap<>();
-		Map<String, List<Double>> tmpData = new HashMap<>();
-		List<String> collectionNames = new ArrayList<>();
+		Map<String, DataStats> res = new HashMap<>();
 		
 		for (DocCollection c : testGroup.getDocCollections()) {
-			collectionNames.add(c.getName());
-			tmpData.put(c.getName(), new ArrayList<>());
+
+			res.put(c.getName(), new DataStats());
 		}
 		
-		for (int userId : participantIds(testGroup)) {
+		for (int id : participantIds(testGroup)) {
 			
-			Map<String, Double> perUserData = timePerDocCollection(collectionNames, userId);
+			List<UsageEvent> h = userHistory(id);
+
+			for (String cName : res.keySet()) {
 			
-			for (Entry<String, Double> e : perUserData.entrySet()) {
-			
-				tmpData.get(e.getKey()).add(e.getValue());
+				res.get(cName).appendValue(timePerCollection(h, cName));
 			}
-		}
-		
-		for (Entry<String, List<Double>> e : tmpData.entrySet()) {
-			
-			res.put(e.getKey(), new DataStats(e.getValue()));
 		}
 		
 		return res;
@@ -279,7 +273,12 @@ public class EventDataExtractor {
 		List<Integer> ids = new ArrayList<>();
 		
 		for (Participant p : group.getParticipants()) {
-			ids.add(p.getId());
+			
+			int id = p.getId();
+			
+			if (ueRepo.findByUserId(id).size() > 0) {
+				ids.add(id);
+			}
 		}
 		
 		return ids;
@@ -421,107 +420,6 @@ public class EventDataExtractor {
 		return res;
 	}
 	
-	private Map<String, Double> clicksPerDocCollection(List<String> collectionNames, int userId) {
-		
-		List<UsageEvent> history = userHistory(userId);
-		Map<String, Double> res = new HashMap<>();
-		
-		if (history.isEmpty()) {
-			return res;
-		}
-		
-		for (String name : collectionNames) {
-			res.put(name,  0.0);
-		}
-		
-		int idx = 0;
-		UsageEvent evt = history.get(idx++);
-		
-		while (idx < history.size()) {
-			
-			while (! evt.getEventType().equals(UsageEvent.Type.DOC_CLICK)) {
-				
-				evt = history.get(idx++);
-				
-				if (evt.getEventType().equals(UsageEvent.Type.SESSION)) {
-					
-					SessionEvent se = (SessionEvent) evt;
-					
-					if (se.getEvent().equals(SessionEvent.Event.LOGOUT)) {
-						return res;
-					}
-				}
-			}
-			
-			if (evt.getEventType().equals(UsageEvent.Type.DOC_CLICK)) {
-				
-				DocClickEvent click = (DocClickEvent) evt;
-				String collectionName = click.getCollectionName();
-
-				double count = res.get(collectionName) + 1.0;
-				res.put(collectionName, count);
-			}
-			
-			evt = history.get(idx++);
-		}
-		
-		return res;
-	}
-	
-	private Map<String, Double> timePerDocCollection(List<String> collectionNames, int userId) {
-		
-		List<UsageEvent> history = userHistory(userId);
-		Map<String, Double> res = new HashMap<>();
-		
-		if (history.isEmpty()) {
-			return res;
-		}
-		
-		for (String name : collectionNames) {
-			res.put(name,  0.0);
-		}
-		
-		int idx = 0;
-		UsageEvent evt = history.get(idx++);
-		
-		while (idx < history.size()) {
-			
-			while (! evt.getEventType().equals(UsageEvent.Type.DOC_CLICK)) {
-				
-				evt = history.get(idx++);
-				
-				if (evt.getEventType().equals(UsageEvent.Type.SESSION)) {
-					
-					SessionEvent se = (SessionEvent) evt;
-					
-					if (se.getEvent().equals(SessionEvent.Event.LOGOUT)) {
-						return res;
-					}
-				}
-			}
-			
-			if (evt.getEventType().equals(UsageEvent.Type.DOC_CLICK)) {
-				
-				DocClickEvent click = (DocClickEvent) evt;
-				String collectionName = click.getCollectionName();
-				
-				LocalDateTime t0 = evt.getTimestamp();
-				
-				evt = history.get(idx++);
-				
-				LocalDateTime t1 = evt.getTimestamp();
-				Duration dt = Duration.between(t0,  t1);
-				
-				Double newTotal = res.get(collectionName) + TimeUnit.SECONDS.convert(dt);
-				res.put(collectionName, newTotal);
-			}
-			else {
-				evt = history.get(idx++);
-			}
-		}
-		
-		return res;
-	}
 	
 	private List<UsageEvent> userHistory(int userId) {
 		
@@ -530,6 +428,55 @@ public class EventDataExtractor {
 		Collections.sort(events,  byTimeStampComparator);
 		
 		return events;
+	}
+	
+	private double clicksPerCollection(List<UsageEvent> history, String collectionName) {
+		
+		int total = 0;
+		
+		for (UsageEvent evt : history) {
+			
+			if (evt instanceof DocClickEvent) {
+				
+				if (evt.getEventType().equals(UsageEvent.Type.DOC_CLICK)) {
+					
+					DocClickEvent clickEvent = (DocClickEvent) evt;
+					
+					if (clickEvent.getCollectionName().equals(collectionName)) {
+						
+						++total;
+					}
+				}
+			}
+		}
+		
+		return total;
+	}
+	
+	private double timePerCollection(List<UsageEvent> history, String collectionName) {
+		
+		double total = 0;
+		
+		for (int i = 0; i < history.size(); ++i) {
+			
+			UsageEvent evt = history.get(i);
+			
+			if (evt.getEventType().equals(UsageEvent.Type.DOC_CLICK)) {
+				
+				DocClickEvent clickEvent = (DocClickEvent) evt;
+				
+				if (clickEvent.getCollectionName().equals(collectionName) 
+				    && i < history.size() -1) {
+					
+					UsageEvent nextEvent = history.get(i + 1);
+					
+					Duration dt = Duration.between(clickEvent.getTimestamp(), nextEvent.getTimestamp());
+					total += dt.getSeconds();
+				}
+			}
+		}
+		
+		return total;
 	}
 	
 	private Comparator<UsageEvent> byTimeStampComparator = new Comparator<UsageEvent>() {

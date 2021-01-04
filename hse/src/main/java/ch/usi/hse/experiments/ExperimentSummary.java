@@ -52,16 +52,14 @@ public class ExperimentSummary {
 				
 		groupNames = new ArrayList<>();
 		participantsPerGroup = new HashMap<>();
-		participants = 0;
+		participants = dataExtractor.effectiveUserCount(experiment);
 				
 		for (TestGroup g : experiment.getTestGroups()) {
 					
 			String gName = g.getName();
-			int gParticipants = g.getParticipants().size();
 					
 			groupNames.add(gName);
-			participantsPerGroup.put(gName, gParticipants);
-			participants += gParticipants;
+			participantsPerGroup.put(gName, dataExtractor.effectiveUserCount(g));
 		}
 				
 		totalQueries = dataExtractor.totalQueries(experiment);

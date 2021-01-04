@@ -111,6 +111,8 @@ public class ExperimentSummaryTest {
 		when(dataExtractor.clicksPerQuery(experiment)).thenReturn(clicksPerQuery);
 		when(dataExtractor.timePerQuery(experiment)).thenReturn(timePerQuery);
 		when(dataExtractor.timePerClick(experiment)).thenReturn(timePerClick);
+		when(dataExtractor.effectiveUserCount(experiment)).thenReturn(participants);
+		when(dataExtractor.effectiveUserCount(g1)).thenReturn(participants);
 	}
 	
 

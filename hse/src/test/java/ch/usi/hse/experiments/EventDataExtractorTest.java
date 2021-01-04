@@ -422,7 +422,7 @@ public class EventDataExtractorTest {
 		DataStats expected = new DataStats(qpu);		
 		DataStats actual = extractor.queriesPerUser(testExperiment);
 		
-		assertTrue(statsEquals(expected, actual));
+		assertEquals(expected, actual);
 	}
 	
 	@Test
@@ -434,7 +434,7 @@ public class EventDataExtractorTest {
 		DataStats expected = new DataStats(qpu);		
 		DataStats actual = extractor.queriesPerUser(g1);
 		
-		assertTrue(statsEquals(expected, actual));
+		assertEquals(expected, actual);
 	}
 	
 	@Test
@@ -448,7 +448,7 @@ public class EventDataExtractorTest {
 		DataStats expected = new DataStats(cpu);		
 		DataStats actual = extractor.clicksPerUser(testExperiment);
 		
-		assertTrue(statsEquals(expected, actual));
+		assertEquals(expected, actual);
 	}
 	
 	@Test
@@ -460,7 +460,7 @@ public class EventDataExtractorTest {
 		DataStats expected = new DataStats(cpu);
 		DataStats actual = extractor.clicksPerUser(g1);
 		
-		assertTrue(statsEquals(expected, actual));
+		assertEquals(expected, actual);
 	}
 	
 	@Test
@@ -477,7 +477,7 @@ public class EventDataExtractorTest {
 		DataStats expected = new DataStats(cpq);
 		DataStats actual = extractor.clicksPerQuery(testExperiment);
 		
-		assertTrue(statsEquals(expected, actual));
+		assertEquals(expected, actual);
 	}
 	
 	@Test
@@ -494,7 +494,7 @@ public class EventDataExtractorTest {
 		DataStats expected = new DataStats(cpq);
 		DataStats actual = extractor.clicksPerQuery(g1);
 		
-		assertTrue(statsEquals(expected, actual));
+		assertEquals(expected, actual);
 	}
 	
 	@Test
@@ -511,7 +511,7 @@ public class EventDataExtractorTest {
 		DataStats expected = new DataStats(tpq);
 		DataStats actual = extractor.timePerQuery(testExperiment);
 		
-		assertTrue(statsEquals(expected, actual));
+		assertEquals(expected, actual);
 	}
 	
 	@Test
@@ -528,7 +528,7 @@ public class EventDataExtractorTest {
 		DataStats expected = new DataStats(tpq);
 		DataStats actual = extractor.timePerQuery(g1);
 		
-		assertTrue(statsEquals(expected, actual));
+		assertEquals(expected, actual);
 	}
 
 	@Test
@@ -545,7 +545,7 @@ public class EventDataExtractorTest {
 		DataStats expected = new DataStats(tpc);
 		DataStats actual = extractor.timePerClick(testExperiment);
 		
-		assertTrue(statsEquals(expected, actual));
+		assertEquals(expected, actual);
 	}
 	
 	@Test
@@ -562,7 +562,7 @@ public class EventDataExtractorTest {
 		DataStats expected = new DataStats(tpc);
 		DataStats actual = extractor.timePerClick(g1);
 				
-		assertTrue(statsEquals(expected, actual));
+		assertEquals(expected, actual);
 	}
 
 	@Test
@@ -584,10 +584,10 @@ public class EventDataExtractorTest {
 			String name = e.getKey();
 			
 			assertTrue(actualStats.containsKey(name));
-			assertTrue(statsEquals(e.getValue(), actualStats.get(name)));
+			assertEquals(e.getValue(), actualStats.get(name));
 		}
 	}
-	
+
 	@Test
 	public void testTimePerDocCollection() {
 		
@@ -607,21 +607,8 @@ public class EventDataExtractorTest {
 			String name = e.getKey();
 			
 			assertTrue(actualStats.containsKey(name));
-			assertTrue(statsEquals(e.getValue(), actualStats.get(name)));
+			assertEquals(e.getValue(), actualStats.get(name));
 		}
-	}
-
-	/////////////////
-
-	private boolean statsEquals(DataStats stats1, DataStats stats2) {
-		
-		double eps = 0.00001;
-		
-		return stats1.getN() == stats2.getN() &&
-			   Math.abs(stats1.getTotal() - stats2.getTotal()) < eps &&
-			   Math.abs(stats1.getMean() - stats2.getMean()) < eps &&
-			   Math.abs(stats1.getMedian() - stats2.getMedian()) < eps &&
-			   Math.abs(stats1.getStandardDeviation() - stats2.getStandardDeviation()) < eps;
 	}
 }
 

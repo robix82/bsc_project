@@ -3,6 +3,9 @@ package ch.usi.hse.experiments;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * Utility class including methods
@@ -18,6 +21,9 @@ public class DataStats {
 	private double mean;
 	private double median;
 	private double standardDeviation;
+	
+	@JsonIgnore
+	private List<Double> values;
 	
 	/**
 	 * Full arguments constructor for json I/O
@@ -40,12 +46,66 @@ public class DataStats {
 	
 	
 	/**
-	 * Contruct from value list 
+	 * Construct from value list 
 	 * (computes statistical metrics based on the given values)
 	 * 
 	 * @param values
 	 */
 	public DataStats(List<Double> values) {
+		
+		this.values = values;
+		
+		update();
+	}
+	
+	/**
+	 * default constructor: initializes all fields to 0
+	 */
+	public DataStats() {
+		
+		values = new ArrayList<>();
+		n = 0;
+		total = 0;
+		mean = 0;
+		median = 0;
+		standardDeviation = 0;
+	}
+	
+	public int getN() {
+		return n;
+	}
+	
+	public double getTotal() {
+		return total;
+	}
+	
+	public double getMean() {
+		return mean;
+	}
+	
+	public double getMedian() {
+		return median;
+	}
+	
+	public double getStandardDeviation() {
+		return standardDeviation;
+	}
+	
+	@JsonIgnore
+	public void appendValue(double v) {
+		
+		values.add(v);
+		update();
+	}
+	
+	@JsonIgnore
+	public void appendValues(List<Double> vs) {
+		
+		values.addAll(vs);
+		update();
+	}
+	
+	private void update() {
 		
 		n = values.size();
 		
@@ -77,25 +137,33 @@ public class DataStats {
 		}
 	}
 	
-	public int getN() {
-		return n;
+	@Override
+	public boolean equals(Object o) {
+		
+		if (o == this) {
+			return true;
+		}
+		
+		if (! (o instanceof DataStats)) {
+			return false;
+		}
+		
+		DataStats stats = (DataStats) o;
+		
+		return stats.values.equals(values);
 	}
 	
-	public double getTotal() {
-		return total;
+	@Override
+	public int hashCode() {
+		
+		return Objects.hash(values);
 	}
 	
-	public double getMean() {
-		return mean;
+
+	public List<Double> getValues() {
+		return values;
 	}
-	
-	public double getMedian() {
-		return median;
-	}
-	
-	public double getStandardDeviation() {
-		return standardDeviation;
-	}
+
 }
 
 
