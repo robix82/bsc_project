@@ -68,7 +68,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 			.antMatchers("/from_survey/**").permitAll()
 			.antMatchers("/login").permitAll()
 			.antMatchers("/participantLogout").permitAll()
-			.antMatchers("/test").permitAll() // temporary
 			.antMatchers("/experiments/**").hasAnyAuthority("EXPERIMENTER", "ADMIN")
 			.antMatchers("/indexing/**").hasAnyAuthority("EXPERIMENTER", "ADMIN")
 			.antMatchers("/admin/**").hasAuthority("ADMIN")
