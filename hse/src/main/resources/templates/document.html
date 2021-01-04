@@ -39,18 +39,16 @@
 
 <script th:inline="javascript">
 	/*<![CDATA[*/
+	var baseUrl = /*[[${baseUrl}]]*/ "default";
 	var docUrl = /*[[${docUrl}]]*/ "default";
 	var fileType = /*[[${fileType}]]*/ "default";
 	/*]]>*/
-	
-	console.log("docUrl: " + docUrl);
-	console.log("fileType: " + fileType)
 </script>
 
 <th:block th:include="fragments/messages.html :: messages"></th:block>
 <th:block th:include="fragments/general.html :: commonScripts"></th:block>
 
-
+<script th:src="@{${baseUrl} + 'js/document.js'}"></script>
 
 </body>
 

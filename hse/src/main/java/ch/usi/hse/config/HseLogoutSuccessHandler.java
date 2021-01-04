@@ -56,6 +56,7 @@ public class HseLogoutSuccessHandler implements LogoutSuccessHandler {
 		if (participantRepo.existsByUserName(uName)) {
 			
 			Participant participant = participantRepo.findByUserName(uName);
+			participant.setLastQuery(null);
 			participant.setOnline(false);
 			participant.setLastQuery(null);
 			participantRepo.save(participant);
@@ -65,6 +66,7 @@ public class HseLogoutSuccessHandler implements LogoutSuccessHandler {
 				
 				Experiment experiment = experimentRepo.findById(experimentId);
 				experiment.addUsageEvent(new SessionEvent(participant, SessionEvent.Event.LOGOUT));
+				
 				experimentRepo.save(experiment);
 				simpMessagingTemplate.convertAndSend("/userActions", experiment);
 			}

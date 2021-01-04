@@ -17,6 +17,7 @@ import ch.usi.hse.db.entities.DocCollection;
 import ch.usi.hse.db.entities.Experiment;
 import ch.usi.hse.db.entities.Experimenter;
 import ch.usi.hse.db.entities.Participant;
+import ch.usi.hse.db.entities.SessionEvent;
 import ch.usi.hse.db.entities.TestGroup;
 import ch.usi.hse.db.repositories.DocCollectionRepository;
 import ch.usi.hse.db.repositories.ExperimentRepository;
@@ -590,7 +591,13 @@ public class ExperimentService {
 			for (Participant p : g.getParticipants()) {
 				
 				p.setActive(false);
-				p.setOnline(false);
+				p.setLastQuery(null);
+				
+				if (p.getOnline()) {
+					
+					p.setOnline(false);
+					ex.addUsageEvent(new SessionEvent(p, SessionEvent.Event.LOGOUT));
+				}
 			}
 		}
 		
