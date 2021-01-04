@@ -48,36 +48,78 @@ public class EventDataExtractor {
 		this.ceRepo = ceRepo;
 	}
 	
+	/**
+	 * returns the number of participants who actually logged in
+	 * 
+	 * @param experiment
+	 * @return
+	 */
 	public int effectiveUserCount(Experiment experiment) {
 		
 		return participantIds(experiment).size();
 	}
 	
+	/**
+	 * returns the number of participants who actually logged in
+	 * 
+	 * @param testGroup
+	 * @return
+	 */
 	public int effectiveUserCount(TestGroup testGroup) {
 		
 		return participantIds(testGroup).size();
 	}
 	
+	/**
+	 * returns the total of all queries entered
+	 * 
+	 * @param experiment
+	 * @return
+	 */
 	public int totalQueries(Experiment experiment) {
 		
 		return qeRepo.findByExperiment(experiment).size();
 	}
 	
+	/**
+	 * returns the total of all queries entered
+	 * 
+	 * @param experiment
+	 * @return
+	 */
 	public int totalQueries(TestGroup testGroup) {
 		
 		return qeRepo.findByGroupId(testGroup.getId()).size();
 	}
 	
+	/**
+	 * returns the total of all documents accessed
+	 * 
+	 * @param experiemnt
+	 * @return
+	 */
 	public int totalClicks(Experiment experiment) {
 		
 		return ceRepo.findByExperiment(experiment).size();
 	}
 	
+	/**
+	 * returns the total of all documents accessed
+	 * 
+	 * @param testGroup
+	 * @return
+	 */
 	public int totalClicks(TestGroup testGroup) {
 	
 		return ceRepo.findByGroupId(testGroup.getId()).size();
 	}
 		
+	/**
+	 * per-experiment query statistics (averaged over users)
+	 * 
+	 * @param experiment
+	 * @return
+	 */
 	public DataStats queriesPerUser(Experiment experiment) {
 		
 		DataStats stats = new DataStats();
@@ -90,6 +132,12 @@ public class EventDataExtractor {
 		return stats;
 	}
 	
+	/**
+	 * per-testGroup query statistics (averaged over users)
+	 * 
+	 * @param testGroup
+	 * @return
+	 */
 	public DataStats queriesPerUser(TestGroup testGroup) {
 		
 		DataStats stats = new DataStats();
@@ -102,6 +150,12 @@ public class EventDataExtractor {
 		return stats;
 	}
 	
+	/**
+	 * per-experiment document access statistics (averaged over users)
+	 * 
+	 * @param experiment
+	 * @return
+	 */
 	public DataStats clicksPerUser(Experiment experiment) {
 		
 		DataStats stats = new DataStats();
@@ -114,6 +168,12 @@ public class EventDataExtractor {
 		return stats;
 	}
 	
+	/**
+	 * testGroup level document access statistics (averaged over users)
+	 * 
+	 * @param testGroup
+	 * @return
+	 */
 	public DataStats clicksPerUser(TestGroup testGroup) {
 		
 		DataStats stats = new DataStats();
@@ -126,6 +186,12 @@ public class EventDataExtractor {
 		return stats;
 	}
 	
+	/**
+	 * experiment level per-query document access statistics (averaged over users)
+	 * 
+	 * @param experiment
+	 * @return
+	 */
 	public DataStats clicksPerQuery(Experiment experiment) {
 		
 		DataStats stats = new DataStats();
@@ -138,6 +204,12 @@ public class EventDataExtractor {
 		return stats;
 	}
 	
+	/**
+	 * testGroup level per-query document access statistics (averaged over users)
+	 * 
+	 * @param testGroup
+	 * @return
+	 */
 	public DataStats clicksPerQuery(TestGroup testGroup) {
 		
 		DataStats stats = new DataStats();
@@ -150,6 +222,12 @@ public class EventDataExtractor {
 		return stats;
 	}
 	
+	/**
+	 * experiment level time spent between successive queries (averaged over all queries)
+	 * 
+	 * @param experiment
+	 * @return
+	 */
 	public DataStats timePerQuery(Experiment experiment) {
 		
 		DataStats stats = new DataStats();
@@ -162,6 +240,12 @@ public class EventDataExtractor {
 		return stats;
 	}
 	
+	/**
+	 * test group level time spent between successive queries (averaged over all queries)
+	 * 
+	 * @param testGroup
+	 * @return
+	 */
 	public DataStats timePerQuery(TestGroup testGroup) {
 		
 		DataStats stats = new DataStats();
@@ -174,6 +258,12 @@ public class EventDataExtractor {
 		return stats;
 	}
 	
+	/**
+	 * experiment level time spent viewing a document (averaged over all document access events)
+	 * 
+	 * @param experiment
+	 * @return
+	 */
 	public DataStats timePerClick(Experiment experiment) {
 		
 		DataStats stats = new DataStats();
@@ -186,6 +276,12 @@ public class EventDataExtractor {
 		return stats;
 	}
 	
+	/**
+	 * test group level time spent viewing a document (averaged over all document access events)
+	 * 
+	 * @param testGroup
+	 * @return
+	 */
 	public DataStats timePerClick(TestGroup testGroup) {
 		
 		DataStats stats = new DataStats();
@@ -198,6 +294,12 @@ public class EventDataExtractor {
 		return stats;
 	}
 	
+	/**
+	 * distribution of document access events over document collections (averaged over users)
+	 * 
+	 * @param testGroup
+	 * @return
+	 */
 	public Map<String, DataStats> clicksPerDocCollection(TestGroup testGroup) {
 		
 		Map<String, DataStats> res = new HashMap<>();
@@ -220,6 +322,12 @@ public class EventDataExtractor {
 		return res;
 	}
 	
+	/**
+	 * distribution of time spent over document collections (averaged over users)
+	 * 
+	 * @param testGroup
+	 * @return
+	 */
 	public Map<String, DataStats> timePerDocCollection(TestGroup testGroup) {
 		
 		Map<String, DataStats> res = new HashMap<>();
@@ -242,6 +350,12 @@ public class EventDataExtractor {
 		return res;
 	}
 	
+	/**
+	 * chronologically sorted list of usage events for each participant 
+	 * 
+	 * @param group
+	 * @return
+	 */
 	public Map<Integer, List<UsageEvent>> userHistories(TestGroup group) {
 		
 		Map<Integer, List<UsageEvent>> histories = new HashMap<>();
