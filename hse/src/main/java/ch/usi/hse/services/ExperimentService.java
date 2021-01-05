@@ -13,17 +13,24 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
+import ch.usi.hse.db.entities.DocClickEvent;
 import ch.usi.hse.db.entities.DocCollection;
 import ch.usi.hse.db.entities.Experiment;
 import ch.usi.hse.db.entities.Experimenter;
 import ch.usi.hse.db.entities.Participant;
+import ch.usi.hse.db.entities.QueryEvent;
 import ch.usi.hse.db.entities.SessionEvent;
 import ch.usi.hse.db.entities.TestGroup;
+import ch.usi.hse.db.entities.UsageEvent;
+import ch.usi.hse.db.repositories.DocClickEventRepository;
 import ch.usi.hse.db.repositories.DocCollectionRepository;
 import ch.usi.hse.db.repositories.ExperimentRepository;
 import ch.usi.hse.db.repositories.ExperimenterRepository;
 import ch.usi.hse.db.repositories.ParticipantRepository;
+import ch.usi.hse.db.repositories.QueryEventRepository;
+import ch.usi.hse.db.repositories.SessionEventRepository;
 import ch.usi.hse.db.repositories.TestGroupRepository;
+import ch.usi.hse.db.repositories.UsageEventRepository;
 import ch.usi.hse.exceptions.ConfigParseException;
 import ch.usi.hse.exceptions.ExperimentExistsException;
 import ch.usi.hse.exceptions.ExperimentStatusException;
@@ -57,6 +64,11 @@ public class ExperimentService {
 	private SimpMessagingTemplate simpMessagingTemplate;
 	private ResultWriter resultWriter;
 	private EventDataExtractor dataExtractor;
+	private UsageEventRepository ueRepo;
+	private SessionEventRepository seRepo;
+	private QueryEventRepository qeRepo;
+	private DocClickEventRepository ceRepo;
+	
 	
 	@Autowired
 	public ExperimentService(ExperimentRepository experimentRepo,
@@ -69,7 +81,11 @@ public class ExperimentService {
 							 ExperimentConfigStorage experimentConfigStorage,
 							 SimpMessagingTemplate simpMessagingTemplate,
 							 ResultWriter resultWriter,
-							 EventDataExtractor dataExtractor) {
+							 EventDataExtractor dataExtractor,
+							 UsageEventRepository ueRepo,
+							 SessionEventRepository seRepo,
+							 QueryEventRepository qeRepo,
+							 DocClickEventRepository ceRepo) {
 		
 		this.experimentRepo = experimentRepo;
 		this.testGroupRepo = testGroupRepo;
@@ -81,6 +97,10 @@ public class ExperimentService {
 		this.simpMessagingTemplate = simpMessagingTemplate;
 		this.resultWriter = resultWriter;
 		this.dataExtractor = dataExtractor;
+		this.ueRepo = ueRepo;
+		this.seRepo = seRepo;
+		this.qeRepo = qeRepo;
+		this.ceRepo = ceRepo;
 	}
 	
 	// GENERAL DB OPERATIONS
@@ -630,7 +650,7 @@ public class ExperimentService {
 		
 		ex.setStatus(Experiment.Status.READY);
 		checkReadyStatus(ex);
-		ex.clearUsageEvents();
+		clearUsageEvents(ex);
 		
 		if (ex.getMode().equals(Experiment.Mode.QUALTRICS)) {
 			
@@ -756,6 +776,28 @@ public class ExperimentService {
 			if (! e.getStatus().equals(Experiment.Status.COMPLETE)) {
 				e.setStatus(Experiment.Status.READY);
 			}
+		}
+	}
+	
+	private void clearUsageEvents(Experiment experiment) {
+		
+		experiment.clearUsageEvents();
+		experimentRepo.save(experiment);
+		
+		for (UsageEvent ue : ueRepo.findByExperiment(experiment)) {		
+			ueRepo.delete(ue);
+		}
+		
+		for (SessionEvent se : seRepo.findByExperiment(experiment)) {
+			seRepo.delete(se);
+		}
+		
+		for (QueryEvent qe : qeRepo.findByExperiment(experiment)) {
+			qeRepo.delete(qe);
+		}
+		
+		for (DocClickEvent ce : ceRepo.findByExperiment(experiment)) {
+			ceRepo.delete(ce);
 		}
 	}
 }

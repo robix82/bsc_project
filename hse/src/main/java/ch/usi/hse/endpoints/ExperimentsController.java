@@ -117,7 +117,7 @@ public class ExperimentsController {
 		
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("baseUrl", baseUrl);
-		mav.addObject("dt");
+		mav.addObject("dt", dt);
 		mav.setViewName("exp_run");
 		mav.addObject("experiment", experimentService.findExperiment(expId));
 		

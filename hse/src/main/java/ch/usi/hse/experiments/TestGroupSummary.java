@@ -50,7 +50,7 @@ public class TestGroupSummary {
 			collectionNames.add(c.getName());
 		}
 		
-		participants = testGroup.getParticipants().size();
+		participants = dataExtractor.effectiveUserCount(testGroup);
 		totalQueries = dataExtractor.totalQueries(testGroup);
 		totalClicks = dataExtractor.totalClicks(testGroup);
 		queriesPerUser = dataExtractor.queriesPerUser(testGroup);

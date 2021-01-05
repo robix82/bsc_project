@@ -20,11 +20,15 @@ import ch.usi.hse.db.entities.Experiment;
 import ch.usi.hse.db.entities.Experimenter;
 import ch.usi.hse.db.entities.Participant;
 import ch.usi.hse.db.entities.TestGroup;
+import ch.usi.hse.db.repositories.DocClickEventRepository;
 import ch.usi.hse.db.repositories.DocCollectionRepository;
 import ch.usi.hse.db.repositories.ExperimentRepository;
 import ch.usi.hse.db.repositories.ExperimenterRepository;
 import ch.usi.hse.db.repositories.ParticipantRepository;
+import ch.usi.hse.db.repositories.QueryEventRepository;
+import ch.usi.hse.db.repositories.SessionEventRepository;
 import ch.usi.hse.db.repositories.TestGroupRepository;
+import ch.usi.hse.db.repositories.UsageEventRepository;
 import ch.usi.hse.exceptions.ExperimentExistsException;
 import ch.usi.hse.exceptions.ExperimentStatusException;
 import ch.usi.hse.exceptions.NoSuchExperimentException;
@@ -66,6 +70,18 @@ public class ExperimentServiceTest {
 	@Mock
 	private EventDataExtractor dataExtractor;
 	
+	@Mock
+	private UsageEventRepository ueRepo;
+	
+	@Mock
+	private SessionEventRepository seRepo;
+	
+	@Mock
+	private QueryEventRepository qeRepo;
+	
+	@Mock
+	private DocClickEventRepository ceRepo;
+	
 	private ExperimentService service;
 	
 	private List<Experiment> savedExperiments;
@@ -92,7 +108,11 @@ public class ExperimentServiceTest {
 										experimentConfigStorage,
 										simpMessagingTemplate,
 										resultWriter,
-										dataExtractor);
+										dataExtractor,
+										ueRepo,
+										seRepo,
+										qeRepo,
+										ceRepo);
 		
 		// DocCollections
 		

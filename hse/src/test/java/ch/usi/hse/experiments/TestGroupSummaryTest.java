@@ -101,6 +101,7 @@ public class TestGroupSummaryTest {
 		when(dataExtractor.timePerClick(testGroup)).thenReturn(timePerClick);
 		when(dataExtractor.clicksPerDocCollection(testGroup)).thenReturn(clicksPerDocCollection);
 		when(dataExtractor.timePerDocCollection(testGroup)).thenReturn(timePerDocCollection);
+		when(dataExtractor.effectiveUserCount(testGroup)).thenReturn(2);
 	}
 	
 	@Test
