@@ -1,6 +1,6 @@
-\BOOKMARK [1][-]{section.1}{\(Temporary\) Source Download and Running Application}{}% 1
+\BOOKMARK [1][-]{section.1}{\(Temporary\) Source Download and Deployed Application}{}% 1
 \BOOKMARK [1][-]{section.2}{Employed Technologies}{}% 2
-\BOOKMARK [1][-]{section.3}{Configuration, Build and Deployment}{}% 3
+\BOOKMARK [1][-]{section.3}{Configuration, Build, and Deployment}{}% 3
 \BOOKMARK [2][-]{subsection.3.1}{Dependencies}{section.3}% 4
 \BOOKMARK [2][-]{subsection.3.2}{Configuration Files}{section.3}% 5
 \BOOKMARK [3][-]{subsubsection.3.2.1}{Maven configuration: pom.xml}{subsection.3.2}% 6
@@ -15,13 +15,15 @@
 \BOOKMARK [3][-]{subsubsection.3.4.2}{Load the image and start the application}{subsection.3.4}% 15
 \BOOKMARK [3][-]{subsubsection.3.4.3}{Apache2 configuration}{subsection.3.4}% 16
 \BOOKMARK [1][-]{section.4}{Usage}{}% 17
-\BOOKMARK [2][-]{subsection.4.1}{Users, Roles and their Definition \(.../admin/ui\)}{section.4}% 18
-\BOOKMARK [2][-]{subsection.4.2}{URL lists and Document collections \(.../indexing/ui\)}{section.4}% 19
-\BOOKMARK [2][-]{subsection.4.3}{Experiment Definition \(.../experiments/ui\)}{section.4}% 20
-\BOOKMARK [2][-]{subsection.4.4}{Experiment Configuration \(.../experiments/setup/ui\)}{section.4}% 21
+\BOOKMARK [2][-]{subsection.4.1}{Users, Roles, and their Definition \(/admin/ui\)}{section.4}% 18
+\BOOKMARK [2][-]{subsection.4.2}{URL lists and Document collections \(/indexing/ui\)}{section.4}% 19
+\BOOKMARK [2][-]{subsection.4.3}{Experiment Definition \(/experiments/ui\)}{section.4}% 20
+\BOOKMARK [2][-]{subsection.4.4}{Experiment Configuration \(/experiments/setup/ui\)}{section.4}% 21
 \BOOKMARK [3][-]{subsubsection.4.4.1}{Configuration in stand-alone mode}{subsection.4.4}% 22
 \BOOKMARK [3][-]{subsubsection.4.4.2}{Configuration in Qualtrics mode}{subsection.4.4}% 23
-\BOOKMARK [2][-]{subsection.4.5}{Experiment Execution \(.../experiments/run/ui\)}{section.4}% 24
+\BOOKMARK [2][-]{subsection.4.5}{Experiment Execution \(/experiments/run/ui\)}{section.4}% 24
 \BOOKMARK [2][-]{subsection.4.6}{Setting up a linked Qualtrics survey}{section.4}% 25
 \BOOKMARK [3][-]{subsubsection.4.6.1}{Survey Questions}{subsection.4.6}% 26
 \BOOKMARK [3][-]{subsubsection.4.6.2}{Survey Flow}{subsection.4.6}% 27
+\BOOKMARK [2][-]{subsection.4.7}{Experiment Evaluation and Data Export \(/experiments/eval/ui\)}{section.4}% 28
+\BOOKMARK [3][-]{subsubsection.4.7.1}{Data Representation}{subsection.4.7}% 29
