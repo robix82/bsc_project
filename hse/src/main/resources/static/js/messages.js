@@ -156,6 +156,8 @@ var m_totalTime = $("#m_totalTime").text();
 
 var m_dataSummary = $("#m_dataSummary").text();
 
+var m_results = $("#m_results").text();
+
 
 
 

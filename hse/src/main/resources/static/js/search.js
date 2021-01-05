@@ -5,7 +5,7 @@ $(document).ready(function() {
 	
 	if (searchResultList != null) {
 		
-		$("#resultPropertiesDisplay").text("Showing " + searchResultList.searchResults.length + " results");
+		$("#resultPropertiesDisplay").text(searchResultList.searchResults.length + " " + m_results);
 		$("#search-input").val(searchResultList.queryString);
 	}
 	
