@@ -105,7 +105,6 @@
 \newcommand{\print@empty}[1]{\ifthenelse{\equal{#1}{!blank!}}{}{#1}}
 
 %utilities
-\RequirePackage{color}
 \newcommand{\TODO}[1]{\noindent{\color{red}\textbf{TODO: #1}}}
 \newcommand{\CONTRIBUTION}[1]{
 \hspace{-0.82cm}
@@ -138,7 +137,7 @@
 }
 
 \newcounter{assistants}
-\newcommand*{\assistant}[4][Universit\`a della Svizzera Italiana, Switzerland]{%
+\newcommand*{\coadvisor}[4][Universit\`a della Svizzera Italiana, Switzerland]{%
 \DTLnewrow{committee}
 \ifthenelse{\isempty{#2}}{\DTLnewdbentry{committee}{title}{!blank!}}{%
 \DTLnewdbentry{committee}{title}{#2}}
@@ -166,11 +165,11 @@
 \renewcommand{\maketitle}{%
 \pagenumbering{Alph}\begin{titlepage}
 \thispagestyle{empty}
-\noindent \includegraphics[width=123mm]{logo-info.pdf}
-\hspace{-0.8mm}\rule[3.6mm]{\textwidth-123mm}{0.2pt}
+\noindent \includegraphics[width=80mm]{Other/logo-info.pdf}
+%\hspace{-0.8mm}\rule[3.6mm]{\textwidth-123mm}{0.2pt}
 \vspace{-20mm}
 \begin{flushright}
-{\Large \textsf{Bachelor Project}}
+{\Large \textbf{Bachelor Project}}
 \end{flushright}
 \vspace{1mm}
 \hfill {%
@@ -185,7 +184,7 @@
 %%%%%%%%%%%%%%%% TITLE, SUBTITLE, AUTHOR %%%%%%%%%%%%%%%%
 
 %%% TITLE %%%
-\noindent {\huge {\textsf{\@title}}}
+\noindent {\huge {\textbf{\@title}}}
 %%% (OPTIONAL SUBTITLE) %%%
 \ifthenelse{\boolean{@subtitle}}{ \noindent{\large \\[0.5em]\textsf{\textbf{\@subtitle}}}\\[12mm]}{\\[12mm]}
 %%% AUTHOR %%%
@@ -200,13 +199,12 @@
 
 %%%%%%%%%%%%%%%%  ADVISOR AND ASSISTANT(S) %%%%%%%%%%%%%%%%
 
-\noindent\textsf{\textbf{Advisor}~} \\
+\noindent \textbf{Advisor:~} \\
 \DTLforeach*[\DTLiseq{\type}{r}]{committee}
 {\actitle=title,\first=first,\last=last,\type=type}{
 \hspace{-0.1cm}\textsf{\print@blank{\actitle}\first \ \last~}%
 }
-%\ifthenelse{\value{assistants} > 0}{\hfill \textsf{\textbf{\\Assistant}\ifthenelse{\value{assistants} > 1}{\textsf{\textbf{s}}{}}}}{}\\
-\ifthenelse{\value{assistants} > 0}{\hfill \textsf{\textbf{\\Co-Advisor}\ifthenelse{\value{assistants} > 1}{\textsf{\textbf{s}}{}}}}{}\\
+\ifthenelse{\value{assistants} > 0}{\hfill \textbf{\\Co-advisor:}\ifthenelse{\value{assistants} > 1}{\textsf{\textbf{s}}{}}}{}\\
 \DTLforeach*[\DTLiseq{\type}{a}]{committee}%
 {\actitle=title,\first=first,\last=last,\type=type}{\DTLiffirstrow{}{, }\textsf{\print@blank{\actitle}\first \ \last}%
 }
@@ -254,12 +252,12 @@
 \newcommand{\SIGNATURES}{
 	\begin{tabular}{ll}
 	\hspace{-0.82cm}
-	\textsf{Advisor's approval}{}
-	(\DTLforeach*[\DTLiseq{\type}{r}]{committee}%
+	\textsf{Approved by the advisor on Date: }{}
+	\DTLforeach*[\DTLiseq{\type}{r}]{committee}%
 	{\actitle=title,\first=first,\last=last,\type=type}{%
-	\DTLiffirstrow{}{, }\textsf{\print@blank{\actitle}\first \ \last}):%
+	\DTLiffirstrow{}{, }\textsf{\print@blank{\actitle}}%
 	\hspace{4cm}
-	& \textsf{Date: }
+	& \textsf{ }
 	}
 	\end{tabular}
 	%
