@@ -37,7 +37,7 @@
 
 \abstract { 
 
-     In this project we implement a software toolkit needed for an experiment planned by the \newline
+     In this project we implement a software toolkit for conducting an experiment planned by the \newline
     \emph{Institute~of~Communication~and~Health (ICH)}. The institute is part of the \emph{Faculty of Communication Sciences}
     at the \emph{Universit\`a della Svizzera Italiana}. Health communication is a relatively new and multidisciplinary field, 
     which includes the study and use of communication to inform and affect decision-making at the individual and community 
@@ -48,8 +48,7 @@
     This project seeks to provide the experimental apparatus which will allow the research team to record data and test its hypotheses.
     The project's main tasks are indexing a predefined set of websites, creating a user interface similar to common search engines that
     can be configured to selectively show different subsets of the corpus according to the experimental conditions under investigation
-    and setting up an experimental environment allowing to conduct controlled experiments (e.g. prevent participants from
-    accessing non-corpus sites) and to record salient data such as search logs and click-stream.
+    and setting up an experimental environment allowing to conduct controlled experiments and record salient data such as search logs and click-stream.
 
 }
 \begin{document}
@@ -68,13 +67,13 @@
 Since the beginning of modern science, researchers have needed special tools in order to conduct experiments. These tools consist 
 mainly of devices for taking measurements and triggering phenomena under controlled conditions. Whereas in the past the
 experimental apparatuses comprised almost exclusively physical devices, nowadays increasingly more software is involved.
-The experiment for which the result of my project is going to be used is a case in which the process of 
+The experiment for which the result of my project is going to be used is a case where the process of 
 setting up the experimental conditions and collecting the result data depends heavily on the software toolkit. It is therefore
 essential for the software to be robust and reliable.
 
-My personal motivations Come from two sides: I have a general interest in science and the scientific method, but in practice,
+My personal motivations come from two sides: I have a general interest in science and the scientific method, but in practice,
 rather than as a scientist,
-I see myself as a technician, who in the area of software development seeks to build useful applications.
+I'd see myself as a technician, who in the area of software development seeks to build useful applications.
 In that sense, this project perfectly fits my interests, as it involves the creation of software to be used in the context of
 scientific research.    
 
@@ -90,7 +89,7 @@ scientific research.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Below is a description of the requirements as defined by the advisor. The requirements include three main tasks as well 
-as eight milestones; the milestones are divided into the categories \emph{Must have}, \emph{should have}, and \emph{Nice to have}.
+as eight milestones; the milestones are divided into the categories \emph{must have}, \emph{should have}, and \emph{nice to have}.
 While working on the project, some additional requirements were defined, which are described in section 
 \ref{sec:reqAdditional}.
 
@@ -118,14 +117,14 @@ While working on the project, some additional requirements were defined, which a
 
     \begin{enumerate}
 
-        \item \textbf{(Must have)} A website that simulates a search engine that lets users enter keywords into a search form and
-              returns results (snippets) from a predefined corpus of websites/links, which can then be clicked on / followed.
+        \item \textbf{(Must have)} A website simulating a search engine that lets users enter keywords into a search form and
+              returns results (including snippets) from a predefined corpus of websites/links, which can then be clicked on / followed.
 
         \item \textbf{(Must have)} A result generator and a simple way to configure it (e.g. using a text file) on a per-group
               basis (i.e. participants in Group 1 receive results from lists R1, R2, and R3; Group 2 participants
               receive results from R4, R2, and R3).
 
-        \item \textbf{(Must have)} A report describing the system's setup/installation and architectural design. 
+        \item \textbf{(Must have)} A report describing the system's installation, setup, and architectural design. 
 
         \item \textbf{(Should have)} A result generator that can detect identical, repeated queries (or minor variations of
               otherwise identical queries, detectable via stop word removal and stemming) upon which it will generate the same response.
@@ -194,11 +193,9 @@ stopping the experiment, the participants are logged out, and transient data is 
 The experiment evaluation interface  allows for quick inspection through data summaries and visualizations. Moreover, it allows
 exporting both the raw data and the summaries as files.
 
-\vspace{.5cm}
-
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.8\textwidth]{figures/usage}
+\includegraphics[width=0.7\textwidth]{figures/usage}
 \caption{Typical usage workflow}
 \label{fig:usage}
 \end{figure}
@@ -211,8 +208,8 @@ exporting both the raw data and the summaries as files.
 In order to define the document collections (corpora) to be used during subsequent experiments, 
 an experimenter can upload text files containing lists of web URLs. The files are  stored, so they can be reused 
 for defining multiple document collections. Via a popup menu, a new  document collection can be defined by providing a name, 
-the collection's language the related URL list.
-Clicking on the ''index'' button initiates the indexing process, which includes data download and the creation of an index
+the collection's language, and the related URL list.
+Clicking on the ``index'' button initiates the indexing process, which includes data download and the creation of an index
 data structure for retrieval. The details of the indexing process are explained in section \TODO{link actual section}.
 \textbf{Figure \ref{fig:indexing}} shows the relevant parts of the interface.
 
@@ -243,7 +240,7 @@ data structure for retrieval. The details of the indexing process are explained 
 
 \TODO{describe first doc collection and update screenshot}
 
-The U.I. for experiment setup allows defining the details of an experiment to be carried out. This step involves creating
+The UI for experiment setup allows defining the details of an experiment to be carried out. This step involves creating
 test groups with associated participants and document collections. Groups can be defined either manually or by using 
 an uploaded configuration file. In both cases, the test group configuration can later be edited manually. 
 The interface allows linking each group to a set of previously indexed document collections. 
@@ -261,13 +258,13 @@ The interface allows linking each group to a set of previously indexed document 
 \subsection{Running an Experiment} \label{sec:designExpRun}
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
-The U.I. for experiment execution includes a start/stop/reset button, a timer, and a tabular display 
+The UI for experiment execution includes a start/stop/reset button, a timer, and a tabular display 
 showing the current participant activities. Clicking the start button starts the timer, enables the participants to log in, and
 initiates the data collection process. While the experiment is running, all queries and click carried out by the
 participants are stored as database records including a timestamp, user id, group id, and query/document related data.
 The details of the data collection process are described in section \TODO{link actual section}.
 When the stop button is clicked the participants are logged out and all transient data is saved to the database.
-after the experiment is complete the related evaluation page becomes available.
+After the experiment is complete the related evaluation page becomes available.
 In case something goes wrong, the experiment can be reset. This causes all collected data to be deleted, while the
 experiment's configuration is preserved.
 \textbf{Figure \ref{fig:run}} shows the user interface.
@@ -303,15 +300,15 @@ links accompanied by short summaries (snippets) with highlighted query terms.
 
 After an experiment has been conducted, the  related evaluation interface becomes available. From this page,
 experimenters can inspect the experiment's results and export  the complete raw data
-or preprocessed data summaries. The UI includes visualizations of the most relevant data features.
+or preprocessed data summaries.
 
 The raw data can be exported either in \emph{CSV} or \emph{JSON} format and consists of a list of all user actions that occurred during the experiment. 
 Each record has a timestamp, a user id, and a group id. Query event records include the query text and the proportions in which
 the data collections are represented  in the result list. Document click event records include the document id, its URL, and
-the document collection to which it belongs.
+the collection to which the given document belongs.
 
 The data summaries include overall experiment statistics and per-group statistics. Moreover, the individual user histories can be 
-exported in the same format as the raw data.
+exported in the same formats as the raw data.
 
 
 Per-experiment statistics include the total count of clicks and queries as well as averages, medians, and standard deviations
@@ -320,7 +317,7 @@ for queries per user, clicks per user, clicks per query, time per query, and tim
 Per group statistics include the same metrics as the per-experiment statistics, plus totals, averages, medians, and standard deviations
 for clicks per document collection.
 
-\TODO{describe in more detail}
+\TODO{describe in more detail and/or add screenshot}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
