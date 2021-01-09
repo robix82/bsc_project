@@ -19,6 +19,8 @@
     linktoc=all
 }
 
+\setlength{\parindent}{.3cm}
+
 %%% Main Body %%%
 
 \author{Robert Jans}
@@ -238,17 +240,18 @@ data structure for retrieval. The details of the indexing process are explained 
 \subsection{Setting up an Experiment} \label{sec:designExpSetup}
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
-\TODO{describe first doc collection and update screenshot}
-
 The UI for experiment setup allows defining the details of an experiment to be carried out. This step involves creating
 test groups with associated participants and document collections. Groups can be defined either manually or by using 
 an uploaded configuration file. In both cases, the test group configuration can later be edited manually. 
-The interface allows linking each group to a set of previously indexed document collections. 
+The interface allows linking each group to a set of previously indexed document collections. Optionally a document collection
+can be set for each test group as predefined result list to be returned after the the first query.
+If the experiment is to be executed in the context of a \emph{Qualtrics} survey, the participants don't need to be specified, as they are
+defined while they take part in the survey. 
 \textbf{Figure \ref{fig:setup}} shows this UI.
 
-\begin{figure} [h]
+\begin{figure}[h!]
 \centering
-\includegraphics[width=0.8\textwidth]{figures/setup}
+\includegraphics[width=0.6\textwidth]{figures/setup}
 \caption{U.I. for experiment setup}
 \label{fig:setup}
 \end{figure}
@@ -262,7 +265,7 @@ The UI for experiment execution includes a start/stop/reset button, a timer, and
 showing the current participant activities. Clicking the start button starts the timer, enables the participants to log in, and
 initiates the data collection process. While the experiment is running, all queries and click carried out by the
 participants are stored as database records including a timestamp, user id, group id, and query/document related data.
-The details of the data collection process are described in section \TODO{link actual section}.
+The details of the data collection mechanism are described in section \ref{sec:data}.
 When the stop button is clicked the participants are logged out and all transient data is saved to the database.
 After the experiment is complete the related evaluation page becomes available.
 In case something goes wrong, the experiment can be reset. This causes all collected data to be deleted, while the
@@ -292,8 +295,6 @@ links accompanied by short summaries (snippets) with highlighted query terms.
 \label{fig:searchUi}
 \end{figure}
 
-\TODO{replace screenshot}
-
 %%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Experiment Evaluation} \label{sec:designExpEval}
 %%%%%%%%%%%%%%%%%%%%%%%%%
@@ -309,24 +310,128 @@ the collection to which the given document belongs.
 
 The data summaries include overall experiment statistics and per-group statistics. Moreover, the individual user histories can be 
 exported in the same formats as the raw data.
-
-
 Per-experiment statistics include the total count of clicks and queries as well as averages, medians, and standard deviations
 for queries per user, clicks per user, clicks per query, time per query, and time per click.
-
 Per group statistics include the same metrics as the per-experiment statistics, plus totals, averages, medians, and standard deviations
-for clicks per document collection.
+for clicks per document collection. Details on the raw data format and the computed statistics are described in \ref{sec:data}.
 
-\TODO{describe in more detail and/or add screenshot}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{\textbf{Raw Data Generation and Computed Statistics}} \label{sec:data}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Raw Data Records} \label{sec:dataRaw}
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The usage tracking system is based on generating records whenever a participant performs a relevant action. The application
+distinguishes three kinds of usage events: session events (log in / log out), query events (generated when a participant
+submits a search query), and document click events (generated when a participant visits a page by clicking on an item in the search results list). All usage events include the following data fields:
+
+    \begin{itemize}
+
+        \item
+        A unique id.
+
+        \item
+        A timestamp indicating the precise time when the event occurred.
+
+        \item
+        The id of the participant who triggered the event.
+
+        \item
+        The id and name of the test group which the participant belongs to.
+
+        \item
+        The event type (one of ``SESSION'', ``QUERY'', or ``DOC\_CLICK'').
+
+
+    \end{itemize}
+
+Query events contain the following additional fields:
+
+    \begin{itemize}
+
+        \item
+        The query string entered by the participant.
+
+        \item
+        The total number of results retrieved.
+
+        \item
+        The number of results retrieved from each of the available document collections.
+
+    \end{itemize}
+
+Document click events contain the following additional fields:
+
+    \begin{itemize}
+
+        \item
+        The URL of the corresponding web page.
+
+        \item
+        The document's id assigned during indexing.
+
+        \item
+        The id and name of the document collection the given document belongs to.
+
+        \item
+        The document's rank (i.e. its position within the search results list).
+
+
+    \end{itemize}
+
+The raw data records can be exported via the experiment's evaluation page in \emph{CSV} or
+\emph{JSON} format in order to be used for statistical analysis. Some basic metrics are
+computed by the application, as described in the following subsection, and displayed on the
+evaluation page.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Computed data} \label{sec:dataPerExperiment}
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+For each experiment the following quantities are considered:
+
+    \begin{itemize}
+
+        \item
+        The total number of query events occurred.
+
+        \item
+        The total number of document click events occurred.
+
+        \item
+        Mean, median and standard deviation of the number of queries per user.
+
+        \item
+        Mean, median and standard deviation of the number of document clicks per user.
+
+        \item
+        Mean, median and standard deviation of the number of clicks per query.
+
+        \item
+        Mean, median and standard deviation of the time spent per document \\ (duration between a document click event and the next usage event performed by the same participant)
+
+        \item
+        Mean, median and standard deviation of the time spent per query \\ (duration between a query and the next query or logout).
+
+    \end{itemize}
+
+The same metrics are available for each test group, allowing for interesting comparisons. Moreover, for each test group, the distribution
+of documents visited and time spent over the document collections from which the results are drawn is represented.
+Section \ref{impl:dataSummaries} describes the details of how these measures are computed.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{\textbf{Software Architecture and Employed Frameworks}} \label{sec:arch}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{General} \label{sec:archGeneral}
-%%%%%%%%%%%%%%%%%%%%%%%%%
+The project requirements implied building a web application including a text information retrieval system. Both aspects are highly complex and it would not be reasonable to build such an application completely from scratch, so I
+needed to rely on appropriate libraries and frameworks. As general framework I chose \emph{SpringBoot}, since
+I had used it in past projects and knew that it includes very useful features for handling the main issues related to
+serving web pages, interacting with a database, and providing endpoints for \emph{Ajax} calls and \emph{WebSocket} services.
+For the information retrieval part, I chose \emph{Apache Lucene}, which includes all functionalities needed for indexing and retrieval,
+and since it is a \emph{Java} library, it can be easily integrated into a \emph{SpringBoot} application. As a database management system
+I chose \emph{MySql}, but I could have chosen any similar tool.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{SpringBoot: a Java framework for web applications} \label{sec:archSpring}
@@ -335,6 +440,23 @@ for clicks per document collection.
 %%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Lucene: an Open Source Information Retrieval Library} \label{sec:archLucene}
 %%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Back-end Code Organization} \label{sec:archBackend}
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{\textbf{Implementation details}} \label{sec:impl}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{User Management} \label{impl:users}
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Data Extraction and Summary Generation} \label{impl:dataSummaries}
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{\textbf{Under the Hood: The Information Retrieval Process}} \label{sec:ir}
