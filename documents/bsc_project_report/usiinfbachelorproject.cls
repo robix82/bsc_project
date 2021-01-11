@@ -165,7 +165,7 @@
 \renewcommand{\maketitle}{%
 \pagenumbering{Alph}\begin{titlepage}
 \thispagestyle{empty}
-\noindent \includegraphics[width=80mm]{Other/logo-info.pdf}
+\noindent \includegraphics[width=80mm]{other/logo-info.pdf}
 %\hspace{-0.8mm}\rule[3.6mm]{\textwidth-123mm}{0.2pt}
 \vspace{-20mm}
 \begin{flushright}

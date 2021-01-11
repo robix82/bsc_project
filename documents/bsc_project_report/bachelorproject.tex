@@ -9,6 +9,8 @@
 \usepackage{caption}
 \usepackage{subcaption}
 
+\usepackage[toc,page]{appendix}
+
 \usepackage{color}
 \usepackage{hyperref}
 \hypersetup{
@@ -63,7 +65,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Motivation}
+\subsection{\textbf{Motivation}}
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 Since the beginning of modern science, researchers have needed special tools in order to conduct experiments. These tools consist 
@@ -80,7 +82,7 @@ In that sense, this project perfectly fits my interests, as it involves the crea
 scientific research.    
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Outline}
+\subsection{\textbf{Outline}}
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 \TODO{describe the sections}
@@ -96,7 +98,7 @@ While working on the project, some additional requirements were defined, which a
 \ref{sec:reqAdditional}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Main Tasks} \label{sec:reqTasks}
+\subsection{\textbf{Main Tasks}} \label{sec:reqTasks}
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
     \begin{enumerate}
@@ -114,7 +116,7 @@ While working on the project, some additional requirements were defined, which a
     \end{enumerate} 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Milestones} \label{sec:reqMilestones}
+\subsection{\textbf{Milestones}} \label{sec:reqMilestones}
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
     \begin{enumerate}
@@ -145,7 +147,7 @@ While working on the project, some additional requirements were defined, which a
     \end{enumerate}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Additional Requirements} \label{sec:reqAdditional}
+\subsection{\textbf{Additional Requirements}} \label{sec:reqAdditional}
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{itemize}
@@ -165,7 +167,7 @@ test group). Only subsequent queries will be processed by the search engine.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{General Structure} \label{sec:designGeneral}
+\subsection{\textbf{General Structure}} \label{sec:designGeneral}
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 Given the close relationships between the experiment configuration, conduction, and analysis, I decided to include
@@ -176,7 +178,7 @@ accessing non-corpus sites by restricting the browser to a whitelist based on th
 The following subsections briefly describe the usage modalities and the related user interfaces.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Typical Usage Workflow} \label{sec:designWorkflow}
+\subsection{\textbf{Typical Usage Workflow}} \label{sec:designWorkflow}
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 The typical workflow includes four steps: preparing the document corpora, setting up an experiment, running the experiment,
@@ -204,7 +206,7 @@ exporting both the raw data and the summaries as files.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Defining the Document Corpora} \label{sec:designDefineDocs}
+\subsection{\textbf{Defining the Document Corpora}} \label{sec:designDefineDocs}
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 In order to define the document collections (corpora) to be used during subsequent experiments, 
@@ -237,7 +239,7 @@ data structure for retrieval. The details of the indexing process are explained 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Setting up an Experiment} \label{sec:designExpSetup}
+\subsection{\textbf{Setting up an Experiment}} \label{sec:designExpSetup}
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 The UI for experiment setup allows defining the details of an experiment to be carried out. This step involves creating
@@ -258,7 +260,7 @@ defined while they take part in the survey.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Running an Experiment} \label{sec:designExpRun}
+\subsection{\textbf{Running an Experiment}} \label{sec:designExpRun}
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 The UI for experiment execution includes a start/stop/reset button, a timer, and a tabular display 
@@ -280,7 +282,7 @@ experiment's configuration is preserved.
 \end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Search Interface Available to Participants} \label{sec:designSearchUi}
+\subsection{\textbf{Search Interface Available to Participants}} \label{sec:designSearchUi}
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 The interface available to the participants looks similar to the main page of most known search engines. It simply
@@ -296,7 +298,7 @@ links accompanied by short summaries (snippets) with highlighted query terms.
 \end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Experiment Evaluation} \label{sec:designExpEval}
+\subsection{\textbf{Experiment Evaluation}} \label{sec:designExpEval}
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 After an experiment has been conducted, the  related evaluation interface becomes available. From this page,
@@ -320,7 +322,7 @@ for clicks per document collection. Details on the raw data format and the compu
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Raw Data Records} \label{sec:dataRaw}
+\subsection{\textbf{Raw Data Records}} \label{sec:dataRaw}
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 The usage tracking system is based on generating records whenever a participant performs a relevant action. The application
@@ -387,7 +389,7 @@ computed by the application, as described in the following subsection, and displ
 evaluation page.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Computed data} \label{sec:dataPerExperiment}
+\subsection{\textbf{Computed data}} \label{sec:dataPerExperiment}
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 For each experiment the following quantities are considered:
@@ -421,46 +423,127 @@ The same metrics are available for each test group, allowing for interesting com
 of documents visited and time spent over the document collections from which the results are drawn is represented.
 Section \ref{impl:dataSummaries} describes the details of how these measures are computed.
 
+\newpage
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{\textbf{Software Architecture and Employed Frameworks}} \label{sec:arch}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 The project requirements implied building a web application including a text information retrieval system. Both aspects are highly complex and it would not be reasonable to build such an application completely from scratch, so I
-needed to rely on appropriate libraries and frameworks. As general framework I chose \emph{SpringBoot}, since
+needed to rely on appropriate libraries and frameworks. As a general framework I chose \emph{SpringBoot} 
+(a \emph{Java} framework for web applications) \cite{springBootHome}, since
 I had used it in past projects and knew that it includes very useful features for handling the main issues related to
 serving web pages, interacting with a database, and providing endpoints for \emph{Ajax} calls and \emph{WebSocket} services.
-For the information retrieval part, I chose \emph{Apache Lucene}, which includes all functionalities needed for indexing and retrieval,
+For the information retrieval part, I chose \emph{Apache Lucene} \cite{luceneHome}, which includes all functionalities needed for indexing and retrieval,
 and since it is a \emph{Java} library, it can be easily integrated into a \emph{SpringBoot} application. As a database management system
-I chose \emph{MySql}, but I could have chosen any similar tool.
+I chose \emph{MySql} \cite{MySQLhome}.
+For managing the dependencies and configuring the build process of the SpringBoot application I used the \emph{Apache Maven}
+project management tool, which allows a simple configuration based on a single configuration file (\emph{pom.xml}).
+For an easy and portable deployment I configured \emph{Maven} to create a \emph{Docker} \cite{dockerHome} image when the application is built;
+this makes the configuration and system requirements on the on the production server as simple as possible.  
+For the client-side I used the \emph{jQuery}\cite{jQueryHome} library in order to keep the \emph{JavaScript} code simple
+and having an easy way to perform \emph{AJAX} (Asynchronous JavaScript and XML) calls. I also employed the
+\emph{Bootstrap} \cite{bootstrapHome} toolkit for the graphical aspects of the front-end interfaces.
+The next two subsections explain how the different parts of the system interact.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{SpringBoot: a Java framework for web applications} \label{sec:archSpring}
+\subsection{\textbf{Overall Architecture}} \label{sec:archOverall}
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
-%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Lucene: an Open Source Information Retrieval Library} \label{sec:archLucene}
-%%%%%%%%%%%%%%%%%%%%%%%%%
+The core of the system is the \emph{SpringBoot} application, whose tasks include serving wen content
+(HTML, CSS and JS files) upon HTTP requests, managing users and authentication (users with different roles have access to different interfaces),
+updating database records upon form submissions and \emph{AJAX} calls, managing \emph{WebSocket} services, and
+providing interfaces for uploading and downloading files. \textbf{Figure \ref{fig:archGeneral}} show the
+overall system architecture.
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.6\textwidth]{figures/archGeneral}
+\caption{General System Architecture}
+\label{fig:archGeneral}
+\end{figure}
+
+\subsubsection{\textbf{Serving Web Content}}
+
+For serving web content, the framework leverages the \emph{Thymeleaf} \cite{thymeleafHome} template engine and uses so called \emph{Controller}
+classes for reacting to \emph{HTTP} requests. Within a controller class, methods with
+the annotation \emph{@RequestMapping}, are defined for responding to requests for specific \emph{URL} paths.
+These methods can return either an object of the class \emph{ModelAndView}, allowing to inject
+variables into the templates, or simply a string representing the name of a template file. 
+
+\emph{Thymeleaf} template files consist mainly of \emph{HTML}, but allow also syntax for useful operations to
+be performed server-side, such as including variables (which can be complex \emph{Java} objects),
+selectively include \emph{HTML} elements depending on conditions, include multiple \emph{HTML} elements
+by iterating over a list, or defining reusable elements (fragments), which can be imported in
+multiple other template files. \emph{JavaScript}, \emph{CSS}, and other static files can be included
+using classical \emph{HTML} syntax. The template engine automatically finds and loads the templates as well as
+static files, as long as they are placed in the project's \emph{resources} directory.
+
+\subsubsection{\textbf{REST Endpoints for \emph{Ajax} requests}}
+
+In several parts of the application, the front-end code needs to send information to the
+server (e.g. when defining experiments and test groups), or retrieve
+information from the server (e.g. the current state of an experiment). This is done via
+\emph{Asynchronous JavaScript and XML} (\emph{Ajax}).
+The main advantage of \emph{Ajax} is that it allows interactions between server and client that are independently from
+displaying a web page \cite{ajaxWikipedia}. This makes the application much more efficient, because the alternative would be reloading
+the same page whenever some data must be sent or retrieved.
+There are several possible implementations for \emph{Ajax}, but the one most frequently used nowadays is based on
+\emph{XMLHttpRequest} and transfers data in \emph{JavaScript Object Notation} (\emph{JSON}).
+
+Systems that use \emph{Ajax} for transferring data and consider the semantics of the \emph{HHTP} request's method
+(GET, POST, PUT, DELETE and others) are often referred to as \emph{REST API} or \emph{RESTful} service,
+where \emph{REST} stands for ``Representational State Transfer'' \cite{restWikipedia}. Implementing the
+server-side of such a system can be done quite easily in \emph{SpringBoot}, since it includes a mechanism
+designed specially for this purpose: the \emph{Jackson ObjectMapper} converts \emph{Java objects} to \emph{JSON} strings
+and vice versa, so when writing a \emph{Controller} class, all data is represented in \emph{Java}, while
+the front-end sends and receives \emph{JSON} \cite{baeldungJackson}. 
+
+\subsubsection{WebSocket for interactive communication}
+
+
+\subsubsection{File Upload and Download}
+
+
+\subsection{Interaction with \emph{MySql} database}
+
+
+\subsubsection{Integrating \emph{Lucene} indexing and retrieval}
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Back-end Code Organization} \label{sec:archBackend}
+\subsection{\textbf{Internal Architecture of the \emph{SpringBoot} Application}} \label{sec:archBackend}
 %%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{\textbf{Implementation details}} \label{sec:impl}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{User Management} \label{impl:users}
+\subsection{\textbf{User Management}} \label{impl:users}
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Data Extraction and Summary Generation} \label{impl:dataSummaries}
+\subsection{\textbf{Data Extraction and Summary Generation}} \label{impl:dataSummaries}
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{\textbf{Under the Hood: The Information Retrieval Process}} \label{sec:ir}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+
+\begin{appendices}
+
+\section{The Lucene Information Retrieval Library}
+
+\section{HSE Setup and usage}
+
+
+\end{appendices}
 
 
 \newpage
