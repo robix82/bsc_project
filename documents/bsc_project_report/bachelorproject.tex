@@ -172,6 +172,10 @@ test group). Only subsequent queries will be processed by the search engine.
 
 Given the close relationships between the experiment configuration, conduction, and analysis, I decided to include
 most of the implied functionalities into a single web application, called \emph{HSE (Health Search Engine)}.
+Given that the planned experiments are going to be conducted with Italian-speaking participants and involve
+web documents written in Italian, the user interface is available both in English and Italian, and document
+corpora can be defined in both languages.
+
 The user management functionality of HSE allows participants to access only a search interface, while experimenters
 have access to pages for managing corpora and experiments. If needed, participants can be prevented from
 accessing non-corpus sites by restricting the browser to a whitelist based on the corpus used for a given experiment.
@@ -453,8 +457,9 @@ The next two subsections explain how the different parts of the system interact.
 The core of the system is the \emph{SpringBoot} application, whose tasks include serving wen content
 (HTML, CSS and JS files) upon HTTP requests, managing users and authentication (users with different roles have access to different interfaces),
 updating database records upon form submissions and \emph{AJAX} calls, managing \emph{WebSocket} services, and
-providing interfaces for uploading and downloading files. \textbf{Figure \ref{fig:archGeneral}} show the
-overall system architecture.
+providing interfaces for uploading and downloading files. \textbf{Figure \ref{fig:archGeneral}} summarizes the
+overall system architecture; the following sections explain why various interactions are required and how they are implemented using the
+chosen frameworks and libraries.
 
 \begin{figure}[h!]
 \centering
@@ -499,22 +504,65 @@ designed specially for this purpose: the \emph{Jackson ObjectMapper} converts \e
 and vice versa, so when writing a \emph{Controller} class, all data is represented in \emph{Java}, while
 the front-end sends and receives \emph{JSON} \cite{baeldungJackson}. 
 
-\subsubsection{WebSocket for interactive communication}
+\subsubsection{\textbf{WebSocket for interactive communication}}
+
+Though \emph{Ajax} works perfectly for pulling information from the server to the client or pushing it from the 
+client to the server, the actions can only be triggered on the client-side. But in my application there
+are a few situations in which it must work the other way around. One such case is updating the participant actions displayed to
+experimenters on the experiment's run page during execution: when a user performs a query or clicks on a link 
+the corresponding event is stored on the server, and the experimenter's page must be somehow notified that an event occurred.
+
+The classical way to solve this issue (before the \emph{WebSocket} protocol existed) was to poll for the
+current state. In my case this would have meant performing an \emph{Ajax} call at regular and possibly short intervals 
+(e.g. once a second) in order to retrieve the current state of the experiment (including the participant's action counts)
+and update the displayed data.
+This approach works, but is quite inefficient, since information is transferred and computations are done even if nothing
+has changed.
+
+The \emph{WebSocket} protocol offers an elegant alternative \cite{websocketWikipedia}: it provides full-duplex communication channels
+over a single \emph{TCP} connection by using a modification of the \emph{HTTP} protocol. Including the \emph{WebSocket} functionality
+in a web application is quite simple. In \emph{SpringBoot} it requires adding the dependency for \emph{spring-boot-starter-websocket},
+creating a class which implements the \emph{WebSocketMessageBrokerConfigurer} interface in order to configure the channels, and
+send messages by using the \emph{@SendTo} annotation or an instantiation of \emph{SimpMessagingTemplate}.
+On the front-end, the \emph{SockJs} library provides functions for connecting and subscribing to specific channels, and it is 
+straight-forward to execute any \emph{JavaScript} code whenever a message is received.  
 
 
-\subsubsection{File Upload and Download}
+\subsubsection{\textbf{File Upload and Download}}
 
+In several situation my application must enable uploading files and storing them on the server or downloading files 
+generated on the server to the client system: experimenters need to upload \emph{URL} lists for creating document collections as well as 
+configuration files for defining test groups, and they must be able to download the data collected during an experiment.
 
-\subsection{Interaction with \emph{MySql} database}
+File upload can be done in \emph{Spring} by setting parameter of type \emph{MultipartFile}. This object has a method
+\emph{getInputStream()}, which returns a standard \emph{Java} stream that can be written to the file system e.g. using
+the \emph{java.nio.file.Files} API. File download is equally simple: the \emph{Java InputStream} from a file can be copied to
+the \emph{OutputStream} associated with a \emph{HttpServletResponse} object (passed as parameter to a \emph{Controller} method)
+e.g. using \emph{FileCopyUtils} \cite{springFileUpload}. On the front-end one can upload files via a form including a
+\emph{HTML} input tag with \texttt{type="file"}. Files can be downloaded using a link.
 
+\subsubsection{\textbf{Database interactions with \emph{Spring Data JPA}}}
 
-\subsubsection{Integrating \emph{Lucene} indexing and retrieval}
+The application heavily relies on data storing and retrieving structured data: user data
+needs to be stored for enabling access control, metadata about document collections and experiment settings
+must be stored both for regulating the experiment's execution process, and during execution the participant's
+actions must be logged. The best way for implementing this kind of functionality is by using a
+\emph{Database Management System (DBMS)} which allows for efficient storage and retrieval.
+I chose \emph{MySql} for this purpose because I already had some experience with it, and there is a lot of documentation online on how to 
+interact with it from a \emph{SpringBoot} application.
+
+\subsubsection{\textbf{Integrating \emph{Lucene} indexing and retrieval}}
+
+\subsubsection{\textbf{Application-level multi language support}}
+
+\subsubsection{\textbf{Corpus-level multi language support}}
 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{\textbf{Internal Architecture of the \emph{SpringBoot} Application}} \label{sec:archBackend}
 %%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 
 
