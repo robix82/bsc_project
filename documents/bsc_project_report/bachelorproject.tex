@@ -596,16 +596,16 @@ tightly coupled classes are placed in the same package. My application roughly f
     \end{description}
 
 Functionalities which are used application-wide are to be considered outside the layered structure. These include
-custom exceptions and an exception-handling mechanism (grouped in a package named ``exceptions'', as well as global
-configuration classes grouped in a package named ``config''. \textbf{Figure \ref{fig:archLayers}} shows the
+custom exceptions and an exception-handling mechanism (grouped in a package named ``exceptions''), as well as global
+configuration classes (grouped in a package named ``config''). \textbf{Figure \ref{fig:archLayers}} shows the
 layered architecture of the application: green rectangles represent packages, blue ovals represent classes,
-edges represent connections through instantiation or method calls.
+solid lines represent connections through instantiation or method calls, dashed lines indicate other interactions.
 
 
 \begin{figure}[h!]
 \centering
 \includegraphics[width=0.9\textwidth]{figures/archLayers}
-\caption{Layered architecture of the application}
+\caption{Layered architecture of the back-end application}
 \label{fig:archLayers}
 \end{figure}
 
