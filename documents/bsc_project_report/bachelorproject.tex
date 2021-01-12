@@ -438,11 +438,12 @@ needed to rely on appropriate libraries and frameworks. As a general framework I
 (a \emph{Java} framework for web applications) \cite{springBootHome}, since
 I had used it in past projects and knew that it includes very useful features for handling the main issues related to
 serving web pages, interacting with a database, and providing endpoints for \emph{Ajax} calls and \emph{WebSocket} services.
-For the information retrieval part, I chose \emph{Apache Lucene} \cite{luceneHome}, which includes all functionalities needed for indexing and retrieval,
+For the information retrieval part, I chose \emph{Apache Lucene} \cite{luceneHome} in conjuction with the \emph{Tika} content analysis toolkit \cite{tikaHome}
+(used for text extraction). \emph{Lucene} includes all functionalities needed for indexing and retrieval,
 and since it is a \emph{Java} library, it can be easily integrated into a \emph{SpringBoot} application. As a database management system
 I chose \emph{MySql} \cite{MySQLhome}.
 For managing the dependencies and configuring the build process of the SpringBoot application I used the \emph{Apache Maven}
-project management tool, which allows a simple configuration based on a single configuration file (\emph{pom.xml}).
+project management tool, which allows a simple configuration based on a single file (\emph{pom.xml}).
 For an easy and portable deployment I configured \emph{Maven} to create a \emph{Docker} \cite{dockerHome} image when the application is built;
 this makes the configuration and system requirements on the on the production server as simple as possible.  
 For the client-side I used the \emph{jQuery}\cite{jQueryHome} library in order to keep the \emph{JavaScript} code simple
@@ -454,7 +455,7 @@ The next two subsections explain how the different parts of the system interact.
 \subsection{\textbf{Overall Architecture}} \label{sec:archOverall}
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
-The core of the system is the \emph{SpringBoot} application, whose tasks include serving wen content
+The core of the system is the \emph{SpringBoot} application, whose tasks include serving web content
 (HTML, CSS and JS files) upon HTTP requests, managing users and authentication (users with different roles have access to different interfaces),
 updating database records upon form submissions and \emph{AJAX} calls, managing \emph{WebSocket} services, and
 providing interfaces for uploading and downloading files. \textbf{Figure \ref{fig:archGeneral}} summarizes the
@@ -548,22 +549,65 @@ needs to be stored for enabling access control, metadata about document collecti
 must be stored both for regulating the experiment's execution process, and during execution the participant's
 actions must be logged. The best way for implementing this kind of functionality is by using a
 \emph{Database Management System (DBMS)} which allows for efficient storage and retrieval.
-I chose \emph{MySql} for this purpose because I already had some experience with it, and there is a lot of documentation online on how to 
-interact with it from a \emph{SpringBoot} application.
+I chose \emph{MySql} for this purpose because I already had some experience with it, and there is plenty of documentation online on how to 
+interact with it from a \emph{SpringBoot} application \cite{springJpaReference} \cite{springJpaTutorial}.
+
+In fact \emph{SpringBoot}'s \emph{Data JPA} features allow to define entities as \emph{Java} classes without ever using the \emph{DBMS} directly.
+The library automatically generates the corresponding tables: classes are mapped to tables, and data members are mapped to fields. Also advanced functionalities such as one-to-many or many-to-many realationships
+can be defined in pure \emph{Java}; even inheritance structures are mapped automatically from \emph{Java} to the \emph{DBMS}. The
+details can be configured using annotations.
+Data access is managed via repositories which are defined as \emph{Java} interfaces.
 
 \subsubsection{\textbf{Integrating \emph{Lucene} indexing and retrieval}}
 
-\subsubsection{\textbf{Application-level multi language support}}
-
-\subsubsection{\textbf{Corpus-level multi language support}}
-
-
+The \emph{Lucene} library can be easily added to the project by specifying it as a dependency in the \emph{Maven} configuration.
+Once the library is available, its classes can be instantiated and methods can be called. Both indexing and retrieval can
+be implemented based on classical \emph{Java} data structures. Details on how
+I used the library for the specific needs of my application are described in sections \ref{sec:implIndexing} 
+and \ref{sec:implRetrieval}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{\textbf{Internal Architecture of the \emph{SpringBoot} Application}} \label{sec:archBackend}
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
+\emph{SpringBoot} does not enforce a particular architecture or package structure, but a pattern which I often encountered is a combination
+of a layered structure in which each layer communicates only with the layer directly below, and a package-per-feature structure, where
+tightly coupled classes are placed in the same package. My application roughly follows this approach, using the following layers:
 
+    \begin{description}
+
+        \item[Web Layer]
+        Top layer of the hierarchy, containing \emph{Controller} classes with methods to handle web requests and API calls.
+        This layer contains a single package named ``endpoints''. This layer uses the functionalities provided by the service layer.
+
+        \item[Service Layer]
+        This layer provides abstractions for lower level functionalities such as file access, database interactions user management and
+        implementations of custom features like indexing, retrieval, and experiment configuration / evaluation.
+        Also this layer consists of a single package named ``services'', containing classes for accessing the specific functionalities
+        provided by the implementation layer below.
+
+        \item[Implementation Layer]
+        This layer contains the actual implementation of the features exposed by the service layer, and is divided into packages 
+        grouping related functionalities. The following packages belong to the implementation layer:
+        ``db'' with sub-packages ``entities'' and ``repositories'' (providing access to the \emph{DBMS}), 
+        ``storage'' (containing classes for reading and writing files in several formats),  
+        ``indexing'' and ``retrieval'' (for using the features of the \emph{Lucene} library).
+
+    \end{description}
+
+Functionalities which are used application-wide are to be considered outside the layered structure. These include
+custom exceptions and an exception-handling mechanism (grouped in a package named ``exceptions'', as well as global
+configuration classes grouped in a package named ``config''. \textbf{Figure \ref{fig:archLayers}} shows the
+layered architecture of the application: green rectangles represent packages, blue ovals represent classes,
+edges represent connections through instantiation or method calls.
+
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.9\textwidth]{figures/archLayers}
+\caption{Layered architecture of the application}
+\label{fig:archLayers}
+\end{figure}
 
 
 
@@ -575,6 +619,14 @@ interact with it from a \emph{SpringBoot} application.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{\textbf{User Management}} \label{impl:users}
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{\textbf{Indexing}} \label{sec:implIndexing}
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{\textbf{Retrieal}} \label{sec:implRetrieval}
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
