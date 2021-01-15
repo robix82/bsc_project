@@ -1,35 +1,60 @@
-\contentsline {section}{\numberline {1}\textbf {Introduction}}{3}{section.1}%
-\contentsline {subsection}{\numberline {1.1}\textbf {Motivation}}{3}{subsection.1.1}%
-\contentsline {subsection}{\numberline {1.2}\textbf {Outline}}{3}{subsection.1.2}%
-\contentsline {section}{\numberline {2}\textbf {Requirements}}{3}{section.2}%
-\contentsline {subsection}{\numberline {2.1}\textbf {Main Tasks}}{3}{subsection.2.1}%
-\contentsline {subsection}{\numberline {2.2}\textbf {Milestones}}{3}{subsection.2.2}%
-\contentsline {subsection}{\numberline {2.3}\textbf {Additional Requirements}}{4}{subsection.2.3}%
-\contentsline {section}{\numberline {3}\textbf {Project Design}}{4}{section.3}%
-\contentsline {subsection}{\numberline {3.1}\textbf {General Structure}}{4}{subsection.3.1}%
-\contentsline {subsection}{\numberline {3.2}\textbf {Typical Usage Workflow}}{4}{subsection.3.2}%
-\contentsline {subsection}{\numberline {3.3}\textbf {Defining the Document Corpora}}{4}{subsection.3.3}%
-\contentsline {subsection}{\numberline {3.4}\textbf {Setting up an Experiment}}{4}{subsection.3.4}%
-\contentsline {subsection}{\numberline {3.5}\textbf {Running an Experiment}}{5}{subsection.3.5}%
-\contentsline {subsection}{\numberline {3.6}\textbf {Search Interface Available to Participants}}{5}{subsection.3.6}%
-\contentsline {subsection}{\numberline {3.7}\textbf {Experiment Evaluation}}{5}{subsection.3.7}%
-\contentsline {section}{\numberline {4}\textbf {Raw Data Generation and Computed Statistics}}{6}{section.4}%
-\contentsline {subsection}{\numberline {4.1}\textbf {Raw Data Records}}{6}{subsection.4.1}%
-\contentsline {subsection}{\numberline {4.2}\textbf {Computed data}}{7}{subsection.4.2}%
-\contentsline {section}{\numberline {5}\textbf {Software Architecture and Employed Frameworks}}{9}{section.5}%
-\contentsline {subsection}{\numberline {5.1}\textbf {Overall Architecture}}{9}{subsection.5.1}%
-\contentsline {subsubsection}{\numberline {5.1.1}\textbf {Serving Web Content}}{10}{subsubsection.5.1.1}%
-\contentsline {subsubsection}{\numberline {5.1.2}\textbf {REST Endpoints for \emph {Ajax} requests}}{10}{subsubsection.5.1.2}%
-\contentsline {subsubsection}{\numberline {5.1.3}\textbf {WebSocket for interactive communication}}{10}{subsubsection.5.1.3}%
-\contentsline {subsubsection}{\numberline {5.1.4}\textbf {File Upload and Download}}{10}{subsubsection.5.1.4}%
-\contentsline {subsubsection}{\numberline {5.1.5}\textbf {Database interactions with \emph {Spring Data JPA}}}{11}{subsubsection.5.1.5}%
-\contentsline {subsubsection}{\numberline {5.1.6}\textbf {Integrating \emph {Lucene} indexing and retrieval}}{11}{subsubsection.5.1.6}%
-\contentsline {subsection}{\numberline {5.2}\textbf {Internal Architecture of the \emph {SpringBoot} Application}}{11}{subsection.5.2}%
-\contentsline {section}{\numberline {6}\textbf {Implementation details}}{12}{section.6}%
-\contentsline {subsection}{\numberline {6.1}\textbf {User Management}}{12}{subsection.6.1}%
-\contentsline {subsection}{\numberline {6.2}\textbf {Indexing}}{12}{subsection.6.2}%
-\contentsline {subsection}{\numberline {6.3}\textbf {Retrieal}}{12}{subsection.6.3}%
-\contentsline {subsection}{\numberline {6.4}\textbf {Data Extraction and Summary Generation}}{12}{subsection.6.4}%
-\contentsline {section}{Appendices}{13}{section*.10}%
-\contentsline {section}{\numberline {A}The Lucene Information Retrieval Library}{13}{appendix.1.A}%
-\contentsline {section}{\numberline {B}HSE Setup and usage}{13}{appendix.1.B}%
+\contentsline {section}{\numberline {1}\textbf {Introduction}}{4}{section.1}%
+\contentsline {subsection}{\numberline {1.1}\textbf {Motivation}}{4}{subsection.1.1}%
+\contentsline {subsection}{\numberline {1.2}\textbf {Outline}}{4}{subsection.1.2}%
+\contentsline {section}{\numberline {2}\textbf {Requirements}}{4}{section.2}%
+\contentsline {subsection}{\numberline {2.1}\textbf {Main Tasks}}{4}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}\textbf {Milestones}}{4}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}\textbf {Additional Requirements}}{5}{subsection.2.3}%
+\contentsline {section}{\numberline {3}\textbf {Project Design}}{5}{section.3}%
+\contentsline {subsection}{\numberline {3.1}\textbf {General Structure}}{5}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}\textbf {Typical Usage Workflow}}{5}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}\textbf {Defining the Document Corpora}}{5}{subsection.3.3}%
+\contentsline {subsection}{\numberline {3.4}\textbf {Setting up an Experiment}}{5}{subsection.3.4}%
+\contentsline {subsection}{\numberline {3.5}\textbf {Running an Experiment}}{6}{subsection.3.5}%
+\contentsline {subsection}{\numberline {3.6}\textbf {Search Interface Available to Participants}}{6}{subsection.3.6}%
+\contentsline {subsection}{\numberline {3.7}\textbf {Experiment Evaluation}}{6}{subsection.3.7}%
+\contentsline {section}{\numberline {4}\textbf {Raw Data Generation and Computed Statistics}}{7}{section.4}%
+\contentsline {subsection}{\numberline {4.1}\textbf {Raw Data Records}}{7}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}\textbf {Computed data}}{8}{subsection.4.2}%
+\contentsline {section}{\numberline {5}\textbf {Software Architecture and Employed Frameworks}}{10}{section.5}%
+\contentsline {subsection}{\numberline {5.1}\textbf {Overall Architecture}}{10}{subsection.5.1}%
+\contentsline {subsubsection}{\numberline {5.1.1}\textbf {Serving Web Content}}{11}{subsubsection.5.1.1}%
+\contentsline {subsubsection}{\numberline {5.1.2}\textbf {REST Endpoints for \emph {Ajax} requests}}{11}{subsubsection.5.1.2}%
+\contentsline {subsubsection}{\numberline {5.1.3}\textbf {WebSocket for interactive communication}}{11}{subsubsection.5.1.3}%
+\contentsline {subsubsection}{\numberline {5.1.4}\textbf {File Upload and Download}}{11}{subsubsection.5.1.4}%
+\contentsline {subsubsection}{\numberline {5.1.5}\textbf {Database interactions with \emph {Spring Data JPA}}}{12}{subsubsection.5.1.5}%
+\contentsline {subsubsection}{\numberline {5.1.6}\textbf {Integrating \emph {Lucene} indexing and retrieval}}{12}{subsubsection.5.1.6}%
+\contentsline {subsection}{\numberline {5.2}\textbf {Internal Architecture of the \emph {SpringBoot} Application}}{12}{subsection.5.2}%
+\contentsline {section}{\numberline {6}\textbf {Implementation details}}{13}{section.6}%
+\contentsline {subsection}{\numberline {6.1}\textbf {User Management}}{13}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}\textbf {Indexing}}{13}{subsection.6.2}%
+\contentsline {subsection}{\numberline {6.3}\textbf {Retrieal}}{13}{subsection.6.3}%
+\contentsline {subsection}{\numberline {6.4}\textbf {Data Extraction and Summary Generation}}{13}{subsection.6.4}%
+\contentsline {section}{Appendices}{14}{section*.10}%
+\contentsline {section}{\numberline {A}Configuration, Build, and Deployment (from HSE Setup and Usage Guide)}{14}{appendix.1.A}%
+\contentsline {subsection}{\numberline {A.1}Dependencies}{14}{subsection.1.A.1}%
+\contentsline {subsection}{\numberline {A.2}Configuration Files}{14}{subsection.1.A.2}%
+\contentsline {subsubsection}{\numberline {A.2.1}Maven configuration: pom.xml}{14}{subsubsection.1.A.2.1}%
+\contentsline {subsubsection}{\numberline {A.2.2}Specific configurations in \texttt {.properties} files}{14}{subsubsection.1.A.2.2}%
+\contentsline {subsubsection}{\numberline {A.2.3}docker-compose.yml}{14}{subsubsection.1.A.2.3}%
+\contentsline {subsection}{\numberline {A.3}Creating a local build}{14}{subsection.1.A.3}%
+\contentsline {subsubsection}{\numberline {A.3.1}Preparing the database}{14}{subsubsection.1.A.3.1}%
+\contentsline {subsubsection}{\numberline {A.3.2}Issuing the build command}{15}{subsubsection.1.A.3.2}%
+\contentsline {subsubsection}{\numberline {A.3.3}Running the application}{15}{subsubsection.1.A.3.3}%
+\contentsline {subsection}{\numberline {A.4}Example deployment on \emph {Ubuntu Server} with \emph {Apache2}}{15}{subsection.1.A.4}%
+\contentsline {subsubsection}{\numberline {A.4.1}Create and transfer the \emph {Docker} image}{15}{subsubsection.1.A.4.1}%
+\contentsline {subsubsection}{\numberline {A.4.2}Load the image and start the application}{15}{subsubsection.1.A.4.2}%
+\contentsline {subsubsection}{\numberline {A.4.3}Apache2 configuration}{16}{subsubsection.1.A.4.3}%
+\contentsline {section}{\numberline {B}Usage (from HSE Setup and Usage Guide)}{16}{appendix.1.B}%
+\contentsline {subsection}{\numberline {B.1}Users, Roles, and their Definition \small {(/admin/ui)}}{16}{subsection.1.B.1}%
+\contentsline {subsection}{\numberline {B.2}URL lists and Document collections \small {(/indexing/ui)}}{16}{subsection.1.B.2}%
+\contentsline {subsection}{\numberline {B.3}Experiment Definition \small {(/experiments/ui)}}{17}{subsection.1.B.3}%
+\contentsline {subsection}{\numberline {B.4}Experiment Configuration \small {(/experiments/setup/ui)}}{17}{subsection.1.B.4}%
+\contentsline {subsubsection}{\numberline {B.4.1}Configuration in stand-alone mode}{18}{subsubsection.1.B.4.1}%
+\contentsline {subsubsection}{\numberline {B.4.2}Configuration in Qualtrics mode}{19}{subsubsection.1.B.4.2}%
+\contentsline {subsection}{\numberline {B.5}Experiment Execution \small {(/experiments/run/ui)}}{19}{subsection.1.B.5}%
+\contentsline {subsection}{\numberline {B.6}Setting up a linked Qualtrics survey}{20}{subsection.1.B.6}%
+\contentsline {subsubsection}{\numberline {B.6.1}Survey Questions}{20}{subsubsection.1.B.6.1}%
+\contentsline {subsubsection}{\numberline {B.6.2}Survey Flow}{21}{subsubsection.1.B.6.2}%
+\contentsline {subsection}{\numberline {B.7}Experiment Evaluation and Data Export \small {(/experiments/eval/ui)}}{23}{subsection.1.B.7}%
+\contentsline {subsubsection}{\numberline {B.7.1}Data Representation}{23}{subsubsection.1.B.7.1}%
