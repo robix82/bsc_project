@@ -584,7 +584,7 @@ tightly coupled classes are placed in the same package. My application roughly f
         This layer provides abstractions for lower level functionalities such as file access, database interactions user management and
         implementations of custom features like indexing, retrieval, and experiment configuration / evaluation.
         Also this layer consists of a single package named ``services'', containing classes for accessing the specific functionalities
-        provided by the implementation layer below.
+        provided by the data access and processing layer below.
 
         \item[Data / Processing Layer]
         This layer contains the actual implementation of the features exposed by the service layer, and is divided into packages 
@@ -600,6 +600,7 @@ custom exceptions and an exception-handling mechanism (grouped in a package name
 configuration classes (grouped in a package named ``config''). \textbf{Figure \ref{fig:archLayers}} shows the
 layered architecture of the application: green rectangles represent packages, blue ovals represent classes,
 solid lines represent connections through instantiation or method calls, dashed lines indicate other interactions.
+In the following subsections I describe each layer in more detail.
 
 
 \begin{figure}[h!]
@@ -609,7 +610,29 @@ solid lines represent connections through instantiation or method calls, dashed 
 \label{fig:archLayers}
 \end{figure}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{\textbf{The Web Layer: Controller Classes for Handling \emph{HTTP} requests}} \label{sec:archWebLayer}
+%%%%%%%%%%%%%%%%%%%%%%%%%
 
+The \emph{Web Layer} contains the single package \texttt{endpoints}; functionalities are split into classes depending on the
+user interface from which they are supposed to be called, which also determins the services they depend on.
+The \texttt{endpoints} package contains the following classes:
+\texttt{AdminController},
+\texttt{AuthController},
+\texttt{ExperimentsController},
+\texttt{FromSurveyController},
+\texttt{IndexingController},
+\texttt{SearchController}.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{\textbf{The Service Layer: Service Classes Providing the Core Functionalities}} \label{sec:archServiceLayer}
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{\textbf{The Data / Processing Layer: Implementation of the Core Functionalities}} \label{sec:archDataLayer}
+%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 
@@ -626,12 +649,22 @@ solid lines represent connections through instantiation or method calls, dashed 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{\textbf{Retrieal}} \label{sec:implRetrieval}
+\subsection{\textbf{Retrieval}} \label{sec:implRetrieval}
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{\textbf{Data Extraction and Summary Generation}} \label{impl:dataSummaries}
 %%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{\textbf{Future Work}} \label{sec:futureWork}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{\textbf{Conclusions}} \label{sec:conclusions}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 \newpage
