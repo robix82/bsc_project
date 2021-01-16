@@ -615,15 +615,101 @@ In the following subsections I describe each layer in more detail.
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 The \emph{Web Layer} contains the single package \texttt{endpoints}; functionalities are split into classes depending on the
-user interface from which they are supposed to be called, which also determins the services they depend on.
+user interface from which they are supposed to be called and the services they depend on.
 The \texttt{endpoints} package contains the following classes:
 \texttt{AdminController},
 \texttt{AuthController},
 \texttt{ExperimentsController},
-\texttt{FromSurveyController},
-\texttt{IndexingController},
+\texttt{FromSurveyController}, \\
+\texttt{IndexingController}, and
 \texttt{SearchController}.
 
+\subsubsection{\textbf{AdminController}}
+
+The class \texttt{AdminController} handles requests to \emph{URL}s with prefix ``\texttt{/admin}'' available to users with \texttt{Administrator} role.
+The functionalities of this controller include serving the \texttt{admin} \emph{UI} page and reacting to \emph{Ajax} requests coming from it.
+The purpose of this interface is creating, updating or removing administrators, experimenters, 
+and participants by using methods of the \texttt{UserService} class
+from the service layer. For details on users and their roles see section \ref{sec:implUsers}.
+
+The class contains the following public methods:
+
+    \begin{description}
+
+        \item[\texttt{getAdminUi}]
+        (annotated with \texttt{@GetMapping("/ui")}) serves the \texttt{admin} \emph{UI} page. It takes no explicit parameters and returns an object
+        of class \texttt{ModelAndView}. The lists of all users, separated by role, are added to the returned object as template variables.
+
+        \item[\texttt{postAdministrator}]
+        (annotated with \texttt{@PostMapping("/administrators")}) takes a parameter of type \texttt{Administrator},
+        which is passed as request body in an \emph{Ajax} \emph{POST} request. It adds
+        the corresponding new administrator to the database by calling the \texttt{UserService} and returns a \texttt{ResponseEntity}
+        containing the newly created user. 
+
+        \item[\emph{POST} mappings for \texttt{Experimenter} and \texttt{Participant}] analogous to the \texttt{postAdministrator} method
+        described above, but for handling users with \texttt{Experimenter} or \texttt{Participant} role.
+
+        \item[\texttt{putAdministrator}] 
+        (annotated with \texttt{@PutMapping("/administrators")}) takes a parameter of type \texttt{Administrator},
+        which is passed as request body in an \emph{Ajax} \emph{PUT} request. It updates the corresponding
+        user in the database (e.g. changing the user name or password) and returns the updated object wrapped
+        in a \texttt{ResponseEntity}.
+
+        \item[\emph{PUT} mappings for \texttt{Experimenter} and \texttt{Participant}] analogous to  the \texttt{putAdministrator} method
+        described above, but for handling users with \texttt{Experimenter} or \texttt{Participant} role.
+
+        \item[\texttt{deleteAdministrator}]
+        (annotated with \texttt{@DeleteMapping("/administrators")}) takes a parameter of type \texttt{Administrator},
+        which is passed as request body in an \emph{Ajax} \emph{DELETE} request. The corresponding user is
+        deleted from the database. The method returns a \texttt{ResponseEntity} containing the deleted user.
+
+        \item[\emph{DELETE} mappings for \texttt{Experimenter} and \texttt{Participant}] analogous to  the \texttt{deleteAdministrator} method
+        described above, but for handling users with \texttt{Experimenter} or \texttt{Participant} role.
+
+        \item[delteAllExperimenters] 
+        (annotated with \texttt{@DeleteMapping("/experimenters/all")}) takes no explicit parameters and removes all
+        users with \texttt{Experimenter} role from the database. The method returns a \texttt{ResponseEntity} containing a string
+        to confirm that the operation has succeeded.
+
+        \item[delteAllParticipants]
+        Same as the method described above, but for deleting all users with \texttt{Participant} role.
+
+    \end{description}
+
+\subsubsection{\textbf{AuthController}}
+
+This is a minimal controller class containing a single method for serving the login page. \\ The method returns
+an object of class \texttt{ModelAndView}.
+
+\subsubsection{\textbf{ExperimentsController}}
+
+The class \texttt{AdminController} handles requests to \emph{URL}s with prefix ``\texttt{/experiments}'' available to users with \\ \texttt{Administrator}
+or \texttt{Experimenter} role. Its purposes are serving the \emph{UI} pages for creating, configuring, running, and evaluating
+experiments, and handling the related \emph{Ajax} requests. For performing these operation, the class uses the functionalities
+provided by the \texttt{ExperimentService} and \texttt{UserService} from the service layer. 
+
+    \begin{description}
+
+        \item[Serving The \emph{UI} Pages]
+        The pages for managing experiments are served via the methods \texttt{getExperimentsUi()}, 
+        \\ \texttt{getExperimentsSetupUi()},
+        \texttt{getExperimentsUi()}, \texttt{getExperimentsRunUi()}, and \texttt{getExperimentsEvalUi()}.
+        The first method takes no explicit parameters, while the others require the experiment's id to be passed as a \texttt{URL}
+        parameter in the \texttt{HTTP} request because the corresponding pages relate to a single experiment at a time.
+        All four methods return an object of class \texttt{ModelAndView}.
+
+        \item[REST API for creating, updating and deleting experiments]
+        Experiments can be created, updated and deleted via \emph{AJAX} calls using the \texttt{HTTP} methods
+        \emph{POST}, \emph{PUT}, and \emph{DELETE} and providing the experiment object as request body. For
+        details on the structure of \texttt{Experiment} objects see section \ref{sec:implExperiments}.
+
+        The methods responsible for these actions are \texttt{postExperiment}, \texttt{putExperiment}, and
+        \texttt{deleteExperiment}, each taking a parameter of type \texttt{Experiment} and returning an
+        object of the same type wrapped in a \texttt{ResponseEntity}.
+
+    \end{description}
+
+\subsubsection{\textbf{FromSurveyController}}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
@@ -641,7 +727,11 @@ The \texttt{endpoints} package contains the following classes:
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{\textbf{User Management}} \label{impl:users}
+\subsection{\textbf{User Management}} \label{sec:implUsers}
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{\textbf{Experiment Representation}} \label{sec:implExperiments}
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
