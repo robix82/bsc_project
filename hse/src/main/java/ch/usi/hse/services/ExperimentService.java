@@ -631,6 +631,15 @@ public class ExperimentService {
 		return updated;
 	}
 
+	/**
+	 * Resets an experiment. All usage events are deleted
+	 * and the state is set to READY 
+	 * 
+	 * @param experiment
+	 * @return
+	 * @throws NoSuchExperimentException
+	 * @throws ExperimentStatusException
+	 */
 	public Experiment resetExperiment(Experiment experiment) 
 			throws NoSuchExperimentException, ExperimentStatusException {
 		

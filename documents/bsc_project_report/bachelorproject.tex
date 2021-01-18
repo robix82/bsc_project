@@ -542,7 +542,7 @@ the \emph{OutputStream} associated with a \emph{HttpServletResponse} object (pas
 e.g. using \emph{FileCopyUtils} \cite{springFileUpload}. On the front-end one can upload files via a form including a
 \emph{HTML} input tag with \texttt{type="file"}. Files can be downloaded using a link.
 
-\subsubsection{\textbf{Database interactions with \emph{Spring Data JPA}}}
+\subsubsection{\textbf{Database interactions with \emph{Spring Data JPA}}} \label{sec:archOverallDb}
 
 The application heavily relies on data storing and retrieving structured data: user data
 needs to be stored for enabling access control, metadata about document collections and experiment settings
@@ -989,54 +989,248 @@ The \texttt{ExperimentService} provides all functionalities related to experimen
 configuration, execution, and evaluation. The class interacts mainly with the \texttt{experiments} and \texttt{db}
 packages. Following are its public methods:
 
-\begin{description}
+    \begin{description}
 
-    \item[\texttt{List<Experiment> allExperiments()}] returns all defined experiments.
+        \item[\texttt{List<Experiment> allExperiments()}] returns all defined experiments.
 
-    \item[\texttt{Experiment findExperiment(int id)}] returns a saved experiment given its id.
+        \item[\texttt{Experiment findExperiment(int id)}] returns a saved experiment given its id.
 
-    \item[\texttt{TestGroup findTestGroup(int id)}] returns a saved test group given its id.
+        \item[\texttt{TestGroup findTestGroup(int id)}] returns a saved test group given its id.
 
-    \item[\texttt{List<Experiment> findByExperimenter(Experimenter experimenter)}] returns all saved
-        experiments belonging to the given experimenter.
+        \item[\texttt{List<Experiment> findByExperimenter(Experimenter experimenter)}] returns all saved
+            experiments belonging to the given experimenter.
 
-    \item[\texttt{Experiment addExperiment(Experiment experiment)}] adds a new experiment to the database.
+        \item[\texttt{Experiment addExperiment(Experiment experiment)}] adds a new experiment to the database.
 
-    \item[\texttt{Experiment updateExperiment(Experiment experiment)}] updates an existing experiment.
+        \item[\texttt{Experiment updateExperiment(Experiment experiment)}] updates an existing experiment.
 
-    \item[\texttt{void deleteExperiment(Experiment experiment)}] deletes an existing experiment.
+        \item[\texttt{void deleteExperiment(Experiment experiment)}] deletes an existing experiment.
 
-    \item[\texttt{TestGroup addTestGroup(TestGroup testGroup)}] adds a new test group to the database.
+        \item[\texttt{TestGroup addTestGroup(TestGroup testGroup)}] adds a new test group to the database.
 
-    \item[\texttt{TestGroup updateTestGroup(TestGroup testGroup)}] updates an existing test group.
+        \item[\texttt{TestGroup updateTestGroup(TestGroup testGroup)}] updates an existing test group.
 
-    \item[\texttt{void deleteTestGroup(TestGroup testGroup)}] deletes an existing test group.
+        \item[\texttt{void deleteTestGroup(TestGroup testGroup)}] deletes an existing test group.
 
-    \item[\texttt{Experiment configureTestGroups(Experiment experiment, String configFileName)}] 
-        defines the test groups and participants for the given experiment, based on the configuration file specified by its file name.
+        \item[\texttt{Experiment configureTestGroups(Experiment experiment, String configFileName)}] 
+            defines the test groups and participants for the given experiment, based on the configuration file specified by its file name.
 
-    \item[\texttt{List<DocCollection> getIndexedDocCollections()}] returns all indexed (therefore usable) document collections.
+        \item[\texttt{List<DocCollection> getIndexedDocCollections()}] returns all indexed (therefore usable) document collections.
 
-    \item[\texttt{List<String> savedConfigFiles()}] returns the names of all available configuration files.
+        \item[\texttt{List<String> savedConfigFiles()}] returns the names of all available configuration files.
 
-    \item[\texttt{void addConfigFile(MultipartFile file)}] stores an uploaded configuration file.
+        \item[\texttt{void addConfigFile(MultipartFile file)}] stores an uploaded configuration file.
 
-    \item[\texttt{void removeConfigFile(String fileName}] deletes a stored configuration file given its file name.
+        \item[\texttt{void removeConfigFile(String fileName)}] deletes a stored configuration file given its file name.
 
-    \item[\texttt{InputStream getConfigFile(String fileName)}] returns the \texttt{InputStream} from a configuration file given its name 
-            (making it available for download).
+        \item[\texttt{InputStream getConfigFile(String fileName)}] returns the \texttt{InputStream} from a configuration file given its name 
+                    (making it available for download).
 
+        \item[\texttt{Experiment startExperiment(Experiment experiment)}] starts an experiment's execution. The related participants are enabled
+                    to log in and the experiment's data fields is updated.
 
+        \item[\texttt{Experiment stopExperiment(Experiment experiment)}] starts an experiment's execution. The related participants are 
+                    logged out and the experiment's data fields is updated.
 
-\end{description}
+        \item[\texttt{Experiment resetExperiment(Experiment experiment)}] All related usage events are deleted
+	                and the experiment's state is set to READY.
+
+        \item[\texttt{InputStream rawResultsCsv(Experiment experiment)}] makes the experiment's collected raw data available
+                    as \texttt{InputStream} for download in \emph{CSV} format.
+
+        \item[\texttt{InputStream rawResultsJson(Experiment experiment)}] makes the experiment's collected raw data available
+                    as \texttt{InputStream} for download in \emph{JSON} format.
+
+        \item[\texttt{InputStream summaryJson(Experiment experiment)}] makes a summary of the experiments data (see section \ref{impl:dataSummaries})
+                    available as \texttt{InputStream} for download in \emph{JSON} format.
+
+        \item[\texttt{InputStream userHistoriesCsv(int groupId)}] makes the individual usage histories of each participant
+                    belonging to the given test group available as \texttt{InputStream} for download in form of a \emph{.zip}
+                    directory containing per-user \emph{CSV} files.
+
+        \item[\texttt{InputStream userHistoriesJson(Experiment experiment)}] makes the usage histories of all participants
+                    in the experiment available as \texttt{InputStream} for download in \emph{JSON} format.
+
+        \item[\texttt{ExperimentSummary experimentSummary(Experiment experiment)}] returns a summary of the experiment's collected data
+                    as \emph{Java} object.
+
+    \end{description}
 
 
 \subsubsection{\textbf{HseUserDetailsService}}
+
+\texttt{HseUserDetailsService} is an auxiliary service class needed for the security configuration in the
+\texttt{config} package. Its purpose is to define the relation between the custom user class \texttt{HseUser} 
+and the user management system internal to the \emph{Spring} framework. It implements the framework's
+interface \texttt{UserDetailsService} with the method \texttt{loadUserByUsername(String userName)}.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{\textbf{The Data / Processing Layer: Implementation of the Core Functionalities}} \label{sec:archDataLayer}
 %%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsubsection{\textbf{Interactions with the data base (package \texttt{db})}} \label{sec:archDataLayerDb}
+
+As mentioned in section \ref{sec:archOverallDb}, access to the \emph{MySQL} database is managed via \emph{SpringBoot}'s
+\emph{Data JPA} features. It's general working principle is to define entities as \emph{Java} classes annotated
+with \texttt{@Entity} and allow transactions via \emph{Java} interfaces annotated with \texttt{@Repository},
+extending the \texttt{CrudRepository} interface defined in the framework. 
+I grouped the entities in the sub-package \texttt{db.enities} and the
+interfaces in the sub-package \texttt{db.repositories}.
+
+Below is a list of all defined entities, grouped according to the feature sets they are related to:
+
+    \begin{description}
+
+        \item[Entities for user management] the following classes define the different user types and roles 
+
+            \begin{itemize}
+
+                \item \texttt{HseUser}: super-class for the user class hierarchy. It contains fields pertinent to all
+                    user entities (administrators, experimenters, and participants). The fields include a unique id, a user name, a password
+                    a boolean indicating whether the given user is active, as well as a one-to-many relation to entities
+                    of type \texttt{Role}.
+
+                \item \texttt{Administrator}: subclass of \texttt{HseUser} with no additional fields.
+
+                \item \texttt{Experimenter}: subclass of \texttt{HseUser} with a one-to-many relation to a set of \texttt{Experiment} entities.
+
+                \item \texttt{Participant}: subclass of \texttt{HseUser} with a many-to-one relation to a \texttt{TestGroup} entity and
+                    several data fields needed during experiment execution and evaluation. The fields include the id and name of the experiment
+                    and the test group which the participant belongs to, a boolean indicating whether the participant is currently online,
+                    counters for submitted queries and visited documents, and strings storing the first and last query submitted. There
+                    is also a field which is used only if the experiment is conducted in the context of a \emph{Qualtrics} survey,
+                    which stores the \emph{URL} to which the user is going to be redirected at the end of the experiment.
+
+                \item \texttt{Role} Roles are defined as separate entities, so if needed, multiple roles can be assigned to the same user.
+
+            \end{itemize}
+
+        \item[Entities for managing experiments] the following classes represent entities related to experiments:
+
+            \begin{itemize}
+
+                \item \texttt{Experiment}: this entity contains fields for the experiment's metadata and relations to test groups 
+                    (which in turn are related to participants), usage events, and the assigned experimenter. The data fields include a unique id, 
+                    a title, a status (enum with values NOT\_READY, READY, RUNNING, or COMPLETE), a mode
+                    (enum with values STAND\_ALONE, or QUALTRICS), the date when the experiment was created, the date when it was conducted,
+                    its start and stop time, and its duration.
+
+                \item \texttt{TestGroup}: an entity representing a test group within an experiment. It has a many-to-one relation
+                    to an experiment, a one-to-many relation to a set of participants, a one-to-many relation to 
+                    the associated document collections, and several fields for holding relevant metadata.
+                    The fields include a unique id and a name. 
+                     
+                \item \texttt{DocCollection}: an entity for holdin data related to document collections. Its data fields
+                    include an id, a name, a language (IT or EN), the file name of the \emph{URL} list the collection is based on,
+                    a boolean indicating whether the collection has been indexed, and the name of the directory where the
+                    associated \emph{Lucene} index is stored.
+
+            \end{itemize}
+
+        \item[Entities for storing usage events] the following classes represent entities needed by the usage logging mechanism: 
+
+            \begin{itemize}
+
+                \item \texttt{UsageEvent}: super-class for the usage event class hierarchy. It contains a many-to-one relation
+                    to an experiment and data fields which are common to all sub-classes. The fields include an id,
+                    a type (enum with values SESSION, QUERY, or DOC\_CLICK), a timestamp, the id of the user who generated the event, 
+                    as well as the id and name of the test group which the user belongs to.
+
+                \item \texttt{SessionEvent}: sub-class of \texttt{UsageEvent} for representing participant's log-in and log-out  
+                    actions.
+
+                \item \texttt{QueryEvent}: sub-class of \texttt{UsageEvent} for representing queries submitted by participants.
+                    This entity stores the submitted query string and the number of results retrieved for the given query.
+                    It also has a one-to-many relation to entities of class \texttt{QueryStat} which hold information about the 
+                    distribution of the search results over the available document collection (see section \ref{impl:dataSummaries} for details). 
+
+                \item \texttt{QueryStat}: auxiliary entity holding information about the number of results retrieved from a particular
+                    document collection upon a given query. It has a many-to-one relation to a \texttt{QueryEvent}, as well as data fields
+                    for storing the collection's id and name and the number of retrieved results. 
+
+            \end{itemize}
+
+
+    \end{description}
+
+\subsubsection{\textbf{Interactions with the file system (package \texttt{storage})}} \label{sec:archDataLayerStorage}
+
+Access to the file system for storing and retrieving \emph{URL} lists and configuration files is implemented in the class
+hierarchy shown in \textbf{Figure \ref{fig:storage}}. Following are brief descriptions of the classes and their
+public methods.
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.5\textwidth]{figures/storage}
+\caption{Class Hierachy for File Storage}
+\label{fig:storage}
+\end{figure}
+
+\begin{description}
+
+    \item[FileStorage] super-class at the top of the hierarchy, implementing general I/O operations
+                       for reading, writing and deleting files or directories by using the
+                       \texttt{java.io} and \texttt{java.nio} packages. 
+                       It includes the following public methods:
+
+        \begin{itemize}
+
+            \item \texttt{void store(MultipartFile file, Path dirPath)}
+
+                stores the given \texttt{MultipartFile} in the directory specified by \texttt{dirPath}.
+
+            \item \texttt{void store(InputStream inputStream, Path filePath)}
+
+                stores the contents of the given \texttt{InputStream} in a file specified by \texttt{filePath}.
+
+            \item \texttt{void store(String content, Path filePath)}
+
+                stores the contents of the given string in a file specified by \texttt{filePath}.
+
+            \item \texttt{void store(MultipartFile file, String dirPathString)}
+
+                stores the given \texttt{MultipartFile} in the directory specified by \texttt{dirPathString}.
+
+            \item \texttt{void delete(Path filePath)}
+
+                deletes the file at the specified path.
+
+            \item \texttt{InputStream getInputStream(Path filePath)}
+
+                returns the file at the specified path as \texttt{InputStream} (to be used for download).
+
+            \item \texttt{void clearDirectory(Path dir)}
+
+                removes all contents of the given directory, including sub-directories.
+
+            \item \texttt{void removeDirectory(Path dir)}
+
+                recursively removes a directory and all its contents, including sub-directories.
+
+
+
+        \end{itemize}
+
+
+    \item[TextFileStorage]
+
+    \item[UrlListStorage]
+
+    \item[ExperimentConfigStorage]
+
+\end{description}
+
+
+\subsubsection{\textbf{Document indexing functionalities (package \texttt{indexing})}} \label{sec:archDataLayerIndexing}
+
+
+
+\subsubsection{\textbf{Document retrieval functionalities (package \texttt{retrieval})}} \label{sec:archDataLayerRetrieval}
+
+
+
+\subsubsection{\textbf{Experiment management (package \texttt{experiments})}} \label{sec:archDataLayerExperiments}
 
 
 
@@ -1049,15 +1243,15 @@ packages. Following are its public methods:
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{\textbf{Experiment Representation}} \label{sec:implExperiments}
-%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{\textbf{Indexing}} \label{sec:implIndexing}
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{\textbf{Retrieval}} \label{sec:implRetrieval}
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{\textbf{Experiment Representation}} \label{sec:implExperiments}
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%

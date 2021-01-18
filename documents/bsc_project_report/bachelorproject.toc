@@ -39,39 +39,44 @@
 \contentsline {subsubsection}{\numberline {5.4.4}\textbf {ExperimentService}}{18}{subsubsection.5.4.4}%
 \contentsline {subsubsection}{\numberline {5.4.5}\textbf {HseUserDetailsService}}{19}{subsubsection.5.4.5}%
 \contentsline {subsection}{\numberline {5.5}\textbf {The Data / Processing Layer: Implementation of the Core Functionalities}}{19}{subsection.5.5}%
-\contentsline {section}{\numberline {6}\textbf {Implementation details}}{19}{section.6}%
-\contentsline {subsection}{\numberline {6.1}\textbf {User Management}}{19}{subsection.6.1}%
-\contentsline {subsection}{\numberline {6.2}\textbf {Experiment Representation}}{19}{subsection.6.2}%
-\contentsline {subsection}{\numberline {6.3}\textbf {Indexing}}{19}{subsection.6.3}%
-\contentsline {subsection}{\numberline {6.4}\textbf {Retrieval}}{19}{subsection.6.4}%
-\contentsline {subsection}{\numberline {6.5}\textbf {Data Extraction and Summary Generation}}{19}{subsection.6.5}%
-\contentsline {section}{\numberline {7}\textbf {Future Work}}{19}{section.7}%
-\contentsline {section}{\numberline {8}\textbf {Conclusions}}{19}{section.8}%
-\contentsline {section}{Appendices}{20}{section*.10}%
-\contentsline {section}{\numberline {A}Configuration, Build, and Deployment (from HSE Setup and Usage Guide)}{20}{appendix.1.A}%
-\contentsline {subsection}{\numberline {A.1}Dependencies}{20}{subsection.1.A.1}%
-\contentsline {subsection}{\numberline {A.2}Configuration Files}{20}{subsection.1.A.2}%
-\contentsline {subsubsection}{\numberline {A.2.1}Maven configuration: pom.xml}{20}{subsubsection.1.A.2.1}%
-\contentsline {subsubsection}{\numberline {A.2.2}Specific configurations in \texttt {.properties} files}{20}{subsubsection.1.A.2.2}%
-\contentsline {subsubsection}{\numberline {A.2.3}docker-compose.yml}{20}{subsubsection.1.A.2.3}%
-\contentsline {subsection}{\numberline {A.3}Creating a local build}{20}{subsection.1.A.3}%
-\contentsline {subsubsection}{\numberline {A.3.1}Preparing the database}{20}{subsubsection.1.A.3.1}%
-\contentsline {subsubsection}{\numberline {A.3.2}Issuing the build command}{21}{subsubsection.1.A.3.2}%
-\contentsline {subsubsection}{\numberline {A.3.3}Running the application}{21}{subsubsection.1.A.3.3}%
-\contentsline {subsection}{\numberline {A.4}Example deployment on \emph {Ubuntu Server} with \emph {Apache2}}{21}{subsection.1.A.4}%
-\contentsline {subsubsection}{\numberline {A.4.1}Create and transfer the \emph {Docker} image}{21}{subsubsection.1.A.4.1}%
-\contentsline {subsubsection}{\numberline {A.4.2}Load the image and start the application}{21}{subsubsection.1.A.4.2}%
-\contentsline {subsubsection}{\numberline {A.4.3}Apache2 configuration}{22}{subsubsection.1.A.4.3}%
-\contentsline {section}{\numberline {B}Usage (from HSE Setup and Usage Guide)}{22}{appendix.1.B}%
-\contentsline {subsection}{\numberline {B.1}Users, Roles, and their Definition \small {(/admin/ui)}}{22}{subsection.1.B.1}%
-\contentsline {subsection}{\numberline {B.2}URL lists and Document collections \small {(/indexing/ui)}}{22}{subsection.1.B.2}%
-\contentsline {subsection}{\numberline {B.3}Experiment Definition \small {(/experiments/ui)}}{23}{subsection.1.B.3}%
-\contentsline {subsection}{\numberline {B.4}Experiment Configuration \small {(/experiments/setup/ui)}}{23}{subsection.1.B.4}%
-\contentsline {subsubsection}{\numberline {B.4.1}Configuration in stand-alone mode}{24}{subsubsection.1.B.4.1}%
-\contentsline {subsubsection}{\numberline {B.4.2}Configuration in Qualtrics mode}{25}{subsubsection.1.B.4.2}%
-\contentsline {subsection}{\numberline {B.5}Experiment Execution \small {(/experiments/run/ui)}}{25}{subsection.1.B.5}%
-\contentsline {subsection}{\numberline {B.6}Setting up a linked Qualtrics survey}{26}{subsection.1.B.6}%
-\contentsline {subsubsection}{\numberline {B.6.1}Survey Questions}{26}{subsubsection.1.B.6.1}%
-\contentsline {subsubsection}{\numberline {B.6.2}Survey Flow}{27}{subsubsection.1.B.6.2}%
-\contentsline {subsection}{\numberline {B.7}Experiment Evaluation and Data Export \small {(/experiments/eval/ui)}}{29}{subsection.1.B.7}%
-\contentsline {subsubsection}{\numberline {B.7.1}Data Representation}{29}{subsubsection.1.B.7.1}%
+\contentsline {subsubsection}{\numberline {5.5.1}\textbf {Interactions with the data base (package \texttt {db})}}{19}{subsubsection.5.5.1}%
+\contentsline {subsubsection}{\numberline {5.5.2}\textbf {Interactions with the file system (package \texttt {storage})}}{20}{subsubsection.5.5.2}%
+\contentsline {subsubsection}{\numberline {5.5.3}\textbf {Document indexing functionalities (package \texttt {indexing})}}{21}{subsubsection.5.5.3}%
+\contentsline {subsubsection}{\numberline {5.5.4}\textbf {Document retrieval functionalities (package \texttt {retrieval})}}{21}{subsubsection.5.5.4}%
+\contentsline {subsubsection}{\numberline {5.5.5}\textbf {Experiment management (package \texttt {experiments})}}{21}{subsubsection.5.5.5}%
+\contentsline {section}{\numberline {6}\textbf {Implementation details}}{21}{section.6}%
+\contentsline {subsection}{\numberline {6.1}\textbf {User Management}}{21}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}\textbf {Indexing}}{21}{subsection.6.2}%
+\contentsline {subsection}{\numberline {6.3}\textbf {Retrieval}}{21}{subsection.6.3}%
+\contentsline {subsection}{\numberline {6.4}\textbf {Experiment Representation}}{21}{subsection.6.4}%
+\contentsline {subsection}{\numberline {6.5}\textbf {Data Extraction and Summary Generation}}{21}{subsection.6.5}%
+\contentsline {section}{\numberline {7}\textbf {Future Work}}{21}{section.7}%
+\contentsline {section}{\numberline {8}\textbf {Conclusions}}{21}{section.8}%
+\contentsline {section}{Appendices}{22}{section*.11}%
+\contentsline {section}{\numberline {A}Configuration, Build, and Deployment (from HSE Setup and Usage Guide)}{22}{appendix.1.A}%
+\contentsline {subsection}{\numberline {A.1}Dependencies}{22}{subsection.1.A.1}%
+\contentsline {subsection}{\numberline {A.2}Configuration Files}{22}{subsection.1.A.2}%
+\contentsline {subsubsection}{\numberline {A.2.1}Maven configuration: pom.xml}{22}{subsubsection.1.A.2.1}%
+\contentsline {subsubsection}{\numberline {A.2.2}Specific configurations in \texttt {.properties} files}{22}{subsubsection.1.A.2.2}%
+\contentsline {subsubsection}{\numberline {A.2.3}docker-compose.yml}{22}{subsubsection.1.A.2.3}%
+\contentsline {subsection}{\numberline {A.3}Creating a local build}{22}{subsection.1.A.3}%
+\contentsline {subsubsection}{\numberline {A.3.1}Preparing the database}{22}{subsubsection.1.A.3.1}%
+\contentsline {subsubsection}{\numberline {A.3.2}Issuing the build command}{23}{subsubsection.1.A.3.2}%
+\contentsline {subsubsection}{\numberline {A.3.3}Running the application}{23}{subsubsection.1.A.3.3}%
+\contentsline {subsection}{\numberline {A.4}Example deployment on \emph {Ubuntu Server} with \emph {Apache2}}{23}{subsection.1.A.4}%
+\contentsline {subsubsection}{\numberline {A.4.1}Create and transfer the \emph {Docker} image}{23}{subsubsection.1.A.4.1}%
+\contentsline {subsubsection}{\numberline {A.4.2}Load the image and start the application}{23}{subsubsection.1.A.4.2}%
+\contentsline {subsubsection}{\numberline {A.4.3}Apache2 configuration}{24}{subsubsection.1.A.4.3}%
+\contentsline {section}{\numberline {B}Usage (from HSE Setup and Usage Guide)}{24}{appendix.1.B}%
+\contentsline {subsection}{\numberline {B.1}Users, Roles, and their Definition \small {(/admin/ui)}}{24}{subsection.1.B.1}%
+\contentsline {subsection}{\numberline {B.2}URL lists and Document collections \small {(/indexing/ui)}}{24}{subsection.1.B.2}%
+\contentsline {subsection}{\numberline {B.3}Experiment Definition \small {(/experiments/ui)}}{25}{subsection.1.B.3}%
+\contentsline {subsection}{\numberline {B.4}Experiment Configuration \small {(/experiments/setup/ui)}}{25}{subsection.1.B.4}%
+\contentsline {subsubsection}{\numberline {B.4.1}Configuration in stand-alone mode}{26}{subsubsection.1.B.4.1}%
+\contentsline {subsubsection}{\numberline {B.4.2}Configuration in Qualtrics mode}{27}{subsubsection.1.B.4.2}%
+\contentsline {subsection}{\numberline {B.5}Experiment Execution \small {(/experiments/run/ui)}}{27}{subsection.1.B.5}%
+\contentsline {subsection}{\numberline {B.6}Setting up a linked Qualtrics survey}{28}{subsection.1.B.6}%
+\contentsline {subsubsection}{\numberline {B.6.1}Survey Questions}{28}{subsubsection.1.B.6.1}%
+\contentsline {subsubsection}{\numberline {B.6.2}Survey Flow}{29}{subsubsection.1.B.6.2}%
+\contentsline {subsection}{\numberline {B.7}Experiment Evaluation and Data Export \small {(/experiments/eval/ui)}}{31}{subsection.1.B.7}%
+\contentsline {subsubsection}{\numberline {B.7.1}Data Representation}{31}{subsubsection.1.B.7.1}%
