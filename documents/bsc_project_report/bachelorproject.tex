@@ -689,7 +689,7 @@ The class contains the following public methods:
 This is a minimal controller class containing a single method for serving the login page. \\ The method returns
 an object of class \texttt{ModelAndView}.
 
-\subsubsection{\textbf{SearchController}}
+\subsubsection{\textbf{SearchController}} \label{sec:archWebLayerSearch}
 
 The \texttt{SearchController} is in charge of serving the main search engine \emph{UI} available to
 participants, and redirecting them to a specific search result when they click on a link or to a logout
@@ -888,15 +888,150 @@ Below is a brief description of each method:
 \subsection{\textbf{The Service Layer: Service Classes Providing the Core Functionalities}} \label{sec:archServiceLayer}
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsubsection{UserService}
+The service layer acts as an interface between the data / processing layer and the web layer. It is
+ divided into classes which group related functionalities:
 
-\subsubsection{IndexingService}
+\subsubsection{\textbf{UserService}}
 
-\subsubsection{SearchService}\label{sec:archServiceSearch}
+The \texttt{UserService} allows for creating, updating, and removing users by interacting with the database repository interfaces
+from the layer below (package \texttt{db}. Following are its public methods:
+ 
+    \begin{description}
 
-\subsubsection{ExperimentService}
+        \item[\texttt{long userCount()}] returns the total number of saved users.
+        \item[\texttt{long administratorCount()}] returns the total number of saved administrators.
+        \item[\texttt{long experimenterCount()}] returns the total number of saved experimenters.
+        \item[\texttt{long participantCount()}] returns the total number of saved participants.
+        \item[\texttt{boolean userExists(int id)}] returns \texttt{true} if a user with the given id exists, false otherwise.
+        \item[\texttt{boolean userExists(String name)}] returns \texttt{true} if a user with the given user name exists, false otherwise.
+        \item[\texttt{List<HseUser> allUsers()}] returns all saved users.
+        \item[\texttt{List<Administrator> allAdministrators()}] returns all saved administrators.
+        \item[\texttt{List<Experimenter> allExperimenters()}] returns all saved experimenters.
+        \item[\texttt{List<Participant> allParticipants()}] returns all saved participants.
+        \item[\texttt{HseUser findUser(int id)}] returns a saved user given its id.
+        \item[\texttt{HseUser findUser(String userName)}] returns a saved user given its user name.
+        \item[\texttt{Administrator findAdministrator(int id)}] returns a saved administrator given its id.
+        \item[\texttt{Administrator findAdministrator(String userName)}] returns a saved administrator given its user name.
+        \item[\texttt{Experimenter findExperimenter(int id)}] returns a saved experimenter given its id.
+        \item[\texttt{Experimenter findExperimenter(String userName)}] returns a saved experimenter given its user name.
+        \item[\texttt{Experimenter findParticipant(int id)}] returns a saved participant given its id.
+        \item[\texttt{Participant findParticipant(String userName)}] returns a saved participant given its user name.
+        \item[\texttt{Administrator addAdministrator(Administrator administrator)}] adds a new administrator to the database.
+        \item[\texttt{Experimenter addExperimenter(Experimenter experimenter)}] adds a new experimenter to the database.
+        \item[\texttt{Participant addParticipant(Participant participant)}] adds a new participant to the database.
+        \item[\texttt{Participant addParticipant(Participant participant)}] adds a new participant to the database.
+        \item[\texttt{Participant addSurveyParticipant(int groupId)}] adds a new participant to the database and sets its user name and password to defaults.
+        \item[\texttt{Administrator updateAdministrator(Administrator administrator)}] Updates the saved administrator with matching id.
+        \item[\texttt{Experimenter updateExperimenter(Experimenter experimenter)}] Updates the saved experimenter with matching id.
+        \item[\texttt{Participant updateParticipant(Participant participant)}] Updates the saved participant with matching id.
+        \item[\texttt{void removeUser(int id)}] removes the save user with the given id.
+        \item[\texttt{void clearExperimenters()}] removes all saved experimenters.
+        \item[\texttt{void clearParticipants()}] removes all saved participants.
+        \item[\texttt{void removeAdministrator(Administrator administrator)}] deletes the given administrator.
+        \item[\texttt{void removeExperimenter(Experimenter experimenter)}] deletes the given experimenter and its experiments.
+        \item[\texttt{void removeParticipant(Participant participant)}] deletes the given participant.
 
-\subsubsection{HseUserDetailsService}
+    \end{description}
+
+
+\subsubsection{\textbf{IndexingService}}
+
+The main purpose of the \texttt{IndexingService} is providing an interface to the \emph{Lucene} based functionalities
+functionalities implemented in the data / processing layer by using classes from the \texttt{indexing} package. It
+also uses classes from the \texttt{storage} package for saving and loading \emph{URL} lists, as well as
+classes from the \texttt{db} package for updating metadata related to document collections. Following are its public methods:
+
+    \begin{description}
+
+        \item[\texttt{List<String> savedUrlLists()}] returns the file names of all saved url lists.
+        \item[\texttt{void addUrlList(MultipartFile file)}] adds a new url list file.
+        \item[\texttt{void removeUrlList(String fileName)}] removes a stored url list given its file name.
+        \item[\texttt{InputStream getUrlListFile(String fileName)}] returns the \texttt{InputStream} of a save url list file 
+                        (for making it availablefor download).
+        \item[\texttt{List<DocCollection> docCollections()}] returns all defined document collections.
+        \item[\texttt{DocCollection addDocCollection(DocCollection docCollection)}] adds a new document collection to the database.
+        \item[\texttt{DocCollection updateDocCollection(DocCollection docCollection)}] updates an existing document collection.
+        \item[\texttt{void removeDocCollection(DocCollection docCollection)}] removes an existing document collection.
+        \item[\texttt{IndexingResult buildIndex(DocCollection docCollection)}] starts the indexing process for the given document collection.
+
+    \end{description}
+
+\subsubsection{\textbf{SearchService}}\label{sec:archServiceSearch}
+
+The \texttt{SearchService} provides access to the \emph{Lucene} based search functionalities implemented
+in the \texttt{retrieval} package. It also uses classes from the \texttt{db} package in order to gather test-group based information
+about which document collections the results are to be retrieved from, as well as metadata about the given document collections. 
+Following are its public methods:
+
+    \begin{description}
+
+        \item[\texttt{SearchResultList handleNewQuery(String query, Participant participant)}]
+            processes the query string using the retrieval system, based on the document collections associated with the given participant's test group. If
+            the query string is equal to the first query entered and a predefined result list is defined, the predefined result list is returned.
+
+        \item[\texttt{SearchResultList handleRepeatedQuery(String query, Participant participant)}] 
+            to be called when the query string is the same as in the immediately previous query. This situation occurs if the
+            search \emph{UI} page is reloaded or the participant gets back to it after having visited a document. 
+
+        \item[\texttt{SearchResultList handleFirstQuery(String query, Participant participant)}]
+            to be called when a participant submits the very first query. If a predefined result list is defined, the predefined result list is returned,
+            otherwise the query is processed by the retrieval system.
+
+        \item[\texttt{void addDocClickEvent(SearchResult searchResult, Participant participant)}]
+            stores a document click event in the database. This method is to be called from the web layer when a participant visits
+            a link in the results list. (see section \ref{sec:archWebLayerSearch}).
+
+    \end{description}
+
+\subsubsection{\textbf{ExperimentService}}
+
+The \texttt{ExperimentService} provides all functionalities related to experiments and test groups, including their definition,
+configuration, execution, and evaluation. The class interacts mainly with the \texttt{experiments} and \texttt{db}
+packages. Following are its public methods:
+
+\begin{description}
+
+    \item[\texttt{List<Experiment> allExperiments()}] returns all defined experiments.
+
+    \item[\texttt{Experiment findExperiment(int id)}] returns a saved experiment given its id.
+
+    \item[\texttt{TestGroup findTestGroup(int id)}] returns a saved test group given its id.
+
+    \item[\texttt{List<Experiment> findByExperimenter(Experimenter experimenter)}] returns all saved
+        experiments belonging to the given experimenter.
+
+    \item[\texttt{Experiment addExperiment(Experiment experiment)}] adds a new experiment to the database.
+
+    \item[\texttt{Experiment updateExperiment(Experiment experiment)}] updates an existing experiment.
+
+    \item[\texttt{void deleteExperiment(Experiment experiment)}] deletes an existing experiment.
+
+    \item[\texttt{TestGroup addTestGroup(TestGroup testGroup)}] adds a new test group to the database.
+
+    \item[\texttt{TestGroup updateTestGroup(TestGroup testGroup)}] updates an existing test group.
+
+    \item[\texttt{void deleteTestGroup(TestGroup testGroup)}] deletes an existing test group.
+
+    \item[\texttt{Experiment configureTestGroups(Experiment experiment, String configFileName)}] 
+        defines the test groups and participants for the given experiment, based on the configuration file specified by its file name.
+
+    \item[\texttt{List<DocCollection> getIndexedDocCollections()}] returns all indexed (therefore usable) document collections.
+
+    \item[\texttt{List<String> savedConfigFiles()}] returns the names of all available configuration files.
+
+    \item[\texttt{void addConfigFile(MultipartFile file)}] stores an uploaded configuration file.
+
+    \item[\texttt{void removeConfigFile(String fileName}] deletes a stored configuration file given its file name.
+
+    \item[\texttt{InputStream getConfigFile(String fileName)}] returns the \texttt{InputStream} from a configuration file given its name 
+            (making it available for download).
+
+
+
+\end{description}
+
+
+\subsubsection{\textbf{HseUserDetailsService}}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
@@ -981,7 +1116,7 @@ Below is a brief description of each method:
         constants: when the profile ``dev'' is selected, the application uses the file 
 
 \texttt{/hse/src/main/resources/application-dev.properties};
-        when ``prod'' is selected, \texttt{/hse/src/main/resources/application-prod.properties}. 
+        when ``prod'' is selected, \\ \texttt{/hse/src/main/resources/application-prod.properties}. 
 
         By default the ``dev'' profile is selected;
         for using the ``prod'' profile, the flag \texttt{-Pprod} is to be included in the \emph{Maven} command 

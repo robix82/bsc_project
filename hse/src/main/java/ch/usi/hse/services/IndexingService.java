@@ -65,8 +65,9 @@ public class IndexingService {
 	}
 	
 	/**  
+	 * returns the file names of all saved url lists
 	 * 
-	 * @return names of the saved url list files
+	 * @return List<String>
 	 * @throws FileReadException
 	 */
 	public List<String> savedUrlLists() throws FileReadException {

@@ -111,10 +111,22 @@ public class UserService {
 	
 	// RETRIEVE USER LISTS
 	
+	/**
+	 * returns true if a user with the given id exists, false otherwise
+	 * 
+	 * @param id
+	 * @return
+	 */
 	public boolean userExists(int id) {
 		return userRepository.existsById(id);
 	}
 	
+	/**
+	 * returns true if a user with the given username exists, false otherwise
+	 * 
+	 * @param name
+	 * @return
+	 */
 	public boolean userExists(String name) {
 		return userRepository.existsByUserName(name);
 	}
@@ -162,10 +174,10 @@ public class UserService {
 	// RETRIEVE SINGLE USERS
 	
 	/**
-	 * returns a saved User given its id
+	 * returns a saved user given its id
 	 * 
 	 * @param id
-	 * @return User
+	 * @return HseUser
 	 * @throws NoSuchUserException
 	 */
 	public HseUser findUser(int id) throws NoSuchUserException {
@@ -404,6 +416,14 @@ public class UserService {
 		return saved;
 	}
 	
+	/**
+	 * adds a new participant to the database and sets its user name and password to defaults
+	 * 
+	 * @param groupId
+	 * @return
+	 * @throws UserExistsException
+	 * @throws NoSuchTestGroupException
+	 */
 	public Participant addSurveyParticipant(int groupId) 
 			throws UserExistsException, NoSuchTestGroupException {
 		
@@ -538,7 +558,7 @@ public class UserService {
 	}
 	
 	/**
-	 * Updates an participant given a Participant instance with matching id
+	 * Updates a participant given a Participant instance with matching id
 	 * 
 	 * @param participant
 	 * @return Participant
@@ -619,11 +639,19 @@ public class UserService {
 		}
 	}
 	
+	/**
+	 * removes all saved experimenters
+	 * 
+	 */
 	public void clearExperimenters() {
 		
 		experimenterRepository.deleteAll();
 	}
 	
+	/**
+	 * removes all saved participants
+	 * 
+	 */
 	public void clearParticipants() {
 		
 		for (TestGroup g : testGroupRepository.findAll()) {
@@ -634,34 +662,49 @@ public class UserService {
 		participantRepository.deleteAll();
 	}
 	
-	private void removeAdministrator(Administrator a) {
+	/**
+	 * deletes the given administrator
+	 * 
+	 * @param a
+	 */
+	private void removeAdministrator(Administrator administrator) {
 		
-		administratorRepository.delete(a);
+		administratorRepository.delete(administrator);
 	}
 
-	private void removeExperimenter(Experimenter e) {
+	/**
+	 * deletes the given experimenter and its experiments
+	 * 
+	 * @param e
+	 */
+	private void removeExperimenter(Experimenter experimenter) {
 		
-		for (Experiment exp : e.getExperiments()) {
+		for (Experiment exp : experimenter.getExperiments()) {
 			
 			Experiment found = experimentRepository.findById(exp.getId());
 			experimentRepository.delete(found);
 		}
 		
-		experimenterRepository.delete(e);
+		experimenterRepository.delete(experimenter);
 	}
 	
-	private void removeParticipant(Participant p) {
+	/**
+	 * deletes the given participant
+	 * 
+	 * @param participant
+	 */
+	private void removeParticipant(Participant participant) {
 		
-		TestGroup g = p.getTestGroup();
+		TestGroup g = participant.getTestGroup();
 		
 		if (g != null) {
 
-			g.removeParticipant(p);
+			g.removeParticipant(participant);
 			testGroupRepository.save(g);
 		}
 		else {
 			
-			participantRepository.delete(p);
+			participantRepository.delete(participant);
 		}
 	}
 }
