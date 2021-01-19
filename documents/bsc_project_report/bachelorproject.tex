@@ -630,7 +630,7 @@ The class \texttt{AdminController} handles requests to \emph{URL}s with prefix `
 The functionalities of this controller include serving the \texttt{admin} \emph{UI} page and reacting to \emph{Ajax} requests coming from it.
 The purpose of this interface is creating, updating or removing administrators, experimenters, 
 and participants by using methods of the \texttt{UserService} class
-from the service layer. For details on users and their roles see section \ref{sec:implUsers}.
+from the service layer.
 
 The class contains the following public methods:
 
@@ -1311,60 +1311,187 @@ for details on how the indexing process is implemented see section \ref{sec:impl
 \label{fig:indexingClasses}
 \end{figure}
 
-\begin{description}
+    \begin{description}
 
-    \item[\texttt{IndexBuilder}]
+        \item[\texttt{IndexBuilder}]
 
-        This class handles the indexing process by instantiating the other classes and calling their methods in a loop for 
-        each document to be indexed. It has the single public method \texttt{buildIndex}, which takes
-        a \texttt{DocumentCollection} object (see section \ref{sec:archDataLayerDb}) as parameter, processes the related
-        documents, and returns a \texttt{IndexingResult} object which summarizes the the actions performed. 
+            This class handles the indexing process by instantiating the other classes and calling their methods in a loop for 
+            each document to be indexed. It has the single public method \texttt{buildIndex}, which takes
+            a \texttt{DocumentCollection} object (see section \ref{sec:archDataLayerDb}) as parameter, processes the related
+            documents, and returns a \texttt{IndexingResult} object which summarizes the the actions performed. 
 
-    \item[\texttt{Downloader}] Is a very simple class containing a single method for downloading a document from the web.
-        The method called \texttt{fetch} takes a \texttt{URL} string as parameter and returns an \texttt{InputStream}
-        containing the document data. It works by calling the \texttt{openStream()} method of the 
-        \texttt{java.net.URL} class.
+        \item[\texttt{Downloader}] Is a very simple class containing a single method for downloading a document from the web.
+            The method called \texttt{fetch} takes a \texttt{URL} string as parameter and returns an \texttt{InputStream}
+            containing the document data. It works by calling the \texttt{openStream()} method of the 
+            \texttt{java.net.URL} class.
 
-    \item[\texttt{TextExtractor}] extracts the text content from \texttt{HTML} or \texttt{PDF} files by
-        leveraging the features of the \emph{Apache Tika} library. it exposes two public methods:
-        \texttt{extractHtml} and \texttt{extractPdf}. Both take an \texttt{Inputstream} containing the
-        document's raw data and a string representing the document's \texttt{URL} (to be added to the returned object),
-        and return an instance of \texttt{ExtractedDocument}, which contains the extracted text as string along with some
-        metadata to be added to the index.
+        \item[\texttt{TextExtractor}] extracts the text content from \texttt{HTML} or \texttt{PDF} files by
+            leveraging the features of the \emph{Apache Tika} library. it exposes two public methods:
+            \texttt{extractHtml} and \texttt{extractPdf}. Both take an \texttt{Inputstream} containing the
+            document's raw data and a string representing the document's \texttt{URL} (to be added to the returned object),
+            and return an instance of \texttt{ExtractedDocument}, which contains the extracted text as string along with some
+            metadata to be added to the index.
 
-    \item[\texttt{Indexer}] creates the actual inverted index by using the features of the \texttt{Lucene} library.
-        It contains the following public methods which are called from the \texttt{IndexBuilder}:
+        \item[\texttt{Indexer}] creates the actual inverted index by using the features of the \texttt{Lucene} library.
+            It contains the following public methods which are called from the \texttt{IndexBuilder}:
 
-        \begin{itemize}
+            \begin{itemize}
 
-            \item \texttt{void setUp(Path dir, String language)} Initializes the index directory with the given path,
-                  sets up an \texttt{Analyzer} for the specified language (EN or IT), and an \texttt{IndexWriter}. 
+                \item \texttt{void setUp(Path dir, String language)} Initializes the index directory with the given path,
+                      sets up an \texttt{Analyzer} for the specified language (EN or IT), and an \texttt{IndexWriter}. 
 
-            \item \texttt{void addDocument(ExtractedDocument source)} adds a document to the previously initialized
-                  index. This method is called repeatedly from the loop in the \texttt{IndexBuilder}.
+                \item \texttt{void addDocument(ExtractedDocument source)} adds a document to the previously initialized
+                      index. This method is called repeatedly from the loop in the \texttt{IndexBuilder}.
 
-            \item \texttt{void tearDown()} is to be called when all documents belonging to the collection
-                  have been indexed. Its purpose is to close open files and streams by calling the \texttt{close()}
-                  methods of \emph{Lucene}'s \texttt{IndexWriter} and \texttt{Directory} classes.
+                \item \texttt{void tearDown()} is to be called when all documents belonging to the collection
+                      have been indexed. Its purpose is to close open files and streams by calling the \texttt{close()}
+                      methods of \emph{Lucene}'s \texttt{IndexWriter} and \texttt{Directory} classes.
 
-        \end{itemize}
+            \end{itemize}
 
-    \item[\texttt{ExtractedDocument}] is a data class containing fields for a document's extracted text content, its \emph{URL}, file type 
-            (\texttt{HTML} or \texttt{PDF}), and metadata generated by the \emph{Tika} text extraction.
+        \item[\texttt{ExtractedDocument}] is a data class containing fields for a document's extracted text content, its \emph{URL}, file type 
+                (\texttt{HTML} or \texttt{PDF}), and metadata generated by the \emph{Tika} text extraction.
 
-    \item[\texttt{IndexingResult}] Is a data class representing a summary of what happened during the indexing process.
-            It contains the names of the document collection and the \emph{URL} list used, the number of
-            processed, indexed, and skipped \texttt{URLS}, and the total execution time.
+        \item[\texttt{IndexingResult}] Is a data class representing a summary of what happened during the indexing process.
+                It contains the names of the document collection and the \emph{URL} list used, the number of
+                processed, indexed, and skipped \texttt{URLS}, and the total execution time.
 
 
-\end{description}
+    \end{description}
 
 
 \subsubsection{\textbf{Document retrieval functionalities (package \texttt{retrieval})}} \label{sec:archDataLayerRetrieval}
 
+In general the text based retrieval process consists of finding documents that are related to a query by searching over an inverted index
+ and returning them sorted by relevance; \emph{Lucene} provides a straight forward way for implementing this functionality. A peculiarity of
+my application is that results must be retrieved from multiple document collections (and therefore multiple \emph{Lucene} indices) and
+combined into a single result list. Moreover an experimenter must be optionally able to define a fixed result list to be displayed 
+in response to the first query submitted by each user. Therefore I needed to build some structures around the features provided by the library. 
+\textbf{Figure \ref{fig:retrievalClasses}} shows the involved classes, which are briefly described below. Details
+on how the retrieval process is implemented are described in section \ref{sec:implRetrieval}.
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.5\textwidth]{figures/retrievalClasses}
+\caption{Classes in the retrieval package}
+\label{fig:retrievalClasses}
+\end{figure}
+
+
+\begin{description}
+
+    \item[\texttt{SearchAssembler}] is the main class to be called from the service layer. Its contains the following public methods:
+
+        \begin{itemize}
+
+            \item \texttt{SearchResultList getSearchResults(String queryString, List<DocCollection> docCollections)}
+
+                searches for documents relevant to the query string among the indices corresponding to the document collections
+                provided as parameter.
+                and returns the results wrapped in an instance of the \texttt{SearchResultList} class described below.
+
+            \item \texttt{SearchResultList getFirstQueryList(DocCollection firstQueryCollection, String queryString)}
+
+                returns all documents from the given collection (to be used for providing the predefined results for 
+                the first query).
+
+            \item \texttt{void updateIndexAccess()}
+
+                is to be called when an index is modified or replaced, which happens if a document collection is updated 
+                or re-indexed.
+
+        \end{itemize}
+
+    \item[\texttt{SearchResult}] is a data class representing a retrieved document. It contains the id and name
+            of the document collection the result is drawn from, the document's id (generated during indexing),
+            its score (determined by the \emph{Lucene} retrieval system and used for sorting), its document's
+            rank within the result list, a summery consisting of text snippets from the content, with highlighted
+            query terms, and its file type (\texttt{HTML} or \texttt{PDF}).
+
+    \item[\texttt{SearchResultList}] represents the list of documents retrieved. An instance of this
+            class is returned when the to the service layer after a call to the \texttt{SearchAssembler}'s
+            \texttt{getSearchResults} or \texttt{getFirstQueryList}. It contains a list of 
+            \texttt{SearchResult} instances as well as  the query string that was processed.
+
+\end{description}
 
 
 \subsubsection{\textbf{Experiment management (package \texttt{experiments})}} \label{sec:archDataLayerExperiments}
+
+The \texttt{experiments} package contains one class named \texttt{ExperimentConfigurer} which is used for defining
+test groups and participants based on a configuration file, as well as several classes related to extracting and processing
+the data collected during an experiment.
+
+\texttt{ExperimentConfigurer} contains the single public method \texttt{configureTestGroups}, which take an 
+\texttt{Experiment} and the name name of a configuration file as parameters, and returns the updated \texttt{Experiment}
+after having parsed the contents of the file and set the experiment's test groups and participants accordingly.
+
+The classes dealing with data extraction and processing are shown in \textbf{Figure \ref{fig:dataExtractionClasses}} and briefly described below.
+Details about their inner workings and the tasks they perform are described in section \ref{impl:dataSummaries}.    
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.6\textwidth]{figures/dataExtractionClasses}
+\caption{Classes related to data extraction and processing}
+\label{fig:dataExtractionClasses}
+\end{figure}
+
+\begin{description}
+
+    \item[\texttt{EventDataExtractor}] Is in charge of retrieving usage event data from the database and computing statistical metrics.
+             It provides public methods for accessing information such as the number of queries or documents visited per experiment, 
+             test group, or user. Many of these methods return instances of the class \texttt{DataStats}, which are used
+             for representing statistics over a list of numeric values.
+
+    \item[\texttt{ExperimentSummary}] contains relevant information about an experiment, which is displayed on the experiments
+            evaluation \emph{UI} page and made available for export through the \texttt{ResultWriter}. The data fields
+            include the experiment's title, the date it was conducted, its duration, the names of its test groups,
+            and statistical metrics obtained from the \texttt{EventDataExtractor}. It also contains a list
+            of \texttt{TestGroupSummary} objects which contain detailed information about the results collected for each test group.
+
+    \item[\texttt{TestGroupSummary}] contains information analogous to \texttt{ExperimentSummary}, but computed on a per test group basis.
+
+    \item[\texttt{DataStats}] has the purpose of computing and storing often used statistical metrics.
+            Objects of this class can be constructed from a list of \texttt{double} values (alternatively values
+            can be appended later on). The accessible data fields are the number of values in the list, their total,
+            mean, median, and standard deviation.  
+
+    \item[\texttt{CsvWriter}] translates usage events into \emph{CSV} format. It returns the data as a single string
+            which is later processed by \texttt{ResultWriter}. It contains a method named \texttt{writeExperimentData},
+            which processes all usage events that occurred within a given experiment, as well as a method
+            named \texttt{writeUserData}, which processes all usage events triggered by a given participant, thus representing
+            its usage history.
+
+    \item[\texttt{ResultWriter}] is used for exporting data in \emph{CSV} or \emph{JSON} format. Following are its
+            public methods, which all return an \texttt{InputStream} to be used for download:
+
+        \begin{itemize}
+
+            \item \texttt{InputStream rawDataCsv(Experiment experiment)} 
+
+                    returns the complete data set related to the given experiment in \emph{CSV} format.
+
+            \item \texttt{InputStream rawDataJson(Experiment experiment)}
+
+                    returns the complete data set related to the given experiment in \emph{JSON} format.
+
+            \item \texttt{InputStream summaryJson(Experiment experiment)}
+
+                    returns the data contained in the \texttt{ExperimentSummary} generated for the given experiment in \emph{JSON} format.
+
+            \item \texttt{InputStream userHistoriesCsv(TestGroup testGroup)}
+
+                    returns the individual user histories of each participant in the give test group in \emph{CSV} format 
+                    grouped in a \texttt{.zip} directory.
+
+            \item \texttt{InputStream userHistoriesJson(Experiment experiment)}
+
+                    returns the user histories of all participants in the given experiment in \emph{JSON} format.
+
+        \end{itemize}
+
+\end{description}
+
 
 
 
@@ -1373,7 +1500,7 @@ for details on how the indexing process is implemented see section \ref{sec:impl
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{\textbf{User Management}} \label{sec:implUsers}
+%\subsection{\textbf{User Management}} \label{sec:implUsers}
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
