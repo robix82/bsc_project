@@ -1167,63 +1167,197 @@ public methods.
 \label{fig:storage}
 \end{figure}
 
-\begin{description}
+    \begin{description}
 
-    \item[FileStorage] super-class at the top of the hierarchy, implementing general I/O operations
-                       for reading, writing and deleting files or directories by using the
-                       \texttt{java.io} and \texttt{java.nio} packages. 
-                       It includes the following public methods:
+        \item[FileStorage] super-class at the top of the hierarchy, implementing general I/O operations
+                           for reading, writing and deleting files or directories by using the
+                           \texttt{java.io} and \texttt{java.nio} packages. 
+                           It includes the following public methods:
 
-        \begin{itemize}
+            \begin{itemize}
 
-            \item \texttt{void store(MultipartFile file, Path dirPath)}
+                \item \texttt{void store(MultipartFile file, Path dirPath)}
 
-                stores the given \texttt{MultipartFile} in the directory specified by \texttt{dirPath}.
+                    stores the given \texttt{MultipartFile} in the directory specified by \texttt{dirPath}.
 
-            \item \texttt{void store(InputStream inputStream, Path filePath)}
+                \item \texttt{void store(InputStream inputStream, Path filePath)}
 
-                stores the contents of the given \texttt{InputStream} in a file specified by \texttt{filePath}.
+                    stores the contents of the given \texttt{InputStream} in a file specified by \texttt{filePath}.
 
-            \item \texttt{void store(String content, Path filePath)}
+                \item \texttt{void store(String content, Path filePath)}
 
-                stores the contents of the given string in a file specified by \texttt{filePath}.
+                    stores the contents of the given string in a file specified by \texttt{filePath}.
 
-            \item \texttt{void store(MultipartFile file, String dirPathString)}
+                \item \texttt{void store(MultipartFile file, String dirPathString)}
 
-                stores the given \texttt{MultipartFile} in the directory specified by \texttt{dirPathString}.
+                    stores the given \texttt{MultipartFile} in the directory specified by \texttt{dirPathString}.
 
-            \item \texttt{void delete(Path filePath)}
+                \item \texttt{void delete(Path filePath)}
 
-                deletes the file at the specified path.
+                    deletes the file at the specified path.
 
-            \item \texttt{InputStream getInputStream(Path filePath)}
+                \item \texttt{InputStream getInputStream(Path filePath)}
 
-                returns the file at the specified path as \texttt{InputStream} (to be used for download).
+                    returns the file at the specified path as \texttt{InputStream} (to be used for download).
 
-            \item \texttt{void clearDirectory(Path dir)}
+                \item \texttt{void clearDirectory(Path dir)}
 
-                removes all contents of the given directory, including sub-directories.
+                    removes all contents of the given directory, including sub-directories.
 
-            \item \texttt{void removeDirectory(Path dir)}
+                \item \texttt{void removeDirectory(Path dir)}
 
-                recursively removes a directory and all its contents, including sub-directories.
-
-
-
-        \end{itemize}
+                    recursively removes a directory and all its contents, including sub-directories.
 
 
-    \item[TextFileStorage]
 
-    \item[UrlListStorage]
+            \end{itemize}
 
-    \item[ExperimentConfigStorage]
 
-\end{description}
+        \item[TextFileStorage] Intermediate class, specialized for handling text files. It includes the following public methods:
+
+            \begin{description}
+
+                \item \texttt{void storeTextFile(MultipartFile file, Path directory)}
+
+                    stores a \texttt{MultiprtFile} in the given directory.
+
+                \item \texttt{void deleteTextFile(String fileName, Path directory)}
+
+                    deletes the file with the given name and location.
+
+                \item \texttt{List<String> getTextLines(String fileName, Path directory)}
+
+                    returns the content of a text file as list of strings.
+
+                \item \texttt{List<String> listTextFiles(Path directory)}
+
+                    returns a the names of the files in the given directory as list.
+
+                \item \texttt{InputStream getTextFileAsStream(String fileName, Path directory)}
+
+                    returns the file at the given name and location as \texttt{InputStream}.
+
+            \end{description}
+
+        \item[UrlListStorage] Sub-class specialized for handling the \texttt{URL} list files used in the application.
+                        All files are stored and retrieved from the directory for \texttt{URL} lists defined in the application's configuration.
+                        It extends \texttt{TextFileStorage} and contains the following public methods:
+
+            \begin{itemize}
+
+                \item \texttt{void storeUrlList(MultipartFile file)}
+
+                    stores the given \texttt{MultipartFile} in the \texttt{URL} lists directory.
+
+                \item \texttt{void deleteUrlList(String fileName)}
+
+                    deletes the file with the given name from the \texttt{URL} lists directory.
+
+                \item \texttt{List<String> getUrlLines(String fileName)}
+
+                    returns the contents of the file with the given name as list (one string per line).
+
+                \item \texttt{List<String> listUrlFiles()}
+
+                    returns the names of all available \texttt{URL} list files as list.
+
+                \item \texttt{InputStream getUrlFileAsStream(String fileName)}
+
+                    returns the file with the given name as \texttt{InputStream}.
+
+            \end{itemize}
+
+        \item[ExperimentConfigStorage] Sub-class specialized for handling the experiment configuration files used in the application.
+                        All files are stored and retrieved from the directory for this kind of files defined in the application's configuration.
+                        It extends \texttt{TextFileStorage} and contains the following public methods:
+
+            \item \texttt{void storeConfigFile(MultipartFile file)}
+
+                stores the given \texttt{MultipartFile} in the defined directory.
+
+            \item \texttt{void deleteConfigFile(String fileName)}
+
+                deletes the file with the given name.
+
+            \item \texttt{List<String> getConfigLines(String fileName)}
+
+                returns the contents of the file with the given name as list (one string per line).
+
+            \item \texttt{List<String> listConfigFiles()}
+
+                returns the names of all available configuration files as list.
+
+            \item \texttt{InputStream getConfigFileAsStream(String fileName)}
+
+                returns the file with the given name as \texttt{InputStream}.
+
+    \end{description}
 
 
 \subsubsection{\textbf{Document indexing functionalities (package \texttt{indexing})}} \label{sec:archDataLayerIndexing}
 
+The process of obtaining a searchable inverted index from a \texttt{URL} list is handled by the classes in the
+\texttt{indexing} package. The \texttt{IndexingService} from the service layer calls the \texttt{IndexBuilder},
+which uses the other classes in the \texttt{indexing} package via composition in order to accomplish the sub-tasks of downloading the
+documents, extracting their text content, building the actual index and storing the relevant metadata in the 
+\texttt{DocumentCollection} object which represents the index at application level. \textbf{Figure \ref{fig:indexingClasses}}
+shows the involved classes which are briefly described below; 
+for details on how the indexing process is implemented see section \ref{sec:implIndexing}.
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.8\textwidth]{figures/indexingClasses}
+\caption{Classes in the indexing package}
+\label{fig:indexingClasses}
+\end{figure}
+
+\begin{description}
+
+    \item[\texttt{IndexBuilder}]
+
+        This class handles the indexing process by instantiating the other classes and calling their methods in a loop for 
+        each document to be indexed. It has the single public method \texttt{buildIndex}, which takes
+        a \texttt{DocumentCollection} object (see section \ref{sec:archDataLayerDb}) as parameter, processes the related
+        documents, and returns a \texttt{IndexingResult} object which summarizes the the actions performed. 
+
+    \item[\texttt{Downloader}] Is a very simple class containing a single method for downloading a document from the web.
+        The method called \texttt{fetch} takes a \texttt{URL} string as parameter and returns an \texttt{InputStream}
+        containing the document data. It works by calling the \texttt{openStream()} method of the 
+        \texttt{java.net.URL} class.
+
+    \item[\texttt{TextExtractor}] extracts the text content from \texttt{HTML} or \texttt{PDF} files by
+        leveraging the features of the \emph{Apache Tika} library. it exposes two public methods:
+        \texttt{extractHtml} and \texttt{extractPdf}. Both take an \texttt{Inputstream} containing the
+        document's raw data and a string representing the document's \texttt{URL} (to be added to the returned object),
+        and return an instance of \texttt{ExtractedDocument}, which contains the extracted text as string along with some
+        metadata to be added to the index.
+
+    \item[\texttt{Indexer}] creates the actual inverted index by using the features of the \texttt{Lucene} library.
+        It contains the following public methods which are called from the \texttt{IndexBuilder}:
+
+        \begin{itemize}
+
+            \item \texttt{void setUp(Path dir, String language)} Initializes the index directory with the given path,
+                  sets up an \texttt{Analyzer} for the specified language (EN or IT), and an \texttt{IndexWriter}. 
+
+            \item \texttt{void addDocument(ExtractedDocument source)} adds a document to the previously initialized
+                  index. This method is called repeatedly from the loop in the \texttt{IndexBuilder}.
+
+            \item \texttt{void tearDown()} is to be called when all documents belonging to the collection
+                  have been indexed. Its purpose is to close open files and streams by calling the \texttt{close()}
+                  methods of \emph{Lucene}'s \texttt{IndexWriter} and \texttt{Directory} classes.
+
+        \end{itemize}
+
+    \item[\texttt{ExtractedDocument}] is a data class containing fields for a document's extracted text content, its \emph{URL}, file type 
+            (\texttt{HTML} or \texttt{PDF}), and metadata generated by the \emph{Tika} text extraction.
+
+    \item[\texttt{IndexingResult}] Is a data class representing a summary of what happened during the indexing process.
+            It contains the names of the document collection and the \emph{URL} list used, the number of
+            processed, indexed, and skipped \texttt{URLS}, and the total execution time.
+
+
+\end{description}
 
 
 \subsubsection{\textbf{Document retrieval functionalities (package \texttt{retrieval})}} \label{sec:archDataLayerRetrieval}
