@@ -72,7 +72,7 @@ public class Indexer {
 		
 		doc.add(new TextField("title", title, Field.Store.YES));
 		
-		doc.add(new TextField("content", source.getContent(), Field.Store.YES));
+		doc.add(new TextField("content", title + " " + source.getContent(), Field.Store.YES));
 		
 		writer.addDocument(doc);
 	}
