@@ -214,7 +214,7 @@
 \hrule height 0.2pt
 \vspace{5mm}
 
-\SIGNATURES
+%\SIGNATURES
 
 \end{titlepage}
 \setcounter{footnote}{0}
@@ -249,16 +249,16 @@
 
 \renewcommand{\baselinestretch}{1.05}
 
-\newcommand{\SIGNATURES}{
-	\begin{tabular}{ll}
-	\hspace{-0.82cm}
-	\textsf{Approved by the advisor on Date: }{}
-	\DTLforeach*[\DTLiseq{\type}{r}]{committee}%
-	{\actitle=title,\first=first,\last=last,\type=type}{%
-	\DTLiffirstrow{}{, }\textsf{\print@blank{\actitle}}%
-	\hspace{4cm}
-	& \textsf{ }
-	}
-	\end{tabular}
+%\newcommand{\SIGNATURES}{
+%	\begin{tabular}{ll}
+%	\hspace{-0.82cm}
+%	\textsf{Approved by the advisor on Date: }{}
+%	\DTLforeach*[\DTLiseq{\type}{r}]{committee}%
+%	{\actitle=title,\first=first,\last=last,\type=type}{%
+%	\DTLiffirstrow{}{, }\textsf{\print@blank{\actitle}}%
+%	\hspace{4cm}
+%	& \textsf{ }
+%	}
+%	\end{tabular}
 	%
-}
+%}

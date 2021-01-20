@@ -425,7 +425,7 @@ For each experiment the following quantities are considered:
 
 The same metrics are available for each test group, allowing for interesting comparisons. Moreover, for each test group, the distribution
 of documents visited and time spent over the document collections from which the results are drawn is represented.
-Section \ref{impl:dataSummaries} describes the details of how these measures are computed.
+
 
 \newpage
 
@@ -826,8 +826,7 @@ provided by the \texttt{ExperimentService} and \texttt{UserService} from the ser
 
         \item[REST API for creating, updating and deleting experiments]
         Experiments can be created, updated and deleted via \emph{AJAX} calls using the \texttt{HTTP} methods
-        \emph{POST}, \emph{PUT}, and \emph{DELETE} and providing the experiment object as request body. For
-        details on the structure of \texttt{Experiment} objects see section \ref{sec:implExperiments}.
+        \emph{POST}, \emph{PUT}, and \emph{DELETE} and providing the experiment object as request body.
 
         The methods responsible for these actions are \texttt{postExperiment}, \texttt{putExperiment}, and
         \texttt{deleteExperiment}, each taking a parameter of type \texttt{Experiment} and returning an
@@ -1041,7 +1040,7 @@ packages. Following are its public methods:
         \item[\texttt{InputStream rawResultsJson(Experiment experiment)}] makes the experiment's collected raw data available
                     as \texttt{InputStream} for download in \emph{JSON} format.
 
-        \item[\texttt{InputStream summaryJson(Experiment experiment)}] makes a summary of the experiments data (see section \ref{impl:dataSummaries})
+        \item[\texttt{InputStream summaryJson(Experiment experiment)}] makes a summary of the experiments data
                     available as \texttt{InputStream} for download in \emph{JSON} format.
 
         \item[\texttt{InputStream userHistoriesCsv(int groupId)}] makes the individual usage histories of each participant
@@ -1143,7 +1142,7 @@ Below is a list of all defined entities, grouped according to the feature sets t
                 \item \texttt{QueryEvent}: sub-class of \texttt{UsageEvent} for representing queries submitted by participants.
                     This entity stores the submitted query string and the number of results retrieved for the given query.
                     It also has a one-to-many relation to entities of class \texttt{QueryStat} which hold information about the 
-                    distribution of the search results over the available document collection (see section \ref{impl:dataSummaries} for details). 
+                    distribution of the search results over the available document collection. 
 
                 \item \texttt{QueryStat}: auxiliary entity holding information about the number of results retrieved from a particular
                     document collection upon a given query. It has a many-to-one relation to a \texttt{QueryEvent}, as well as data fields
@@ -1426,8 +1425,7 @@ the data collected during an experiment.
 \texttt{Experiment} and the name name of a configuration file as parameters, and returns the updated \texttt{Experiment}
 after having parsed the contents of the file and set the experiment's test groups and participants accordingly.
 
-The classes dealing with data extraction and processing are shown in \textbf{Figure \ref{fig:dataExtractionClasses}} and briefly described below.
-Details about their inner workings and the tasks they perform are described in section \ref{impl:dataSummaries}.    
+The classes dealing with data extraction and processing are shown in \textbf{Figure \ref{fig:dataExtractionClasses}} and briefly described below.    
 
 \begin{figure}[h!]
 \centering
@@ -1493,31 +1491,130 @@ Details about their inner workings and the tasks they perform are described in s
 \end{description}
 
 
-
+\newpage
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{\textbf{Implementation details}} \label{sec:impl}
+\section{\textbf{Implementation of the Information Retrieval System}} \label{sec:impl}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%%%%%%%%%%%%%%%%%%%%%%%%%
-%\subsection{\textbf{User Management}} \label{sec:implUsers}
-%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{\textbf{Indexing}} \label{sec:implIndexing}
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
+This section describes some technical details regarding the process of building a \emph{Lucene} index starting from
+a \emph{URL} list uploaded by an experimenter. The process consists in a number of operations to be performed
+for each \emph{URL} and can be summarized in the following steps:
+
+    \begin{enumerate}
+
+        \item download the raw data received when pointing to the given address on the internet. 
+
+        \item extract text content and additional information from the downloaded data.
+
+        \item analyze and persist the obtained representation using features of the \emph{Lucene} library.
+
+    \end{enumerate}
+
+The \emph{URL}s are stored one pr line in a text file and are made available as a list of strings via
+the file access feature provided in the \texttt{storage} package (see section \ref{sec:archDataLayerStorage}).
+At a top level, the indexing process is implemented as a loop over the list of strings. If anything goes wrong
+at some step (e.g. an address not being available on the network or an I/O operation failing), the given
+\emph{URL} is skipped and the loop continues with the next one. The number of documents skipped as well as the
+number of successfully indexed documents are stored in counter variables. After all \emph{URL}s in the list have
+been processed, execution exits the loop and a summary containing relevant information such as the values
+of the counters and the processing time is returned to the caller as an instance of the class 
+\texttt{IndexingResult} (see section \ref{sec:archDataLayerIndexing}.
+The following subsections describe the details of each step within the main loop.
+
+\subsubsection{Raw Data Download}
+
+The \texttt{java.net.URL} class provides a very simple way for downloading web content via its 
+\texttt{openStream()} method. \textbf{Figure \ref{fig:downloadMethod}} shows how I embedded
+this functionality in my custom \texttt{fetch} method.
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.6\textwidth]{figures/downloadMethod}
+\caption{Method for downloading a web site}
+\label{fig:downloadMethod}
+\end{figure}
+
+The method returns an \texttt{InputStream} to be processed in the next step. If something unexpected happens, an instance
+ of \texttt{IOException} is thrown. If this happens, a \texttt{catch} block causes the loop to continue with
+the next \emph{URL}. 
+
+\subsubsection{Text Extraction}
+
+For the text extraction step I used some functionalities provided by the \emph{Apache Tika} \cite{tikaHome} library.
+The involved \emph{Tika} classes are \texttt{BodyContentHandler}, \texttt{Metadata}, \texttt{ParseContext}, and implementations of the
+\texttt{Parser} interface (HtmlParser or PDFParser, depending on the document type). The \texttt{Parser} processes
+an \texttt{InputStream} and writes the results to objects of the other three classes. 
+\textbf{Figure \ref{fig:extractionMethod}} shows my method for accessing these features.
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.6\textwidth]{figures/extractionMethod}
+\caption{Method for text extraction}
+\label{fig:extractionMethod}
+\end{figure}
+
+The returned \texttt{ExtractedDocument} object converts the information from the \emph{BodyContentHandler} to a \emph{Java}
+String and the \emph{Metadata} to a \texttt{Map<String, String>} and stores it in data fields along with the document's \texttt{URL}
+and file type, to be used in the next processing step. 
+
+\subsubsection{Analysis an Storage}
+
+The core part of the indexing process is of course creating an index and adding documents to it. The involved classes from the \emph{Lucene} 
+library are \texttt{IndexWriter}, \texttt{Directory}, \texttt{Analyzer}, \texttt{Document}, and \texttt{Fileld}, whose 
+interactions are shown in \textbf{Figure \ref{fig:luceneIndexClasses}}.
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.6\textwidth]{figures/luceneIndexClasses}
+\caption{Lucene Indexing Classes}
+\label{fig:luceneIndexClasses}
+\end{figure}
+
+\begin{description}
+
+    \item[IndexWriter] creates a new index or opens an existing one and allows adding, removing or updating documents.
+
+    \item[Directory] represents the location of an index (in my case a directory in the file system).
+
+    \item[Analyzer] converts plain text into a sequence of tokens. This involves removing so called ``stop words'' 
+        (frequently used but irrelevant words) and stemming (reducing similar words to their common root). Since
+        both stop word removal and stemming are language dependent, so a different \texttt{Analyzer} implementation
+        for Italian document collections than for English ones was to be used.
+
+    \item[Document] The Document class represents a collection of fields which can optionally be stored. 
+        In my application each document contains the following fields; \texttt{id}, \texttt{url}, 
+        \texttt{fileType}, \texttt{title}, and \texttt{content}.
+
+\end{description}
+
+
+In my application, access to these classes is mediated by a class named \texttt{Indexer}, which exposes the methods
+\texttt{setUp}, \texttt{addDocument} and tearDown. before the main loop is started, the \texttt{setUp} method is called which
+initializes the \texttt{Directory} and \texttt{Analyzer}, and \texttt{IndexWriter} with information from
+the \texttt{DocumentCollection} instance to be indexed. During the loop, for each extracted document, the
+\texttt{addDocument} method is called, which creates the \emph{Lucene} document and populates the fields.
+After the main loop terminates, the \texttt{tearDown} method is called, which
+in turn calls the \texttt{close()} methods of the \texttt{IndexWriter} and \texttt{Directory}.
+
+For details on the usage of the \emph{Lucene} indexing functionalities see chapter 1 of the book
+``Lucene in Action'' \cite{luceneInAction}.
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{\textbf{Retrieval}} \label{sec:implRetrieval}
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
-%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{\textbf{Experiment Representation}} \label{sec:implExperiments}
-%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{\textbf{Data Extraction and Summary Generation}} \label{impl:dataSummaries}
+\subsection{\textbf{Term Highlighting}} \label{sec:implRetrieval}
 %%%%%%%%%%%%%%%%%%%%%%%%%
+
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1531,6 +1628,13 @@ Details about their inner workings and the tasks they perform are described in s
 
 
 \newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{appendices}
 
@@ -1991,18 +2095,6 @@ Details about their inner workings and the tasks they perform are described in s
             \end{figure}
 
         \end{enumerate}
-
-        \vspace{.5cm}
-
-        \textbf{Figure \ref{fig:qflow}} shows the entire edited survey flow.
-
-
-        \begin{figure} [h]
-        \centering
-        \includegraphics[width=.9\textwidth]{figures/qflow}
-        \caption[]{Edited Survey Flow}
-        \label{fig:qflow}
-        \end{figure}
 
         \newpage
 
