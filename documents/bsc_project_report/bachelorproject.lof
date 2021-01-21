@@ -1,8 +1,8 @@
-\contentsline {figure}{\numberline {1}{\ignorespaces Typical usage workflow\relax }}{6}{figure.caption.3}%
+\contentsline {figure}{\numberline {1}{\ignorespaces Typical usage workflow\relax }}{5}{figure.caption.3}%
 \contentsline {figure}{\numberline {2}{\ignorespaces Indexing UI page\relax }}{6}{figure.caption.4}%
-\contentsline {figure}{\numberline {3}{\ignorespaces U.I. for experiment setup\relax }}{7}{figure.caption.5}%
-\contentsline {figure}{\numberline {4}{\ignorespaces UI for experiment execution\relax }}{8}{figure.caption.6}%
-\contentsline {figure}{\numberline {5}{\ignorespaces User interface available to participants\relax }}{8}{figure.caption.7}%
+\contentsline {figure}{\numberline {3}{\ignorespaces U.I. for experiment setup\relax }}{6}{figure.caption.5}%
+\contentsline {figure}{\numberline {4}{\ignorespaces UI for experiment execution\relax }}{7}{figure.caption.6}%
+\contentsline {figure}{\numberline {5}{\ignorespaces User interface available to participants\relax }}{7}{figure.caption.7}%
 \contentsline {figure}{\numberline {6}{\ignorespaces General System Architecture\relax }}{10}{figure.caption.8}%
 \contentsline {figure}{\numberline {7}{\ignorespaces Layered architecture of the back-end application\relax }}{13}{figure.caption.9}%
 \contentsline {figure}{\numberline {8}{\ignorespaces Class Hierachy for File Storage\relax }}{20}{figure.caption.10}%
@@ -12,3 +12,5 @@
 \contentsline {figure}{\numberline {12}{\ignorespaces Method for downloading a web site\relax }}{25}{figure.caption.14}%
 \contentsline {figure}{\numberline {13}{\ignorespaces Method for text extraction\relax }}{25}{figure.caption.15}%
 \contentsline {figure}{\numberline {14}{\ignorespaces Lucene Indexing Classes\relax }}{26}{figure.caption.16}%
+\contentsline {figure}{\numberline {15}{\ignorespaces Methods for accessing\emph {Lucene}'s indexing features\relax }}{26}{figure.caption.17}%
+\contentsline {figure}{\numberline {16}{\ignorespaces Role of \texttt {QueryParser} in the search process \cite {luceneInAction}\relax }}{27}{figure.caption.18}%

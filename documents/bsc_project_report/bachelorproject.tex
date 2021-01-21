@@ -81,12 +81,6 @@ I'd see myself as a technician, who in the area of software development seeks to
 In that sense, this project perfectly fits my interests, as it involves the creation of software to be used in the context of
 scientific research.    
 
-%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{\textbf{Outline}}
-%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\TODO{describe the sections}
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{\textbf{Requirements}} \label{sec:req}
@@ -1594,7 +1588,8 @@ interactions are shown in \textbf{Figure \ref{fig:luceneIndexClasses}}.
 
 
 In my application, access to these classes is mediated by a class named \texttt{Indexer}, which exposes the methods
-\texttt{setUp}, \texttt{addDocument} and tearDown. before the main loop is started, the \texttt{setUp} method is called which
+\texttt{setUp}, \texttt{addDocument} (shown in \textbf{Figure \ref{fig:indexerCode}})
+ and tearDown. before the main loop is started, the \texttt{setUp} method is called which
 initializes the \texttt{Directory} and \texttt{Analyzer}, and \texttt{IndexWriter} with information from
 the \texttt{DocumentCollection} instance to be indexed. During the loop, for each extracted document, the
 \texttt{addDocument} method is called, which creates the \emph{Lucene} document and populates the fields.
@@ -1604,27 +1599,87 @@ in turn calls the \texttt{close()} methods of the \texttt{IndexWriter} and \text
 For details on the usage of the \emph{Lucene} indexing functionalities see chapter 1 of the book
 ``Lucene in Action'' \cite{luceneInAction}.
 
+\begin{figure}[h]
+     
+     \centering
+     \begin{subfigure}[b]{0.45\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{figures/indexerCode1}
+     \end{subfigure}
+     \begin{subfigure}[b]{0.45\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{figures/indexerCode2}
+     \end{subfigure}
+     \caption{Methods for accessing\emph{Lucene}'s indexing features}
+     \label{fig:indexerCode}
+
+\end{figure}
+
+\newpage
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{\textbf{Retrieval}} \label{sec:implRetrieval}
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
+Retrieval consists of translating a query string into terms and finding matching documents in the index by comparing
+the query terms with the terms stored in the fields defined during indexing. The involved \emph{Lucene} 
+classes are briefly described below \cite{luceneInAction}:
 
-%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{\textbf{Term Highlighting}} \label{sec:implRetrieval}
-%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{description}
+
+    \item[\texttt{IndexReader} and \texttt{IndexSearcher}] provide read access to the index for searching.
+
+    \item[\texttt{Query} (and subclasses)] encapsulate logic for particular query types. Instances of this class
+            are passed to \texttt{IndexSearcher}'s \texttt{search} method.
+
+    \item[\texttt{QueryParser}] transforms a query string into a \texttt{Query} object, given the field to be considered
+            and an instace of \texttt{Analyzer}. In most cases it is recommended to use the same type of \texttt{Analyzer}
+            that was used during indexing, so the query terms undergo the same stop word removal an stemming procedures.
+
+    \item[TopDocs] Contains the results returned by \texttt{IndexSearcher}'s \texttt{search} method.
+
+    \item[ScoreDoc] provides access to the results in \texttt{TopDocs}.
+
+\end{description}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.6\textwidth]{figures/queryParser}
+\caption{Role of \texttt{QueryParser} in the search process \cite{luceneInAction}}
+\label{fig:queryParser}
+\end{figure}
 
 
+In our application, access to the retrieval features is implemented in class \texttt{SearchAssembler} within the \texttt{retrieval} package.
+When a query is submitted, each document collection available to the given test group is searched, and results are appended to a
+list in form of instances of the class \texttt{SearchResult}, which contains the information provided by \emph{Lucene}'s 
+\texttt{ScoreDoc} and \texttt{Document} classes, along with other metadata. Before the list is returned, it is sorted
+by score.
 
+\newpage
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{\textbf{Future Work}} \label{sec:futureWork}
+\section{\textbf{Conclusions and Future Work}} \label{sec:futureWork}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+Though the resulting application satisfies (at leas at a basic level) the requirements defined at the
+ beginning of the project, there are a number of ways it can be improved and extended in the future. An important
+point is that I implemented the indexing and retrieval mechanisms using only the simplest aspects of the
+\emph{Lucene} API. I suppose that an assessment of the implementation's performance in terms of
+precision and recall would show a large margin of possible improvement, which could affect the participant's 
+usage experience and thus have an impact on the experiment's results. The quality of of the search engine could
+definitely be improved by at the level of \emph{Lucenes} \texttt{Analyzer} class, which can be extended for
+a fine grained application-specific configuration. Also the graphical aspects of the user interface may be
+designed in a more attractive way.
+A future extension which I have kind of set the bases for is the support for multiple languages, both at the
+user interface and document corpus level, as it is now the case for English and Italian.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{\textbf{Conclusions}} \label{sec:conclusions}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+In conclusion I'd like to express my thanks to the professors Marc Langheinrich and Peter Schulz
+for having given me the opportunity to work on this interesting and in many ways challenging project, 
+and having given me precise and clear indications on how to proceed.
+I hope that the result will allow to collect useful information in the context of the panned experiment,
+an maybe be reused in adapted forms for similar research scenarios in the future.
+
 
 
 \newpage
