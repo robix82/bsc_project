@@ -212,7 +212,7 @@ an experimenter can upload text files containing lists of web URLs. The files ar
 for defining multiple document collections. Via a popup menu, a new  document collection can be defined by providing a name, 
 the collection's language, and the related URL list.
 Clicking on the ``index'' button initiates the indexing process, which includes data download and the creation of an index
-data structure for retrieval. The details of the indexing process are explained in section \TODO{link actual section}.
+data structure for retrieval. The details of the indexing process are explained in section \ref{sec:implIndexing}.
 \textbf{Figure \ref{fig:indexing}} shows the relevant parts of the interface.
 
 \begin{figure}[h]
@@ -244,7 +244,7 @@ The UI for experiment setup allows defining the details of an experiment to be c
 test groups with associated participants and document collections. Groups can be defined either manually or by using 
 an uploaded configuration file. In both cases, the test group configuration can later be edited manually. 
 The interface allows linking each group to a set of previously indexed document collections. Optionally a document collection
-can be set for each test group as predefined result list to be returned after the the first query.
+can be set for each test group as predefined result list to be returned in response to the first query.
 If the experiment is to be executed in the context of a \emph{Qualtrics} survey, the participants don't need to be specified, as they are
 defined while they take part in the survey. 
 \textbf{Figure \ref{fig:setup}} shows this UI.
@@ -270,7 +270,7 @@ When the stop button is clicked the participants are logged out and all transien
 After the experiment is complete the related evaluation page becomes available.
 In case something goes wrong, the experiment can be reset. This causes all collected data to be deleted, while the
 experiment's configuration is preserved.
-\textbf{Figure \ref{fig:run}} shows the user interface.
+\textbf{Figure \ref{fig:run}} shows the related user interface.
 
 \begin{figure} [h]
 \centering
@@ -306,7 +306,7 @@ or preprocessed data summaries.
 The raw data can be exported either in \emph{CSV} or \emph{JSON} format and consists of a list of all user actions that occurred during the experiment. 
 Each record has a timestamp, a user id, and a group id. Query event records include the query text and the proportions in which
 the data collections are represented  in the result list. Document click event records include the document id, its URL, and
-the collection to which the given document belongs.
+the collection which the given document belongs to.
 
 The data summaries include overall experiment statistics and per-group statistics. Moreover, the individual user histories can be 
 exported in the same formats as the raw data.
@@ -469,7 +469,7 @@ For serving web content, the framework leverages the \emph{Thymeleaf} \cite{thym
 classes for reacting to \emph{HTTP} requests. Within a controller class, methods with
 the annotation \emph{@RequestMapping}, are defined for responding to requests for specific \emph{URL} paths.
 These methods can return either an object of the class \emph{ModelAndView}, allowing to inject
-variables into the templates, or simply a string representing the name of a template file. 
+variables into the template, or simply a string representing the name of a template. 
 
 \emph{Thymeleaf} template files consist mainly of \emph{HTML}, but allow also syntax for useful operations to
 be performed server-side, such as including variables (which can be complex \emph{Java} objects),
@@ -485,7 +485,7 @@ In several parts of the application, the front-end code needs to send informatio
 server (e.g. when defining experiments and test groups), or retrieve
 information from the server (e.g. the current state of an experiment). This is done via
 \emph{Asynchronous JavaScript and XML} (\emph{Ajax}).
-The main advantage of \emph{Ajax} is that it allows interactions between server and client that are independently from
+The main advantage of \emph{Ajax} is that it allows interactions between server and client that are independent from
 displaying a web page \cite{ajaxWikipedia}. This makes the application much more efficient, because the alternative would be reloading
 the same page whenever some data must be sent or retrieved.
 There are several possible implementations for \emph{Ajax}, but the one most frequently used nowadays is based on
@@ -502,13 +502,13 @@ the front-end sends and receives \emph{JSON} \cite{baeldungJackson}.
 \subsubsection{\textbf{WebSocket for interactive communication}}
 
 Though \emph{Ajax} works perfectly for pulling information from the server to the client or pushing it from the 
-client to the server, the actions can only be triggered on the client-side. But in my application there
+client to the server, the actions can only be triggered on the client-side. But in our application there
 are a few situations in which it must work the other way around. One such case is updating the participant actions displayed to
 experimenters on the experiment's run page during execution: when a user performs a query or clicks on a link 
 the corresponding event is stored on the server, and the experimenter's page must be somehow notified that an event occurred.
 
 The classical way to solve this issue (before the \emph{WebSocket} protocol existed) was to poll for the
-current state. In my case this would have meant performing an \emph{Ajax} call at regular and possibly short intervals 
+current state. In our case this would have meant performing an \emph{Ajax} call at regular and possibly short intervals 
 (e.g. once a second) in order to retrieve the current state of the experiment (including the participant's action counts)
 and update the displayed data.
 This approach works, but is quite inefficient, since information is transferred and computations are done even if nothing
@@ -529,18 +529,18 @@ In several situation my application must enable uploading files and storing them
 generated on the server to the client system: experimenters need to upload \emph{URL} lists for creating document collections as well as 
 configuration files for defining test groups, and they must be able to download the data collected during an experiment.
 
-File upload can be done in \emph{Spring} by setting parameter of type \emph{MultipartFile}. This object has a method
+File upload can be done in \emph{SpringBoot} by setting a parameter of type \emph{MultipartFile} for a controller method. This object has a method
 \emph{getInputStream()}, which returns a standard \emph{Java} stream that can be written to the file system e.g. using
 the \emph{java.nio.file.Files} API. File download is equally simple: the \emph{Java InputStream} from a file can be copied to
 the \emph{OutputStream} associated with a \emph{HttpServletResponse} object (passed as parameter to a \emph{Controller} method)
-e.g. using \emph{FileCopyUtils} \cite{springFileUpload}. On the front-end one can upload files via a form including a
+e.g. using \emph{FileCopyUtils} \cite{springFileUpload}. On the front-end one can upload files via a form including an
 \emph{HTML} input tag with \texttt{type="file"}. Files can be downloaded using a link.
 
 \subsubsection{\textbf{Database interactions with \emph{Spring Data JPA}}} \label{sec:archOverallDb}
 
-The application heavily relies on data storing and retrieving structured data: user data
+The application heavily relies on storing and retrieving structured data: user data
 needs to be stored for enabling access control, metadata about document collections and experiment settings
-must be stored both for regulating the experiment's execution process, and during execution the participant's
+must be stored for regulating the experiment's execution process, and during execution the participant's
 actions must be logged. The best way for implementing this kind of functionality is by using a
 \emph{Database Management System (DBMS)} which allows for efficient storage and retrieval.
 I chose \emph{MySql} for this purpose because I already had some experience with it, and there is plenty of documentation online on how to 
@@ -557,25 +557,24 @@ Data access is managed via repositories which are defined as \emph{Java} interfa
 The \emph{Lucene} library can be easily added to the project by specifying it as a dependency in the \emph{Maven} configuration.
 Once the library is available, its classes can be instantiated and methods can be called. Both indexing and retrieval can
 be implemented based on classical \emph{Java} data structures. Details on how
-I used the library for the specific needs of my application are described in sections \ref{sec:implIndexing} 
-and \ref{sec:implRetrieval}.
+I used the library for the specific needs of my application are described in section \ref{sec:impl}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{\textbf{Internal Architecture of the \emph{SpringBoot} Application}} \label{sec:archBackend}
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 \emph{SpringBoot} does not enforce a particular architecture or package structure, but a pattern which I often encountered is a combination
-of a layered structure in which each layer communicates only with the layer directly below, and a package-per-feature structure, where
-tightly coupled classes are placed in the same package. My application roughly follows this approach, using the following layers:
+of a layered structure in which each layer communicates only with the layer directly below, and a package-per-feature structure, where 
+semantically related classes are placed in the same package. Our application roughly follows this approach, using the following layers:
 
     \begin{description}
 
         \item[Web Layer]
         Top layer of the hierarchy, containing \emph{Controller} classes with methods to handle web requests and API calls.
-        This layer contains a single package named ``endpoints''. This layer uses the functionalities provided by the service layer.
+        This layer contains a single package named ``endpoints'' and uses the functionalities provided by the service layer.
 
         \item[Service Layer]
-        This layer provides abstractions for lower level functionalities such as file access, database interactions user management and
+        This layer provides abstractions for lower level functionalities such as file access, database interactions, user management, and
         implementations of custom features like indexing, retrieval, and experiment configuration / evaluation.
         Also this layer consists of a single package named ``services'', containing classes for accessing the specific functionalities
         provided by the data access and processing layer below.
@@ -594,7 +593,7 @@ custom exceptions and an exception-handling mechanism (grouped in a package name
 configuration classes (grouped in a package named ``config''). \textbf{Figure \ref{fig:archLayers}} shows the
 layered architecture of the application: green rectangles represent packages, blue ovals represent classes,
 solid lines represent connections through instantiation or method calls, dashed lines indicate other interactions.
-In the following subsections I describe each layer in more detail.
+In the following subsections, each layer is described in more detail.
 
 
 \begin{figure}[h!]
