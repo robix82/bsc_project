@@ -928,8 +928,8 @@ from the layer below (package \texttt{db}. Following are its public methods:
 
 \subsubsection{\textbf{IndexingService}}
 
-The main purpose of the \texttt{IndexingService} is providing an interface to the \emph{Lucene} based functionalities
-functionalities implemented in the data / processing layer by using classes from the \texttt{indexing} package. It
+The main purpose of the \texttt{IndexingService} is providing an interface to the \emph{Lucene} based 
+implemented in the \\ data / processing layer by using classes from the \texttt{indexing} package. It
 also uses classes from the \texttt{storage} package for saving and loading \emph{URL} lists, as well as
 classes from the \texttt{db} package for updating metadata related to document collections. Following are its public methods:
 
@@ -1034,7 +1034,7 @@ packages. Following are its public methods:
                     as \texttt{InputStream} for download in \emph{JSON} format.
 
         \item[\texttt{InputStream summaryJson(Experiment experiment)}] makes a summary of the experiments data
-                    available as \texttt{InputStream} for download in \emph{JSON} format.
+                    available as \\ \texttt{InputStream} for download in \emph{JSON} format.
 
         \item[\texttt{InputStream userHistoriesCsv(int groupId)}] makes the individual usage histories of each participant
                     belonging to the given test group available as \texttt{InputStream} for download in form of a \emph{.zip}
@@ -1067,7 +1067,7 @@ As mentioned in section \ref{sec:archOverallDb}, access to the \emph{MySQL} data
 \emph{Data JPA} features. It's general working principle is to define entities as \emph{Java} classes annotated
 with \texttt{@Entity} and allow transactions via \emph{Java} interfaces annotated with \texttt{@Repository},
 extending the \texttt{CrudRepository} interface defined in the framework. 
-I grouped the entities in the sub-package \texttt{db.enities} and the
+The entities are grouped in the sub-package \texttt{db.enities} and the
 interfaces in the sub-package \texttt{db.repositories}.
 
 Below is a list of all defined entities, grouped according to the feature sets they are related to:
@@ -1094,7 +1094,7 @@ Below is a list of all defined entities, grouped according to the feature sets t
                     is also a field which is used only if the experiment is conducted in the context of a \emph{Qualtrics} survey,
                     which stores the \emph{URL} to which the user is going to be redirected at the end of the experiment.
 
-                \item \texttt{Role} Roles are defined as separate entities, so if needed, multiple roles can be assigned to the same user.
+                \item \texttt{Role} defined as separate entity, so if needed, multiple roles can be assigned to the same user.
 
             \end{itemize}
 
@@ -1356,7 +1356,7 @@ for details on how the indexing process is implemented see section \ref{sec:impl
 
 In general the text based retrieval process consists of finding documents that are related to a query by searching over an inverted index
  and returning them sorted by relevance; \emph{Lucene} provides a straight forward way for implementing this functionality. A peculiarity of
-my application is that results must be retrieved from multiple document collections (and therefore multiple \emph{Lucene} indices) and
+our application is that results must be retrieved from multiple document collections (and therefore multiple \emph{Lucene} indices) and
 combined into a single result list. Moreover an experimenter must be optionally able to define a fixed result list to be displayed 
 in response to the first query submitted by each user. Therefore I needed to build some structures around the features provided by the library. 
 \textbf{Figure \ref{fig:retrievalClasses}} shows the involved classes, which are briefly described below. Details
@@ -1508,7 +1508,7 @@ for each \emph{URL} and can be summarized in the following steps:
 
     \end{enumerate}
 
-The \emph{URL}s are stored one pr line in a text file and are made available as a list of strings via
+The \emph{URL}s are stored one per line in a text file and are made available as a list of strings via
 the file access feature provided in the \texttt{storage} package (see section \ref{sec:archDataLayerStorage}).
 At a top level, the indexing process is implemented as a loop over the list of strings. If anything goes wrong
 at some step (e.g. an address not being available on the network or an I/O operation failing), the given
@@ -1516,7 +1516,7 @@ at some step (e.g. an address not being available on the network or an I/O opera
 number of successfully indexed documents are stored in counter variables. After all \emph{URL}s in the list have
 been processed, execution exits the loop and a summary containing relevant information such as the values
 of the counters and the processing time is returned to the caller as an instance of the class 
-\texttt{IndexingResult} (see section \ref{sec:archDataLayerIndexing}.
+\texttt{IndexingResult} (see section \ref{sec:archDataLayerIndexing}).
 The following subsections describe the details of each step within the main loop.
 
 \subsubsection{Raw Data Download}
@@ -1533,7 +1533,7 @@ this functionality in my custom \texttt{fetch} method.
 \end{figure}
 
 The method returns an \texttt{InputStream} to be processed in the next step. If something unexpected happens, an instance
- of \texttt{IOException} is thrown. If this happens, a \texttt{catch} block causes the loop to continue with
+ of \texttt{IOException} is thrown. In that case, a \texttt{catch} block causes the loop to continue with
 the next \emph{URL}. 
 
 \subsubsection{Text Extraction}
@@ -1555,7 +1555,7 @@ The returned \texttt{ExtractedDocument} object converts the information from the
 String and the \emph{Metadata} to a \texttt{Map<String, String>} and stores it in data fields along with the document's \texttt{URL}
 and file type, to be used in the next processing step. 
 
-\subsubsection{Analysis an Storage}
+\subsubsection{Analysis and Persistence}
 
 The core part of the indexing process is of course creating an index and adding documents to it. The involved classes from the \emph{Lucene} 
 library are \texttt{IndexWriter}, \texttt{Directory}, \texttt{Analyzer}, \texttt{Document}, and \texttt{Fileld}, whose 
@@ -1564,7 +1564,7 @@ interactions are shown in \textbf{Figure \ref{fig:luceneIndexClasses}}.
 \begin{figure}[h!]
 \centering
 \includegraphics[width=0.6\textwidth]{figures/luceneIndexClasses}
-\caption{Lucene Indexing Classes}
+\caption{Lucene Indexing Classes \cite{luceneInAction}}
 \label{fig:luceneIndexClasses}
 \end{figure}
 
@@ -1575,18 +1575,18 @@ interactions are shown in \textbf{Figure \ref{fig:luceneIndexClasses}}.
     \item[Directory] represents the location of an index (in my case a directory in the file system).
 
     \item[Analyzer] converts plain text into a sequence of tokens. This involves removing so called ``stop words'' 
-        (frequently used but irrelevant words) and stemming (reducing similar words to their common root). Since
-        both stop word removal and stemming are language dependent, so a different \texttt{Analyzer} implementation
+        (frequently used but irrelevant words) and stemming (reducing similar words to their common root). 
+        Both stop word removal and stemming are language dependent, so a different \texttt{Analyzer} implementation
         for Italian document collections than for English ones was to be used.
 
-    \item[Document] The Document class represents a collection of fields which can optionally be stored. 
-        In my application each document contains the following fields; \texttt{id}, \texttt{url}, 
+    \item[Document] The \texttt{Document} class represents a collection of fields which can optionally be stored. 
+        In our application each document contains the following fields; \texttt{id}, \texttt{url}, 
         \texttt{fileType}, \texttt{title}, and \texttt{content}.
 
 \end{description}
 
 
-In my application, access to these classes is mediated by a class named \texttt{Indexer}, which exposes the methods
+Access to these classes is mediated by a class named \texttt{Indexer}, which exposes the methods
 \texttt{setUp}, \texttt{addDocument} (shown in \textbf{Figure \ref{fig:indexerCode}})
  and tearDown. before the main loop is started, the \texttt{setUp} method is called which
 initializes the \texttt{Directory} and \texttt{Analyzer}, and \texttt{IndexWriter} with information from
@@ -1628,8 +1628,8 @@ classes are briefly described below \cite{luceneInAction}:
 
     \item[\texttt{IndexReader} and \texttt{IndexSearcher}] provide read access to the index for searching.
 
-    \item[\texttt{Query} (and subclasses)] encapsulate logic for particular query types. Instances of this class
-            are passed to \texttt{IndexSearcher}'s \texttt{search} method.
+    \item[\texttt{Query} (and subclasses)] encapsulates logic for particular query types. Instances of this class
+            are passed to \\ \texttt{IndexSearcher}'s \texttt{search} method.
 
     \item[\texttt{QueryParser}] transforms a query string into a \texttt{Query} object, given the field to be considered
             and an instace of \texttt{Analyzer}. In most cases it is recommended to use the same type of \texttt{Analyzer}
@@ -1661,21 +1661,22 @@ by score.
 \section{\textbf{Conclusions and Future Work}} \label{sec:futureWork}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Though the resulting application satisfies (at leas at a basic level) the requirements defined at the
- beginning of the project, there are a number of ways it can be improved and extended in the future. An important
+Though the resulting application mostly satisfies the requirements defined at the
+ beginning of the project, there are a number of ways in which it can be improved and extended in the future. An important
 point is that I implemented the indexing and retrieval mechanisms using only the simplest aspects of the
 \emph{Lucene} API. I suppose that an assessment of the implementation's performance in terms of
 precision and recall would show a large margin of possible improvement, which could affect the participant's 
-usage experience and thus have an impact on the experiment's results. The quality of of the search engine could
-definitely be improved by at the level of \emph{Lucenes} \texttt{Analyzer} class, which can be extended for
-a fine grained application-specific configuration. Also the graphical aspects of the user interface may be
+usage experience and thus have an impact on the experiment's results. \emph{Lucene} provides plenty of possibilities for
+a more fine grained application-specific configuration. Also the graphical aspects of the user interface may be
 designed in a more attractive way.
 A future extension which I have kind of set the bases for is the support for multiple languages, both at the
 user interface and document corpus level, as it is now the case for English and Italian.
 
 In conclusion I'd like to express my thanks to the professors Marc Langheinrich and Peter Schulz
 for having given me the opportunity to work on this interesting and in many ways challenging project, 
-and having given me precise and clear indications on how to proceed.
+and having provided precise and clear indications on how to proceed.
+Though I had previously used some of the employed technologies, I learned a lot, especially at the level of architectural design.
+
 I hope that the result will allow to collect useful information in the context of the panned experiment,
 an maybe be reused in adapted forms for similar research scenarios in the future.
 
@@ -1745,7 +1746,7 @@ an maybe be reused in adapted forms for similar research scenarios in the future
         \texttt{spring.datasource.xxx} properties, which indicates the database which the application is going to connect to, and 
         the \texttt{baseUrl} parameter, which indicates the prefix used at server-level.
         For instance, in the \texttt{application-prod.properties} as I have set it up, the data source is pointing to a \emph{MySql} Docker container,
-        and the base URL is set to \texttt{/hse/} since I deploy it on \texttt{http://www.robix-projects.org/hse/}. 
+        and the base URL is set to \texttt{/hse/} (assuming the application is depoyed on \texttt{http://[some-domain]/hse/}). 
         In the \texttt{application-dev.properties} file the data source points to a local \emph{MySql} instance and the baseUrl is \texttt{/}.
 
         The other properties indicate directory paths and should not need to be modified.
@@ -1857,7 +1858,7 @@ an maybe be reused in adapted forms for similar research scenarios in the future
         \begin{verbatim}
         <VirtualHost *:80>
 
-          ServerName www.robix-projects.org
+          ServerName [some-domain].org
           ProxyPreserveHost On
 
           ProxyPass /hse/ http://127.0.0.1:8081/
@@ -1866,7 +1867,7 @@ an maybe be reused in adapted forms for similar research scenarios in the future
         </VirtualHost>
         \end{verbatim}
 
-        This configuration makes the application available under \texttt{http://www.robix-projects.org/hse}. Notice that
+        This configuration makes the application available under \texttt{http://[some-domain]/hse}. Notice that
         the prefix \texttt{/hse/} must match the \texttt{baseUrl} property in \texttt{application-prod.properties}
         and the port (8081 in this example) must correspond to the port defined in \texttt{docker-compose.yml}. 
 

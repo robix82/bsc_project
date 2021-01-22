@@ -11,6 +11,6 @@
 \contentsline {figure}{\numberline {11}{\ignorespaces Classes related to data extraction and processing\relax }}{24}{figure.caption.13}%
 \contentsline {figure}{\numberline {12}{\ignorespaces Method for downloading a web site\relax }}{25}{figure.caption.14}%
 \contentsline {figure}{\numberline {13}{\ignorespaces Method for text extraction\relax }}{25}{figure.caption.15}%
-\contentsline {figure}{\numberline {14}{\ignorespaces Lucene Indexing Classes\relax }}{26}{figure.caption.16}%
+\contentsline {figure}{\numberline {14}{\ignorespaces Lucene Indexing Classes \cite {luceneInAction}\relax }}{26}{figure.caption.16}%
 \contentsline {figure}{\numberline {15}{\ignorespaces Methods for accessing\emph {Lucene}'s indexing features\relax }}{26}{figure.caption.17}%
 \contentsline {figure}{\numberline {16}{\ignorespaces Role of \texttt {QueryParser} in the search process \cite {luceneInAction}\relax }}{27}{figure.caption.18}%

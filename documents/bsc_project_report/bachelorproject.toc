@@ -47,7 +47,7 @@
 \contentsline {subsection}{\numberline {6.1}\textbf {Indexing}}{25}{subsection.6.1}%
 \contentsline {subsubsection}{\numberline {6.1.1}Raw Data Download}{25}{subsubsection.6.1.1}%
 \contentsline {subsubsection}{\numberline {6.1.2}Text Extraction}{25}{subsubsection.6.1.2}%
-\contentsline {subsubsection}{\numberline {6.1.3}Analysis an Storage}{26}{subsubsection.6.1.3}%
+\contentsline {subsubsection}{\numberline {6.1.3}Analysis and Persistence}{26}{subsubsection.6.1.3}%
 \contentsline {subsection}{\numberline {6.2}\textbf {Retrieval}}{27}{subsection.6.2}%
 \contentsline {section}{\numberline {7}\textbf {Conclusions and Future Work}}{28}{section.7}%
 \contentsline {section}{Appendices}{29}{section*.19}%
