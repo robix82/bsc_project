@@ -88,6 +88,9 @@ public class Experiment {
 	
 	@Column(name="duration")
 	private Duration duration;
+	
+	@Column(name="timeout")
+	private Integer timeout;
 	 
 	public Experiment() {
 		
@@ -98,6 +101,7 @@ public class Experiment {
 		startTime = LocalDateTime.of(2000, 1, 1, 0, 0);
 		endTime = LocalDateTime.of(2000, 1, 1, 0, 0);
 		duration = Duration.ofMillis(0);
+		timeout = 600; // seconds
 	} 
 	
 	public Experiment(int id, String title, Set<TestGroup> testGroups) {
@@ -110,6 +114,7 @@ public class Experiment {
 		startTime = LocalDateTime.of(2000, 1, 1, 0, 0);
 		endTime = LocalDateTime.of(2000, 1, 1, 0, 0);
 		duration = Duration.ofMillis(0);
+		timeout = 600; // seconds
 	}
 	
 	public Experiment(String title) {
@@ -122,6 +127,7 @@ public class Experiment {
 		startTime = LocalDateTime.of(2000, 1, 1, 0, 0);
 		endTime = LocalDateTime.of(2000, 1, 1, 0, 0);
 		duration = Duration.ofMillis(0);
+		timeout = 600; // seconds
 	}
 	
 	public int getId() {
@@ -310,6 +316,14 @@ public class Experiment {
 				p.setClickCount(0);
 			}
 		}
+	}
+	
+	public int getTimeout() {
+		return timeout;
+	}
+	
+	public void setTimeout(int timeout) {
+		this.timeout = timeout;
 	}
 	
 	@Override

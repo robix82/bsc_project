@@ -12,6 +12,11 @@ $(document).ready(function() {
 
 		submitConfigFile();
 	});
+	
+	$("#timeoutInput").on("change", () => {
+		
+		updateTimeout();
+	});
 }); 
 
 function getDocCollection(collectionId) {
@@ -244,6 +249,31 @@ function submitTestGroup(testGroup, method) {
 			dataType: "json",
 			contentType: 'application/json; charset=utf-8',
 			data: JSON.stringify(testGroup),
+			success: () => {
+				location.reload();
+			},
+			error: (err) => { 
+
+				handleHttpError(err);
+			}
+		}
+	);
+}
+
+function updateTimeout() {
+	
+	let url = baseUrl + "experiments/";
+	
+	experiment.timeout = $("#timeoutInput").val() * 60;
+	
+	console.log("setting timeout to " + experiment.timeout);
+	
+	$.ajax(url,
+		{
+			type: "PUT",
+			dataType: "json",
+			contentType: 'application/json; charset=utf-8',
+			data: JSON.stringify(experiment),
 			success: () => {
 				location.reload();
 			},

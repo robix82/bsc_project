@@ -20,6 +20,8 @@
 	
 	<div id="inner-container">
 	
+		
+	
 		<div th:if="${experiment.mode.name() == 'STAND_ALONE'}" class="tab-container">
 		
 			<div class="tab-header">
@@ -79,6 +81,11 @@
 						th:text="#{m_configureFromFile}"	
 						onclick="showFileConfigModal()">
 				</button>	
+			</div>
+			
+			<div id="timeoutDiv">
+			  <h3 id="timeoutLabel">Timeout (min.): </h3>
+			  <input id="timeoutInput" type="number" th:value="${experiment.timeout / 60}"></input>
 			</div>
 			
 			<div id="test-groups-header">

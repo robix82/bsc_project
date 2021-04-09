@@ -260,6 +260,7 @@ public class ExperimentService {
 		found.setDateConducted(experiment.getDateConducted());
 		found.setStartTime(experiment.getStartTime());
 		found.setEndTime(experiment.getEndTime());
+		found.setTimeout(experiment.getTimeout());
 
 		checkReadyStatus(found);
 	
