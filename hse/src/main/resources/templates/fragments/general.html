@@ -22,7 +22,9 @@
 
 	  	<div id="internal-links">
 
+			<!--
 			<a  class="internal-link" th:href="@{${baseUrl}}" th:text="#{m_search}"></a>
+			-->
 			
 			<a class="internal-link" th:href="@{${baseUrl} + 'experiments/ui'}" th:text="#{m_experiments}"></a>
 
@@ -46,7 +48,7 @@
 	
 		 <div id="internal-links">
 
-			<a  class="participant-link" th:href="@{${baseUrl}}" th:text="#{m_search}"></a>
+			<a  class="participant-link" th:href="@{${baseUrl} + 'logout'}" th:text="#{m_completeSurvey}"></a>
 			<a th:if="${surveyUrl != null}" class="participant-link" th:href="@{${surveyUrl}}" th:text="#{m_completeSurvey}"></a>
 			
 		</div>

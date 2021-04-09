@@ -61,7 +61,7 @@ public class SearchController {
 	 * @throws NoSuchTestGroupException 
 	 */
 	@GetMapping("/")
-	public ModelAndView getSearchUi(@AuthenticationPrincipal User user, String queryString) 
+	public ModelAndView getSearchUi(@AuthenticationPrincipal User user, String queryString, Integer t) 
 			throws NoSuchUserException, 
 				   ParseException, 
 				   FileReadException, 
@@ -114,12 +114,21 @@ public class SearchController {
 			
 			srl = searchService.handleNewQuery(query, participant);
 		}
-
+		
+		int timeout = 0;
+		
+		if (t != null) {
+			timeout = t;
+		}
+		else {
+			timeout = experimentService.findExperiment(participant.getExperimentId()).getTimeout();
+		}
 		
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("baseUrl", baseUrl);
-		mav.setViewName("search");
 		mav.addObject("searchResultList", srl);
+		mav.addObject("timeout", timeout);
+		mav.setViewName("search");
 				
 		return mav;
 	}

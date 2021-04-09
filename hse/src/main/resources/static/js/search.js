@@ -1,6 +1,9 @@
 
 var stompClient = null;
 
+var t = timeout;
+var timer;
+
 $(document).ready(function() {
 	
 	if (searchResultList != null) {
@@ -10,7 +13,45 @@ $(document).ready(function() {
 	}
 	
 	connectWebSocket();
+	
+	showTime(t);
+	timer = setInterval(onTimeStep, 1000);
 });
+
+function onTimeStep() {
+	
+	t -= 1;
+	
+	$("#tParam").val(t);
+	showTime(t);
+	
+	if (t == 0) {
+		
+		location.href = baseUrl + "logout";
+	}
+}
+
+function showTime(time) {
+	
+	let minutes = Math.floor(time / 60);
+	let seconds = time % 60;
+	
+	let minString = "";
+	let secString = "";
+	
+	if (minutes < 10) {
+		minString += "0";
+	}
+	
+	if (seconds < 10) {
+		secString += "0";
+	}
+	
+	minString += minutes;
+	secString += seconds;
+	
+	$("#remainingTime").text(minString + ":" + secString);
+}
 
 function sendBrowseEvent(searchResult) {
 	

@@ -10,6 +10,11 @@ h2 {
 	font-size: 16pt;
 }
 
+#timeoutDisp {
+	
+	margin-top: 3em;
+}
+
 #title {
 	
 	display: flex;

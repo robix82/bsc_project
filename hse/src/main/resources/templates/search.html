@@ -17,6 +17,10 @@
 
 <div class="main-container">
 
+	<div id="timeoutDisp">
+		<h3 id="remainingTime">:</h3>
+	</div>
+
 	<div id="title">
 		<h1>HSE</h1>
 		<h2>The Health Search Engine</h2>	
@@ -30,6 +34,8 @@
 				   	class="form-control form-control-lg" 
 				   	type="text" 
 				   	th:placeholder="#{m_search}">
+		
+		<input type="hidden" id="tParam" name="t">
 		
 		<button type="submit" id="search-btn" class="btn btn-lg btn-primary">
 			<span class="glyphicon glyphicon-search"></span>
@@ -63,6 +69,7 @@
 <script th:inline="javascript">
 	/*<![CDATA[*/
 	var searchResultList = /*[[${searchResultList}]]*/ "default";
+	var timeout = /*[[${timeout}]]*/ "default";
 	/*]]>*/
 </script>
 
