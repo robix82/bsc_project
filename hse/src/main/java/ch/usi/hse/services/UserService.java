@@ -443,6 +443,9 @@ public class UserService {
 			String pwd = bCryptPasswordEncoder.encode(surveyUserPassword);
 			
 			Participant p = new Participant(userName, pwd);
+			Set<Role> roles = new HashSet<>();
+			roles.add(roleRepository.findByRole("PARTICIPANT"));
+			p.setRoles(roles);
 			participant = participantRepository.save(p);
 		}
 		else {

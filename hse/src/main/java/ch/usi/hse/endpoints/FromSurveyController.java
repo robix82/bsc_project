@@ -47,6 +47,7 @@ public class FromSurveyController {
 	@Autowired
 	private SimpMessagingTemplate simpMessagingTemplate;
 	
+	
 	@Value("${baseUrl}")
 	private String baseUrl;
 
@@ -86,6 +87,7 @@ public class FromSurveyController {
 		ModelAndView mav = new ModelAndView();
 		mav.setViewName("search");
 		mav.addObject("baseUrl", baseUrl);
+		mav.addObject("timeout", experiment.getTimeout());
 
 		return mav;
 	}
