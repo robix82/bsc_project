@@ -240,10 +240,11 @@ public class ExperimentsController {
 	 * @return
 	 * @throws NoSuchExperimentException
 	 * @throws TestGroupExistsException 
+	 * @throws UserExistsException 
 	 */
 	@PostMapping("/testGroups")
 	public ResponseEntity<TestGroup> postTestGroup(@RequestBody TestGroup testGroup) 
-			throws NoSuchExperimentException, TestGroupExistsException {
+			throws NoSuchExperimentException, TestGroupExistsException, UserExistsException {
 		
 		TestGroup saved = experimentService.addTestGroup(testGroup);
 		
@@ -259,13 +260,14 @@ public class ExperimentsController {
 	 * @throws NoSuchExperimentException 
 	 * @throws NoSuchDocCollectionException 
 	 * @throws UserExistsException 
+	 * @throws NoSuchUserException 
 	 */
 	@PutMapping("/testGroups")
 	public ResponseEntity<TestGroup> updateTestGroup(@RequestBody TestGroup testGroup) 
 			throws NoSuchTestGroupException, 
 				   NoSuchExperimentException, 
 				   NoSuchDocCollectionException, 
-				   UserExistsException {
+				   UserExistsException, NoSuchUserException {
 		
 		TestGroup updated = experimentService.updateTestGroup(testGroup);
 		

@@ -26,7 +26,6 @@ import ch.usi.hse.db.repositories.DocClickEventRepository;
 import ch.usi.hse.db.repositories.DocCollectionRepository;
 import ch.usi.hse.db.repositories.ExperimentRepository;
 import ch.usi.hse.db.repositories.ExperimenterRepository;
-import ch.usi.hse.db.repositories.ParticipantRepository;
 import ch.usi.hse.db.repositories.QueryEventRepository;
 import ch.usi.hse.db.repositories.SessionEventRepository;
 import ch.usi.hse.db.repositories.TestGroupRepository;
@@ -56,7 +55,6 @@ public class ExperimentService {
 
 	private ExperimentRepository experimentRepo;
 	private TestGroupRepository testGroupRepo;
-	private ParticipantRepository participantRepo;
 	private DocCollectionRepository collectionRepo;
 	private ExperimenterRepository experimenterRepo;
 	ExperimentConfigurer experimentConfigurer;
@@ -69,11 +67,12 @@ public class ExperimentService {
 	private QueryEventRepository qeRepo;
 	private DocClickEventRepository ceRepo;
 	
+	private UserService userService;
+	
 	
 	@Autowired
 	public ExperimentService(ExperimentRepository experimentRepo,
 							 TestGroupRepository testGroupRepo,
-							 ParticipantRepository participantRepo,
 							 DocCollectionRepository collectionRepo,
 							 ExperimenterRepository experimenterRepo,
 							 ExperimentConfigurer experimentConfigurer,
@@ -85,11 +84,11 @@ public class ExperimentService {
 							 UsageEventRepository ueRepo,
 							 SessionEventRepository seRepo,
 							 QueryEventRepository qeRepo,
-							 DocClickEventRepository ceRepo) {
+							 DocClickEventRepository ceRepo,
+							 UserService userService) {
 		
 		this.experimentRepo = experimentRepo;
 		this.testGroupRepo = testGroupRepo;
-		this.participantRepo = participantRepo;
 		this.collectionRepo = collectionRepo;
 		this.experimenterRepo = experimenterRepo;
 		this.experimentConfigurer = experimentConfigurer;
@@ -101,6 +100,7 @@ public class ExperimentService {
 		this.seRepo = seRepo;
 		this.qeRepo = qeRepo;
 		this.ceRepo = ceRepo;
+		this.userService = userService;
 	}
 	
 	// GENERAL DB OPERATIONS
@@ -338,12 +338,13 @@ public class ExperimentService {
 	 * @throws NoSuchExperimentException 
 	 * @throws NoSuchDocCollectionException 
 	 * @throws UserExistsException 
+	 * @throws NoSuchUserException 
 	 */
 	public TestGroup updateTestGroup(TestGroup testGroup) 
 			throws NoSuchTestGroupException, 
 				   NoSuchExperimentException, 
 				   NoSuchDocCollectionException, 
-				   UserExistsException {
+				   UserExistsException, NoSuchUserException {
 		
 		int groupId = testGroup.getId();
 		
@@ -365,18 +366,18 @@ public class ExperimentService {
 		
 		for (Participant p : testGroup.getParticipants()) {	
 			
-			if (! participantRepo.existsById(p.getId())) {
+			if (! userService.userExists(p.getId())) {
 			
-				if (participantRepo.existsByUserName(p.getUserName())) {
+				if (userService.userExists(p.getUserName())) {
 					throw new UserExistsException(p.getUserName());
 				}			
 			}
 			else {
 				
-				Participant existing = participantRepo.findById(p.getId());
+				Participant existing = userService.findParticipant(p.getId());
 				
 				if (! p.getUserName().equals(existing.getUserName()) &&
-					participantRepo.existsByUserName(p.getUserName())) {
+					userService.userExists(p.getUserName())) {
 					
 					throw new UserExistsException(p.getUserName());
 				}
@@ -393,7 +394,17 @@ public class ExperimentService {
 		
 		for (Participant p : testGroup.getParticipants()) {
 			
-			found.addParticipant(p);
+			Participant p1;
+			
+			if (userService.userExists(p.getId())) {
+				
+				p1 = (Participant) userService.findParticipant(p.getId());
+			}
+			else {
+				p1 = userService.addParticipant(p);
+			}
+			
+			found.addParticipant(p1);
 		}
 		
 		TestGroup updated = testGroupRepo.save(found);
@@ -480,7 +491,7 @@ public class ExperimentService {
 	// CONFIG FILE MANAGEMENT
 	
 	/**
-	 * returns the names of all ailable configuration files
+	 * returns the names of all available configuration files
 	 * 
 	 * @return
 	 * @throws FileReadException

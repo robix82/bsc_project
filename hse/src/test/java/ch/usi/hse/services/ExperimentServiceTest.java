@@ -82,6 +82,9 @@ public class ExperimentServiceTest {
 	@Mock
 	private DocClickEventRepository ceRepo;
 	
+	@Mock
+	private UserService userService;
+	
 	private ExperimentService service;
 	
 	private List<Experiment> savedExperiments;
@@ -101,7 +104,6 @@ public class ExperimentServiceTest {
 		
 		service = new ExperimentService(experimentRepo,
 										testGroupRepo,
-										participantRepo,
 										collectionRepo,
 										experimenterRepo,
 										experimentConfigurer,
@@ -112,7 +114,8 @@ public class ExperimentServiceTest {
 										ueRepo,
 										seRepo,
 										qeRepo,
-										ceRepo);
+										ceRepo,
+										userService);
 		
 		// DocCollections
 		

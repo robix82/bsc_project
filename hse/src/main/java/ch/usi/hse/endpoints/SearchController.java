@@ -28,6 +28,7 @@ import ch.usi.hse.exceptions.NoSuchTestGroupException;
 import ch.usi.hse.exceptions.NoSuchUserException;
 import ch.usi.hse.retrieval.SearchResult;
 import ch.usi.hse.retrieval.SearchResultList;
+import ch.usi.hse.services.ExperimentService;
 import ch.usi.hse.services.SearchService;
 import ch.usi.hse.services.UserService;
 
@@ -49,6 +50,9 @@ public class SearchController {
 	
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private ExperimentService experimentService;
 
 	/**
 	 * Serves the main search UI page
@@ -65,6 +69,19 @@ public class SearchController {
 				   NoSuchExperimentException, 
 				   NoSuchFileException, 
 				   IOException, NoSuchTestGroupException {
+		
+		HseUser u = userService.findUser(user.getUsername());
+		
+		if (! (u instanceof Participant)) {
+			
+			ModelAndView mav = new ModelAndView();
+			mav.addObject("baseUrl", baseUrl);
+			mav.addObject("experiments", experimentService.allExperiments());
+			mav.addObject("experimenters", userService.allExperimenters());
+			mav.setViewName("experiments");
+			
+			return mav;
+		}
 		
 		Participant participant = userService.findParticipant(user.getUsername());
 		
