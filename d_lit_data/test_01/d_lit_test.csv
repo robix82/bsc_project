@@ -1,0 +1,19 @@
+eventId,eventType,timestamp,userId,groupId,groupName,action,queryString,resultCount,docDistribution,url,documentId,documentRank,collectionId,collectionName
+411,QUERY,2021-04-13T13:05:28,410,389,g1,N.A.,depressione,20,[g1_green:16][g1_red:4],N.A.,N.A.,N.A.,N.A.,N.A.
+414,DOC_CLICK,2021-04-13T13:05:29,410,389,g1,N.A.,N.A.,N.A.,N.A.,https://www.cure-naturali.it/enciclopedia-naturale/salute/naturopatia/depressione.html,3,1,376,g1_red
+422,QUERY,2021-04-16T06:11:39,421,391,g3,N.A.,depressione,8,[g3_green:4][g3_red:4],N.A.,N.A.,N.A.,N.A.,N.A.
+425,DOC_CLICK,2021-04-16T06:11:56,421,391,g3,N.A.,N.A.,N.A.,N.A.,https://www.msdmanuals.com/it/casa/disturbi-di-salute-mentale/disturbi-dell-umore/depressione,1,2,379,g3_green
+426,DOC_CLICK,2021-04-16T06:12:32,421,391,g3,N.A.,N.A.,N.A.,N.A.,https://www.ipsico.it/sintomi-cura/depressione/,3,4,379,g3_green
+427,DOC_CLICK,2021-04-16T06:13:08,421,391,g3,N.A.,N.A.,N.A.,N.A.,https://www.melarossa.it/salute/psicologia/le-8-dritte-combattere-la-depressione-54916/,2,6,380,g3_red
+428,DOC_CLICK,2021-04-16T06:13:42,421,391,g3,N.A.,N.A.,N.A.,N.A.,https://rimediomeopatici.com/affezioni-rimedi/ansia-depressione-attacchi-di-panico/,0,8,380,g3_red
+429,QUERY,2021-04-16T06:14:32,421,391,g3,N.A.,depressione medicamenti,8,[g3_green:4][g3_red:4],N.A.,N.A.,N.A.,N.A.,N.A.
+432,DOC_CLICK,2021-04-16T06:14:46,421,391,g3,N.A.,N.A.,N.A.,N.A.,https://rimediomeopatici.com/affezioni-rimedi/ansia-depressione-attacchi-di-panico/,0,8,380,g3_red
+433,QUERY,2021-04-16T06:15:11,421,391,g3,N.A.,depressione medicina,8,[g3_green:4][g3_red:4],N.A.,N.A.,N.A.,N.A.,N.A.
+436,DOC_CLICK,2021-04-16T06:15:19,421,391,g3,N.A.,N.A.,N.A.,N.A.,https://www.greenme.it/vivere/salute-e-benessere/antidepressivi-naturali-10-rimedi/,1,1,380,g3_red
+437,DOC_CLICK,2021-04-16T06:15:50,421,391,g3,N.A.,N.A.,N.A.,N.A.,https://www.melarossa.it/salute/psicologia/le-8-dritte-combattere-la-depressione-54916/,2,8,380,g3_red
+438,DOC_CLICK,2021-04-16T06:15:55,421,391,g3,N.A.,N.A.,N.A.,N.A.,https://www.ospedalemarialuigia.it/disturbi-dell-umore/depressione-maggiore/,2,7,379,g3_green
+439,DOC_CLICK,2021-04-16T06:16:44,421,391,g3,N.A.,N.A.,N.A.,N.A.,https://www.melarossa.it/salute/psicologia/le-8-dritte-combattere-la-depressione-54916/,2,8,380,g3_red
+440,DOC_CLICK,2021-04-16T06:16:48,421,391,g3,N.A.,N.A.,N.A.,N.A.,https://www.ipsico.it/sintomi-cura/depressione/,3,3,379,g3_green
+441,DOC_CLICK,2021-04-16T06:17:47,421,391,g3,N.A.,N.A.,N.A.,N.A.,https://www.cure-naturali.it/enciclopedia-naturale/salute/naturopatia/depressione.html,3,2,380,g3_red
+442,SESSION,2021-04-16T06:20:25,421,391,g3,LOGOUT,N.A.,N.A.,N.A.,N.A.,N.A.,N.A.,N.A.,N.A.
+449,SESSION,2021-04-16T08:10:14,410,389,g1,LOGOUT,N.A.,N.A.,N.A.,N.A.,N.A.,N.A.,N.A.,N.A.

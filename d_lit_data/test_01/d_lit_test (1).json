@@ -1,0 +1,508 @@
+{
+  "title" : "d_lit_test",
+  "dateConducted" : [ 2021, 4, 12, 12, 44, 13 ],
+  "duration" : 329160.844022000,
+  "groupNames" : [ "g1", "g2", "g3" ],
+  "participantsPerGroup" : {
+    "g1" : 1,
+    "g2" : 0,
+    "g3" : 1
+  },
+  "participants" : 2,
+  "totalQueries" : 4,
+  "totalClicks" : 12,
+  "queriesPerUser" : {
+    "n" : 2,
+    "total" : 5.0,
+    "mean" : 2.5,
+    "median" : 2.0,
+    "standardDeviation" : 1.118033988749895
+  },
+  "clicksPerUser" : {
+    "n" : 2,
+    "total" : 13.0,
+    "mean" : 6.5,
+    "median" : 6.0,
+    "standardDeviation" : 5.024937810560445
+  },
+  "clicksPerQuery" : {
+    "n" : 4,
+    "total" : 13.0,
+    "mean" : 3.25,
+    "median" : 2.5,
+    "standardDeviation" : 2.1360009363293826
+  },
+  "timePerQuery" : {
+    "n" : 4,
+    "total" : 483498.0,
+    "mean" : 120874.5,
+    "median" : 243.5,
+    "standardDeviation" : 120677.29514598013
+  },
+  "timePerClick" : {
+    "n" : 12,
+    "total" : 483457.0,
+    "mean" : 40288.083333333336,
+    "median" : 36.0,
+    "standardDeviation" : 69699.00982642955
+  },
+  "groupSummaries" : [ {
+    "groupName" : "g1",
+    "collectionNames" : [ "g1_green", "g1_red" ],
+    "participants" : 1,
+    "totalQueries" : 1,
+    "totalClicks" : 1,
+    "queriesPerUser" : {
+      "n" : 1,
+      "total" : 1.0,
+      "mean" : 1.0,
+      "median" : 1.0,
+      "standardDeviation" : 0.0
+    },
+    "clicksPerUser" : {
+      "n" : 1,
+      "total" : 1.0,
+      "mean" : 1.0,
+      "median" : 1.0,
+      "standardDeviation" : 0.0
+    },
+    "clicksPerQuery" : {
+      "n" : 1,
+      "total" : 1.0,
+      "mean" : 1.0,
+      "median" : 1.0,
+      "standardDeviation" : 0.0
+    },
+    "timePerQuery" : {
+      "n" : 1,
+      "total" : 241486.0,
+      "mean" : 241486.0,
+      "median" : 241486.0,
+      "standardDeviation" : 0.0
+    },
+    "timePerClick" : {
+      "n" : 1,
+      "total" : 241485.0,
+      "mean" : 241485.0,
+      "median" : 241485.0,
+      "standardDeviation" : 0.0
+    },
+    "clicksPerDocCollection" : {
+      "g1_green" : {
+        "n" : 1,
+        "total" : 0.0,
+        "mean" : 0.0,
+        "median" : 0.0,
+        "standardDeviation" : 0.0
+      },
+      "g1_red" : {
+        "n" : 1,
+        "total" : 1.0,
+        "mean" : 1.0,
+        "median" : 1.0,
+        "standardDeviation" : 0.0
+      }
+    },
+    "timePerDocCollection" : {
+      "g1_green" : {
+        "n" : 1,
+        "total" : 0.0,
+        "mean" : 0.0,
+        "median" : 0.0,
+        "standardDeviation" : 0.0
+      },
+      "g1_red" : {
+        "n" : 1,
+        "total" : 241485.0,
+        "mean" : 241485.0,
+        "median" : 241485.0,
+        "standardDeviation" : 0.0
+      }
+    },
+    "userHistories" : {
+      "410" : [ {
+        "id" : 411,
+        "timestamp" : [ 2021, 4, 13, 13, 5, 28 ],
+        "userId" : 410,
+        "groupId" : 389,
+        "groupName" : "g1",
+        "eventType" : "QUERY",
+        "queryString" : "depressione",
+        "totalResults" : 20,
+        "queryStats" : [ {
+          "collectionId" : 375,
+          "collectionName" : "g1_green",
+          "resultCount" : 16
+        }, {
+          "collectionId" : 376,
+          "collectionName" : "g1_red",
+          "resultCount" : 4
+        } ]
+      }, {
+        "id" : 414,
+        "timestamp" : [ 2021, 4, 13, 13, 5, 29 ],
+        "userId" : 410,
+        "groupId" : 389,
+        "groupName" : "g1",
+        "eventType" : "DOC_CLICK",
+        "url" : "https://www.cure-naturali.it/enciclopedia-naturale/salute/naturopatia/depressione.html",
+        "documentId" : 3,
+        "collectionId" : 376,
+        "collectionName" : "g1_red",
+        "documentRank" : 1
+      }, {
+        "id" : 449,
+        "timestamp" : [ 2021, 4, 16, 8, 10, 14 ],
+        "userId" : 410,
+        "groupId" : 389,
+        "groupName" : "g1",
+        "eventType" : "SESSION",
+        "event" : "LOGOUT"
+      } ]
+    }
+  }, {
+    "groupName" : "g2",
+    "collectionNames" : [ "g2_green", "g2_red" ],
+    "participants" : 0,
+    "totalQueries" : 0,
+    "totalClicks" : 0,
+    "queriesPerUser" : {
+      "n" : 0,
+      "total" : 0.0,
+      "mean" : 0.0,
+      "median" : 0.0,
+      "standardDeviation" : 0.0
+    },
+    "clicksPerUser" : {
+      "n" : 0,
+      "total" : 0.0,
+      "mean" : 0.0,
+      "median" : 0.0,
+      "standardDeviation" : 0.0
+    },
+    "clicksPerQuery" : {
+      "n" : 0,
+      "total" : 0.0,
+      "mean" : 0.0,
+      "median" : 0.0,
+      "standardDeviation" : 0.0
+    },
+    "timePerQuery" : {
+      "n" : 0,
+      "total" : 0.0,
+      "mean" : 0.0,
+      "median" : 0.0,
+      "standardDeviation" : 0.0
+    },
+    "timePerClick" : {
+      "n" : 0,
+      "total" : 0.0,
+      "mean" : 0.0,
+      "median" : 0.0,
+      "standardDeviation" : 0.0
+    },
+    "clicksPerDocCollection" : {
+      "g2_green" : {
+        "n" : 0,
+        "total" : 0.0,
+        "mean" : 0.0,
+        "median" : 0.0,
+        "standardDeviation" : 0.0
+      },
+      "g2_red" : {
+        "n" : 0,
+        "total" : 0.0,
+        "mean" : 0.0,
+        "median" : 0.0,
+        "standardDeviation" : 0.0
+      }
+    },
+    "timePerDocCollection" : {
+      "g2_green" : {
+        "n" : 0,
+        "total" : 0.0,
+        "mean" : 0.0,
+        "median" : 0.0,
+        "standardDeviation" : 0.0
+      },
+      "g2_red" : {
+        "n" : 0,
+        "total" : 0.0,
+        "mean" : 0.0,
+        "median" : 0.0,
+        "standardDeviation" : 0.0
+      }
+    },
+    "userHistories" : { }
+  }, {
+    "groupName" : "g3",
+    "collectionNames" : [ "g3_green", "g3_red" ],
+    "participants" : 1,
+    "totalQueries" : 3,
+    "totalClicks" : 11,
+    "queriesPerUser" : {
+      "n" : 1,
+      "total" : 3.0,
+      "mean" : 3.0,
+      "median" : 3.0,
+      "standardDeviation" : 0.0
+    },
+    "clicksPerUser" : {
+      "n" : 1,
+      "total" : 11.0,
+      "mean" : 11.0,
+      "median" : 11.0,
+      "standardDeviation" : 0.0
+    },
+    "clicksPerQuery" : {
+      "n" : 3,
+      "total" : 11.0,
+      "mean" : 3.6666666666666665,
+      "median" : 4.0,
+      "standardDeviation" : 2.0548046676563256
+    },
+    "timePerQuery" : {
+      "n" : 3,
+      "total" : 526.0,
+      "mean" : 175.33333333333334,
+      "median" : 173.0,
+      "standardDeviation" : 112.28040296012875
+    },
+    "timePerClick" : {
+      "n" : 11,
+      "total" : 487.0,
+      "mean" : 44.27272727272727,
+      "median" : 36.0,
+      "standardDeviation" : 39.497044559379624
+    },
+    "clicksPerDocCollection" : {
+      "g3_red" : {
+        "n" : 1,
+        "total" : 7.0,
+        "mean" : 7.0,
+        "median" : 7.0,
+        "standardDeviation" : 0.0
+      },
+      "g3_green" : {
+        "n" : 1,
+        "total" : 4.0,
+        "mean" : 4.0,
+        "median" : 4.0,
+        "standardDeviation" : 0.0
+      }
+    },
+    "timePerDocCollection" : {
+      "g3_red" : {
+        "n" : 1,
+        "total" : 307.0,
+        "mean" : 307.0,
+        "median" : 307.0,
+        "standardDeviation" : 0.0
+      },
+      "g3_green" : {
+        "n" : 1,
+        "total" : 180.0,
+        "mean" : 180.0,
+        "median" : 180.0,
+        "standardDeviation" : 0.0
+      }
+    },
+    "userHistories" : {
+      "421" : [ {
+        "id" : 422,
+        "timestamp" : [ 2021, 4, 16, 6, 11, 39 ],
+        "userId" : 421,
+        "groupId" : 391,
+        "groupName" : "g3",
+        "eventType" : "QUERY",
+        "queryString" : "depressione",
+        "totalResults" : 8,
+        "queryStats" : [ {
+          "collectionId" : 379,
+          "collectionName" : "g3_green",
+          "resultCount" : 4
+        }, {
+          "collectionId" : 380,
+          "collectionName" : "g3_red",
+          "resultCount" : 4
+        } ]
+      }, {
+        "id" : 425,
+        "timestamp" : [ 2021, 4, 16, 6, 11, 56 ],
+        "userId" : 421,
+        "groupId" : 391,
+        "groupName" : "g3",
+        "eventType" : "DOC_CLICK",
+        "url" : "https://www.msdmanuals.com/it/casa/disturbi-di-salute-mentale/disturbi-dell-umore/depressione",
+        "documentId" : 1,
+        "collectionId" : 379,
+        "collectionName" : "g3_green",
+        "documentRank" : 2
+      }, {
+        "id" : 426,
+        "timestamp" : [ 2021, 4, 16, 6, 12, 32 ],
+        "userId" : 421,
+        "groupId" : 391,
+        "groupName" : "g3",
+        "eventType" : "DOC_CLICK",
+        "url" : "https://www.ipsico.it/sintomi-cura/depressione/",
+        "documentId" : 3,
+        "collectionId" : 379,
+        "collectionName" : "g3_green",
+        "documentRank" : 4
+      }, {
+        "id" : 427,
+        "timestamp" : [ 2021, 4, 16, 6, 13, 8 ],
+        "userId" : 421,
+        "groupId" : 391,
+        "groupName" : "g3",
+        "eventType" : "DOC_CLICK",
+        "url" : "https://www.melarossa.it/salute/psicologia/le-8-dritte-combattere-la-depressione-54916/",
+        "documentId" : 2,
+        "collectionId" : 380,
+        "collectionName" : "g3_red",
+        "documentRank" : 6
+      }, {
+        "id" : 428,
+        "timestamp" : [ 2021, 4, 16, 6, 13, 42 ],
+        "userId" : 421,
+        "groupId" : 391,
+        "groupName" : "g3",
+        "eventType" : "DOC_CLICK",
+        "url" : "https://rimediomeopatici.com/affezioni-rimedi/ansia-depressione-attacchi-di-panico/",
+        "documentId" : 0,
+        "collectionId" : 380,
+        "collectionName" : "g3_red",
+        "documentRank" : 8
+      }, {
+        "id" : 429,
+        "timestamp" : [ 2021, 4, 16, 6, 14, 32 ],
+        "userId" : 421,
+        "groupId" : 391,
+        "groupName" : "g3",
+        "eventType" : "QUERY",
+        "queryString" : "depressione medicamenti",
+        "totalResults" : 8,
+        "queryStats" : [ {
+          "collectionId" : 379,
+          "collectionName" : "g3_green",
+          "resultCount" : 4
+        }, {
+          "collectionId" : 380,
+          "collectionName" : "g3_red",
+          "resultCount" : 4
+        } ]
+      }, {
+        "id" : 432,
+        "timestamp" : [ 2021, 4, 16, 6, 14, 46 ],
+        "userId" : 421,
+        "groupId" : 391,
+        "groupName" : "g3",
+        "eventType" : "DOC_CLICK",
+        "url" : "https://rimediomeopatici.com/affezioni-rimedi/ansia-depressione-attacchi-di-panico/",
+        "documentId" : 0,
+        "collectionId" : 380,
+        "collectionName" : "g3_red",
+        "documentRank" : 8
+      }, {
+        "id" : 433,
+        "timestamp" : [ 2021, 4, 16, 6, 15, 11 ],
+        "userId" : 421,
+        "groupId" : 391,
+        "groupName" : "g3",
+        "eventType" : "QUERY",
+        "queryString" : "depressione medicina",
+        "totalResults" : 8,
+        "queryStats" : [ {
+          "collectionId" : 379,
+          "collectionName" : "g3_green",
+          "resultCount" : 4
+        }, {
+          "collectionId" : 380,
+          "collectionName" : "g3_red",
+          "resultCount" : 4
+        } ]
+      }, {
+        "id" : 436,
+        "timestamp" : [ 2021, 4, 16, 6, 15, 19 ],
+        "userId" : 421,
+        "groupId" : 391,
+        "groupName" : "g3",
+        "eventType" : "DOC_CLICK",
+        "url" : "https://www.greenme.it/vivere/salute-e-benessere/antidepressivi-naturali-10-rimedi/",
+        "documentId" : 1,
+        "collectionId" : 380,
+        "collectionName" : "g3_red",
+        "documentRank" : 1
+      }, {
+        "id" : 437,
+        "timestamp" : [ 2021, 4, 16, 6, 15, 50 ],
+        "userId" : 421,
+        "groupId" : 391,
+        "groupName" : "g3",
+        "eventType" : "DOC_CLICK",
+        "url" : "https://www.melarossa.it/salute/psicologia/le-8-dritte-combattere-la-depressione-54916/",
+        "documentId" : 2,
+        "collectionId" : 380,
+        "collectionName" : "g3_red",
+        "documentRank" : 8
+      }, {
+        "id" : 438,
+        "timestamp" : [ 2021, 4, 16, 6, 15, 55 ],
+        "userId" : 421,
+        "groupId" : 391,
+        "groupName" : "g3",
+        "eventType" : "DOC_CLICK",
+        "url" : "https://www.ospedalemarialuigia.it/disturbi-dell-umore/depressione-maggiore/",
+        "documentId" : 2,
+        "collectionId" : 379,
+        "collectionName" : "g3_green",
+        "documentRank" : 7
+      }, {
+        "id" : 439,
+        "timestamp" : [ 2021, 4, 16, 6, 16, 44 ],
+        "userId" : 421,
+        "groupId" : 391,
+        "groupName" : "g3",
+        "eventType" : "DOC_CLICK",
+        "url" : "https://www.melarossa.it/salute/psicologia/le-8-dritte-combattere-la-depressione-54916/",
+        "documentId" : 2,
+        "collectionId" : 380,
+        "collectionName" : "g3_red",
+        "documentRank" : 8
+      }, {
+        "id" : 440,
+        "timestamp" : [ 2021, 4, 16, 6, 16, 48 ],
+        "userId" : 421,
+        "groupId" : 391,
+        "groupName" : "g3",
+        "eventType" : "DOC_CLICK",
+        "url" : "https://www.ipsico.it/sintomi-cura/depressione/",
+        "documentId" : 3,
+        "collectionId" : 379,
+        "collectionName" : "g3_green",
+        "documentRank" : 3
+      }, {
+        "id" : 441,
+        "timestamp" : [ 2021, 4, 16, 6, 17, 47 ],
+        "userId" : 421,
+        "groupId" : 391,
+        "groupName" : "g3",
+        "eventType" : "DOC_CLICK",
+        "url" : "https://www.cure-naturali.it/enciclopedia-naturale/salute/naturopatia/depressione.html",
+        "documentId" : 3,
+        "collectionId" : 380,
+        "collectionName" : "g3_red",
+        "documentRank" : 2
+      }, {
+        "id" : 442,
+        "timestamp" : [ 2021, 4, 16, 6, 20, 25 ],
+        "userId" : 421,
+        "groupId" : 391,
+        "groupName" : "g3",
+        "eventType" : "SESSION",
+        "event" : "LOGOUT"
+      } ]
+    }
+  } ]
+}

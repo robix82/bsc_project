@@ -1,0 +1,241 @@
+{
+  "g1" : {
+    "410" : [ {
+      "id" : 411,
+      "timestamp" : [ 2021, 4, 13, 13, 5, 28 ],
+      "userId" : 410,
+      "groupId" : 389,
+      "groupName" : "g1",
+      "eventType" : "QUERY",
+      "queryString" : "depressione",
+      "totalResults" : 20,
+      "queryStats" : [ {
+        "collectionId" : 375,
+        "collectionName" : "g1_green",
+        "resultCount" : 16
+      }, {
+        "collectionId" : 376,
+        "collectionName" : "g1_red",
+        "resultCount" : 4
+      } ]
+    }, {
+      "id" : 414,
+      "timestamp" : [ 2021, 4, 13, 13, 5, 29 ],
+      "userId" : 410,
+      "groupId" : 389,
+      "groupName" : "g1",
+      "eventType" : "DOC_CLICK",
+      "url" : "https://www.cure-naturali.it/enciclopedia-naturale/salute/naturopatia/depressione.html",
+      "documentId" : 3,
+      "collectionId" : 376,
+      "collectionName" : "g1_red",
+      "documentRank" : 1
+    }, {
+      "id" : 449,
+      "timestamp" : [ 2021, 4, 16, 8, 10, 14 ],
+      "userId" : 410,
+      "groupId" : 389,
+      "groupName" : "g1",
+      "eventType" : "SESSION",
+      "event" : "LOGOUT"
+    } ]
+  },
+  "g2" : { },
+  "g3" : {
+    "421" : [ {
+      "id" : 422,
+      "timestamp" : [ 2021, 4, 16, 6, 11, 39 ],
+      "userId" : 421,
+      "groupId" : 391,
+      "groupName" : "g3",
+      "eventType" : "QUERY",
+      "queryString" : "depressione",
+      "totalResults" : 8,
+      "queryStats" : [ {
+        "collectionId" : 379,
+        "collectionName" : "g3_green",
+        "resultCount" : 4
+      }, {
+        "collectionId" : 380,
+        "collectionName" : "g3_red",
+        "resultCount" : 4
+      } ]
+    }, {
+      "id" : 425,
+      "timestamp" : [ 2021, 4, 16, 6, 11, 56 ],
+      "userId" : 421,
+      "groupId" : 391,
+      "groupName" : "g3",
+      "eventType" : "DOC_CLICK",
+      "url" : "https://www.msdmanuals.com/it/casa/disturbi-di-salute-mentale/disturbi-dell-umore/depressione",
+      "documentId" : 1,
+      "collectionId" : 379,
+      "collectionName" : "g3_green",
+      "documentRank" : 2
+    }, {
+      "id" : 426,
+      "timestamp" : [ 2021, 4, 16, 6, 12, 32 ],
+      "userId" : 421,
+      "groupId" : 391,
+      "groupName" : "g3",
+      "eventType" : "DOC_CLICK",
+      "url" : "https://www.ipsico.it/sintomi-cura/depressione/",
+      "documentId" : 3,
+      "collectionId" : 379,
+      "collectionName" : "g3_green",
+      "documentRank" : 4
+    }, {
+      "id" : 427,
+      "timestamp" : [ 2021, 4, 16, 6, 13, 8 ],
+      "userId" : 421,
+      "groupId" : 391,
+      "groupName" : "g3",
+      "eventType" : "DOC_CLICK",
+      "url" : "https://www.melarossa.it/salute/psicologia/le-8-dritte-combattere-la-depressione-54916/",
+      "documentId" : 2,
+      "collectionId" : 380,
+      "collectionName" : "g3_red",
+      "documentRank" : 6
+    }, {
+      "id" : 428,
+      "timestamp" : [ 2021, 4, 16, 6, 13, 42 ],
+      "userId" : 421,
+      "groupId" : 391,
+      "groupName" : "g3",
+      "eventType" : "DOC_CLICK",
+      "url" : "https://rimediomeopatici.com/affezioni-rimedi/ansia-depressione-attacchi-di-panico/",
+      "documentId" : 0,
+      "collectionId" : 380,
+      "collectionName" : "g3_red",
+      "documentRank" : 8
+    }, {
+      "id" : 429,
+      "timestamp" : [ 2021, 4, 16, 6, 14, 32 ],
+      "userId" : 421,
+      "groupId" : 391,
+      "groupName" : "g3",
+      "eventType" : "QUERY",
+      "queryString" : "depressione medicamenti",
+      "totalResults" : 8,
+      "queryStats" : [ {
+        "collectionId" : 379,
+        "collectionName" : "g3_green",
+        "resultCount" : 4
+      }, {
+        "collectionId" : 380,
+        "collectionName" : "g3_red",
+        "resultCount" : 4
+      } ]
+    }, {
+      "id" : 432,
+      "timestamp" : [ 2021, 4, 16, 6, 14, 46 ],
+      "userId" : 421,
+      "groupId" : 391,
+      "groupName" : "g3",
+      "eventType" : "DOC_CLICK",
+      "url" : "https://rimediomeopatici.com/affezioni-rimedi/ansia-depressione-attacchi-di-panico/",
+      "documentId" : 0,
+      "collectionId" : 380,
+      "collectionName" : "g3_red",
+      "documentRank" : 8
+    }, {
+      "id" : 433,
+      "timestamp" : [ 2021, 4, 16, 6, 15, 11 ],
+      "userId" : 421,
+      "groupId" : 391,
+      "groupName" : "g3",
+      "eventType" : "QUERY",
+      "queryString" : "depressione medicina",
+      "totalResults" : 8,
+      "queryStats" : [ {
+        "collectionId" : 379,
+        "collectionName" : "g3_green",
+        "resultCount" : 4
+      }, {
+        "collectionId" : 380,
+        "collectionName" : "g3_red",
+        "resultCount" : 4
+      } ]
+    }, {
+      "id" : 436,
+      "timestamp" : [ 2021, 4, 16, 6, 15, 19 ],
+      "userId" : 421,
+      "groupId" : 391,
+      "groupName" : "g3",
+      "eventType" : "DOC_CLICK",
+      "url" : "https://www.greenme.it/vivere/salute-e-benessere/antidepressivi-naturali-10-rimedi/",
+      "documentId" : 1,
+      "collectionId" : 380,
+      "collectionName" : "g3_red",
+      "documentRank" : 1
+    }, {
+      "id" : 437,
+      "timestamp" : [ 2021, 4, 16, 6, 15, 50 ],
+      "userId" : 421,
+      "groupId" : 391,
+      "groupName" : "g3",
+      "eventType" : "DOC_CLICK",
+      "url" : "https://www.melarossa.it/salute/psicologia/le-8-dritte-combattere-la-depressione-54916/",
+      "documentId" : 2,
+      "collectionId" : 380,
+      "collectionName" : "g3_red",
+      "documentRank" : 8
+    }, {
+      "id" : 438,
+      "timestamp" : [ 2021, 4, 16, 6, 15, 55 ],
+      "userId" : 421,
+      "groupId" : 391,
+      "groupName" : "g3",
+      "eventType" : "DOC_CLICK",
+      "url" : "https://www.ospedalemarialuigia.it/disturbi-dell-umore/depressione-maggiore/",
+      "documentId" : 2,
+      "collectionId" : 379,
+      "collectionName" : "g3_green",
+      "documentRank" : 7
+    }, {
+      "id" : 439,
+      "timestamp" : [ 2021, 4, 16, 6, 16, 44 ],
+      "userId" : 421,
+      "groupId" : 391,
+      "groupName" : "g3",
+      "eventType" : "DOC_CLICK",
+      "url" : "https://www.melarossa.it/salute/psicologia/le-8-dritte-combattere-la-depressione-54916/",
+      "documentId" : 2,
+      "collectionId" : 380,
+      "collectionName" : "g3_red",
+      "documentRank" : 8
+    }, {
+      "id" : 440,
+      "timestamp" : [ 2021, 4, 16, 6, 16, 48 ],
+      "userId" : 421,
+      "groupId" : 391,
+      "groupName" : "g3",
+      "eventType" : "DOC_CLICK",
+      "url" : "https://www.ipsico.it/sintomi-cura/depressione/",
+      "documentId" : 3,
+      "collectionId" : 379,
+      "collectionName" : "g3_green",
+      "documentRank" : 3
+    }, {
+      "id" : 441,
+      "timestamp" : [ 2021, 4, 16, 6, 17, 47 ],
+      "userId" : 421,
+      "groupId" : 391,
+      "groupName" : "g3",
+      "eventType" : "DOC_CLICK",
+      "url" : "https://www.cure-naturali.it/enciclopedia-naturale/salute/naturopatia/depressione.html",
+      "documentId" : 3,
+      "collectionId" : 380,
+      "collectionName" : "g3_red",
+      "documentRank" : 2
+    }, {
+      "id" : 442,
+      "timestamp" : [ 2021, 4, 16, 6, 20, 25 ],
+      "userId" : 421,
+      "groupId" : 391,
+      "groupName" : "g3",
+      "eventType" : "SESSION",
+      "event" : "LOGOUT"
+    } ]
+  }
+}
