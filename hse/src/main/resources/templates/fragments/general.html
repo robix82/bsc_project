@@ -44,19 +44,25 @@
 	</nav>
 	
 	<nav sec:authorize="hasAuthority('PARTICIPANT')" id="paticipant-nav"
-		 th:fragment="participant-navbar" class="navbar bg-secondary fixed-top">
+		 th:fragment="participant-navbar" class="navbar fixed-top">
 	
 		 <div id="internal-links">
 
 			<a  class="participant-link" th:href="@{${baseUrl} + 'logout'}" th:text="#{m_completeSurvey}"></a>
+			
+			<!--
 			<a th:if="${surveyUrl != null}" class="participant-link" th:href="@{${surveyUrl}}" th:text="#{m_completeSurvey}"></a>
+			-->
+			<a id="survey-link" th:if="${surveyUrl != null}" class="participant-link" th:href="@{${surveyUrl}}" th:text="Ritorna al sondaggio"></a>
 			
 		</div>
 		
+		<!--
 		<div id="langSelectors">
 			<div class="langSelector participant-link" id="lang_it">IT</div>
 			<div class="langSelector participant-link" id="lang_en">EN</div>
 		</div>
+		-->
 		
 	</nav>
 
