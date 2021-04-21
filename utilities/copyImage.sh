@@ -1,5 +1,5 @@
 
-server=root@www.robix-projects.org:hse
+server=robert@195.176.181.160:hse
 image=robix82/usi.ch-hse:0.1
 filename=hse.tar
 

@@ -48,12 +48,12 @@
 	
 		 <div id="internal-links">
 
-			<a  class="participant-link" th:href="@{${baseUrl} + 'logout'}" th:text="#{m_completeSurvey}"></a>
+			<a th:if="${surveyUrl == null}" class="participant-link" th:href="@{${baseUrl} + 'logout'}">Torna al sondaggio</a>
 			
 			<!--
 			<a th:if="${surveyUrl != null}" class="participant-link" th:href="@{${surveyUrl}}" th:text="#{m_completeSurvey}"></a>
 			-->
-			<a id="survey-link" th:if="${surveyUrl != null}" class="participant-link" th:href="@{${surveyUrl}}" th:text="Ritorna al sondaggio"></a>
+			<a id="survey-link" th:if="${surveyUrl != null}" class="participant-link" th:href="@{${surveyUrl}}">Torna al sondaggio</a>
 			
 		</div>
 		
