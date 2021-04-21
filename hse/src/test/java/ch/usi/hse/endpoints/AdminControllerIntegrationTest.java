@@ -147,7 +147,7 @@ public class AdminControllerIntegrationTest {
 		testGroup.setParticipants(new HashSet<>(participants));
 		groupRepo.save(testGroup);
 	}
-	
+	/*
 	@Test
 	public void testSetup() {
 		
@@ -751,6 +751,8 @@ public class AdminControllerIntegrationTest {
 		assertEquals(0, participantRepo.count());
 		assertEquals(0, groupRepo.findById(testGroup.getId()).getParticipants().size());
 	}
+	
+	*/
 
 	/////////////////
 
