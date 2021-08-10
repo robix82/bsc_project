@@ -1,0 +1,71 @@
+eventId,eventType,timestamp,userId,groupId,groupName,action,queryString,resultCount,docDistribution,url,documentId,documentRank,collectionId,collectionName
+453,SESSION,2021-04-16T11:36:25,452,390,g2,LOGOUT,N.A.,N.A.,N.A.,N.A.,N.A.,N.A.,N.A.,N.A.
+455,SESSION,2021-04-16T11:52:12,454,390,g2,LOGOUT,N.A.,N.A.,N.A.,N.A.,N.A.,N.A.,N.A.,N.A.
+458,QUERY,2021-04-19T11:39:40,457,391,g3,N.A.,cdc,0,,N.A.,N.A.,N.A.,N.A.,N.A.
+459,SESSION,2021-04-19T11:39:46,457,391,g3,LOGOUT,N.A.,N.A.,N.A.,N.A.,N.A.,N.A.,N.A.,N.A.
+462,QUERY,2021-04-20T11:56:06,460,389,g1,N.A.,cure depressione,20,[g1_red:4][g1_green:16],N.A.,N.A.,N.A.,N.A.,N.A.
+465,QUERY,2021-04-20T11:56:32,460,389,g1,N.A.,terapia depressione,20,[g1_red:4][g1_green:16],N.A.,N.A.,N.A.,N.A.,N.A.
+468,QUERY,2021-04-20T11:57:01,460,389,g1,N.A.,antidepressivi,17,[g1_red:2][g1_green:15],N.A.,N.A.,N.A.,N.A.,N.A.
+472,QUERY,2021-04-20T11:57:19,460,389,g1,N.A.,come aiutare amico depressione,20,[g1_green:16][g1_red:4],N.A.,N.A.,N.A.,N.A.,N.A.
+475,QUERY,2021-04-20T11:57:48,460,389,g1,N.A.,depressione sintomi,20,[g1_green:16][g1_red:4],N.A.,N.A.,N.A.,N.A.,N.A.
+478,QUERY,2021-04-20T11:58:46,460,389,g1,N.A.,psicologo lugano,11,[g1_green:10][g1_red:1],N.A.,N.A.,N.A.,N.A.,N.A.
+482,QUERY,2021-04-20T11:59:58,460,389,g1,N.A.,piu efficaci terapie o antidepressivi depressione,20,[g1_green:16][g1_red:4],N.A.,N.A.,N.A.,N.A.,N.A.
+485,QUERY,2021-04-20T12:00:11,460,389,g1,N.A.,depressione cure naturali,20,[g1_green:16][g1_red:4],N.A.,N.A.,N.A.,N.A.,N.A.
+488,QUERY,2021-04-20T12:01:03,460,389,g1,N.A.,ansia depressione cure,20,[g1_green:16][g1_red:4],N.A.,N.A.,N.A.,N.A.,N.A.
+491,QUERY,2021-04-20T12:01:50,460,389,g1,N.A.,fasi di depressione,20,[g1_green:16][g1_red:4],N.A.,N.A.,N.A.,N.A.,N.A.
+494,QUERY,2021-04-20T12:02:33,460,389,g1,N.A.,suicidio depressione trattamenti,20,[g1_green:16][g1_red:4],N.A.,N.A.,N.A.,N.A.,N.A.
+497,QUERY,2021-04-20T12:03:07,460,389,g1,N.A.,suicidio terapie,19,[g1_green:16][g1_red:3],N.A.,N.A.,N.A.,N.A.,N.A.
+500,QUERY,2021-04-20T12:03:36,460,389,g1,N.A.,terapia cognitiva depressione,20,[g1_green:16][g1_red:4],N.A.,N.A.,N.A.,N.A.,N.A.
+503,QUERY,2021-04-20T12:03:52,460,389,g1,N.A.,tcc depressione,20,[g1_green:16][g1_red:4],N.A.,N.A.,N.A.,N.A.,N.A.
+506,QUERY,2021-04-20T12:04:06,460,389,g1,N.A.,chi puo dare ricetta antidepressivi,19,[g1_green:15][g1_red:4],N.A.,N.A.,N.A.,N.A.,N.A.
+509,QUERY,2021-04-20T12:04:49,460,389,g1,N.A.,regolatore dell umore,19,[g1_green:15][g1_red:4],N.A.,N.A.,N.A.,N.A.,N.A.
+512,QUERY,2021-04-20T12:06:07,460,389,g1,N.A.,cure mancanza sonno depressione,20,[g1_green:16][g1_red:4],N.A.,N.A.,N.A.,N.A.,N.A.
+515,SESSION,2021-04-20T12:06:16,460,389,g1,LOGOUT,N.A.,N.A.,N.A.,N.A.,N.A.,N.A.,N.A.,N.A.
+516,QUERY,2021-04-20T12:08:27,481,391,g3,N.A.,combattere la depressione,8,[g3_green:4][g3_red:4],N.A.,N.A.,N.A.,N.A.,N.A.
+519,DOC_CLICK,2021-04-20T12:08:34,481,391,g3,N.A.,N.A.,N.A.,N.A.,https://www.istitutobeck.com/depressione,0,1,379,g3_green
+520,DOC_CLICK,2021-04-20T12:09:10,481,391,g3,N.A.,N.A.,N.A.,N.A.,https://www.greenme.it/vivere/salute-e-benessere/antidepressivi-naturali-10-rimedi/,1,5,380,g3_red
+521,QUERY,2021-04-20T12:10:33,481,391,g3,N.A.,salvare un amico dalla depressione,8,[g3_green:4][g3_red:4],N.A.,N.A.,N.A.,N.A.,N.A.
+524,DOC_CLICK,2021-04-20T12:10:56,481,391,g3,N.A.,N.A.,N.A.,N.A.,https://www.istitutobeck.com/depressione,0,2,379,g3_green
+525,SESSION,2021-04-20T12:11:58,481,391,g3,LOGOUT,N.A.,N.A.,N.A.,N.A.,N.A.,N.A.,N.A.,N.A.
+526,SESSION,2021-04-20T12:12:27,481,391,g3,LOGOUT,N.A.,N.A.,N.A.,N.A.,N.A.,N.A.,N.A.,N.A.
+531,QUERY,2021-04-20T16:31:17,530,390,g2,N.A.,come aiutare un depresso,18,[g2_green:10][g2_red:8],N.A.,N.A.,N.A.,N.A.,N.A.
+534,DOC_CLICK,2021-04-20T16:32:26,530,390,g2,N.A.,N.A.,N.A.,N.A.,https://www.idoctors.it/patologia-depressione-26791,6,13,377,g2_green
+535,DOC_CLICK,2021-04-20T16:35:29,530,390,g2,N.A.,N.A.,N.A.,N.A.,https://www.inpsico.it/disturbi-trattati/disturbi-umore/,9,5,377,g2_green
+536,SESSION,2021-04-20T16:37:46,530,390,g2,LOGOUT,N.A.,N.A.,N.A.,N.A.,N.A.,N.A.,N.A.,N.A.
+539,QUERY,2021-04-20T20:37:11,538,391,g3,N.A.,depressione trattamento msd,8,[g3_green:4][g3_red:4],N.A.,N.A.,N.A.,N.A.,N.A.
+542,DOC_CLICK,2021-04-20T20:37:15,538,391,g3,N.A.,N.A.,N.A.,N.A.,https://www.msdmanuals.com/it/casa/disturbi-di-salute-mentale/disturbi-dell-umore/depressione,1,1,379,g3_green
+543,QUERY,2021-04-20T20:40:45,538,391,g3,N.A.,pubmed depressione trattamento,8,[g3_green:4][g3_red:4],N.A.,N.A.,N.A.,N.A.,N.A.
+546,QUERY,2021-04-20T20:41:34,538,391,g3,N.A.,cochrane depressione trattamento,8,[g3_green:4][g3_red:4],N.A.,N.A.,N.A.,N.A.,N.A.
+549,SESSION,2021-04-20T20:42:51,538,391,g3,LOGOUT,N.A.,N.A.,N.A.,N.A.,N.A.,N.A.,N.A.,N.A.
+554,QUERY,2021-04-21T11:50:59,553,391,g3,N.A.,cura depressione,8,[g3_green:4][g3_red:4],N.A.,N.A.,N.A.,N.A.,N.A.
+557,DOC_CLICK,2021-04-21T11:51:11,553,391,g3,N.A.,N.A.,N.A.,N.A.,https://www.msdmanuals.com/it/casa/disturbi-di-salute-mentale/disturbi-dell-umore/depressione,1,7,379,g3_green
+558,QUERY,2021-04-21T11:51:58,551,389,g1,N.A.,sintomi comuni depressione ministero della salute,20,[g1_green:16][g1_red:4],N.A.,N.A.,N.A.,N.A.,N.A.
+561,DOC_CLICK,2021-04-21T11:53:01,551,389,g1,N.A.,N.A.,N.A.,N.A.,https://www.docgenerici.it/depressione-sintomi-cura-cosa-sapere/,8,1,375,g1_green
+562,QUERY,2021-04-21T11:53:27,553,391,g3,N.A.,depressione e disturbi alimentari,8,[g3_green:4][g3_red:4],N.A.,N.A.,N.A.,N.A.,N.A.
+565,DOC_CLICK,2021-04-21T11:53:46,553,391,g3,N.A.,N.A.,N.A.,N.A.,https://www.msdmanuals.com/it/casa/disturbi-di-salute-mentale/disturbi-dell-umore/depressione,1,3,379,g3_green
+566,QUERY,2021-04-21T11:54:14,551,389,g1,N.A.,sintomi depressione ministero della salute,20,[g1_green:16][g1_red:4],N.A.,N.A.,N.A.,N.A.,N.A.
+569,QUERY,2021-04-21T11:54:30,551,389,g1,N.A.,come assistere una persona depressa,20,[g1_green:16][g1_red:4],N.A.,N.A.,N.A.,N.A.,N.A.
+572,DOC_CLICK,2021-04-21T11:54:32,553,391,g3,N.A.,N.A.,N.A.,N.A.,https://www.istitutobeck.com/depressione,0,6,379,g3_green
+573,DOC_CLICK,2021-04-21T11:54:41,551,389,g1,N.A.,N.A.,N.A.,N.A.,https://www.istitutobeck.com/depressione,0,7,375,g1_green
+574,QUERY,2021-04-21T11:57:26,553,391,g3,N.A.,disturbi alimentari da depressione,8,[g3_green:4][g3_red:4],N.A.,N.A.,N.A.,N.A.,N.A.
+577,DOC_CLICK,2021-04-21T11:57:35,553,391,g3,N.A.,N.A.,N.A.,N.A.,https://www.ipsico.it/sintomi-cura/depressione/,3,7,379,g3_green
+578,QUERY,2021-04-21T11:58:18,551,389,g1,N.A.,portali di ascolto per persone con depressione,20,[g1_green:16][g1_red:4],N.A.,N.A.,N.A.,N.A.,N.A.
+581,DOC_CLICK,2021-04-21T11:58:29,551,389,g1,N.A.,N.A.,N.A.,N.A.,https://www.consultorioantera.it/approfondimenti/disturbi-dello-stato-dell-umore/depressione.html,14,2,375,g1_green
+582,DOC_CLICK,2021-04-21T11:58:39,553,391,g3,N.A.,N.A.,N.A.,N.A.,https://www.melarossa.it/salute/psicologia/le-8-dritte-combattere-la-depressione-54916/,2,8,380,g3_red
+583,DOC_CLICK,2021-04-21T11:58:57,553,391,g3,N.A.,N.A.,N.A.,N.A.,https://www.ospedalemarialuigia.it/disturbi-dell-umore/depressione-maggiore/,2,4,379,g3_green
+584,SESSION,2021-04-21T11:59:13,551,389,g1,LOGOUT,N.A.,N.A.,N.A.,N.A.,N.A.,N.A.,N.A.,N.A.
+585,DOC_CLICK,2021-04-21T11:59:49,553,391,g3,N.A.,N.A.,N.A.,N.A.,https://www.cure-naturali.it/enciclopedia-naturale/salute/naturopatia/depressione.html,3,5,380,g3_red
+586,DOC_CLICK,2021-04-21T12:00:43,553,391,g3,N.A.,N.A.,N.A.,N.A.,https://www.msdmanuals.com/it/casa/disturbi-di-salute-mentale/disturbi-dell-umore/depressione,1,3,379,g3_green
+587,SESSION,2021-04-21T12:00:49,553,391,g3,LOGOUT,N.A.,N.A.,N.A.,N.A.,N.A.,N.A.,N.A.,N.A.
+590,SESSION,2021-04-21T12:06:24,588,390,g2,LOGOUT,N.A.,N.A.,N.A.,N.A.,N.A.,N.A.,N.A.,N.A.
+593,QUERY,2021-04-21T13:32:28,592,391,g3,N.A.,trattamento per deppresione,7,[g3_green:4][g3_red:3],N.A.,N.A.,N.A.,N.A.,N.A.
+596,QUERY,2021-04-21T13:33:15,592,391,g3,N.A.,deppresione,0,,N.A.,N.A.,N.A.,N.A.,N.A.
+597,QUERY,2021-04-21T13:33:20,592,391,g3,N.A.,depression,8,[g3_green:4][g3_red:4],N.A.,N.A.,N.A.,N.A.,N.A.
+600,QUERY,2021-04-21T13:33:31,592,391,g3,N.A.,depression trattamento,8,[g3_green:4][g3_red:4],N.A.,N.A.,N.A.,N.A.,N.A.
+603,QUERY,2021-04-21T13:33:53,592,391,g3,N.A.,terapia per depressione,8,[g3_green:4][g3_red:4],N.A.,N.A.,N.A.,N.A.,N.A.
+606,QUERY,2021-04-21T13:33:59,592,391,g3,N.A.,terapia per depresione,7,[g3_green:4][g3_red:3],N.A.,N.A.,N.A.,N.A.,N.A.
+609,QUERY,2021-04-21T13:34:04,592,391,g3,N.A.,terapia per depressione,8,[g3_green:4][g3_red:4],N.A.,N.A.,N.A.,N.A.,N.A.
+612,QUERY,2021-04-21T13:34:18,592,391,g3,N.A.,depressione psichalalisti,8,[g3_green:4][g3_red:4],N.A.,N.A.,N.A.,N.A.,N.A.
+615,QUERY,2021-04-21T13:34:28,592,391,g3,N.A.,depressione psicoterapia,8,[g3_green:4][g3_red:4],N.A.,N.A.,N.A.,N.A.,N.A.
+618,DOC_CLICK,2021-04-21T13:34:59,592,391,g3,N.A.,N.A.,N.A.,N.A.,https://www.istitutobeck.com/depressione,0,1,379,g3_green
+619,SESSION,2021-04-21T13:36:58,592,391,g3,LOGOUT,N.A.,N.A.,N.A.,N.A.,N.A.,N.A.,N.A.,N.A.
