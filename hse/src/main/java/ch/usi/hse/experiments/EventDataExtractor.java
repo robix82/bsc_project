@@ -432,7 +432,14 @@ public class EventDataExtractor {
 				while (evt.getEventType().equals(UsageEvent.Type.DOC_CLICK)) {
 					
 					++clickCount;
-					evt = history.get(++idx);
+					
+					try {
+						evt = history.get(++idx);
+					}
+					catch(Exception e) {
+						System.out.println("INDE) ERROR");
+						break;
+					}
 				}
 				
 				res.add((double) clickCount);
