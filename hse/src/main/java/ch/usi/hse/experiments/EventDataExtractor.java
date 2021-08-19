@@ -484,7 +484,15 @@ public class EventDataExtractor {
 				
 				while (evt.getEventType().equals(UsageEvent.Type.DOC_CLICK)) {
 					
-					evt = history.get(idx++);
+					//evt = history.get(idx++);
+					
+					try {
+						evt = history.get(++idx);
+					}
+					catch(Exception e) {
+						System.out.println("INDE) ERROR");
+						break;
+					}
 				}
 				
 				LocalDateTime t1 = evt.getTimestamp();
@@ -530,11 +538,25 @@ public class EventDataExtractor {
 				
 				LocalDateTime t0 = evt.getTimestamp();
 				
+				/*
 				evt = history.get(idx++);
 				
 				LocalDateTime t1 = evt.getTimestamp();
 				Duration dt = Duration.between(t0,  t1);
 				res.add((double) dt.getSeconds());
+				*/
+				
+				try {
+					evt = history.get(idx++);
+					
+					LocalDateTime t1 = evt.getTimestamp();
+					Duration dt = Duration.between(t0,  t1);
+					res.add((double) dt.getSeconds());
+				}
+				catch(Exception e) {
+					System.out.println("INDE) ERROR");
+					break;
+				}
 			}
 		}
 		
