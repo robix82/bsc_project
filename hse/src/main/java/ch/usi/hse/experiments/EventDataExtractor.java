@@ -412,38 +412,45 @@ public class EventDataExtractor {
 		int clickCount = 0;
 		UsageEvent evt; 
 		
-		while (idx < history.size()) {
-			
-			evt = history.get(idx++);
-			
-			if (evt.getEventType().equals(UsageEvent.Type.SESSION)) {
+		try {
+		
+			while (idx < history.size()) {
 				
-				SessionEvent se = (SessionEvent) evt;
+				evt = history.get(idx++);
 				
-				if (se.getEvent().equals(SessionEvent.Event.LOGOUT)) {
-					return res;
-				}
-			}
-			else if (evt.getEventType().equals(UsageEvent.Type.QUERY)) {
-				
-				evt = history.get(idx);
-				clickCount = 0;
-				
-				while (evt.getEventType().equals(UsageEvent.Type.DOC_CLICK)) {
+				if (evt.getEventType().equals(UsageEvent.Type.SESSION)) {
 					
-					++clickCount;
+					SessionEvent se = (SessionEvent) evt;
 					
-					try {
-						evt = history.get(++idx);
-					}
-					catch(Exception e) {
-						System.out.println("INDE) ERROR");
-						break;
+					if (se.getEvent().equals(SessionEvent.Event.LOGOUT)) {
+						return res;
 					}
 				}
-				
-				res.add((double) clickCount);
+				else if (evt.getEventType().equals(UsageEvent.Type.QUERY)) {
+					
+					evt = history.get(idx);
+					clickCount = 0;
+					
+					while (evt.getEventType().equals(UsageEvent.Type.DOC_CLICK)) {
+						
+						++clickCount;
+						
+						try {
+							evt = history.get(++idx);
+						}
+						catch(Exception e) {
+							System.out.println("INDE) ERROR");
+							break;
+						}
+					}
+					
+					res.add((double) clickCount);
+				}
 			}
+		}
+		catch(Exception ex) {
+			
+			System.out.println("OUTER INDEX ERROR");
 		}
 
 		return res;
@@ -458,49 +465,56 @@ public class EventDataExtractor {
 			return res;
 		}
 		
-		int idx = 0;
-		UsageEvent evt = history.get(idx++);
+		try {
 		
-		while (idx < history.size()) {
-						
-			while (! evt.getEventType().equals(UsageEvent.Type.QUERY)) {
-				
-				evt = history.get(idx++);
-				
-				if (evt.getEventType().equals(UsageEvent.Type.SESSION)) {
-					
-					SessionEvent se = (SessionEvent) evt;
-					
-					if (se.getEvent().equals(SessionEvent.Event.LOGOUT)) {
-						return res;
-					}
-				}
-			}
+			int idx = 0;
+			UsageEvent evt = history.get(idx++);
 			
-			if (evt.getEventType().equals(UsageEvent.Type.QUERY)) {
-				
-				LocalDateTime t0 = evt.getTimestamp();
-				evt = history.get(idx++);			
-				
-				while (evt.getEventType().equals(UsageEvent.Type.DOC_CLICK)) {
+			while (idx < history.size()) {
+							
+				while (! evt.getEventType().equals(UsageEvent.Type.QUERY)) {
 					
-					//evt = history.get(idx++);
+					evt = history.get(idx++);
 					
-					try {
-						evt = history.get(++idx);
-					}
-					catch(Exception e) {
-						System.out.println("INDE) ERROR");
-						break;
+					if (evt.getEventType().equals(UsageEvent.Type.SESSION)) {
+						
+						SessionEvent se = (SessionEvent) evt;
+						
+						if (se.getEvent().equals(SessionEvent.Event.LOGOUT)) {
+							return res;
+						}
 					}
 				}
 				
-				LocalDateTime t1 = evt.getTimestamp();
-				
-				Duration dt = Duration.between(t0,  t1);
-				
-				res.add((double) dt.getSeconds());
+				if (evt.getEventType().equals(UsageEvent.Type.QUERY)) {
+					
+					LocalDateTime t0 = evt.getTimestamp();
+					evt = history.get(idx++);			
+					
+					while (evt.getEventType().equals(UsageEvent.Type.DOC_CLICK)) {
+						
+						//evt = history.get(idx++);
+						
+						try {
+							evt = history.get(++idx);
+						}
+						catch(Exception e) {
+							System.out.println("INDEX ERROR");
+							break;
+						}
+					}
+					
+					LocalDateTime t1 = evt.getTimestamp();
+					
+					Duration dt = Duration.between(t0,  t1);
+					
+					res.add((double) dt.getSeconds());
+				}
 			}
+		}
+		catch(Exception ex) {
+			
+			System.out.println("OUTER INDEX ERROR");
 		}
 		
 		return res;
@@ -515,49 +529,55 @@ public class EventDataExtractor {
 			return res;
 		}
 		
-		int idx = 0;
-		UsageEvent evt = history.get(idx++);
+		try {
 		
-		while (idx < history.size()) {
+			int idx = 0;
+			UsageEvent evt = history.get(idx++);
 			
-			while (! evt.getEventType().equals(UsageEvent.Type.DOC_CLICK)) {
+			while (idx < history.size()) {
 				
-				evt = history.get(idx++);
-				
-				if (evt.getEventType().equals(UsageEvent.Type.SESSION)) {
+				while (! evt.getEventType().equals(UsageEvent.Type.DOC_CLICK)) {
 					
-					SessionEvent se = (SessionEvent) evt;
+					evt = history.get(idx++);
 					
-					if (se.getEvent().equals(SessionEvent.Event.LOGOUT)) {
-						return res;
+					if (evt.getEventType().equals(UsageEvent.Type.SESSION)) {
+						
+						SessionEvent se = (SessionEvent) evt;
+						
+						if (se.getEvent().equals(SessionEvent.Event.LOGOUT)) {
+							return res;
+						}
 					}
 				}
-			}
-			
-			if (evt.getEventType().equals(UsageEvent.Type.DOC_CLICK)) {
 				
-				LocalDateTime t0 = evt.getTimestamp();
-				
-				/*
-				evt = history.get(idx++);
-				
-				LocalDateTime t1 = evt.getTimestamp();
-				Duration dt = Duration.between(t0,  t1);
-				res.add((double) dt.getSeconds());
-				*/
-				
-				try {
+				if (evt.getEventType().equals(UsageEvent.Type.DOC_CLICK)) {
+					
+					LocalDateTime t0 = evt.getTimestamp();
+					
+					/*
 					evt = history.get(idx++);
 					
 					LocalDateTime t1 = evt.getTimestamp();
 					Duration dt = Duration.between(t0,  t1);
 					res.add((double) dt.getSeconds());
-				}
-				catch(Exception e) {
-					System.out.println("INDE) ERROR");
-					break;
+					*/
+					
+					try {
+						evt = history.get(idx++);
+						
+						LocalDateTime t1 = evt.getTimestamp();
+						Duration dt = Duration.between(t0,  t1);
+						res.add((double) dt.getSeconds());
+					}
+					catch(Exception e) {
+						System.out.println("INDEX ERROR");
+						break;
+					}
 				}
 			}
+		}
+		catch(Exception ex) {
+			System.out.println("OUTER INDEX ERROR");
 		}
 		
 		return res;
